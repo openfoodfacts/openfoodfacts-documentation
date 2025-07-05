@@ -1,0 +1,168 @@
+---
+title: "Multi-Project Scanning"
+description: "Guide to using Open Food Facts APIs for scanning cosmetics, pet food, and other products across multiple project databases."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+<Callout>
+**Multi-Project Ecosystem**
+
+Open Beauty Facts, Open Pet Food Facts, Open Products Facts behave mostly like Open Food Facts. Behaviours may change over time, as we tweak it.
+</Callout>
+
+## Specific base URLs
+
+<Cards>
+<Card title="Open Beauty Facts" description="Cosmetics: openbeautyfacts.org" />
+<Card title="Open Pet Food Facts" description="Pet Food: openpetfoodfacts.org" />
+<Card title="Open Products Facts" description="Other products: openproductsfacts.org" />
+</Cards>
+
+## Feature Comparison
+
+<Tabs items={['Supported Features', 'Not Yet Supported']}>
+<Tab value="Supported Features">
+<Callout type="info">
+**Shared Codebase Benefits**
+
+- **Same codebase**: Knowledge panels are supported
+- **New packaging API**: Fully supported across all projects
+</Callout>
+</Tab>
+<Tab value="Not Yet Supported">
+<Callout type="warn">
+**Feature Limitations**
+
+- Search-a-licious, Open Prices, Folksonomy Engine, Nutri-Patrol not supported yet
+- No Robotoff questions yet
+</Callout>
+</Tab>
+</Tabs>
+
+## Project Specificities
+
+<Tabs items={['Open Beauty Facts', 'Open Pet Food Facts', 'Open Products Facts']}>
+<Tab value="Open Beauty Facts">
+**Cosmetics-Specific Features:**
+- No nutrition table
+- No Eco-Score, Nutri-Score or NOVA level for ultra-processing
+</Tab>
+<Tab value="Open Pet Food Facts">
+**Pet Food-Specific Features:**
+- No Eco-Score, Nutri-Score or NOVA level for ultra-processing
+</Tab>
+<Tab value="Open Products Facts">
+**General Products Features:**
+- No nutrition table
+- No Eco-Score, Nutri-Score or NOVA level for ultra-processing
+- Most data will be modelled using the [Folksonomy Engine](./folksonomy-engine.mdx)
+</Tab>
+</Tabs>
+
+## Important APIs for Universal Product Scanning
+
+### Universal Barcode API
+
+<Callout>
+**Universal Scanning Solution**
+
+We have a universal barcode scanning API, where you scan a barcode, and you get a result from either Open Food Facts, Open Pet Food Facts, Open Beauty Facts or Open Products Facts with a `product_type`.
+</Callout>
+
+<Steps>
+<Step>
+**Use Universal Parameter**
+
+You can use the `product_type=all` parameter
+</Step>
+
+<Step>
+**Automatic Redirection**
+
+Asked on any instance, it will redirect you to the right instance if a product exists and is on another instance (eg: asking for a beauty barcode on food instance)
+</Step>
+
+<Step>
+**API Reference**
+
+<Card title="Universal Barcode API Documentation" href="https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-/api/v2/product/-barcode-">
+See reference documentation for complete implementation details
+</Card>
+</Step>
+</Steps>
+
+### Handling Missing Products
+
+<Callout type="info">
+**Missing Product Flow**
+
+If no result is found in any of the 4 databases, you will have to ask the type of product to your users, and use the classic product addition API on the right project.
+</Callout>
+
+<Steps>
+<Step>
+**Wrong Project Detection**
+
+If (it can happen) the product appears on the wrong project, we suggest you use the NutriPatrol API to let your users report it to the moderators
+</Step>
+
+<Step>
+**Proceed with Correct Addition**
+
+Then proceed to a product addition on the right project
+</Step>
+
+<Step>
+**Moderation Process**
+
+The moderators will then move the existing data to the right project
+</Step>
+</Steps>
+
+<Callout>
+**Future Goal**
+
+Eventually, project categorization errors should be infinitesimal
+</Callout>
+
+## API Roadmap and multi-project behaviour
+
+We plan to bring the APIs mentioned above to Open Beauty Facts (Search-a-licious, Knowledge Panels, Open Prices, Robotoff, Folksonomy Engine)
+
+## Sample outputs
+
+Please use the Open Food Facts API reference for most operations (data and photo addition, ingredient lists, categories, labels…)
+
+### Product in Open Beauty Facts
+```text title="Open Beauty Facts Product Example"
+https://world.openbeautyfacts.org/api/v2/product/3560070791460.json
+```
+
+### Ingredients
+<Callout type="warning">
+  **Experimental Feature**
+
+  This is very experimental. Do not rely on this for allergen or ingredient parsing yet.
+</Callout>
+
+#### List of ingredients detected by the current experimental parser
+```
+https://world.openbeautyfacts.org/ingredients.json
+```
+
+#### Products where the current experimental parser could not detect aluminium salts
+```
+https://world.openbeautyfacts.org/ingredient/-aluminum-salts.json
+```
+
+#### Products where the current experimental parser could detect aluminium salts
+```
+https://world.openbeautyfacts.org/ingredient/aluminum-salts.json
+```
+
+### Periods after Opening
+[Periods after opening taxonomy](https://en.wiki.openbeautyfacts.org/Global_period_after_opening_taxonomy)

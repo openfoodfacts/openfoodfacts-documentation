@@ -1,0 +1,152 @@
+---
+title: "Explain Query Language"
+description: "Discover the power of Lucene Query Language within Search-a-licious. This guide explains the enhanced query syntax, covering basic terms, field-specific searches, operators, ranges, and how different field types like text and numeric are handled."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Explain Query Language
+
+<Callout type="info">
+The idea of Search-a-licious is to provide a powerful yet easy to use API, through the use of a well proven language: Lucene Query Language.
+</Callout>
+
+## Enhanced Query Language
+
+While Elasticsearch provides a way to use this language in the queries, it has some important limitations like the lack of support for nested and object fields.
+
+<Card title="Luqum Library" href="https://github.com/jurismarches/luqum">
+Thanks to the luqum library, Search-a-licious is able to use Lucene Query Language in a broader way.
+</Card>
+
+Search-a-licious also uses luqum to introspect the query and transform it to add features corresponding to your configuration and leverage taxonomies and other peculiarities.
+
+<Callout type="tip">
+It enables for example taking into account synonyms, or adding the languages to query about on the fly without the need to complexify the query too much at API level.
+</Callout>
+
+## Query Syntax
+
+<Callout>
+The query syntax is quite simple, you have several options:
+</Callout>
+
+<Steps>
+<Step title="Simple Word Search">
+
+Query for simple word in the default text fields (those having `full_text_search` property in your configuration) by simply having the word in your query:
+
+```sh title="Simple Word Query"
+chocolate
+```
+
+Entries with text `chocolate`
+
+</Step>
+<Step title="Exact Phrase Search">
+
+Match exactly a full sentence by using quotes:
+
+```sh title="Exact Phrase Query"
+"dark chocolate"
+```
+
+Entries with text `dark chocolate`
+
+</Step>
+<Step title="Field-Specific Search">
+
+Match a word or phrase in a specific field by using the field name, followed by a colon:
+
+```sh title="Field-Specific Query"
+labels:organic
+```
+
+Entries with labels containing `organic`
+
+</Step>
+<Step title="Multiple Terms">
+
+Have more than one term, the query will try to match all terms:
+
+```sh title="Multiple Terms Query"
+"dark chocolate" labels:organic
+```
+
+Entries with text `dark chocolate` and labels containing `organic`
+
+</Step>
+<Step title="Complex Queries with Operators">
+
+Combine queries with `AND`, `OR` and `NOT` operators, and use parentheses to group them:
+
+```sh title="Complex Query with Operators"
+"dark chocolate" AND (labels:organic OR labels:vegan) AND NOT nutriscore:(e OR d)
+```
+
+Entries with text `dark chocolate`, labels containing `organic` or `vegan`, and Nutri-Score not `e` or `d`
+
+</Step>
+<Step title="Sub-field Queries">
+
+Query a sub field by using "." or ":":
+
+```sh title="Sub-field Query Example 1"
+nutrients.sugar_100g:[10 TO 15]
+```
+
+Equivalent to:
+
+```sh title="Sub-field Query Example 2"
+nutrients:sugar_100g:[10 TO 15]
+```
+
+Entries with sugar between 10 and 15 grams per 100g
+
+</Step>
+<Step title="Unbounded Range Queries">
+
+In ranges you can use * for unbounded values:
+
+```sh title="Unbounded Range Query"
+nutrients.sugar_100g:[* TO 20] AND nutrients.proteins_100g:[2 TO *]
+```
+
+Entries with sugar below 20g and proteins above 2g for 100g
+
+</Step>
+<Step title="Field Existence Check">
+
+Match field existence with `*`:
+
+```sh title="Field Existence Query"
+nutriscore:*
+```
+
+Entries with Nutri-Score computed
+
+</Step>
+</Steps>
+
+## Different Types of Fields
+
+<Callout type="tip">
+When you created your configuration, you defined different field types. It's important because the matching possibilities are not the same.
+</Callout>
+
+<Cards>
+<Card title="Keyword Fields" description="Used for exact matching" />
+<Card title="Full Text Fields" description="Part of the text can be matched, with complex matching possibilities" />
+<Card title="Numeric Fields" description="Used for range matching or computations" />
+<Card title="Date Fields" description="Used for range matching or computations" />
+</Cards>
+
+## Full Text Queries
+
+<Callout type="warning">
+**Documentation In Progress**
+
+More information on how we transform queries is coming soon.
+</Callout>

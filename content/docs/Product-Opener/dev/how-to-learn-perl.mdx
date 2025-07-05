@@ -1,0 +1,67 @@
+---
+title: "Learning Perl"
+description: "Comprehensive guide to learning Perl programming language with resources, tutorials, and official documentation for Open Food Facts development"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+<Callout type="info">
+**New to Perl?**
+
+Here are some introductory resources to learn Perl for Open Food Facts development.
+</Callout>
+
+## Quick start
+
+<Cards>
+<Card href="https://www.youtube.com/watch?v=c0k9ieKky7Q" title="Perl YouTube Tutorial" description="Perl Enough to be dangerous // FULL COURSE 3 HOURS" external />
+<Card href="https://www.tutorialspoint.com/perl/perl_quick_guide.htm" title="Perl Introduction" description="Introduction to perl from tutorialspoint" external />
+<Card href="https://blob.perl.org/books/impatient-perl/iperl.pdf" title="Impatient Perl" description="PDF document for people interested in learning perl" external />
+<Card href="https://perl.fish/learn" title="Perl Fish" description="Comprehensive collection of Perl learning resources" external />
+</Cards>
+
+## Official Documentation
+
+<Callout>
+**Official Resources**
+
+Start with these official Perl resources for the most up-to-date and comprehensive information.
+</Callout>
+
+<Cards>
+<Card href="https://www.perl.org/" title="Perl.org" description="Official Perl website with documentation, tutorials, and community resources" external />
+<Card href="https://learn.perl.org/" title="Learn Perl" description="Perl programming language tutorials for beginners" external />
+<Card href="https://perlmaven.com/" title="Perl Maven" description="Perl programming tutorials, tips, and code examples" external />
+</Cards>
+
+## Useful Documentation for Product Opener
+
+<Callout type="warning">
+**Important for Open Food Facts Development**
+
+These specific Perl features are used extensively in ProductOpener's codebase.
+</Callout>
+
+<Tabs items={['Special Variables', 'Regular Expressions']}>
+<Tab value="Special Variables">
+<Card href="https://perldoc.perl.org/variables/" title="Perl Special Variables" description="Reference for special variables like $', $#, etc." external />
+
+<Callout type="info">
+**Why This Matters**
+
+Product Opener uses many Perl special variables throughout the codebase. Understanding these will help you read and write code more effectively.
+</Callout>
+</Tab>
+
+<Tab value="Regular Expressions">
+<Card href="https://perldoc.perl.org/perlre" title="Perl Regular Expressions" description="Comprehensive guide to Perl regex syntax and features" external />
+
+<Callout type="info">
+**Heavily Used in Product Opener**
+
+We use regular expressions extensively in ProductOpener's code for text processing, data validation, and parsing.
+</Callout>
+</Tab>
+</Tabs>

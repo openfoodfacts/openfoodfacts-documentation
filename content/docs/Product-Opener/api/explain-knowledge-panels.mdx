@@ -1,0 +1,85 @@
+---
+title: "Knowledge Panels"
+description: "Guide to understanding and implementing knowledge panels that provide ready-to-display product information in Open Food Facts API"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+<Callout type="info">
+**Ready-to-Display Information**
+
+The Open Food Facts API allows clients (such as the Open Food Facts website and mobile app) to request ready-to-display information about an object (such as a product or a facet like a category).
+</Callout>
+
+Clients do not have to know in advance what kind of information is displayed (for example - the ingredients of a product, nutrition data, Nutri-Score or Eco-Score). They only have to know how to display essential data types such as texts, grades, images, and tables.
+
+![Panels for oatmeal on the mobile app, showing ingredients and nutrition info](../images/knowledge-panels-in-action.png)
+
+<Callout>
+**Knowledge panels in action on the website and mobile app**
+</Callout>
+
+## Main elements
+
+<Callout type="info">
+**Panel Structure**
+
+Main elements are panels, which in turn contain elements. Elements are typically `text_element`, `image_element`, `map_element`. Some panels are grouping panels together, forming a hierarchy.
+</Callout>
+
+We also have a concept of action, which allows the user to take an action, currently editing.
+
+<Card href="./ref/schemas/knowledge_panels/panels.yaml" title="Knowledge Panels JSON Schema" description="Complete structure of the knowledge panels data returned by the API" />
+
+<Card href="https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-/api/v2/product/-barcode--fields-knowledge_panels" title="API Reference" description="Getting Knowledge panels for a specific product by barcode" external />
+
+## How to make a knowledge panel related contribution
+
+<Steps>
+<Step>
+**Define Your Vision**: Have a clear vision of the information you want to convey, both in synthetic and larger form
+</Step>
+<Step>
+**Identify Missing Information**: If the information is missing to properly display the panel, devise a clear way for the user to contribute it
+</Step>
+<Step>
+**Handle Unavailable Data**: Explain when information is not available on the product packaging
+</Step>
+</Steps>
+
+## Code-pointers
+
+<Cards>
+<Card title="Environment Templates" description="templates/api/knowledge-panels/environment/label.tt.json" />
+<Card title="Contribution Logic" description="lib/ProductOpener/KnowledgePanelsContribution.pm" />
+<Card title="Product Panels" description="lib/ProductOpener/KnowledgePanels.pm - for products" />
+<Card title="Facet Panels" description="lib/ProductOpener/KnowledgePanelsTags.pm - for facets" />
+</Cards>
+
+<Callout type="info">
+**Panel Generation**
+
+Knowledge panels are generated based on product data and taxonomies, with support for localization and customization.
+</Callout>
+
+## How to test that your knowledge panel contribution does not break the app
+
+<Steps>
+<Step>
+**Setup Local Tunnel**: Use tools such as ngrok.io to open a tunnel from your local development machine to the Internet
+</Step>
+<Step>
+**GitPod Alternative**: If you are using GitPod to run your Product Opener instance, you don't need ngrok as GitPod allows you to make your dev instance URL public
+</Step>
+<Step>
+**Mobile App Testing**: Activate the DEV mode of the official Open Food Facts mobile app, switch the Server to test, and set a custom URL (yours) for the server
+</Step>
+</Steps>
+
+<Callout type="warning">
+**Testing is Critical**
+
+Always test your knowledge panel contributions to ensure they don't break the mobile app experience.
+</Callout>

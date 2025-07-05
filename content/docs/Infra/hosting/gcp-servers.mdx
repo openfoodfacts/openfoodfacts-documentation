@@ -1,0 +1,29 @@
+---
+title: "GCP Servers"
+description: "This document provides an overview of Google Cloud Platform servers, specifically `monitoring-01`, managed via Ansible. It also highlights the importance of configuring GCP Firewall rules to allow HTTP and HTTPS traffic for proper server operation."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Google Cloud Platform Servers
+
+We have one GCP server:
+
+<Cards>
+<Card title="monitoring-01" href="https://github.com/openfoodfacts/openfoodfacts-infrastructure/blob/develop/ansible">
+Server managed using Ansible for infrastructure automation
+</Card>
+</Cards>
+
+## GCP Firewall Configuration
+
+<Callout type="warning">
+There is a firewall between internet and our GCP servers.
+</Callout>
+
+<Callout type="info">
+**Important:** To enable `HTTP` and `HTTPS` traffic, it is **necessary** to tick the `Allow HTTP traffic` and `Allow HTTPS traffic` boxes in the VM settings.
+</Callout>

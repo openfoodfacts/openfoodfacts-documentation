@@ -1,0 +1,142 @@
+---
+title: "Open Food Facts Query"
+description: "This document describes the Open Food Facts Query project, which computes aggregations for product exploration. It covers its production and staging deployments, testing methods, and how it enhances performance by avoiding direct MongoDB queries."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Open Food Facts Query
+
+<Card title="Performance Optimization" description="MongoDB aggregation replacement for faster product exploration">
+
+The Open Food Facts Query project computes aggregation requests visible on the website when users select "Explore products by". It provides faster results by avoiding direct MongoDB queries.
+
+**Repository:** [openfoodfacts/openfoodfacts-query](https://github.com/openfoodfacts/openfoodfacts-query/)
+
+</Card>
+
+## Deployment Overview
+
+<Tabs items={["Production", "Staging", "Testing"]}>
+  <Tab value="Production">
+    ### Production Deployment
+    
+    <Card title="Container Setup" description="Dedicated Proxmox container for production deployment">
+    
+    **Location:** Proxmox container CT 115 on off1
+    **Method:** Docker Compose deployment
+    
+    <Callout type="info">
+    Specific container options are applied to support Docker hosting. See the [2024-02-12 installation report](./reports/2024-02-12-install-off-query-off1.md) for detailed setup information.
+    </Callout>
+    
+    </Card>
+  </Tab>
+  
+  <Tab value="Staging">
+    ### Staging Deployment
+    
+    <Card title="Staging Environment" description="Docker VM deployment for testing">
+    
+    **Location:** Staging dockers VM
+    **Method:** Docker Compose project
+    **URL:** [https://query.openfoodfacts.net/](https://query.openfoodfacts.net/)
+    
+    ### Storage Configuration
+    - `/var/lib/docker/volumes` mounted on specific ZFS dataset
+    - Hosted on NVME pool for optimal performance
+    
+    </Card>
+  </Tab>
+  
+  <Tab value="Testing">
+    ### Testing the Service
+    
+    <Card title="Aggregation Testing" description="Verify MongoDB aggregation replacement functionality">
+    
+    The application accepts MongoDB aggregation queries as a replacement for direct database queries.
+    
+    **Test Command:**
+    ```bash title="Test Aggregation Query"
+    curl -d '[{"$match": {"countries_tags": "en:france"}},{"$group":{"_id":"$brands_tags"}}]' \
+         -H "Content-Type: application/json" \
+         https://query.openfoodfacts.org/aggregate
+    ```
+    
+    <Callout type="tip">
+    This test query matches products from France and groups them by brand tags.
+    </Callout>
+    
+    </Card>
+  </Tab>
+</Tabs>
+
+## Key Features
+
+<Cards>
+  <Card title="Aggregation Replacement" description="Replaces MongoDB aggregation queries for better performance" />
+  <Card title="Product Exploration" description="Powers the 'Explore products by' website functionality" />
+  <Card title="Performance Optimization" description="Provides faster query results than direct database access" />
+  <Card title="API Compatibility" description="Accepts standard MongoDB aggregation syntax" />
+</Cards>
+
+## Architecture
+
+<Card title="System Architecture" description="Understanding the query service deployment">
+
+<Steps>
+  <Step title="Query Reception">
+    Receives aggregation requests from the website frontend
+  </Step>
+  
+  <Step title="Processing">
+    Processes queries without direct MongoDB interaction
+  </Step>
+  
+  <Step title="Result Delivery">
+    Returns optimized results for product exploration features
+  </Step>
+</Steps>
+
+</Card>
+
+## Environment Details
+
+<Tabs items={["Production Specs", "Staging Specs", "Performance"]}>
+  <Tab value="Production Specs">
+    - **Server:** off1 Proxmox host
+    - **Container:** CT 115 (dedicated)
+    - **Deployment:** Docker Compose
+    - **URL:** https://query.openfoodfacts.org/
+  </Tab>
+  
+  <Tab value="Staging Specs">
+    - **Server:** Staging dockers VM
+    - **Storage:** ZFS dataset on NVME pool
+    - **URL:** https://query.openfoodfacts.net/
+  </Tab>
+  
+  <Tab value="Performance">
+    - **Database:** Bypasses MongoDB for aggregations
+    - **Speed:** Faster than direct database queries
+    - **Scalability:** Optimized for high-volume product exploration
+  </Tab>
+</Tabs>
+
+## Related Documentation
+
+<Cards>
+  <Card 
+    title="Installation Report" 
+    description="Detailed setup documentation for production deployment"
+    href="./reports/2024-02-12-install-off-query-off1.md"
+  />
+  <Card 
+    title="GitHub Repository" 
+    description="Source code and development documentation"
+    href="https://github.com/openfoodfacts/openfoodfacts-query/"
+  />
+</Cards>

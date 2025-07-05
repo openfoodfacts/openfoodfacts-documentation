@@ -1,0 +1,253 @@
+---
+title: "Linux Server Guidelines"
+description: "This document provides guidelines for managing Linux servers within the Open Food Facts infrastructure. It covers using etckeeper for configuration management, email setup with Postfix or Exim, iptables for firewall rules, and tips for shell and autocompletion issues."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Linux Server Guidelines
+
+Guidelines for managing Linux servers within the Open Food Facts infrastructure.
+
+<Callout type="warning">
+**FIXME**: This document is not up-to-date and must be reviewed.
+</Callout>
+
+## Server Types Overview
+
+<Cards>
+  <Card title="Bare Metal Servers" href="#server-architecture">
+    Physical servers with direct hardware access
+  </Card>
+  <Card title="Proxmox Hosts" href="./proxmox.md">
+    Virtualization platform hosting containers and VMs
+  </Card>
+  <Card title="LXC Containers" href="#server-architecture">
+    Lightweight containerized environments
+  </Card>
+  <Card title="QEMU VMs" href="#server-architecture">
+    Full virtual machines on Proxmox
+  </Card>
+</Cards>
+
+<Callout type="note">
+Every server is referenced in the [CT and VM list of OFF infrastructure](https://docs.google.com/document/d/14x5yPdcJ8uLoc5zb0HYjb_EYUIWZzOlaPWYyLSuIcTw/edit?resourcekey=0-h0h9ksbTUBykEDuBkXH4fg#).
+</Callout>
+
+## Configuration Management
+
+### Etckeeper
+
+<Callout type="info">
+We use `etckeeper` with Git backend on as many servers as possible for configuration tracking.
+</Callout>
+
+<Steps>
+  <Step>
+    **Before Changes**
+    
+    ```bash title="Save Current State"
+    git status
+    etckeeper commit "save before changes"
+    ```
+  </Step>
+  
+  <Step>
+    **Make Changes**
+    
+    Perform your configuration modifications in `/etc`.
+  </Step>
+  
+  <Step>
+    **After Changes**
+    
+    ```bash title="Commit Changes"
+    etckeeper commit "<descriptive message>"
+    ```
+  </Step>
+</Steps>
+
+<Callout type="tip">
+See [etckeeper documentation](https://etckeeper.branchable.com/README/) for more details.
+</Callout>
+
+## Email Configuration
+
+<Callout type="info">
+We use either Postfix or Exim as a satellite of a smart_host. All outgoing mail passes through the Proxmox Mail Gateway.
+</Callout>
+
+### Mail Gateway Setup
+
+<Cards>
+  <Card title="Proxmox Mail Gateway" href="./mail.md#servers">
+    Central mail processing and security
+  </Card>
+  <Card title="SPF Records" href="./mail.md#servers">
+    Sender Policy Framework configuration
+  </Card>
+  <Card title="DKIM Signatures" href="./mail.md#servers">
+    Domain Keys Identified Mail setup
+  </Card>
+</Cards>
+
+<Callout type="note">
+The Proxmox Mail Gateway is registered in SPF records and adds DKIM signatures to ensure email deliverability.
+</Callout>
+
+For detailed configuration, see [Mail - Servers](./mail.md#servers).
+
+## Firewall Management
+
+### Iptables Configuration
+
+<Callout type="info">
+We use iptables on many servers (generally host servers) with iptables-persistent for rule persistence.
+</Callout>
+
+<Tabs>
+  <Tab value="ovh" label="OVH Servers">
+    ### OVH Server Rules
+    
+    Rules are stored in:
+    ```bash title="Rule Locations"
+    /etc/iptables/rule.v4   # IPv4 rules
+    /etc/iptables/rule.v6   # IPv6 rules
+    ```
+  </Tab>
+  
+  <Tab value="off1" label="OFF1 Server">
+    ### OFF1 Server Rules
+    
+    Rules are stored in:
+    ```bash title="Rule Location"
+    /etc/iptables.up.rules
+    ```
+  </Tab>
+</Tabs>
+
+### Docker and Iptables
+
+<Callout type="warning">
+Docker has its own chains that are not affected by `INPUT` and `OUTPUT` rules. It won't block ports exposed by Docker.
+</Callout>
+
+<Steps>
+  <Step>
+    **Understanding Docker Chains**
+    
+    Docker creates its own iptables chains that bypass standard INPUT/OUTPUT rules.
+  </Step>
+  
+  <Step>
+    **Use DOCKER-USER Chain**
+    
+    To block Docker-exposed ports, add rules to the `DOCKER-USER` chain.
+  </Step>
+  
+  <Step>
+    **Reference Documentation**
+    
+    See [Docker iptables documentation](https://docs.docker.com/network/iptables/) for details.
+  </Step>
+</Steps>
+
+## Shell Configuration Issues
+
+### Root Bash Configuration
+
+<Callout type="note">
+Root is often created before autocompletion packages are installed, leading to limited shell features.
+</Callout>
+
+<Steps>
+  <Step>
+    **Check Current Configuration**
+    
+    Compare current and default configurations:
+    ```bash title="Compare Bashrc"
+    diff $HOME/.bashrc /etc/skel/.bashrc
+    ```
+  </Step>
+  
+  <Step>
+    **Copy Default Configuration**
+    
+    If different, copy the default:
+    ```bash title="Update Bashrc"
+    cp /etc/skel/.bashrc /root/
+    ```
+  </Step>
+</Steps>
+
+## Troubleshooting Common Issues
+
+<Tabs>
+  <Tab value="color" label="No Color in Shell">
+    ### Shell Color Issues
+    
+    <Steps>
+      <Step>
+        **Check TERM Variable**
+        
+        ```bash title="Check Terminal Type"
+        echo $TERM
+        ```
+        
+        Should be `xterm-256color` or `linux`.
+      </Step>
+      
+      <Step>
+        **Fix Bashrc**
+        
+        ```bash title="Compare and Fix"
+        diff $HOME/.bashrc /etc/skel/.bashrc
+        # If different, copy from /etc/skel/.bashrc
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab value="completion" label="No Autocompletion">
+    ### Autocompletion Issues
+    
+    <Steps>
+      <Step>
+        **Check bash-completion Package**
+        
+        ```bash title="Verify Installation"
+        dpkg --verify bash-completion && echo ok
+        ```
+      </Step>
+      
+      <Step>
+        **Fix Bashrc Configuration**
+        
+        ```bash title="Compare and Fix"
+        diff $HOME/.bashrc /etc/skel/.bashrc
+        # If different, copy from /etc/skel/.bashrc
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Cards>
+  <Card title="Configuration Tracking" href="#etckeeper">
+    Always use etckeeper to track /etc changes
+  </Card>
+  <Card title="Email Routing" href="#email-configuration">
+    Route all mail through Proxmox Mail Gateway
+  </Card>
+  <Card title="Firewall Management" href="#firewall-management">
+    Use iptables-persistent for rule persistence
+  </Card>
+  <Card title="Shell Setup" href="#shell-configuration-issues">
+    Ensure proper shell configuration for all users
+  </Card>
+</Cards>

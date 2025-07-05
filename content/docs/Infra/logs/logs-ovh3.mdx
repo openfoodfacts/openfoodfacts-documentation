@@ -1,0 +1,168 @@
+---
+title: "Ovh3 Server Logs"
+description: "Timeline of incidents and interventions on ovh3 server including CPU issues, disk failures, SSL certificate problems, ZFS dataset stalls, and logrotate configuration changes."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Ovh3 Server Logs
+
+<Callout type="info">
+Report here the timeline of incidents and interventions on ovh3 server. Keep things short or write a report.
+</Callout>
+
+## Recent Incidents
+
+<Cards>
+  <Card title="2024-10-31: CPU Issues" description="System using 100% CPU, resolved with reboot" />
+  <Card title="2024-10-10: Disk Failure" description="SDA drive showing pending sector errors" />
+  <Card title="2023-12-05: SSL Certificates" description="Images SSL certificate renewal failed" />
+  <Card title="ZFS Stalls" description="Multiple ZFS dataset stall incidents requiring hard reboots" />
+</Cards>
+
+## 2024-10-31 System Taking 100% CPU
+
+<Card title="High CPU Usage Resolution" description="ARC processes consuming all CPU resources">
+
+### Problem Description
+<Steps>
+  <Step title="Initial Symptoms">
+    - Server not accessible via SSH
+    - Munin showing 100% CPU usage by system processes
+  </Step>
+  
+  <Step title="Investigation">
+    - Top showed `arc_prune` + `arc_evict` using 100% CPU
+    - Logs showed no strange messages
+    - ARC metadata usage was within normal limits
+  </Step>
+  
+  <Step title="Resolution">
+    - Requested hard reboot via OVH console
+    - Issue persisted after restart
+    - Soft reboot resolved the problem
+  </Step>
+</Steps>
+
+<Callout type="warn">
+ARC (Adaptive Replacement Cache) issues can cause severe performance problems requiring system restart.
+</Callout>
+
+</Card>
+
+## 2024-10-10 Disk Drive Issues
+
+<Callout type="error">
+SDA drive on ovh3 is faulty with 64 Current_Pending_Sector and 2 Reallocated_Event_Count errors.
+</Callout>
+
+See [Infrastructure Issue #424](https://github.com/openfoodfacts/openfoodfacts-infrastructure/issues/424) for details.
+
+## 2023-12-05 SSL Certificates Expired
+
+<Card title="Images SSL Certificate Problem" description="Certificate renewal failed due to missing nginx plugin">
+
+### Issue Details
+Images stopped displaying on the website due to SSL certificate expiration.
+
+**Error from syslog:**
+```log title="Certificate Renewal Error"
+Dec  5 13:12:58 off2 certbot[385770]: Failed to renew certificate images.openfoodfacts.org with error: The requested nginx plugin does not appear to be installed
+```
+
+### Resolution Steps
+<Steps>
+  <Step title="Install Plugin">
+    Install the missing nginx plugin:
+    ```bash
+    apt install python3-certbot-nginx
+    ```
+  </Step>
+  
+  <Step title="Renew Certificates">
+    Renew all certificates:
+    ```bash
+    certbot renew
+    ```
+  </Step>
+  
+  <Step title="Clean Up">
+    Remove obsolete domain configuration:
+    ```bash
+    mv /etc/letsencrypt/renewal/ovh3.openfoodfacts.org.{conf,backup}
+    ```
+  </Step>
+</Steps>
+
+</Card>
+
+## 2023-09-12 Logrotate Configuration
+
+<Card title="Nginx Log Management" description="Configured log rotation for large nginx access logs">
+
+**Issue:** Nginx had a very large static-access.log file (52G).
+
+**Solution:** Modified `/etc/logrotate.d/nginx` to include `/rpool/logs-nginx/*.log` and executed log rotation.
+
+</Card>
+
+## ZFS Dataset Stall Incidents
+
+<Callout type="error">
+Multiple incidents of ZFS dataset stalls requiring hard reboots. Pattern suggests potential hardware issues.
+</Callout>
+
+<Tabs items={["2023-09-07", "2023-06-08", "2023-05-30", "2023-05-04"]}>
+  <Tab value="2023-09-07">
+    ### 2023-09-07 ZFS Dataset Stalled
+    
+    **Context:** Day after switching images.openfoodfacts.org back to ovh3.
+    
+    **Symptoms:**
+    - Images.openfoodfacts.org down alert
+    - Nginx restart failed with zombie processes
+    - Processes couldn't be killed (I/O wait state)
+    - File listing worked, but content access hung
+    - ZFS pool status showed READ error on sdb
+    
+    **Resolution:** Hard reboot required.
+    
+    [Slack Discussion](https://openfoodfacts.slack.com/archives/C01F18SQ8F7/p1694089024775499)
+  </Tab>
+  
+  <Tab value="2023-06-08">
+    ### 2023-06-08 ZFS Dataset Stalled
+    
+    **Symptoms:**
+    - Nginx images not responding
+    - off.net also affected
+    - ZFS dataset stopped working at 00:50 UTC
+    
+    **Resolution:** Hard reboot (no symptoms in logs).
+    
+    [Slack Discussion](https://openfoodfacts.slack.com/archives/C1FPYCWM7/p1686298752505019)
+  </Tab>
+  
+  <Tab value="2023-05-30">
+    ### 2023-05-30 ZFS Dataset Stalled
+    Hard reboot required.
+  </Tab>
+  
+  <Tab value="2023-05-04">
+    ### 2023-05-04 ZFS Dataset Stalled
+    Hard reboot required.
+  </Tab>
+</Tabs>
+
+## Related Issues
+
+<Cards>
+  <Card 
+    title="Disk Hardware Issues" 
+    description="See 2023-07-16 Disk sdc errors report"
+    href="./reports/2023-07-16-ovh3-sdc-broken.md"
+  />
+</Cards>

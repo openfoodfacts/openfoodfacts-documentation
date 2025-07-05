@@ -1,0 +1,24 @@
+---
+title: "Web Pages"
+description: "Instructions for using pages from the openfoodfacts-web repository in your local development environment to access complete translations and content."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+To avoid messing the product-opener repository with translations of web pages, we moved most pages in [openfoodfacts-web repository](https://github.com/openfoodfacts/openfoodfacts-web) specifically in the lang/ directory.
+
+This repo only has a really minimal lang directory named lang-default.
+
+## Setting up web content locally
+
+If you want to have all contents locally, you should first clone openfoodfacts-web repo locally, and then:
+
+<Steps>
+<Step title="Using Docker">
+If you are using docker, you can set the `WEB_RESOURCES_PATH` env variable to a relative or absolute path leading to openfoodfacts-web directory.
+</Step>
+<Step title="Using symlinks">
+Else, make symlink `lang` point to openfoodfacts-web `lang` directory, and `html/off_web_html` point to openfoodfacts-web `html` directory.
+</Step>
+</Steps>

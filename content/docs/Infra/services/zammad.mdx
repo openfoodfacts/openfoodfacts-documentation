@@ -1,0 +1,292 @@
+---
+title: "Zammad Overview"
+description: "This document provides an overview of Zammad, the support tool used by Open Food Facts. It covers its installation, accessibility, underlying services, and configuration details, including Elasticsearch heap memory settings for optimal performance."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Zammad Support System
+
+<Card title="Customer Support Platform" description="Zammad ticketing system for Open Food Facts support">
+
+[Zammad](https://zammad.org/) is our comprehensive customer support and ticketing tool, providing a centralized platform for handling user inquiries and support requests.
+
+**Access URL:** [https://support.openfoodfacts.org/](https://support.openfoodfacts.org/)
+
+</Card>
+
+## Current Infrastructure
+
+<Callout type="warn">
+The current installation is hosted at CQuest's home location and should be migrated to our main infrastructure.
+</Callout>
+
+<Card title="Current Hosting Details" description="Temporary infrastructure setup requiring migration">
+
+### Access Information
+
+<Tabs items={["Connection", "Location", "Migration Status"]}>
+  <Tab value="Connection">
+    ### SSH Access
+    
+    **Host:** `freebox.computel.fr`  
+    **Port:** `12922`
+    
+    ```bash title="SSH Connection"
+    ssh freebox.computel.fr -p 12922
+    ```
+  </Tab>
+  
+  <Tab value="Location">
+    ### Infrastructure Details
+    
+    - **Hosting:** CQuest's home location
+    - **Container Type:** LXC container within VM
+    - **Status:** Temporary hosting solution
+  </Tab>
+  
+  <Tab value="Migration Status">
+    ### Migration Requirements
+    
+    <Steps>
+      <Step title="Assessment">
+        Evaluate current installation and data
+      </Step>
+      
+      <Step title="Target Infrastructure">
+        Identify appropriate hosting location in main infrastructure
+      </Step>
+      
+      <Step title="Migration Planning">
+        Plan data migration and service transition
+      </Step>
+      
+      <Step title="DNS Updates">
+        Update DNS records for seamless transition
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+</Card>
+
+## Installation Details
+
+<Card title="Package-Based Installation" description="Standard Zammad package deployment">
+
+### Installation Method
+
+The system was installed using the official Zammad package following the [installation documentation](https://docs.zammad.org/en/latest/install/package.html).
+
+### Installation Benefits
+
+<Cards>
+  <Card title="Standard Deployment" description="Uses official package management" />
+  <Card title="System Integration" description="Integrates with systemd services" />
+  <Card title="Update Path" description="Clear upgrade path for future versions" />
+</Cards>
+
+</Card>
+
+## Service Architecture
+
+<Card title="Multi-Service Architecture" description="Distributed service components for scalability">
+
+### Service Components
+
+<Tabs items={["Active Services", "Service Structure", "Database Backend"]}>
+  <Tab value="Active Services">
+    ### Primary Services
+    
+    The operational services (with `-1` suffix):
+    
+    <Steps>
+      <Step title="Web Interface">
+        **zammad-web-1.service** - Main web application
+      </Step>
+      
+      <Step title="WebSocket Server">
+        **zammad-websocket-1.service** - Real-time communication
+      </Step>
+      
+      <Step title="Background Worker">
+        **zammad-worker-1.service** - Background job processing
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab value="Service Structure">
+    ### Service Organization
+    
+    <Callout type="info">
+    All services begin with the name `zammad-`. Services without the `-1` suffix are placeholder services that run `sleep infinity`.
+    </Callout>
+    
+    **Active Services Pattern:** `zammad-*-1.service`  
+    **Placeholder Services:** `zammad-*.service` (inactive)
+  </Tab>
+  
+  <Tab value="Database Backend">
+    ### PostgreSQL Database
+    
+    - **Database:** PostgreSQL for primary data storage
+    - **Integration:** Native Zammad PostgreSQL support
+    - **Performance:** Optimized for ticket and user data
+  </Tab>
+</Tabs>
+
+</Card>
+
+## Elasticsearch Configuration
+
+<Card title="Search Engine Configuration" description="Elasticsearch setup for advanced search capabilities">
+
+### Container-Specific Configuration
+
+<Callout type="warn">
+Because Zammad runs in an LXC container, Elasticsearch heap memory size must be configured manually.
+</Callout>
+
+### Memory Configuration
+
+<Steps>
+  <Step title="Configuration File">
+    Create memory configuration file:
+    ```bash title="Memory Configuration Path"
+    /etc/elasticsearch/jvm.options.d/memory.options
+    ```
+  </Step>
+  
+  <Step title="Memory Setting">
+    Set appropriate heap size:
+    ```bash title="Recommended Memory Setting"
+    -Xms600m
+    -Xmx600m
+    ```
+  </Step>
+  
+  <Step title="Service Restart">
+    Restart Elasticsearch service to apply changes
+  </Step>
+</Steps>
+
+### Memory Recommendations
+
+<Tabs items={["Current Setting", "Scaling", "Monitoring"]}>
+  <Tab value="Current Setting">
+    **Current Configuration:** 600MB heap memory
+    
+    This setting provides good performance for the current support volume.
+  </Tab>
+  
+  <Tab value="Scaling">
+    ### Future Scaling
+    
+    - **Light Usage:** 512MB - 600MB
+    - **Medium Usage:** 1GB - 2GB  
+    - **Heavy Usage:** 2GB+ (consider migration)
+  </Tab>
+  
+  <Tab value="Monitoring">
+    ### Performance Monitoring
+    
+    - Monitor Elasticsearch logs for memory warnings
+    - Watch for garbage collection issues
+    - Monitor search performance metrics
+  </Tab>
+</Tabs>
+
+</Card>
+
+## System Components
+
+<Cards>
+  <Card title="Web Application" description="Main Zammad web interface for ticket management" />
+  <Card title="WebSocket Service" description="Real-time updates and notifications" />
+  <Card title="Background Workers" description="Email processing and automated tasks" />
+  <Card title="PostgreSQL" description="Primary database for tickets and user data" />
+  <Card title="Elasticsearch" description="Advanced search and indexing capabilities" />
+</Cards>
+
+## Migration Considerations
+
+<Card title="Infrastructure Migration Planning" description="Moving Zammad to main infrastructure">
+
+### Migration Requirements
+
+<Steps>
+  <Step title="Data Assessment">
+    - PostgreSQL database size and structure
+    - File attachments and stored documents
+    - Elasticsearch indices and search data
+  </Step>
+  
+  <Step title="Service Dependencies">
+    - Email integration configuration
+    - Authentication system integration
+    - External webhook configurations
+  </Step>
+  
+  <Step title="Infrastructure Planning">
+    - Target server selection (containerized deployment)
+    - Network configuration and SSL certificates
+    - Backup and disaster recovery setup
+  </Step>
+  
+  <Step title="Migration Execution">
+    - Data migration testing
+    - DNS cutover planning
+    - Service validation and testing
+  </Step>
+</Steps>
+
+</Card>
+
+## Operational Guidelines
+
+<Tabs items={["Maintenance", "Troubleshooting", "Security"]}>
+  <Tab value="Maintenance">
+    ### Regular Maintenance Tasks
+    
+    - **Service Health:** Monitor all Zammad services
+    - **Database Maintenance:** PostgreSQL vacuuming and statistics
+    - **Elasticsearch:** Index optimization and cleanup
+    - **Updates:** Regular package updates and security patches
+  </Tab>
+  
+  <Tab value="Troubleshooting">
+    ### Common Issues
+    
+    - **Memory Issues:** Check Elasticsearch heap settings
+    - **Service Failures:** Verify all `-1` services are running
+    - **Search Problems:** Restart Elasticsearch service
+    - **Performance:** Monitor database and search performance
+  </Tab>
+  
+  <Tab value="Security">
+    ### Security Considerations
+    
+    - **SSL Configuration:** Ensure HTTPS for all connections
+    - **Database Security:** PostgreSQL access control
+    - **Container Security:** Regular security updates
+    - **Backup Security:** Secure backup storage and encryption
+  </Tab>
+</Tabs>
+
+## Related Documentation
+
+<Cards>
+  <Card 
+    title="Zammad Documentation" 
+    description="Official Zammad installation and configuration guide"
+    href="https://docs.zammad.org/en/latest/install/package.html"
+  />
+  <Card 
+    title="Support Portal" 
+    description="Access the live Zammad support system"
+    href="https://support.openfoodfacts.org/"
+  />
+</Cards>

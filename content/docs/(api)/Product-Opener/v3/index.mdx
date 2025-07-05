@@ -1,0 +1,75 @@
+---
+title: API v3
+description: Modern Open Food Facts API with enhanced capabilities and improved performance
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Callout } from 'fumadocs-ui/components/callout';
+
+# Open Food Facts API v3
+
+The next generation Open Food Facts API provides enhanced capabilities, improved performance, and modern RESTful design patterns. Built with developer experience in mind, API v3 offers cleaner endpoints and better data structures.
+
+<Callout type='info'>
+  API v3 represents the future of Open Food Facts APIs, featuring improved design, better error
+  handling, and enhanced developer experience.
+</Callout>
+
+## API Categories
+
+<Cards>
+  <Card
+    title='Read Requests'
+    description='Modern endpoints for retrieving product data with improved performance'
+    href='/docs/v3/read-requests'
+  />
+  <Card
+    title='Write Requests'
+    description='Enhanced endpoints for creating and updating product information'
+    href='/docs/v3/write-requests'
+  />
+</Cards>
+
+## Base URL
+
+All API v3 requests use the modern endpoint structure:
+
+```
+https://world.openfoodfacts.org/api/v3
+```
+
+## Key Improvements
+
+- **RESTful Design**: Clean, predictable URL patterns following REST conventions
+- **Better Performance**: Optimized queries and response times
+- **Enhanced Error Handling**: Detailed error responses with helpful debugging information
+- **Modern JSON**: Improved data structures and consistent field naming
+- **Validation**: Built-in request validation with clear error messages
+
+<Callout type='success'>
+  API v3 maintains compatibility with Open Food Facts data while providing a more modern developer
+  experience.
+</Callout>
+
+## Key Features
+
+- **Product Management**: Full CRUD operations for product data
+- **Image Handling**: Advanced image upload and management capabilities
+- **Taxonomy Support**: Better integration with Open Food Facts taxonomies
+- **Batch Operations**: Efficient handling of multiple product operations
+- **Schema Validation**: Built-in validation for data integrity
+
+## Migration from v2
+
+<Callout type='warn'>
+  While migrating from API v2 to v3, note that endpoint structures and some response formats have
+  changed. Review the documentation carefully.
+</Callout>
+
+## Getting Started
+
+Start with the [Product Retrieval](/docs/v3/read-requests) endpoints to understand the improved data structures and response formats in API v3.
+
+## Development Status
+
+API v3 is actively developed and may introduce new features and improvements. Check the changelog for updates and new capabilities.

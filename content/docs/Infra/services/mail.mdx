@@ -1,0 +1,352 @@
+---
+title: "Mail Infrastructure"
+description: "This document details the mail infrastructure at Open Food Facts, focusing on Proxmox Mail Gateway as a relay for all servers. It covers DKIM and SPF configurations, Google Workspace and Brevo integration, and client-side mail configurations for Exim4 and Postfix."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Mail on Open Food Facts Infrastructure
+
+<Callout type="info">
+Because mail is difficult to setup, we use [Proxmox Mail Gateway](https://www.proxmox.com/en/proxmox-mail-gateway) as a relay to all servers. It ensures correct SPF, but also it adds DKIM signature.
+</Callout>
+
+The DKIM and SPF records are configured on main domain *openfoodfacts.org*.
+
+<Callout type="note">
+While DKIM is specific (because Brevo and Google keys are distinct by construction), main SPF rule includes Brevo and Google servers.
+
+No server receives mail, but they should be able to send them.
+</Callout>
+
+<Callout type="warning" id="only-domain">
+**Important:** We ONLY support email addresses on primary domain (`openfoodfacts.org`) and we DO NOT support emails on sub domains (aka `xxx.openfoodfacts.org`).
+</Callout>
+
+## External Mail Services
+
+<Cards>
+<Card title="Google Workspace">
+We use Gmail for email boxes and groups with DKIM configuration
+</Card>
+<Card title="Brevo">
+We use Brevo to send newsletters with dedicated subdomain
+</Card>
+<Card title="Proxmox Mail Gateway">
+Central mail relay for all our servers
+</Card>
+</Cards>
+
+### Google Workspace
+
+<Callout type="info">
+We use Gmail for email boxes and groups.
+
+We have a DKIM record configured for google domain and sub-domains in the DNS, we also take into account in SPF rule. You can find the public key in google workspace admin console, under gmail.
+</Callout>
+
+### Brevo
+
+<Callout type="info">
+We use Brevo to send newsletters.
+
+We have a DKIM record configured for the Brevo domain in the DNS, we also take into account in SPF rule. They use the **hello.openfoodfacts.org** subdomain.
+</Callout>
+
+<Callout type="tip">
+You can find the public key if you are logged as admin in Brevo, in the top right corner menu, going in "Senders, domains and dedicated IPs". Clicking on domains, and then the hello.openfoodfacts.org domain, you can see the needed DNS records.
+</Callout>
+
+## Proxmox Mail Gateway
+
+<Card title="PMG Configuration">
+This is the `pmg` LXC VM (aka `102`) currently on `ovh1.openfoodfacts.org`.
+</Card>
+
+<Callout type="info">
+The install follows [procedure starting from a debian distribution](https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html#pmg_install_on_debian).
+</Callout>
+
+### Administration
+
+<Steps>
+<Step>
+**Create SSH Tunnel**
+You can access the administration of pmg by using a tunnel on ovh1:
+
+```bash title="SSH Tunnel"
+ssh -L 8006:10.1.0.102:8006 ovh1.openfoodfacts.org -N
+```
+</Step>
+
+<Step>
+**Connect to Web Interface**
+Then connect to https://localhost:8006 (beware the *s* of https!)
+
+You must have an account to connect to the service.
+</Step>
+</Steps>
+
+<Callout type="tip">
+The most important tools you will find is Administration where you can see queues of deferred mails or logs (on the administration entry).
+
+See https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html#_administration
+</Callout>
+
+### Configuration Options
+
+<Callout type="note">
+First bear in mind that even if proxmox mail gateway is built to handle outgoing and incoming emails, we want to use it only for outgoing emails.
+</Callout>
+
+<Cards>
+<Card title="Let's Encrypt">
+We registered a Let's Encrypt account with tech@openfoodfacts.org
+</Card>
+<Card title="Administrator">
+Administrator email is tech@openfoodfacts.org
+</Card>
+<Card title="Relay Configuration">
+Relay is set to smtp-relay.gmail.com (for incoming mails - though we shouldn't need it)
+</Card>
+<Card title="Port Configuration">
+- SMTP private port: `25`
+- Public port: `26`
+</Card>
+<Card title="Network Security">
+In networks tab, there are all servers IPs, though because of redirects, PMG sees each incoming request as issued by `10.1.0.1`
+</Card>
+<Card title="TLS">
+TLS (TLS tab) is enabled
+</Card>
+</Cards>
+
+<Callout type="info">
+**DKIM Configuration:**
+DKIM is configured with label `pmg-openfoodfacts`, with a key size of 2048, the public key was reported in DNS configuration.
+
+See also [installation report](./reports/2022-02-proxmox-mail-gateway-install.md)
+</Callout>
+
+### Network Redirects
+
+<Tabs>
+<Tab value="dns" label="DNS Configuration">
+- `pmg.openfoodfacts.org` is a CNAME to `ovh1.openfoodfacts.org`
+- `ovh1` IP address is reported in the SPF entry of the DNS
+- There is an entry for the DKIM key
+</Tab>
+
+<Tab value="iptables" label="Iptables Rules">
+An iptables rule on host (`ovh1`) redirects our server incoming IPs to the VM SMTP port (25). Private network address (corresponding to VM and docker ranges) are also redirected.
+
+To add a new machine:
+
+```bash title="Add Machine to Iptables"
+sudo iptables -t nat -A PREROUTING -s 213.36.253.206,213.36.253.208,146.59.148.140,51.210.154.203,1.210.32.79 -d pmg.openfoodfacts.org -p tcp --dport 25 -j DNAT --to 10.1.0.102:25
+```
+
+<Callout type="warning">
+Don't forget [to save iptables](./linux-server.md#iptables)
+</Callout>
+
+<Callout type="note">
+Note that the port 25 is in fact the private (trusted) port (not the public one, as we are not receiving emails). This is a tweak in default config.
+</Callout>
+</Tab>
+
+<Tab value="nginx" label="NGINX Proxy">
+The [NGINX reverse proxy](./nginx-reverse-proxy.md) (VM `101` on `ovh1`) proxies requests to `pmg.openfoodfacts.org` on port 80, to the proxmox mail gateway VM (`102`), this is needed for certificate generation through Let's Encrypt by the gateway.
+</Tab>
+</Tabs>
+
+### Testing Gateway Configuration
+
+<Tabs>
+<Tab value="simple" label="Simple Test">
+To do a simple test, you may use:
+
+```bash title="Simple Mail Test"
+echo "Subject: mail gateway test" | sudo sendmail -f alex@openfoodfacts.org -v alex@openfoodfacts.org
+```
+
+Directly on the `pmg` server.
+</Tab>
+
+<Tab value="quality" label="Quality Test">
+To test quality of the configuration we can send a mail to a service such as https://www.mail-tester.com/
+
+<Steps>
+<Step>
+I temporarily added an iptables rule to enable my personal IP address to be forwarded to the mail gateway (as for servers)
+</Step>
+<Step>
+I added pmg.openfoodfacts.org as an SMTP server in thunderbird and configured my personal address to use it
+</Step>
+<Step>
+I sent a mail as requested by the service
+</Step>
+<Step>
+I could then check the result
+</Step>
+<Step>
+I undo iptables and thunderbird config
+</Step>
+</Steps>
+</Tab>
+</Tabs>
+
+## Server Configuration
+
+<Callout type="info">
+On client servers (be it a VM, a host or a standalone server), we use either exim4 or postfix.
+</Callout>
+
+### Email Aliases
+
+<Callout type="note">
+We normally keep a standard `/etc/aliases`. We have specific groups to receive emails: `root@openfoodfacts.org` and `off@openfoodfacts.org`
+
+You may add some redirections for non standard users to one of those groups.
+</Callout>
+
+<Callout type="warning">
+Do not forget to run `newaliases`, and [`etckeeper`](./linux-server.md#etckeeper) and restart the postfix service (`postfix.service` and/or `postfix@-.service`).
+</Callout>
+
+<Tabs>
+<Tab value="postfix" label="Postfix Configuration">
+<Steps>
+<Step>
+**Run Configuration**
+```bash title="Configure Postfix"
+dpkg-reconfigure postfix
+```
+</Step>
+
+<Step>
+**Configuration Options**
+- Configuration type: **satellite system**
+- Mail name: **openfoodfacts.org**
+- Relayhost: **pmg.openfoodfacts.org** (with an exception for ovh1/ovh2/ovh3: 10.1.0.102)
+- Mail for root: **tech@openfoodfacts.org**
+- Other dest: **blank**
+- Sync: **no**
+- Local network: **leave default**
+- Use procmail: **no**
+- Default for the rest
+</Step>
+</Steps>
+
+<Callout type="warning">
+**Important:** On some systems, the real daemon is not `postfix.service` but `postfix@-.service`
+
+So, for example, if you touch `/etc/alias` (with after `sudo newaliases`) you need to `systemctl reload postfix@-.service`
+</Callout>
+</Tab>
+
+<Tab value="exim4" label="Exim4 Configuration">
+<Steps>
+<Step>
+**Run Configuration**
+```bash title="Configure Exim4"
+dpkg-reconfigure exim4-config
+```
+</Step>
+
+<Step>
+**Configuration Options**
+- Mail sent by smarthost; no local mail
+- Mail name: **openfoodfacts.org**
+- Listen: **127.0.0.1**
+- Other dest: **off1.free.org**
+- Visible domain name: **openfoodfacts.org**
+- IP address smarthost: **pmg.openfoodfacts.org**
+- Keep DNS queries minimal (dial-up): **no**
+- Local: **maildir format in home**
+- Split config: **no**
+</Step>
+</Steps>
+</Tab>
+</Tabs>
+
+### Testing Mail Configuration
+
+<Tabs>
+<Tab value="sendmail" label="Using Sendmail">
+```bash title="Test with Sendmail"
+echo "Subject: sendmail test xxx" | sudo sendmail -f alex@openfoodfacts.org -v root
+```
+</Tab>
+
+<Tab value="mailx" label="Using Mailx">
+With the `bsd-mailx` package installed:
+
+```bash title="Test with Mailx"
+echo "test message from xxx" | mailx -s "test root xxx" -r alex@openfoodfacts.org root
+```
+
+<Callout type="note">
+Note that we use bsd-mailx and not the alias from mailutils as it does not behave the same. Notably it won't use /etc/mailname to complete email address which leads to problems.
+</Callout>
+</Tab>
+</Tabs>
+
+### Troubleshooting
+
+If you do not receive the email on expected group, here are some checks:
+
+<Steps>
+<Step>
+**Check Local Logs**
+- `/var/log/exim/` if you use `exim4`
+- `/var/log/mail*` if you use postfix
+</Step>
+
+<Step>
+**Check PMG VM Logs**
+- `/var/log/mail*` on pmg VM
+</Step>
+
+<Step>
+**Test Network Connectivity**
+```bash title="Network Tests"
+ping pmg.openfoodfacts.org
+nc -vz pmg.openfoodfacts.org 25
+```
+
+<Callout type="info">
+If `nc` command fails, you might have firewall problems: verify iptables on your machine and on ovh1. (`nc` command belongs to `netcat-traditional` or `netcat-openbsd` packages)
+</Callout>
+</Step>
+
+<Step>
+**Manual SMTP Test**
+You can even try to send a mail manually using SMTP protocol using `nc pmg.openfoodfacts.org` and following a tutorial about [sending email with netcat](https://www.linuxjournal.com/content/sending-email-with-netcat).
+
+If it succeeds this may mean you have a problem in username to email address translation.
+</Step>
+
+<Step>
+**Check Configuration Files**
+- `/etc/mailname` contains `openfoodfacts.org` (see also [debian wiki](https://wiki.debian.org/EtcMailName))
+- Check `/etc/aliases` and `/etc/email-addresses` if you use exim4
+</Step>
+</Steps>
+
+## References
+
+<Cards>
+<Card title="Debian Reference" href="https://www.debian.org/doc/manuals/debian-reference/ch06.en.html#_the_mail_system">
+Comprehensive mail system documentation
+</Card>
+<Card title="Debian Wiki - Postfix" href="https://wiki.debian.org/Postfix">
+Postfix-specific configuration guide
+</Card>
+<Card title="Debian Wiki - Exim" href="https://wiki.debian.org/Exim">
+Exim-specific configuration guide
+</Card>
+</Cards>

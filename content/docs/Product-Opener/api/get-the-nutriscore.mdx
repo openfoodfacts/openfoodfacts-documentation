@@ -1,0 +1,221 @@
+---
+title: "Get Nutri-Score"
+description: "Complete tutorial for implementing Nutri-Score retrieval including v2 transition, data completion flows, and user experience best practices."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+## Introduction
+
+<Callout type="info">
+**Complete Implementation Flow**
+
+If you can't get the information on a specific product, you can get your user to send photos and data, that will then be processed by Open Food Facts AI and contributors to get the computed result you want to show them.
+</Callout>
+
+<Steps>
+<Step>
+**Implement the complete flow** so users get immediate results with minimal effort on their side
+</Step>
+<Step>
+**Ensure user satisfaction** by handling all possible data states
+</Step>
+<Step>
+**Follow the technical guide** in the [product addition tutorial](../tutorials/adding-missing-products.mdx) for required operations
+</Step>
+</Steps>
+
+## Display Nutri-Score knowledge panels - All the logic below in 5 lines of code!
+
+<Cards>
+<Card 
+  title="Dart Package Integration" 
+  description="Knowledge Panels are already implemented in the Dart package"
+  href="#"
+/>
+<Card 
+  title="JSON API Implementation" 
+  description="Simple to implement from the JSON API"
+  href="#"
+/>
+<Card 
+  title="Future-Ready Knowledge" 
+  description="Consume present and future knowledge from Open Food Facts"
+  href="#"
+/>
+</Cards>
+
+## Using the official visual assets of the Nutri-Score
+
+<Callout type="warn">
+**Official Assets Only**
+
+Please use only the official assets to display the Nutri-Score. You can get v1 logos here: [NutriScore variants](https://drive.google.com/drive/u/1/folders/1SL2hgqYHSLMhYjMze9nYXV9GOdGMBgc)
+</Callout>
+
+## Getting ready for Nutri-Score V2
+
+<Callout type="info">
+**Nutri-Score V2 Updates**
+
+- **New computation method** now requires the ingredient list, a category, and nutrition table
+- **Transition period logo** available to indicate you're using the new computation
+- **Language-dependent assets** - contact us if your language isn't supported
+</Callout>
+
+<Callout type="warn">
+**Asset Translation**
+
+Don't translate assets on your own. Contact us to ensure proper official translation support.
+</Callout>
+
+### New transition assets for Nutri-Score V2
+
+```bash title="Nutri-Score V2 Asset URLs"
+https://static.openfoodfacts.org/images/attributes/dist/nutriscore-a-new-en.svg
+https://static.openfoodfacts.org/images/attributes/dist/nutriscore-b-new-en.svg
+https://static.openfoodfacts.org/images/attributes/dist/nutriscore-c-new-en.svg
+https://static.openfoodfacts.org/images/attributes/dist/nutriscore-d-new-en.svg
+https://static.openfoodfacts.org/images/attributes/dist/nutriscore-e-new-en.svg
+```
+
+### Available languages
+
+<Tabs items={['Supported Languages', 'Language Replacement']}>
+<Tab value="Supported Languages">
+- Dutch (nl)
+- French (fr) 
+- German (de)
+- Luxembourgish (lb)
+- English (en)
+</Tab>
+<Tab value="Language Replacement">
+Replace the language code in the URL:
+`nutriscore-e-new-en.svg` → `nutriscore-e-new-fr.svg`
+</Tab>
+</Tabs>
+
+<Callout>
+**Need Additional Languages?**
+
+Contact [reuse@openfoodfacts.org](mailto:reuse@openfoodfacts.org) for unofficial courtesy translations.
+</Callout>
+
+<Callout type="warn">
+**Version Consistency**
+
+Make sure you use v2 assets when showing v2 values.
+</Callout>
+
+## Data completion flow
+
+Here are the different messages to use according to the state:
+
+<Steps>
+<Step title="If category is present but no Nutri-Score">
+```javascript title="Condition Check"
+if ("en:categories-completed" in states_tags && nutrition_grade === null) {
+  // Category is complete but no Nutri-Score available
+}
+```
+<Callout type="info">
+  "We could not compute a Nutri-Score for this product. It might be that the category is an exception. If you believe this is an error, you can email contact@thenameofyourapp.org"
+</Callout>
+<Callout type="info">
+**Resources:**
+- List of exceptions: [Santé Publique France PDF](https://www.santepubliquefrance.fr/content/download/150262/file/QR_scientifique_technique_150421.pdf)
+- Get states with: `https://world.openfoodfacts.org/api/v0/product/3414280980209.json?fields=ecoscore_grade,states_tags`
+</Callout>
+</Step>
+<Step title="If category is present but no nutrition">
+```javascript title="Condition Check"
+if ("en:categories-completed" in states_tags && "en:nutrition-facts-to-be-completed" in states_tags) {
+  // Category complete but nutrition facts needed
+}
+```
+<Callout type="info">
+  **Prompt:** "Add nutrition facts to compute the Nutri-Score"
+</Callout>
+<Callout type="info">
+  **Add a one-click option** to indicate no nutrition facts on the packaging: "This product doesn't have nutrition facts"
+</Callout>
+<Callout type="info">
+  **Automated Nutrition Extraction**
+
+  We now have a convenient API to automatically extract nutrition from an image
+</Callout>
+</Step>
+<Step title="If nutrition is present but no category">
+```javascript title="Condition Check"
+if "en:categories-to-be-completed" in states_tags AND "en:nutrition-facts-completed" in states_tags
+```
+<Callout type="info">
+  **Prompt:** "Add a category to compute the Nutri-Score"
+</Callout>
+</Step>
+<Step title="Help the user add the category if it is missing">
+<Card title="Robotoff API Integration" href="https://docs.google.com/document/d/1IoDy0toQrrqtWHvDYp2rEVw84Yq1J0x2pt-0RGTm7h0/edit">
+You can use our Robotoff API to get your users to validate a prediction
+</Card>
+</Step>
+<Step title="If no category and no nutrition">
+```javascript title="Condition Check"
+if "en:categories-to-be-completed" in states_tags AND "en:nutrition-facts-to-be-completed" in states_tags
+```
+<Callout type="info">
+  **Prompt:** "Add nutrition facts and a category to compute the Nutri-Score"
+</Callout>
+<Callout type="info">
+**Automated Nutrition Extraction**
+
+We now have a convenient API to automatically extract nutrition from an image
+</Callout>
+</Step>
+<Step title="Add a one-click option to indicate no nutrition facts on the packaging">
+```text title="User Option"
+"This product doesn't have nutrition facts"
+```
+</Step>
+<Step title="If the nutrition image is missing">
+```javascript title="Condition Check"
+if "en:nutrition-photo-to-be-selected" in states_tags OR "en:photos-to-be-uploaded" in states_tags
+```
+</Step>
+<Step title="If the nutrition image is obsolete using the image refresh API">
+<Card title="Image Refresh API" href="https://github.com/openfoodfacts/api-documentation/issues/15">
+Learn more about refreshing obsolete nutrition images
+</Card>
+</Step>
+</Steps>
+
+## Add Nutri-Score disclaimers
+
+<Steps>
+<Step title="A message if fibers are missing">
+```json title="Fiber Warning Message"
+msgctxt "nutrition_grade_fr_fiber_warning"
+msgid "Warning: the amount of fiber is not specified, their possible positive contribution to the grade could not be taken into account."
+```
+</Step>
+<Step title="A message if fruit/nuts are missing">
+```json title="Fruits/Vegetables/Nuts Warning"
+msgctxt "nutrition_grade_fr_no_fruits_vegetables_nuts_warning"
+msgid "Warning: the amount of fruits, vegetables and nuts is not specified, their possible positive contribution to the grade could not be taken into account."
+```
+</Step>
+<Step title="A message if fruits/nuts is an estimate from ingredients">
+```json title="Ingredients Estimate Warning"
+msgctxt "nutrition_grade_fr_fruits_vegetables_nuts_estimate_warning"
+msgid "Warning: the amount of fruits, vegetables and nuts is not specified on the label, it was estimated from the list of ingredients: %d%"
+```
+</Step>
+<Step title="A message if fruits/nuts is an estimate from category">
+```json title="Category Estimate Warning"
+msgctxt "nutrition_grade_fr_fruits_vegetables_nuts_from_category_warning"
+msgid "Warning: the amount of fruits, vegetables and nuts is not specified on the label, it was estimated from the category (%s) of the product: %d%"
+```
+</Step>
+</Steps>

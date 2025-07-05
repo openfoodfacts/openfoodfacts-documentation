@@ -1,0 +1,121 @@
+---
+title: "Redis Usage"
+description: "This document outlines the various uses of Redis within the Open Food Facts infrastructure, including its role as a production instance for event streams, its integration with Matomo, and details on its installation and related reports."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Redis Usage
+
+Redis is a versatile database that acts as a synchronization layer between different services in our infrastructure.
+
+<Callout type="info">
+We use Redis in various places across the Open Food Facts infrastructure for caching, event streaming, and inter-service communication.
+</Callout>
+
+## Redis Deployments
+
+<Cards>
+  <Card title="Production Instance" href="#production-instance-for-off">
+    Dedicated Redis for event streams and service synchronization
+  </Card>
+  <Card title="Matomo Integration" href="#matomo">
+    Redis queues for handling analytics traffic
+  </Card>
+  <Card title="Cross-Datacenter" href="#cross-datacenter-access">
+    Proxied access between OVH and Free datacenters
+  </Card>
+</Cards>
+
+## Production Instance for OFF
+
+We have a production instance of Redis dedicated to Open Food Facts operations.
+
+<Callout type="note">
+Currently used for the event stream function to enable other services like off-queries, Robotoff, and search-a-licious to update their data.
+</Callout>
+
+### Cross-Datacenter Access
+
+<Steps>
+  <Step>
+    **Stunnel Proxy**
+    
+    Redis is proxied between OVH and Free datacenter through [stunnel](./stunnel.md).
+  </Step>
+  
+  <Step>
+    **Connection from OVH**
+    
+    To use from ovh1/ovh2, connect to stunnel client server on standard Redis port:
+    
+    ```bash title="Redis Connection"
+    # Connect to Redis through stunnel
+    redis-cli -h 10.1.0.113 -p 6379
+    ```
+  </Step>
+</Steps>
+
+### Installation Details
+
+<Tabs>
+  <Tab value="deployment" label="Deployment">
+    ### Container Deployment
+    
+    - **Location**: Container 122 on the OFF Proxmox cluster
+    - **Data Storage**: `/var/lib/redis` is in a specific dataset
+    - **OS**: Simple Debian deployment
+  </Tab>
+  
+  <Tab value="configuration" label="Configuration">
+    ### Configuration Management
+    
+    <Callout type="tip">
+    Specific configurations are stored in `confs/off-redis` directory.
+    </Callout>
+    
+    **System Service**:
+    - Override systemd service to send emails on failure
+    - Automated monitoring and alerting
+  </Tab>
+</Tabs>
+
+## Matomo Integration
+
+<Callout type="info">
+[Matomo also uses Redis Queues](./matomo.md) to handle high traffic volumes efficiently.
+</Callout>
+
+<Steps>
+  <Step>
+    **Queue Processing**
+    
+    Redis manages analytics data queues for Matomo.
+  </Step>
+  
+  <Step>
+    **Traffic Management**
+    
+    Handles high-volume analytics data processing.
+  </Step>
+</Steps>
+
+## Related Documentation
+
+<Cards>
+  <Card title="Stunnel Setup" href="./reports/2024-01-04-setting-up-stunnel.md">
+    Setting up Stunnel for secure Redis connectivity
+  </Card>
+  <Card title="Production Install" href="./reports/2024-02-08-prod-redis-install.md">
+    Production Redis installation process and configuration
+  </Card>
+  <Card title="Stunnel Overview" href="./stunnel.md">
+    Stunnel configuration and management
+  </Card>
+  <Card title="Matomo Integration" href="./matomo.md">
+    How Matomo uses Redis for queue management
+  </Card>
+</Cards>

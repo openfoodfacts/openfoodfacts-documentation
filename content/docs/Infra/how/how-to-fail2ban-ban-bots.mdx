@@ -1,0 +1,175 @@
+---
+title: "How to Ban Bots with Fail2ban"
+description: "Learn how to configure and use Fail2ban to ban malicious bots from your servers. This guide covers installing Fail2ban, setting up various filters, creating a manual ban jail, and managing banned IP addresses."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# How to Ban Bots with Fail2ban
+
+Learn how to configure and use Fail2ban to protect your servers from malicious bots and automated attacks.
+
+<Callout type="info">
+Fail2ban monitors log files and automatically bans IP addresses that show malicious behavior, such as too many authentication failures or bot-like activity.
+</Callout>
+
+## Installation and Setup
+
+<Steps>
+  <Step>
+    **Install Fail2ban**
+    
+    ```bash title="Install Fail2ban"
+    sudo apt install fail2ban
+    ```
+  </Step>
+  
+  <Step>
+    **Debian 11+ Configuration**
+    
+    <Callout type="note">
+    On Debian 11, additional configuration is required. Follow [How to install fail2ban on debian 11+](./how-to-fail2ban-debian-11+.md)
+    </Callout>
+  </Step>
+</Steps>
+
+## Standard Filter Configuration
+
+<Callout type="info">
+We install these filters with standard configurations across our infrastructure.
+</Callout>
+
+<Cards>
+  <Card title="nginx-botsearch" href="#standard-filters">
+    Bans bots that blindly search for old software installations
+  </Card>
+  <Card title="nginx-http-auth" href="#standard-filters">
+    Bans bots making too many failed authentication attempts
+  </Card>
+  <Card title="sshd" href="#standard-filters">
+    Protects SSH connections from brute force attacks
+  </Card>
+  <Card title="proxmox_ui" href="#standard-filters">
+    Protects Proxmox web interface from unauthorized access
+  </Card>
+</Cards>
+
+## Manual Ban Jail Configuration
+
+Create a jail for manually banning problematic IP addresses that automated filters might miss.
+
+<Steps>
+  <Step>
+    **Enable Manual Ban Jail**
+    
+    ```bash title="Enable nginx-manual-ban Jail"
+    ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/jail.d/nginx-manual-ban.local /etc/fail2ban/jail.d/
+    systemctl restart fail2ban
+    ```
+  </Step>
+  
+  <Step>
+    **How It Works**
+    
+    - Uses `nginx-botsearch` filter on a fake log file
+    - Allows manual IP addition to the jail
+    - Permanent ban time for manually added IPs
+  </Step>
+</Steps>
+
+<Callout type="note">
+**Persistence**: Fail2ban (recent versions) is naturally persistent across reboots using a SQLite database in `/var/lib/fail2ban/`.
+</Callout>
+
+## Managing Fail2ban
+
+<Tabs>
+  <Tab value="status" label="Status & Monitoring">
+    ### Status and Logs
+    
+    ```bash title="Check Overall Status"
+    fail2ban-client status  # See all running jails
+    ```
+    
+    ```bash title="Check Specific Jail"
+    fail2ban-client status sshd  # Status for specific jail: banned addresses, etc.
+    ```
+    
+    ```bash title="Monitor Logs"
+    tail -f /var/log/fail2ban.log  # Watch fail2ban activity in real-time
+    ```
+  </Tab>
+  
+  <Tab value="management" label="IP Management">
+    ### View Banned IPs
+    
+    ```bash title="List Banned IPs"
+    sudo fail2ban-client status nginx-manual-ban
+    ```
+    
+    ### Ban an IP Address
+    
+    ```bash title="Manual IP Ban"
+    sudo fail2ban-client set nginx-manual-ban banip <IP>
+    ```
+    
+    <Callout type="tip">
+    Supports IP ranges: `123.456.789.1/24`
+    </Callout>
+    
+    ### Unban an IP Address
+    
+    ```bash title="Unban IP"
+    sudo fail2ban-client set nginx-manual-ban unbanip <IP>
+    ```
+  </Tab>
+</Tabs>
+
+## Common Operations
+
+<Cards>
+  <Card title="Monitor Activity" href="#monitoring">
+    Check jail status and banned IPs
+  </Card>
+  <Card title="Manual Bans" href="#manual-management">
+    Add problematic IPs to ban list
+  </Card>
+  <Card title="Troubleshooting" href="#troubleshooting">
+    Debug filter issues and unban legitimate IPs
+  </Card>
+</Cards>
+
+### Best Practices
+
+<Steps>
+  <Step>
+    **Regular Monitoring**
+    
+    Check fail2ban status regularly to ensure it's working correctly.
+  </Step>
+  
+  <Step>
+    **Log Review**
+    
+    Monitor `/var/log/fail2ban.log` for patterns and false positives.
+  </Step>
+  
+  <Step>
+    **Whitelist Management**
+    
+    Ensure legitimate IP ranges are whitelisted to prevent accidental bans.
+  </Step>
+  
+  <Step>
+    **Filter Tuning**
+    
+    Adjust filter sensitivity based on actual attack patterns observed.
+  </Step>
+</Steps>
+
+<Callout type="warning">
+Be careful when manually banning IP ranges. Always verify you're not blocking legitimate traffic or your own access paths.
+</Callout>

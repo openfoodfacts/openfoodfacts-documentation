@@ -1,0 +1,27 @@
+---
+title: "Nutrition Data Structure"
+description: "Explanation of how nutrition data is structured in Open Food Facts, including per-serving vs per-100g calculations and nutrient fields"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+
+<Callout type="info">
+  This document outlines the structure of nutrition data within Open Food Facts, detailing how product-level and nutrient-specific fields are organized.
+</Callout>
+
+## Product-Level Fields
+
+- `nutrition_data_per`: Indicates whether nutrition data is presented per "serving" or "100g".
+- `serving_size`: The serving size as entered from the product packaging.
+- `serving_quantity`: The computed serving quantity in grams.
+
+## Nutrient-Specific Fields
+
+For each individual nutrient, the following fields are available:
+
+- `_value`: The raw value as entered.
+- `_unit`: The unit of the entered value.
+- `_100g`: The amount of the nutrient per 100g, in its original unit.
+- `_serving`: The amount of the nutrient per serving, in a normalized unit.
+- `_no suffix_`: The entered value in a normalized unit.
+- `_label`: The entered label for an unknown nutrient (if applicable).

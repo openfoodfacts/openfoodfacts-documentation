@@ -1,0 +1,112 @@
+---
+title: "Explain Taxonomies"
+description: "Understand how taxonomies organize item categorization in Search-a-licious. This guide covers listing taxonomies, defining taxonomy fields, using them for autocompletion, and the technical details of their implementation in Elasticsearch."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Explain Taxonomies
+
+<Callout type="info">
+Taxonomies are a way to organize categorization of items.
+</Callout>
+
+Normally, a taxonomy is about a specific field. For each possible value, it defines translations in different languages, and also possible synonyms (in each language). For each entry we have a canonical identifier.
+
+<Callout>
+A taxonomy also organizes the entries within a direct acyclic graph (a hierarchy but with possibility of multiple parents, though always avoiding cycles). For example, it may help describe that a salmon is a marine fish as well as a freshwater fish, and an oily fish.
+</Callout>
+
+<Callout type="tip">
+It can be used to help users find items using a specific field, in their language, even if they use a synonym for it.
+</Callout>
+
+## Listing Taxonomies
+
+<Card title="Taxonomy Configuration Reference" href="./ref-config/searchalicious-config-schema.html#indices_additionalProperties_taxonomy">
+If you plan to use taxonomies, you should first list them in the taxonomy section of the configuration
+</Card>
+
+<Callout type="warning">
+Taxonomies must come in a JSON format, that can be downloaded at a particular URL.
+</Callout>
+
+### JSON Structure
+
+The data in the JSON must contain an object, where:
+
+<Steps>
+<Step title="Entry Keys">
+
+Each key corresponds to the id of the taxonomy entries
+
+</Step>
+<Step title="Entry Values">
+
+The value is an Object, with the following fields (none are mandatory):
+
+- **`name`**: an Object associating language code, with the entry name in the language (useful for translating the entry)
+- **`synonyms`**: an Object associating language code, with an array of synonyms for this entry in this language
+
+</Step>
+</Steps>
+
+## Taxonomy Fields
+
+<Card title="Field Configuration Guide" href="./explain-configuration.md#fields">
+As you define your fields in the configuration, you can specify that a field is a taxonomy field
+</Card>
+
+When you specify `type: taxonomy`, you also have to provide the following fields:
+
+<Cards>
+<Card title="taxonomy_name" description="The name of the taxonomy (as defined in the configuration)" />
+<Card title="synonyms_search" description="If true, adds a full text subfield that enables using synonyms and translations to match this term" />
+</Cards>
+
+## Autocompletion with Taxonomies
+
+<Callout>
+When you import taxonomies, they can be used to provide autocompletion in multiple ways.
+</Callout>
+
+<Steps>
+<Step title="Web Component Integration">
+
+The web components can use them to add values to facets, or to provide suggestions in the search bar.
+
+</Step>
+<Step title="API Autocompletion">
+
+<Card title="Autocompletion API" href="../ref-openapi/#operation/taxonomy_autocomplete_autocomplete_get">
+You can also use the autocompletion API directly
+</Card>
+
+</Step>
+</Steps>
+
+## Importing Taxonomies
+
+<Card title="Import Command Reference" href="../devs/ref-python/cli.html#python3-m-app-import-taxonomies">
+If you defined taxonomies, you must import them using the import-taxonomies command
+</Card>
+
+## Technical Details on Taxonomy Fields
+
+<Callout type="tip">
+A taxonomy field is stored in Elasticsearch as an object.
+</Callout>
+
+For each language it has a specific field, but in this field we just store the taxonomy entry id (e.g., for organic, we always store `en:organic`). The analyzer is almost set to `keyword` which means it won't be tokenized (but it is not completely true, as we also transform hyphen to underscore).
+
+<Callout type="warning">
+**Field Value Requirements**
+
+The value of this field must be considered a unique token by Elasticsearch standard tokenizer. So you should only use letters, numbers, colons and the underscore.
+</Callout>
+As an exception, we allow the hyphen character, transforming it to "_" before tokenization.
+
+But those field have a specific *search analyzer*, so that when you enter a search query,
+The query text is tokenized using standard analyzer, then lower cased, and we then look for synonyms in the taxonomy.

@@ -1,0 +1,97 @@
+---
+title: "Nutrition Photo Selection"
+description: "This document explains the process of selecting nutrition photos for products, focusing on detecting nutrition tables using string matching and machine learning. It details the criteria for candidate images, the role of nutrient mentions, and the integration with object detection for cropping."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Nutrition Photo Selection
+
+<Callout title="Objective">
+Every product should have a nutrition photo selected if nutrition facts are visible on the packaging. For multilingual products, we only want a nutrition table to be selected for the main language of the product to avoid unnecessary image duplication, except in the rare cases where we have distinct table for different languages.
+</Callout>
+
+## Detection Methods
+
+We detect nutrition tables using a combination of approaches:
+
+<Cards>
+  <Card
+    title="String Matching"
+    description="Using regex patterns to detect nutrient mentions and values"
+  />
+  <Card
+    title="Machine Learning"
+    description="Using ML models to identify nutrition-related content"
+  />
+</Cards>
+
+### Nutrient Detection Insights
+
+We use two types of insights to identify nutrition content:
+
+<Steps>
+<Step>
+### Nutrient Mention Insights
+We use `nutrient_mention` insights [^nutrient_mention_insight] to fetch all nutrient mentions, in all supported languages:
+
+- **Nutrient names**: "sugar", "carbohydrates", "nutritional information", "energy", etc.
+- **Nutrient values**: Numeric values with units
+</Step>
+
+<Step>
+### Nutrient Insights
+We also use `nutrient` insights [^nutrient_insight], that detect nutrient name and values that are consecutive in the OCR string, to assign a higher priority to images that also have `nutrient` insights in addition to `nutrient_mention` insights (`priority=1` instead of `priority=2`).
+</Step>
+</Steps>
+
+## Selection Criteria
+
+The detected nutrient names are associated with one or more language (ex: if we detect 'energie', it may be in French, German or Dutch). We check for each image and each detected language if the following rules apply, in which case the image is a candidate for selection as a nutrition table photo [^nutrition_image_importer]:
+
+<Callout title="Candidate Requirements">
+All of the following conditions must be met:
+</Callout>
+
+- **Nutrient names**: At least 4 nutrient name mentions ("sugar", "energy",...) in the target language
+- **Nutrient values**: At least 3 nutrient value mentions ("15 g", "252 kJ",...)
+- **Energy values**: At least one energy nutrient value (value ending with "kJ" or "kcal")
+- **Language match**: The detected language must be the product main language
+
+## Object Detection Integration
+
+<Card
+  title="Nutrition Table Cropping"
+  description="If available, we use the nutrition-table object detector prediction to find a crop of the nutrition table. We only use the cropping information if there is only one nutrition table detected with confidence ≥0.9."
+/>
+
+## Insight Generation
+
+<Steps>
+<Step>
+### Condition Check
+If all the selection criteria apply, we generate an insight.
+</Step>
+
+<Step>
+### Uniqueness
+There is maximum one insight generated per product.
+</Step>
+
+<Step>
+### Prioritization
+We generate candidates using the most recent images first (images are sorted by decreasing image IDs), so that the most recent images are considered first: we want the most up-to-date photo possible for nutrition table.
+</Step>
+</Steps>
+
+<Callout type="info" title="Image Prioritization">
+Note that we generate candidates using the most recent images first (images are sorted by decreasing image IDs), so that the most recent images are considered first: we want the most up-to-date photo possible for nutrition table.
+</Callout>
+
+---
+
+[^nutrient_mention_insight]: see `find_nutrient_mentions` in `robotoff.prediction.ocr.nutrient`
+[^nutrient_insight]: see `find_nutrient_values` in `robotoff.prediction.ocr.nutrient`
+[^nutrition_image_importer]: see `NutritionImageImporter.generate_candidates_for_image` in `robotoff.insights.importer`

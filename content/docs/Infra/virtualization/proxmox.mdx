@@ -1,0 +1,266 @@
+---
+title: "Proxmox Management"
+description: "This document provides an overview of Proxmox, covering its use for VM management, backup strategies, storage synchronization, network configuration, user management, and troubleshooting common issues. It also includes details on creating and managing containers."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Proxmox
+
+<Callout title="Virtualization Platform">
+On ovh1 and ovh2 we use Proxmox to manage VMs.
+</Callout>
+
+<Callout type="warn" title="Documentation Status">
+**TODO** this page is really incomplete!
+</Callout>
+
+## Proxmox Knowledge & Resources
+
+<Cards>
+  <Card title="Proxmox Wiki" href="https://pve.proxmox.com/wiki" description="Official documentation and comprehensive guides" />
+  <Card title="Community Scripts" href="https://community-scripts.github.io/ProxmoxVE/" description="Community scripts to ease Proxmox utilization" />
+</Cards>
+
+### Community Scripts Usage
+
+<Callout type="info" title="Production Consideration">
+Those scripts might not be suited for production environment; they're better suited for home servers.
+</Callout>
+
+**Useful Applications:**
+- **Testing**: Install test services very quickly
+- **Learning**: Study good practices when installing software
+
+**Script Categories:**
+- Proxmox management: post-install, automate CT updates, etc.
+- Docker and Kubernetes tools
+- Web apps: Nextcloud, Keycloak, Nginx proxy manager, Grafana, Prometheus
+- Development tools: VS Code Server, AI tools
+- Platform solutions: Yunohost (containing dozens of apps)
+
+## Backup Strategy
+
+<Callout type="warn" title="Important Backup Policy">
+**IMPORTANT:** We don't use standard Proxmox backup[^previous_backups] (see Datacenter -> backup).
+</Callout>
+
+Instead we use [syncoid / sanoid](./sanoid) to snapshot and synchronize data to other servers.
+
+[^previous_backups]: Previously every VM / CT is backed up twice a week using general Proxmox backup, in a specific ZFS dataset
+
+## Storage Synchronization
+
+<Callout title="Replication Alternative">
+We don't use standard Proxmox replication of storages, because it is incompatible with using [syncoid / sanoid](./sanoid), as it removes snapshots on destination and does not allow choosing destination location.
+</Callout>
+
+<Callout type="warn" title="Manual Intervention Required">
+It means that restoring a container / VM won't be automatic and will need manual intervention.
+</Callout>
+
+### Replication (Deprecated)
+
+<Callout type="info" title="Previous Setup">
+Previously, VM and container storage were regularly synchronized to ovh3 (and eventually to ovh1/2).
+</Callout>
+
+**Management:**
+- Replication can be seen in the web interface, clicking on "replication" section on a particular container / VM
+- Managed with command line `pvesr` (PVE Storage replication)
+- See [official documentation](https://pve.proxmox.com/wiki/Storage_Replication)
+
+**Adding Replication:**
+<Steps>
+<Step>
+### Access Replication Menu
+In the Replication menu of the container, click "Add"
+</Step>
+
+<Step>
+### Configure Target
+Target: the server you want to replicate to
+</Step>
+
+<Step>
+### Set Schedule
+Schedule: */5 if you want every 5 minutes (takes less than 10 seconds, thanks to ZFS)
+</Step>
+</Steps>
+
+## Network Configuration
+
+<Callout title="Virtual Bridges">
+We configure network through virtual bridges (`vmbr<n>`) that are themselves linked to a physical network device.
+</Callout>
+
+<Callout type="info" title="NGINX Proxy">
+Also note that [NGINX proxy](#nginx-proxy) has its own IP address on a separate bridge, so that it can get network traffic directly.
+</Callout>
+
+**Container Network Setup:**
+- Local containers normally set their network to be `10.1.0.<ct number>/24`
+- They route through `10.0.0.1` (or 2) and define the route to `10.0.0.1`
+- All managed by Proxmox
+
+### OVH Side Configuration
+
+<Tabs defaultValue="ovh" items={["ovh", "off2"]}>
+  <Tab value="ovh">
+    **vmbr0**: Bridge for the local network  
+    **vmbr1**: Public interface
+
+    | Name | Type | Active | Autostart | VLAN | Ports/Slaves | Bond Mode | CIDR | Gateway | Comment |
+    |------|------|--------|-----------|------|--------------|-----------|------|---------|---------|
+    | enp5s0f0 | Network Device | Yes | No | No | | | | | |
+    | enp5s0f1 | Network Device | Yes | No | No | | | | | |
+    | vmbr0 | Linux Bridge | Yes | Yes | No | enp5s0f1 | | 10.0.0.1/8 2001:41d0:0203:948c:1::1/80 | | |
+    | vmbr1 | Linux Bridge | Yes | Yes | No | enp5s0f0 | | 146.59.148.140/24 2001:41d0:0203:948c:0::1/80 | 146.59.148.254 2001:41d0:0203:94ff:ffff:ffff:ffff | |
+  </Tab>
+  
+  <Tab value="off2">
+    **vmbr0**: Public interface  
+    **vmbr1**: Bridge for the local network
+
+    | Name | Type | Active | Autostart | VLAN | Ports/Slaves | Bond Mode | CIDR | Gateway | Comment |
+    |------|------|--------|-----------|------|--------------|-----------|------|---------|---------|
+    | eno1 | Network Device | Yes | No | No | | | | | |
+    | eno2 | Network Device | Yes | No | No | | | | | |
+    | vmbr0 | Linux Bridge | Yes | Yes | No | eno1 | | 213.36.253.208/27 | 213.36.253.222 | |
+    | vmbr1 | Linux Bridge | Yes | Yes | No | eno2 | | 10.0.0.2/8 | | Internal network with VM and other free servers |
+
+    This corresponds to settings in `/etc/network/interfaces` (generated by PVE):
+
+    ```bash title="Network Interface Configuration"
+    auto lo
+    iface lo inet loopback
+
+    iface eno1 inet manual
+
+    iface eno2 inet manual
+
+    auto vmbr0
+    iface vmbr0 inet static
+    	address 213.36.253.208/27
+    	gateway 213.36.253.222
+    	bridge-ports eno1
+    	bridge-stp off
+    	bridge-fd 0
+
+    auto vmbr1
+    iface vmbr1 inet static
+    	address 10.0.0.2/8
+    	bridge-ports eno2
+    	bridge-stp off
+    	bridge-fd 0
+    	post-up echo 1 > /proc/sys/net/ipv4/ip_forward
+    	post-up   iptables -t nat -A POSTROUTING -s '10.1.0.0/16' -o vmbr0 -j MASQUERADE
+    	post-down iptables -t nat -D POSTROUTING -s '10.1.0.0/16' -o vmbr0 -j MASQUERADE
+    #Internal network with VM and other free servers
+    ```
+
+    <Callout type="warn" title="Manual Configuration">
+    **FIXME**: I added the last lines (post-up/down) myself, not sure if PVE would normally add them by itself?
+    </Callout>
+  </Tab>
+</Tabs>
+
+### Firewall
+
+<Callout title="Host Firewall">
+We use Proxmox firewall on host. **FIXME** to be completed.
+</Callout>
+
+We have a masquerading rule for 10.1.0.1/24.
+
+## Users and Groups
+
+<Callout title="Minimal Access Control">
+We have a minimal set of users and groups.
+</Callout>
+
+**User Groups:**
+- **admin group**: For Proxmox admins (*Administrator Role*)
+- **ro_users**: Gives read-only access to the interface (*PVEAuditor Role*)
+
+**Access Management:**
+<Steps>
+<Step>
+### Create Users
+Put users (see users in Proxmox interface) in groups (see groups in Proxmox interface)
+</Step>
+
+<Step>
+### Assign Roles
+Give roles to users (see permissions in Proxmox interface)
+</Step>
+</Steps>
+
+## Post-Install Configuration
+
+### Repository Setup
+
+<Steps>
+<Step>
+### Remove Enterprise Repository
+```bash title="Remove Enterprise Repo"
+rm /etc/apt/sources.list.d/pve-enterprise.list
+```
+</Step>
+
+<Step>
+### Add No-Subscription Repository
+```bash title="Add Community Repo"
+echo "deb http://download.proxmox.com/debian/pve "$(lsb_release --short --codename)" pve-no-subscription" > /etc/apt/sources.list.d/pve-install-repo.list
+apt update
+```
+</Step>
+</Steps>
+
+### Additional Setup
+
+<Cards>
+  <Card title="SmartCTL" description="Verify smartctl is activated for disk monitoring" />
+  <Card title="Fail2ban" description="Install and configure fail2ban for security" />
+  <Card title="Backups" description="Don't forget to schedule backups" />
+</Cards>
+
+**Useful Resources:**
+- [Techno Tim Guide](https://techno-tim.github.io/posts/first-11-things-proxmox/)
+
+<Callout type="info" title="Additional Considerations">
+- IOMMU configuration (if needed)
+- Schedule [backups](#proxmox-backups)
+</Callout>
+
+## Troubleshooting
+
+### Container Issues
+
+<Callout type="warn" title="Common Container Problems">
+Some logs that may appear during container troubleshooting:
+</Callout>
+
+```log title="Mount Namespacing Error"
+systemd-networkd "Failed to set up mount namespacing" "/run/systemd/unit-root/proc" "Permission denied" lxc
+nov. 28 18:40:57 proxy systemd[123]: systemd-networkd.service: Failed to set up mount namespacing: /run/systemd/unit-root/proc: Permission denied
+nov. 28 18:40:57 proxy systemd[123]: systemd-networkd.service: Failed at step NAMESPACE spawning /lib/systemd/systemd-networkd: Permission denied
+```
+
+**Symptom:** Slow login time due to systemd-logind service being down:
+
+```log title="Login Service Timeout"
+Mar 29 10:37:53 proxy dbus-daemon[128]: [system] Failed to activate service 'org.freedesktop.login1': timed out (service_start_timeout=25000ms)
+Mar 29 10:42:43 proxy dbus-daemon[128]: [system] Failed to activate service 'org.freedesktop.login1': timed out (service_start_timeout=25000ms)
+```
+
+**Solution:** Just add nesting capability to the container and restart it.
+
+<Card
+  title="Related Thread"
+  href="https://discuss.linuxcontainers.org/t/apparmor-blocks-systemd-services-in-container/9812"
+  description="Discussion on AppArmor blocking systemd services in containers"
+/>

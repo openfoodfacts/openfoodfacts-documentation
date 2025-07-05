@@ -1,0 +1,105 @@
+---
+title: "Comparing Sodas"
+description: "Tutorial showing how to use Open Food Facts API to compare different soda products for nutrition and additives information"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+<Callout>
+**Use Case Scenario**
+
+**Dave** wants his app to make an API call to provide Anna the information she needs to make a conscious choice when buying sodas.
+</Callout>
+
+## Authentication and Header
+
+<Callout type="info">
+**No Authentication Required**
+
+To make the API query that returns the products that might be interesting for Anna, Dave doesn't need to authenticate (`READ` request).
+</Callout>
+
+<Callout type="warn">
+**User-Agent Header Required**
+
+He has to add a `User-Agent` HTTP Header with the name of his app, the version, system and a URL (if any), so that he doesn't get blocked by mistake.
+</Callout>
+
+```json title="User-Agent Example"
+User-Agent: HealthyFoodChoices - Android - Version 1.0
+```
+
+## Subdomain
+
+Since Anna lives in NY, Dave wants to define the subdomain for the query as `us`. The subdomain automatically defines:
+- Country code (`cc`) 
+- Language of the interface (`lc`)
+
+```javascript title="Base URL"
+https://us.openfoodfacts.org
+```
+
+<Callout>
+**Region-Specific Results**
+
+The country code determines that only the products sold in the US are displayed. The language of the interface for the country code `us` is English.
+</Callout>
+
+## API Version
+
+The current version number of the Open Food Facts API is v0.
+
+```javascript title="Versioned API Endpoint"
+https://us.openfoodfacts.org/api/v0
+```
+
+## Product Barcode
+
+After the version number, the word "product", followed by its barcode must be added:
+
+```javascript title="Product Endpoint Structure"
+https://us.openfoodfacts.org/api/v0/product/
+```
+
+## Product Comparison Example
+
+The app will provide Anna with information about additives, sugars and nutriscore of different types of colas, to help her make her purchase decision.
+
+<Steps>
+<Step>
+**Product Selection**: Anna selects the products she wants to compare in the application
+</Step>
+<Step>
+**Barcode Retrieval**: The app retrieves the corresponding barcodes
+</Step>
+<Step>
+**API Calls**: Make API calls for each product
+</Step>
+</Steps>
+
+### Selected Products for Comparison
+
+<Cards>
+<Card title="Pepsico Pepsi Cola Soda" href="https://us.openfoodfacts.org/api/v0/product/01223004">
+Barcode: 01223004
+</Card>
+<Card title="Coca-Cola Classic Coke Soft Drink" href="https://us.openfoodfacts.org/api/v0/product/04963406">
+Barcode: 04963406
+</Card>
+<Card title="Diet Pepsi" href="https://us.openfoodfacts.org/api/v0/product/069000019832">
+Barcode: 069000019832
+</Card>
+<Card title="Coca-Cola Zero" href="https://us.openfoodfacts.org/api/v0/product/5000112519945">
+Barcode: 5000112519945
+</Card>
+</Cards>
+
+```http title="API Calls for Product Comparison"
+GET https://us.openfoodfacts.org/api/v0/product/01223004
+GET https://us.openfoodfacts.org/api/v0/product/04963406
+GET https://us.openfoodfacts.org/api/v0/product/069000019832
+GET https://us.openfoodfacts.org/api/v0/product/5000112519945
+```

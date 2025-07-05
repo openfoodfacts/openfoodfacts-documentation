@@ -1,0 +1,157 @@
+---
+title: "Infrastructure Overview"
+description: "This document provides an overview of the Open Food Facts infrastructure, detailing server locations at Free Datacenter and OVH, network configurations including web traffic proxies and Stunnel, and the main services hosted on each server."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Infrastructure Overview
+
+## Server Locations
+
+<Callout title="Hosting Providers">
+We have servers hosted by multiple providers, with generous sponsorship from key organizations.
+</Callout>
+
+### Sponsored Infrastructure
+
+<Cards>
+  <Card title="Free Datacenter" href="./free-datacenter" description="Sponsored by free.org - electricity, network and server hosting" />
+  <Card title="OVH Servers" href="./ovh-servers" description="Three bare metal servers sponsored by OVH Foundation" />
+  <Card title="Moji Datacenter" href="./moji-datacenter" description="High-performance server sponsored by Moji" />
+</Cards>
+
+#### Free Datacenter Servers
+- **off1.openfoodfacts.org** - Main Open Food Facts production server
+- **off2.openfoodfacts.org** - Database and backend services
+
+#### OVH Foundation Servers
+- **ovh1.openfoodfacts.org** - Proxmox cluster, small services
+- **ovh2.openfoodfacts.org** - Docker services (staging/production)
+- **ovh3.openfoodfacts.org** - Storage server, image serving
+
+### Paid Infrastructure
+
+<Cards>
+  <Card title="Kimsufi" href="./ovh-servers" description="ks1.openfoodfacts.org at Kimsufi" />
+  <Card title="Hetzner" href="./hetzner-servers" description="Temporary servers at Hetzner" />
+</Cards>
+
+## Network Architecture
+
+### Web Traffic Proxies
+
+<Steps>
+<Step>
+### OVH Services Proxy
+Most services are hosted on OVH and pass through an nginx proxy (see [proxmox - HTTP Reverse Proxy](./proxmox#http-reverse-proxy)) hosted on VM 101 on ovh1 which has a bridge with its own IP.
+</Step>
+
+<Step>
+### Product Opener Proxy
+Product opener instances (openfoodfacts.org and its cousins) have their own proxy on [off1](#off1).
+</Step>
+
+<Step>
+### Static Content Proxy
+A specific nginx is also set on [ovh3](#ovh3) to serve images and some static resources.
+</Step>
+</Steps>
+
+### Network Services
+
+<Cards>
+  <Card title="Stunnel" description="For clear text TCP services transiting through (also to avoid IP rules)" />
+  <Card title="IP Tables" description="Access control and service proxying" />
+</Cards>
+
+#### Access Control
+<Callout type="info" title="IP Tables Rules">
+We limit access to certain services through IP tables rules:
+- **off2**: MongoDB access filtered by IP to enable access from OVH
+- **ovh1**: IP tables rules proxy PGM service requests from off1 and off2
+</Callout>
+
+## Server Details
+
+### off1 (Free Datacenter)
+
+<Card title="Main Production Server" description="Located at free.org - Main Open Food Facts services">
+
+**Current Setup:**
+- Bare-metal Debian installation (migration to Proxmox planned)
+
+**Main Services:**
+- Open Food Facts server main nginx (distribution install)
+- All Product Opener instances: Open Food Facts / Open Products Facts / etc.
+
+**Secondary Services:**
+- https://cestemballepresdechezvous.fr/
+</Card>
+
+### off2 (Free Datacenter)
+
+<Card title="Database Server" description="Located at free.org - Main database infrastructure">
+
+**Current Setup:**
+- Bare-metal Debian installation (migration to Proxmox planned)
+
+**Main Services:**
+- Main MongoDB instance supporting all product data for Product Opener instances on [off1](#off1)
+</Card>
+
+### ovh1 (OVH Strasbourg - sbg3)
+
+<Card title="Proxmox Services" description="Small services and reverse proxy">
+
+**Setup:**
+- Uses [Proxmox](./proxmox) virtualization
+- Part of Proxmox cluster
+
+**Services (Proxmox containers):**
+- [HTTP reverse proxy](./proxmox#http-reverse-proxy)
+- [Proxmox mail gateway](./mail)
+- Blog
+- [Odoo (connect)](./odoo)
+</Card>
+
+### ovh2 (OVH Roubaix - rbx8)
+
+<Card title="Docker Services" description="Staging and production Docker environments">
+
+**Setup:**
+- Part of [Proxmox](./proxmox) cluster
+- Two big QEMU VMs hosting Docker services
+
+**Environments:**
+- **Staging VM**: Development and testing services
+- **Production VM**: Live production services
+
+See [Docker architecture](./docker_architecture) for details.
+</Card>
+
+### ovh3 (OVH Roubaix - rbx7)
+
+<Card title="Storage Server" description="Main storage and static content serving">
+
+**Main Contents:**
+- Replication of all production data: images, products, etc.
+- Nginx to serve images (and some static resources as fallback)
+- ZFS volumes for ovh1 and ovh2 services
+
+<Callout type="success" title="Storage Hub">
+This server acts as our main storage hub, providing backup and serving capabilities for static content.
+</Callout>
+</Card>
+
+### osm45 (Moji)
+
+<Card title="IPv6 Infrastructure" description="Located at Moji datacenter">
+
+**Network Configuration:**
+- IPv6 only (+ IPv4 internal network)
+
+See [Moji Datacenter](./moji-datacenter) for complete details.
+</Card>

@@ -1,0 +1,48 @@
+---
+title: "How to Debug Backend"
+description: "Learn how to debug the Search-a-licious backend application. This guide provides instructions on stopping the default API instance, setting breakpoints with pdb, and running the uvicorn server in a way that supports debugging."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# How to Debug the Backend App
+
+<Callout type="warning">
+**Default API Limitations**
+
+By default, the API runs on uvicorn which uses autoreloading and more than one thread, also it does not have a tty. So if you use `pdb.set_trace()` you won't be able to access the console.
+</Callout>
+
+## Debugging Process
+
+<Steps>
+<Step title="Stop API Instance">
+
+```bash title="Stop Default API"
+docker compose stop api
+```
+
+</Step>
+<Step title="Add Breakpoint">
+
+Add a `pdb.set_trace()` at the point you want to debug in your code.
+
+</Step>
+<Step title="Launch Debug Server">
+
+```bash title="Start Debug Server"
+docker compose run --rm --use-aliases api uvicorn app.api:app --proxy-headers --host 0.0.0.0 --port 8000 --reload
+```
+
+<Callout type="tip">
+^[use_aliases]: The `--use-aliases` flag ensures proper network connectivity between containers.
+</Callout>
+
+</Step>
+<Step title="Test Your Code">
+
+Go to the URL you want to test and the debugger will break at your set breakpoint.
+
+</Step>
+</Steps>

@@ -1,0 +1,118 @@
+---
+title: "Logo ANN System"
+description: "This document describes the Logo-ANN system, which extracts, vectorizes, and searches for nearest neighbors of logos in product images. It covers logo extraction using object detection, embedding with CLIP, and approximate nearest neighbors search using Elasticsearch."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Logo-ANN System
+
+<Callout type="info">
+  About 1600 products are added every day to the database. Each product having multiple logos on its packaging, thousands of new logos are added every day as valuable sources of information. These logos are often useful to get important data on products (origin, brand, quality, label, etc...).
+</Callout>
+
+A logo automatic detection from images and a logo manual classification features are implemented in Robotoff.
+
+## System Overview
+
+<Steps>
+  <Step>
+    ### Logo Extraction
+    
+    Extract logos from product images using object detection models.
+  </Step>
+
+  <Step>
+    ### Logo Embedding
+    
+    Vectorize each logo using computer vision models.
+  </Step>
+
+  <Step>
+    ### Nearest Neighbor Search
+    
+    Search for each logo's nearest neighbors in an index containing all embedded logos.
+  </Step>
+</Steps>
+
+## Logo Extraction
+
+When a new image is added to the database, Robotoff applies an object detection model to extract logos from it.
+
+<Callout type="info">
+  **Model**: "universal-logo-detector" - An ONNX model trained by Open Food Facts on numerous data from the database.
+  
+  For implementation details, see `robotoff.workers.tasks.import_image.run_logo_object_detection`
+</Callout>
+
+**Model Output:**
+- **Bounding boxes**: Detection zones for each logo in the image
+- **Categories**: Classification as "brand" or "label"
+
+<Card title="Model Information" href="https://github.com/openfoodfacts/robotoff-models/releases" description="Learn more about the universal-logo-detector model in the robotoff-models release" />
+
+## Logo Embedding
+
+After the detection of a logo, Robotoff uses a computer vision model to vectorize it.
+
+<Cards>
+  <Card title="CLIP Model" href="https://huggingface.co/docs/transformers/model_doc/clip" description="CLIP-vit-base-patch32 model developed and trained by OpenAI" />
+  <Card title="Embedding Benchmark" href="https://openfoodfacts.github.io/robotoff/research/logo-detection/embedding-benchmark/" description="Benchmark results that led to choosing CLIP-vit-base-patch32" />
+</Cards>
+
+**Technical Details:**
+- **Model**: [CLIP-vit-base-patch32](https://huggingface.co/docs/transformers/model_doc/clip)
+- **Usage**: Only the vision part of the model is used for logo vectorization
+- **Serving**: Model is loaded with [Triton](https://developer.nvidia.com/nvidia-triton-inference-server) and used only for inference
+- **Storage**: Embeddings are stored in Robotoff's PostgreSQL database
+
+<Callout type="note">
+  With the logo crop of the initial image as input, CLIP returns an embedding and Robotoff stores it in its PostgreSQL database.
+  
+  For implementation details, see `robotoff.workers.tasks.import_image.save_logo_embeddings`
+</Callout>
+
+## Approximate Nearest Neighbors Search
+
+Each generated embedding is stored in an ElasticSearch index for nearest neighbor search. 
+
+<Callout type="info">
+  ElasticSearch allows for approximate nearest neighbor (ANN) search with an HNSW (Hierarchical Navigable Small World) index, which leads to fast and accurate search.
+</Callout>
+
+<Card title="ANN Benchmark" href="https://openfoodfacts.github.io/robotoff/research/logo-detection/ann-benchmark/" description="Performance benchmarks for the ANN search implementation" />
+
+### Process Flow
+
+<Steps>
+  <Step>
+    ### Store Embedding
+    
+    After storing the embedding in the index, a search for its nearest neighbors is performed.
+  </Step>
+
+  <Step>
+    ### Store Neighbors
+    
+    The IDs of these neighbors are stored in the Robotoff PostgreSQL database.
+  </Step>
+
+  <Step>
+    ### API Access
+    
+    The nearest neighbor search is available via an API and used by annotation tools.
+  </Step>
+</Steps>
+
+### API Integration
+
+<Cards>
+  <Card title="Search API" href="https://robotoff.openfoodfacts.org/api/v1/ann/search/185171?count=50" description="Nearest neighbor search API endpoint" />
+  <Card title="Hunger Games" href="https://hunger.openfoodfacts.org/" description="Annotation game that uses the ANN search API" />
+</Cards>
+
+<Callout type="note">
+  For API implementation details, see `robotoff.app.api.ANNResource`
+</Callout>

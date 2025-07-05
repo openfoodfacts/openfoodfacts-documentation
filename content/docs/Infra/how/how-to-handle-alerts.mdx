@@ -1,0 +1,183 @@
+---
+title: "Handle Alerts"
+description: "This document outlines how to diagnose and resolve common infrastructure alerts. It covers issues like high Postfix mail queues, outdated ZFS snapshots, and excessive snapshots, providing steps for troubleshooting and remediation."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# How to Handle Alerts
+
+This document describes how to diagnose and fix common infrastructure alerts in our Open Food Facts infrastructure.
+
+<Callout type="info">
+Each alert type has specific diagnostic procedures and remediation steps. Follow the appropriate section for your alert.
+</Callout>
+
+## Alert Types
+
+<Cards>
+  <Card title="Postfix Mail Queue" href="#postfix-mail-messages-queue-is-high-slack">
+    High deferred mail queue in Proxmox Mail Gateway
+  </Card>
+  <Card title="Sanoid Errors" href="#sanoid_check-sh-error-on-server-email">
+    ZFS snapshot management issues and failures
+  </Card>
+</Cards>
+
+## Postfix Mail Messages Queue is High (Slack)
+
+<Callout type="warning">
+This alert is fired by Prometheus when the Proxmox Mail Gateway deferred mail queue has many messages.
+</Callout>
+
+This happens because of bad email addresses that can't be delivered.
+
+<Steps>
+  <Step>
+    **Access Mail Gateway**
+    
+    [Connect to the Proxmox Mail Gateway interface](./mail.md#administration)
+  </Step>
+  
+  <Step>
+    **Check Deferred Mails**
+    
+    Go to *Administration* → *Queues* and check deferred mails by target domains.
+  </Step>
+  
+  <Step>
+    **Analyze Issues**
+    
+    Identify the root cause:
+    - Users with full inbox or non-existent addresses
+    - Emails to `root@<server>.openfoodfacts.org` (server relay misconfiguration)
+  </Step>
+  
+  <Step>
+    **Remediate**
+    
+    - Remove invalid users (also from newsletter/Brevo)
+    - Fix server relay configuration or install `bsd-mailx` package
+    - See [mail configuration for servers](./mail.md#servers)
+  </Step>
+  
+  <Step>
+    **Clean Up**
+    
+    Empty the queues after resolving issues.
+  </Step>
+</Steps>
+
+<Callout type="tip">
+**Extract Email Addresses**: Use browser console with this JavaScript expression to extract deferred email addresses:
+
+```javascript title="Email Extraction Script"
+$x('//div[contains(@id, "pmgPostfixMailQueue")]//div[@class="x-grid-item-container"]//table//td[4]//text()').map(x => x.nodeValue).join("\n")
+```
+</Callout>
+
+## sanoid_check.sh Error on `<server>` (Email)
+
+This alert is fired by the `sanoid_check.sh` script which runs regularly via systemd on every host using ZFS.
+
+<Callout type="info">
+There are two possible alerts for each dataset, each requiring different diagnostic approaches.
+</Callout>
+
+<Tabs>
+  <Tab value="old-snapshot" label="Old Snapshot">
+    ### Last Snapshot `<dataset>` is Too Old
+
+    <Steps>
+      <Step>
+        **Identify Dataset Type**
+        
+        Determine if the dataset is:
+        - A replication of a dataset on another host
+        - A local dataset
+      </Step>
+      
+      <Step>
+        **For Replicated Datasets**
+        
+        ```bash title="Check Replication Status"
+        # List snapshots
+        zfs list -t snapshot path/of/dataset
+        
+        # Check syncoid logs
+        journalctl -xe -u syncoid
+        ```
+        
+        <Callout type="note">
+        Synchronization issues might be transient due to large data volumes. Sometimes the last snapshot has been removed on the source.
+        </Callout>
+        
+        See [How to resync ZFS replication](./how-to-resync-zfs-replication.md) if needed.
+      </Step>
+      
+      <Step>
+        **For Local Datasets**
+        
+        ```bash title="Check Local Configuration"
+        # List snapshots
+        zfs list -t snapshot path/of/dataset
+        
+        # Check sanoid logs
+        journalctl -xe -u sanoid
+        ```
+        
+        Verify sanoid configuration:
+        - [Add snapshot specification](./sanoid.md#sanoid-snapshot-configuration)
+        - Check [`no_sanoid_checks` directives](./sanoid.md#sanoid-checks)
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab value="too-many" label="Too Many Snapshots">
+    ### `<dataset>` Has Too Many Snapshots
+
+    <Callout type="warning">
+    Snapshot accumulation can lead to increased disk usage and needs immediate attention.
+    </Callout>
+
+    <Steps>
+      <Step>
+        **List Current Snapshots**
+        
+        ```bash title="Check Snapshot Count"
+        zfs list -t snapshot path/of/dataset
+        ```
+      </Step>
+      
+      <Step>
+        **Identify Root Cause**
+        
+        Common causes:
+        - Missing retention policy in `sanoid.conf`
+        - External source adding snapshots
+        - Sanoid cleanup failures
+      </Step>
+      
+      <Step>
+        **Check Sanoid Logs**
+        
+        ```bash title="Review Logs"
+        journalctl -xe -u sanoid
+        ```
+        
+        Look for cleanup failures or configuration issues.
+      </Step>
+      
+      <Step>
+        **Fix Configuration**
+        
+        - Configure retention policy in `sanoid.conf`
+        - Remove external snapshot sources
+        - Resolve sanoid cleanup issues
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>

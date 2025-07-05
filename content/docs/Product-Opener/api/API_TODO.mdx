@@ -1,0 +1,259 @@
+---
+title: "API TODO"
+description: "TODO list for Open Food Facts OpenAPI documentation improvements, missing fields, and required sections"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+<Callout type="info">
+**API Enhancement Priority**
+
+This document outlines the missing fields and sections that need to be added to the Open Food Facts API v2 for improved functionality and documentation completeness.
+</Callout>
+
+## Missing Product Response Fields (v2 API Priority)
+
+The following fields need to be included in the product response for the v2 API. They are organized by category for better understanding:
+
+<Tabs items={['General', 'Nutrition', 'Fatty Acids', 'Vitamins', 'Minerals']}>
+
+<Tab value="General">
+### General Product Information
+
+**Basic Fields:**
+- `url` - Product URL
+- `created_datetime` - Creation timestamp
+- `last_modified_datetime` - Last modification timestamp
+- `image_small_url` - Small image URL
+
+**Categorization & Labels:**
+- `categories_fr` - French categories
+- `labels_fr` - French labels
+- `main_category` - Primary category
+- `main_category_fr` - Primary category (French)
+
+**Geographic & Additional Info:**
+- `first_packaging_code_geo` - Geographic packaging code
+- `cities` - Associated cities
+- `countries_fr` - Countries (French)
+- `no_nutriments` - Nutriment availability flag
+- `additives` - Additives information
+- `ingredients_from_palm_oil` - Palm oil ingredients
+</Tab>
+
+<Tab value="Nutrition">
+### Nutritional Components (per 100g)
+
+**Proteins & Carbohydrates:**
+- `casein_100g` - Casein content
+- `serum-proteins_100g` - Serum proteins
+- `nucleotides_100g` - Nucleotides
+- `fiber_100g` - Dietary fiber
+
+**Sugars & Carbohydrates:**
+- `sucrose_100g` - Sucrose
+- `glucose_100g` - Glucose  
+- `fructose_100g` - Fructose
+- `lactose_100g` - Lactose
+- `maltose_100g` - Maltose
+- `maltodextrins_100g` - Maltodextrins
+- `starch_100g` - Starch
+- `polyols_100g` - Sugar alcohols
+
+**Other Nutrients:**
+- `caffeine_100g` - Caffeine content
+- `taurine_100g` - Taurine content
+- `ph_100g` - pH level
+- `fruits-vegetables-nuts_100g` - Fruits/vegetables/nuts percentage
+</Tab>
+
+<Tab value="Fatty Acids">
+### Fatty Acids (per 100g)
+
+**General Fats:**
+- `fat_100g` - Total fat
+- `trans-fat_100g` - Trans fat
+- `cholesterol_100g` - Cholesterol
+
+**Saturated Fatty Acids:**
+- `butyric-acid_100g` - Butyric acid
+- `caproic-acid_100g` - Caproic acid
+- `caprylic-acid_100g` - Caprylic acid
+- `capric-acid_100g` - Capric acid
+- `lauric-acid_100g` - Lauric acid
+- `myristic-acid_100g` - Myristic acid
+- `palmitic-acid_100g` - Palmitic acid
+- `stearic-acid_100g` - Stearic acid
+- `arachidic-acid_100g` - Arachidic acid
+- `behenic-acid_100g` - Behenic acid
+- `lignoceric-acid_100g` - Lignoceric acid
+- `cerotic-acid_100g` - Cerotic acid
+- `montanic-acid_100g` - Montanic acid
+- `melissic-acid_100g` - Melissic acid
+
+**Unsaturated Fatty Acids:**
+- `monounsaturated-fat_100g` - Monounsaturated fat
+- `polyunsaturated-fat_100g` - Polyunsaturated fat
+
+**Omega Fatty Acids:**
+- `omega-3-fat_100g` - Omega-3 fat
+- `alpha-linolenic-acid_100g` - Alpha-linolenic acid
+- `eicosapentaenoic-acid_100g` - EPA
+- `docosahexaenoic-acid_100g` - DHA
+- `omega-6-fat_100g` - Omega-6 fat
+- `linoleic-acid_100g` - Linoleic acid
+- `arachidonic-acid_100g` - Arachidonic acid
+- `gamma-linolenic-acid_100g` - Gamma-linolenic acid
+- `dihomo-gamma-linolenic-acid_100g` - Dihomo-gamma-linolenic acid
+- `omega-9-fat_100g` - Omega-9 fat
+- `oleic-acid_100g` - Oleic acid
+- `elaidic-acid_100g` - Elaidic acid
+- `gondoic-acid_100g` - Gondoic acid
+- `mead-acid_100g` - Mead acid
+- `erucic-acid_100g` - Erucic acid
+- `nervonic-acid_100g` - Nervonic acid
+</Tab>
+
+<Tab value="Vitamins">
+### Vitamins (per 100g)
+
+**Fat-Soluble Vitamins:**
+- `vitamin-a_100g` - Vitamin A
+- `vitamin-d_100g` - Vitamin D
+- `vitamin-e_100g` - Vitamin E
+- `vitamin-k_100g` - Vitamin K
+
+**Water-Soluble Vitamins:**
+- `vitamin-c_100g` - Vitamin C (Ascorbic acid)
+- `vitamin-b1_100g` - Vitamin B1 (Thiamine)
+- `vitamin-b2_100g` - Vitamin B2 (Riboflavin)
+- `vitamin-pp_100g` - Vitamin B3 (Niacin)
+- `vitamin-b6_100g` - Vitamin B6 (Pyridoxine)
+- `vitamin-b9_100g` - Vitamin B9 (Folate)
+- `vitamin-b12_100g` - Vitamin B12 (Cobalamine)
+- `biotin_100g` - Biotin (Vitamin B7)
+- `pantothenic-acid_100g` - Pantothenic acid (Vitamin B5)
+</Tab>
+
+<Tab value="Minerals">
+### Minerals & Trace Elements (per 100g)
+
+**Major Minerals:**
+- `calcium_100g` - Calcium
+- `phosphorus_100g` - Phosphorus
+- `magnesium_100g` - Magnesium
+- `potassium_100g` - Potassium
+- `chloride_100g` - Chloride
+- `bicarbonate_100g` - Bicarbonate
+
+**Trace Elements:**
+- `iron_100g` - Iron
+- `zinc_100g` - Zinc
+- `copper_100g` - Copper
+- `manganese_100g` - Manganese
+- `fluoride_100g` - Fluoride
+- `selenium_100g` - Selenium
+- `chromium_100g` - Chromium
+- `molybdenum_100g` - Molybdenum
+- `iodine_100g` - Iodine
+- `silica_100g` - Silica
+
+**Nutritional Scores:**
+- `carbon-footprint_100g` - Carbon footprint
+- `nutrition-score-fr_100g` - French nutrition score
+- `nutrition-score-uk_100g` - UK nutrition score
+</Tab>
+
+</Tabs>
+
+## Documentation Sections to be Added
+
+<Callout type="warn">
+**Documentation Gaps**
+
+The following sections are missing from the current API documentation and need to be implemented for a complete developer experience.
+</Callout>
+
+<Cards>
+<Card title="Authentication">
+Authentication process for different environments
+</Card>
+<Card title="API Conventions">
+Readable/writable fields and conventions
+</Card>
+<Card title="Country & Language Codes">
+Localization parameters and supported codes
+</Card>
+<Card title="External Links">
+OpenAPI external reference links
+</Card>
+<Card title="Field Descriptions">
+Complete parameter and response documentation
+</Card>
+<Card title="Reuses Section">
+Refactor reuses section from introduction
+</Card>
+</Cards>
+
+### Authentication
+
+<Callout type="info">
+**Current Issue**
+
+The error code for wrong username and password is `403`, but the response is still in HTML format instead of JSON.
+</Callout>
+
+**Requirements:**
+- Describe authentication process for different environments
+- Standardize error response format (JSON instead of HTML)
+- Document authentication methods and token management
+- Provide examples for successful and failed authentication
+
+### API Conventions
+
+**Requirements:**
+- List all readable fields in product responses
+- List all writable fields for product creation/editing
+- Specify that only writable fields can be modified when adding or editing products
+- Document existing API conventions and standards
+- Provide field validation rules and constraints
+
+### Country & Language Codes
+
+**Requirements:**
+- Document `ll` (language) parameter usage
+- Document `cc` (country) parameter usage  
+- Provide complete list of supported country codes
+- Provide complete list of supported language codes
+- Show examples of localized API requests
+
+### External Links
+
+**Requirements:**
+- Add OpenAPI external links for additional information
+- Reference relevant Open Food Facts documentation
+- Link to taxonomy and ingredient databases
+- Provide links to data quality and contribution guidelines
+
+### Field Descriptions
+
+**Requirements:**
+- Review all API parameters for proper descriptions
+- Add suitable examples for each field
+- Ensure response field documentation is complete
+- Validate that all examples are accurate and current
+
+### Reuses Section Refactor
+
+<Callout>
+**Action Required**
+
+Remove the reuses section from the introduction as we are implementing a different approach for this content.
+</Callout>
+
+**Requirements:**
+- Extract reuses section from introduction
+- Implement new content structure for reusable components
+- Update navigation and cross-references

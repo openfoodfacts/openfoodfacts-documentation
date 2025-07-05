@@ -1,0 +1,49 @@
+---
+title: "Direnv Setup"
+description: "Guide to using direnv for automatic environment variable management in Open Food Facts development projects without manual configuration."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+As a developer, it can be better not to think too much about setting the right env variables as you enter a project. [`direnv`](https://direnv.net/) aims at providing a solution.
+
+## Quick setup guide for Open Food Facts developers
+
+<Steps>
+<Step title="Install direnv">
+Install direnv on your system using the usual package manager.
+</Step>
+<Step title="Configure your shell">
+For Mac users you need to know if you are in zsh, bash, or something else; since 10.15 (Catalina) zsh is set by default, but to be sure type in terminal:
+
+```bash
+echo $SHELL
+```
+
+You have to adapt the direnv line according to what you use → follow this official [direnv doc](https://direnv.net/docs/hook.html).
+</Step>
+<Step title="Create environment file">
+In your project directory add a `.envrc` file, where you override variables from `.env` that you want to:
+
+```bash
+echo "setting up docker compose env"
+export DOCKER_BUILDKIT=1
+# The next two lines do the same thing in different ways; choose one.
+export USER_UID=${UID}
+export USER_UID=$(id -g)
+```
+</Step>
+<Step title="Allow direnv">
+In your project directory, run:
+
+```bash
+direnv allow .
+```
+</Step>
+<Step title="Test the setup">
+In a new shell:
+- go to the project directory
+- direnv should trigger and load your variables
+</Step>
+</Steps>

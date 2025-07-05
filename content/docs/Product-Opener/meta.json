@@ -1,0 +1,14 @@
+{
+  "title": "Product Opener",
+  "description": "Core product database system",
+  "icon": "Database",
+  "root": true,
+  "pages":[
+    "index",
+    "---Developer Documentation---",
+    "...dev",
+    "---Tutorial---",
+    "...tutorials",
+    "..."
+  ]
+}

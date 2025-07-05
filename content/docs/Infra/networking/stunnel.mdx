@@ -1,0 +1,270 @@
+---
+title: "Stunnel Secure Connections"
+description: "This document explains Stunnel, a tool for securing TCP connections between distant servers using OpenSSL encryption. It covers its installation, client-server configurations, PSK security, and systemd service setup, including important considerations for public exposure and PID file handling."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Stunnel Secure Connections
+
+Stunnel enables secure TCP connections between distant servers using OpenSSL encryption.
+
+<Callout type="info">
+Stunnel is installed on the reverse proxy of off2 and on a specific VM (113) on ovh1. For installation details, see [the install report](./reports/2024-01-04-setting-up-stunnel.md).
+</Callout>
+
+## Architecture Overview
+
+``` mermaid title="Architecture"
+sequenceDiagram
+    box Private Network 1
+      Participant Cli as Client
+      Participant Scli as Stunnel Server 1 (client)
+    End
+    box Private Network 2
+      Participant Sserv as Stunnel Server 2 (server)
+      Participant Mongo as MongoDB Server
+    End
+    Note over Scli,Sserv: The wild web
+    Cli->>Scli: Query MongoDB
+    Scli->>Sserv: Encrypted
+    Sserv->>Mongo: Query MongoDB
+    Mongo->>Sserv: MongoDB response
+    Sserv->>Scli: Encrypted
+    Scli->>Cli: MongoDB response
+```
+
+## Client vs Server Configuration
+
+<Callout type="warning">
+Understanding the client/server distinction is critical for proper security configuration.
+</Callout>
+
+<Tabs>
+  <Tab value="client" label="Client Side">
+    ### Stunnel Client
+    
+    - **Role**: Where connections are initiated (*Stunnel Server 1* in diagram)
+    - **Configuration**: `client=yes`
+    - **Security**: Must **never** be exposed on public IP
+    - **Location**: Internal container with private IP only
+  </Tab>
+  
+  <Tab value="server" label="Server Side">
+    ### Stunnel Server
+    
+    - **Role**: Accepts connections and forwards to target service
+    - **Configuration**: `client=no` (server side)
+    - **Security**: May be exposed publicly through reverse proxy
+    - **Location**: Reverse proxy configuration
+  </Tab>
+</Tabs>
+
+### Security Model
+
+<Cards>
+  <Card title="Server Side Exposure" href="#security-considerations">
+    Uses reverse proxy for controlled public access
+  </Card>
+  <Card title="Client Side Protection" href="#security-considerations">
+    Internal container with private IP only
+  </Card>
+  <Card title="Encryption" href="#psk">
+    PSK (Private Shared Key) for secure communication
+  </Card>
+</Cards>
+
+<Callout type="danger">
+**CRITICAL**: Always double-check to only use `client=yes` on the internal container (private network), never on the proxy exposed to public internet.
+</Callout>
+
+## Configuration
+
+### File Location and Structure
+
+<Steps>
+  <Step>
+    **Configuration File**
+    
+    Configuration is in `/etc/stunnel/off.conf` for the `off` instance.
+  </Step>
+  
+  <Step>
+    **Service Entries**
+    
+    Multiple service entries can be added to serve different services.
+  </Step>
+  
+  <Step>
+    **Client/Server Setting**
+    
+    - Client side: `client=yes`
+    - Server side: `client=no`
+  </Step>
+</Steps>
+
+### PSK Security
+
+<Callout type="info">
+We use PSK (Private Shared Key) for security - easier and more performant than certificate-based authentication.
+</Callout>
+
+<Steps>
+  <Step>
+    **PSK File Location**
+    
+    PSK files must be in `/etc/stunnel/psk/` directory.
+  </Step>
+  
+  <Step>
+    **Security Requirements**
+    
+    ```bash title="Secure PSK Files"
+    chmod -R go-rwx /etc/stunnel/psk/
+    ```
+    
+    <Callout type="warning">
+    PSK files must **never** be committed to Git repository. Keep them on servers only.
+    </Callout>
+  </Step>
+  
+  <Step>
+    **Generate PSK**
+    
+    ```bash title="Generate PSK"
+    pwgen 32
+    ```
+  </Step>
+  
+  <Step>
+    **Unique Usernames**
+    
+    Keep each username unique for each server **and** each service to avoid conflicts.
+  </Step>
+</Steps>
+
+## Configuration Testing
+
+<Callout type="danger">
+**BEWARE**: Stunnel is used for other services! Don't restart the service without testing configuration first.
+</Callout>
+
+<Steps>
+  <Step>
+    **Test Configuration**
+    
+    Test by starting another stunnel instance:
+    
+    ```bash title="Test Configuration"
+    stunnel /etc/stunnel/off.conf
+    ```
+    
+    <Callout type="note">
+    This will fail due to port conflicts, but you can verify if configuration parses correctly.
+    </Callout>
+  </Step>
+  
+  <Step>
+    **Restart Service**
+    
+    When configuration is verified:
+    
+    ```bash title="Restart Stunnel Service"
+    systemctl restart stunnel@off
+    ```
+  </Step>
+</Steps>
+
+## Systemd Service
+
+<Callout type="info">
+The `stunnel@off` service corresponds to `/etc/stunnel/off.conf` configuration.
+</Callout>
+
+### Service Customizations
+
+<Tabs>
+  <Tab value="permissions" label="Permissions">
+    ### PID File Handling
+    
+    We had to override the systemd service for PID file management:
+    
+    <Steps>
+      <Step>
+        **Root Launch**
+        
+        Stunnel launches as `root` to get privileges, then changes user.
+      </Step>
+      
+      <Step>
+        **PID File Creation**
+        
+        PID file is created with the running user.
+      </Step>
+      
+      <Step>
+        **Group Permissions**
+        
+        Use group `stunnel4` in service definition and add group write permission to runtime directory.
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab value="process" label="Process Management">
+    ### Foreground Execution
+    
+    <Callout type="note">
+    Stunnel is launched in foreground mode to let systemd handle process management properly.
+    </Callout>
+    
+    Benefits:
+    - Better process supervision
+    - Proper logging integration
+    - Cleaner service lifecycle management
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Cards>
+  <Card title="Security" href="#security-best-practices">
+    Proper client/server configuration and PSK management
+  </Card>
+  <Card title="Testing" href="#testing-best-practices">
+    Always test configuration before restarting services
+  </Card>
+  <Card title="Monitoring" href="#monitoring-best-practices">
+    Monitor tunnel connectivity and performance
+  </Card>
+</Cards>
+
+### Security Best Practices
+
+<Steps>
+  <Step>
+    **Network Isolation**
+    
+    - Client side: Private networks only
+    - Server side: Controlled public exposure through reverse proxy
+  </Step>
+  
+  <Step>
+    **PSK Management**
+    
+    - Generate strong PSKs (32 characters)
+    - Unique usernames per server and service
+    - Secure file permissions (go-rwx)
+    - Never commit PSKs to version control
+  </Step>
+  
+  <Step>
+    **Configuration Verification**
+    
+    - Test configurations before deployment
+    - Verify client/server settings
+    - Check port bindings and conflicts
+  </Step>
+</Steps>

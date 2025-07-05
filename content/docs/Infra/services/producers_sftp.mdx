@@ -1,0 +1,235 @@
+---
+title: "Producers SFTP"
+description: "This document describes the Producers SFTP, a secure file transfer protocol used by producers for automated product updates. It covers its location, configuration, and the process for adding new SFTP users, emphasizing security best practices."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Producers SFTP
+
+<Card title="Secure File Transfer for Producers" description="Automated product update system via SFTP">
+
+The Producers SFTP is part of the producer platform, enabling producers to send files for regular automated updates of their products.
+
+</Card>
+
+## Overview
+
+<Tabs items={["Purpose", "Architecture", "Security"]}>
+  <Tab value="Purpose">
+    ### Use Case
+    - **Automated Updates:** Producers upload files for regular product updates
+    - **Bulk Processing:** Handles large-scale product data imports
+    - **Integration:** Part of the broader producer platform ecosystem
+  </Tab>
+  
+  <Tab value="Architecture">
+    ### System Location
+    - **Host:** Reverse proxy container (requires dedicated network interface)
+    - **Storage:** ZFS dataset `zfs-hdd/off-pro/sftp`
+    - **Mount Point:** `/mnt/off-pro/sftp`
+  </Tab>
+  
+  <Tab value="Security">
+    ### Security Model
+    - **Group Isolation:** All users must be in `sftponly` group exclusively
+    - **Key-based Auth:** Support for SSH public key authentication
+    - **Network Isolation:** Runs on dedicated container with network interface
+  </Tab>
+</Tabs>
+
+## Storage Configuration
+
+<Card title="ZFS Dataset Mounting" description="Dual-mount strategy for access control">
+
+### Mount Points
+
+The SFTP directory is mounted in two locations:
+
+<Steps>
+  <Step title="Reverse Proxy Container">
+    Mounted as `/mnt/off-pro/sftp` to provide SFTP access to producers
+  </Step>
+  
+  <Step title="OFF-Pro Container">
+    Also mounted to give the producer platform access to uploaded files
+  </Step>
+</Steps>
+
+<Callout type="info">
+This dual-mount approach allows secure file upload while enabling platform processing.
+</Callout>
+
+</Card>
+
+## SFTP Configuration
+
+<Card title="SSH Configuration" description="SFTP service configuration management">
+
+### Configuration File
+
+The SFTP service is configured in `/etc/ssh/sshd_config.d/sftp.conf`, which is a symlink to `confs/proxy-off/sshd_config/sftp.conf` in this repository.
+
+### SSH Key Authentication
+
+<Steps>
+  <Step title="Public Key Placement">
+    For key-based authentication, place the producer's public key in:
+    ```bash
+    /mnt/off-pro/sftp/<username>_authorized_keys
+    ```
+  </Step>
+  
+  <Step title="File Permissions">
+    Ensure proper file permissions for security
+  </Step>
+  
+  <Step title="Group Membership">
+    Verify user is in `sftponly` group only
+  </Step>
+</Steps>
+
+</Card>
+
+## Adding New SFTP Users
+
+<Card title="User Management Process" description="Step-by-step guide for adding SFTP users">
+
+### User Creation Process
+
+<Steps>
+  <Step title="Run Script">
+    Execute the user creation script:
+    ```bash title="Add SFTP User"
+    # Run as root in the reverse proxy container
+    ./script/off-proxy/add_sftp_user.pl
+    ```
+  </Step>
+  
+  <Step title="Group Assignment">
+    **Critical:** Ensure every user is in the `sftponly` group and **only** in this group
+  </Step>
+  
+  <Step title="SSH Key Setup">
+    If using key authentication, configure the authorized_keys file
+  </Step>
+  
+  <Step title="Test Access">
+    Verify the setup before notifying the producer
+  </Step>
+</Steps>
+
+<Callout type="error">
+**CRITICAL SECURITY REQUIREMENT:** Every user **must be in `sftponly` group** and only in this group. This ensures proper access control and security isolation.
+</Callout>
+
+</Card>
+
+## Testing and Verification
+
+<Card title="Access Testing" description="Verify SFTP setup before production use">
+
+### Server Key Fingerprint
+
+<Steps>
+  <Step title="Get Fingerprint">
+    Obtain server key fingerprint for producer verification:
+    ```bash title="Get SSH Fingerprint"
+    ssh-keyscan $(hostname) | ssh-keygen -lf -
+    ```
+  </Step>
+  
+  <Step title="Share with Producer">
+    Communicate the fingerprint to the producer for host verification
+  </Step>
+</Steps>
+
+### Connection Testing
+
+<Steps>
+  <Step title="Test with LFTP">
+    Test SFTP access before notifying the producer:
+    ```bash title="Test SFTP Connection"
+    lftp sftp://user@sftp.openfoodfacts.org
+    password:
+    > ls
+    ```
+  </Step>
+  
+  <Step title="Verify Commands">
+    Issue at least an `ls` command, as `lftp` only connects on the first command
+  </Step>
+  
+  <Step title="Test Upload">
+    Verify file upload capabilities if required
+  </Step>
+</Steps>
+
+</Card>
+
+## Security Best Practices
+
+<Tabs items={["User Management", "Access Control", "Monitoring"]}>
+  <Tab value="User Management">
+    ### User Security
+    
+    <Cards>
+      <Card title="Group Isolation" description="sftponly group membership exclusively" />
+      <Card title="Key Authentication" description="Prefer SSH keys over passwords" />
+      <Card title="Regular Audits" description="Review user access periodically" />
+    </Cards>
+  </Tab>
+  
+  <Tab value="Access Control">
+    ### Permission Management
+    
+    - **Directory Permissions:** Proper ownership and permissions on SFTP directories
+    - **File Access:** Limited to necessary directories only
+    - **Network Isolation:** Container-based network separation
+  </Tab>
+  
+  <Tab value="Monitoring">
+    ### Operational Monitoring
+    
+    - **Connection Logs:** Monitor SFTP access patterns
+    - **File Activity:** Track upload/download activities
+    - **Security Events:** Alert on suspicious access attempts
+  </Tab>
+</Tabs>
+
+## Architecture Integration
+
+<Card title="Producer Platform Integration" description="How SFTP fits into the larger ecosystem">
+
+### Data Flow
+
+<Steps>
+  <Step title="Producer Upload">
+    Producers upload files via SFTP to their designated directories
+  </Step>
+  
+  <Step title="Platform Processing">
+    OFF-Pro container accesses files for automated processing
+  </Step>
+  
+  <Step title="Product Updates">
+    Processed data updates products in the main database
+  </Step>
+  
+  <Step title="Cleanup">
+    Processed files are moved or archived according to retention policies
+  </Step>
+</Steps>
+
+</Card>
+
+## Related Components
+
+<Cards>
+  <Card title="Producer Platform" description="Main platform that processes uploaded files" />
+  <Card title="Reverse Proxy" description="Container hosting the SFTP service" />
+  <Card title="ZFS Storage" description="Underlying storage system for file management" />
+</Cards>

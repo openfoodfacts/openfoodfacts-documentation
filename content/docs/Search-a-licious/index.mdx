@@ -1,0 +1,127 @@
+---
+title: "Search-a-licious"
+description: "Welcome to Search-a-licious, a ready-to-use search component built on Elasticsearch. This documentation provides an executive summary, technical overview, and contribution guidelines to help you get started with transforming large data collections into searchable content."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+
+![Search-a-licious](./assets/RVB_HORIZONTAL_WHITE_BG_SEARCH-A-LICIOUS-50.png "Search-a-licious logo")
+
+<Callout type="info">
+Welcome to the documentation of search-a-licious, a ready to use search component built on top of [Elasticsearch](https://www.elastic.co/).
+</Callout>
+
+## Executive Summary
+
+<Callout>
+Search-a-licious transforms large data collections into searchable content, allowing users to quickly find what they need with powerful queries, facet exploration, and visualizations. Originally developed for Open Food Facts, it's perfect for exposing data, supporting decision-making, and enabling exploration, unlocking the full potential of open data collections. Developers can rapidly build apps thanks to its easy configuration, reusable components, and robust architecture.
+</Callout>
+
+## What is Search-a-licious?
+
+We created this project to leverage collections of (uniform enough) data to build tools that can:
+
+<Cards>
+<Card title="Reach Large Public" description="Make data accessible to a wide audience" />
+<Card title="Smart Filtering" description="Help users find items according to their criteria" />
+<Card title="Data Exploration" description="Enable data exploration and useful insights" />
+</Cards>
+
+## Key Features
+
+<Steps>
+<Step title="Engaging Search Experience">
+- Fast full text search
+- Facets to refine results  
+- As-you-type filter suggestions
+</Step>
+<Step title="Personalized Results">
+Specific sorting to match user needs and preferences
+</Step>
+<Step title="Instant Insights">
+Help users build insights with instant charts and visualizations
+</Step>
+<Step title="Powerful API">
+Build in-app features with a comprehensive API
+</Step>
+</Steps>
+
+## Technical Overview
+
+<Cards>
+<Card title="Web Components" href="/docs/Search-a-licious/users/tutorial#building-a-search-interface" description="Quickly build your UI using any JavaScript framework, or plain HTML" />
+<Card title="Easy Configuration" href="/docs/Search-a-licious/users/tutorial#create-a-configuration-file" description="One-stop file configuration to describe your content" />
+<Card title="Docker Deployment" href="/docs/Search-a-licious/users/how-to-install" description="Ready-to-deploy Docker Compose file including all needed services" />
+<Card title="Data Import" href="/docs/Search-a-licious/users/tutorial#import-the-data" description="One command initial data import from JSONL data export" />
+</Cards>
+### Core Technologies
+
+<Cards>
+<Card title="Elasticsearch" href="https://www.elastic.co/elasticsearch" description="Powerful search engine foundation" />
+<Card title="Web Components" href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Components" description="Built with Lit framework for reusable UI components" />
+<Card title="Vega" href="https://vega.github.io/" description="Advanced visualization and charting capabilities" />
+<Card title="Redis" href="https://redis.io/" description="Event stream processing and caching" />
+</Cards>
+
+## Getting Started
+
+<Card title="Start with Tutorial" href="./users/tutorial.mdx">
+Read our comprehensive tutorial to get started with Search-a-licious!
+</Card>
+
+## Documentation Structure
+
+<Callout type="tip">
+**Documentation Organization**
+
+The documentation follows the [Diátaxis framework](https://diataxis.fr/) and is split between User documentation (for re-users, third party developers) and Developer documentation (for contributors).
+</Callout>
+
+<Cards>
+<Card title="User Documentation" href="./users/" description="For re-users and third party developers" />
+<Card title="Developer Documentation" href="./devs/" description="For contributors to the project" />
+</Cards>
+
+### Page Naming Convention
+
+Pages titles follow this structure:
+- **tutorial on** - tutorials aimed at learning
+- **how to…** - how-to guides to reach a specific goal  
+- **explain…** - explanations to understand a topic
+- **reference…** - providing detailed information
+
+## Contributing
+
+<Callout type="info">
+**Open Source Project**
+
+This is an Open Source project and contributions are really welcome!
+</Callout>
+
+<Cards>
+<Card title="Developer Introduction" href="./devs/introduction.mdx" description="Get started with contributing to the project" />
+<Card title="Project Wiki" href="https://wiki.openfoodfacts.org/Search-a-licious" description="Additional information and community resources" />
+</Cards>
+
+Every contribution including bug reports, documentation, and UX design is welcome!
+
+## Thank You to Our Sponsors!
+
+<Callout>
+**NGI Search Support**
+
+This project has received financial support from the NGI Search (New Generation Internet) program, funded by the 🇪🇺 European Commission. Thank you for supporting Open-Source, Open Data, and the Commons.
+</Callout>
+
+<Cards>
+<Card title="NGI Search">
+<img src="./assets/NGISearch_logo_tag_icon.svg" alt="NGI-search logo" title="NGI-search logo" height="100" />
+</Card>
+<Card title="European Union">
+<img src="./assets/europa-flag.jpg" alt="European flag" title="The European Union flag" height="100" />
+</Card>
+</Cards>
+

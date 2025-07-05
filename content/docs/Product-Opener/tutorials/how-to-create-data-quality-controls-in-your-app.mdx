@@ -1,0 +1,112 @@
+---
+title: "Quality Controls"
+description: "Best practices for implementing data quality controls in apps contributing to Open Food Facts through prevention, error handling, and user guidance."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+<Callout>
+**Quality Through Crowdsourcing**
+
+This tutorial will guide you through best practices for maintaining high-quality data contributions to Open Food Facts through your app. Open Food Facts leverages crowdsourcing, which is a fantastic way to gather vast amounts of information, but also necessitates measures to ensure data accuracy.
+</Callout>
+
+## Prevention is Key
+
+<Callout type="info">
+**Proactive Approach**
+
+The most effective approach lies in prevention. Here's how your app's interface can play a crucial role:
+</Callout>
+
+### Instant Feedback
+
+<Cards>
+<Card title="Nutritional Values" description="Implement checks that flag inconsistencies and prompt users to verify their entries" />
+<Card title="Ingredient Language" description="Ensure users take legible photos and send them in the actual language written" />
+<Card title="Selfie Detection" description="Use MLKit to detect selfies instead of products and warn users" />
+</Cards>
+
+<Card title="MLKit Face Detection" href="https://developers.google.com/ml-kit/vision/face-detection/android">
+On-device libraries like MLKit can detect whether the user is taking a selfie instead of a product
+</Card>
+
+### Quality Guidelines
+
+<Tabs items={['Data Quality Facets', 'Non-Food Prevention']}>
+<Tab value="Data Quality Facets">
+<Callout>
+**Follow Established Guidelines**
+
+Utilize the data quality facets established by Open Food Facts and recode some (or all of) them within your app. These facets act as guidelines for your users to ensure comprehensive and accurate data collection.
+</Callout>
+</Tab>
+<Tab value="Non-Food Prevention">
+<Callout>
+**Route to Correct Database**
+
+Implement functionalities that route non-food items like cosmetics to the right database (just ask your users if it's a food or a cosmetic).
+</Callout>
+</Tab>
+</Tabs>
+
+## Addressing Errors and Malicious Intent
+
+### Error Management
+
+<Callout type="warn">
+**Expect the Unexpected**
+
+It's inevitable that some users might unintentionally or deliberately submit inaccurate data. Be prepared for such situations.
+</Callout>
+
+### User Management
+
+<Steps>
+<Step>
+**Version Tracking**
+
+When sending data to Open Food Facts, include the app version used for the contribution
+</Step>
+
+<Step>
+**User Anonymization**
+
+Include an anonymized user identifier along with the contribution
+</Step>
+
+<Step>
+**Individual Accountability**
+
+This allows Open Food Facts to block repeat offenders (and not your app's global account) individually if necessary, without the need for them to create an Open Food Facts account
+</Step>
+</Steps>
+
+<Callout>
+**Benefits of Proper Tracking**
+
+Versioning and user anonymization protect your app's reputation while maintaining accountability for data quality.
+</Callout>
+
+### Collaboration
+- **Team Support**: If you suspect recurring issues with user-generated data potentially stemming from app functionalities, don't hesitate to reach out to the Open Food Facts team. We're happy to assist in troubleshooting, UI feedback…
+
+## Cater for the complexity in Food & Nutrition Data
+
+<Steps>
+<Step title="Handle Edge Cases">
+**Dehydrated Products**: Food and nutrition data can be intricate. Consider edge cases like dehydrated products that require rehydration for accurate nutritional value representation.
+</Step>
+<Step title="Global Considerations">
+**International Variations**: Nutritional facts tables differ internationally. Be mindful of these variations (e.g., US vs. European formats) and the need for appropriate labeling within your app.
+**"As Sold" vs. "As Prepared" Values**: Nutritional information can be presented based on the product's state, "as sold" or "as prepared." Ensure clarity within your app regarding these variations.
+</Step>
+<Step title="Photo Documentation">
+**A photo is better than nothing at all or bad data alone**: Using a photo helps us cross-check the edits by your users, use artificial intelligence to compare the product to similar products in the same category. It also helps us complete the product at a later time if your users doesn't have the courage to input the data, or if he inputs bad data. A photo of the nutrition table and of the ingredients will go *a very long way*
+</Step>
+</Steps>
+
+By following these guidelines and fostering a collaborative approach with Open Food Facts, your app can significantly contribute to a high-quality data collection effort, empowering informed consumer choices.

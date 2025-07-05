@@ -1,0 +1,200 @@
+---
+title: "Free Datacenter Overview"
+description: "This document provides an overview of the Free Datacenter, hosting off1 and off2 servers. It covers server location, physical access, hardware details, network configuration (IPv4 and IPv6), disk setup, and specific BIOS settings for off2."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Free Datacenter
+
+<Callout type="info">
+[Fondation Free](https://www.fondation-free.fr/) is graciously providing us hosting for two servers: off1 and off2. They also provide network and electricity for free.
+</Callout>
+
+## Location
+
+Those servers are located is Bezon, near Paris. To go there we need to ask to the team there.
+
+<Callout type="note">
+The two servers are piled one above another (off2 on top). It's a bay with different Open Source projects' servers. They have at small label on them "Open Food Facts"
+</Callout>
+
+## Servers
+
+Those are DELL servers.
+
+<Callout type="tip">
+On the back side of server cover you find some useful instructions.
+</Callout>
+
+![Server cover](../img/2023-02-free-dc-instructions-on-server-cover.jpg "Instructions on the server cover")`{ width=50% }`
+
+<Steps>
+<Step>
+**Switching Off**
+To switch a server off, plug a screen and keyboard or use ssh, login and use shutdown command.
+</Step>
+
+<Step>
+**Switching On**
+The server switch on button is on the front panel, a small ⏼ button on the right.
+</Step>
+
+<Step>
+**Power Supply**
+There is a double plug for power supply. A small velcro helps keeps plugs in place.
+</Step>
+</Steps>
+
+![Plugs velcro](../img/2023-02-free-dc-plugs-velcro.jpg "A small velcro maintains plugs in place")`{ width=50% }`
+
+<Callout type="info">
+There is a blue led if all is ok (on the front and on the back). If something is wrong it turns to orange and blinks. (it will be the case for example if cover is not on the server).
+
+You can make the LED blink to identify the server by a button on the left on the front side of the server.
+</Callout>
+
+## IPMI
+
+IPMI enables rebooting the server through the network.
+
+<Callout type="note">
+Connecting to 213.36.253.209 with a browser or ssh we get access to an emergency console on the machine. (note: it uses a self signed certificate).
+
+It has to be configured with the right static network configuration in BIOS to be able to work (see below)
+</Callout>
+
+## Network
+
+We have three network physical interface on each server:
+
+<Cards>
+<Card title="IPMI Interface">
+One dedicated to ipmi
+</Card>
+<Card title="Internal Network">
+One for internal network - on a dedicated small switch between OFF and OSM machines
+</Card>
+<Card title="Public Network">
+One for public network
+</Card>
+</Cards>
+
+![Ethernet cables](../img/2023-02-free-dc-ethernet.jpg "The three eternet cables on the server")`{ width=50% }`
+
+<Tabs>
+<Tab value="ipv4" label="IPv4 Configuration">
+We have the following static IP v4 addresses:
+
+**off1:**
+- 213.36.253.206/27 used for the host (vmbr0)
+- 213.36.253.215/27 used for the reverse proxy container
+
+**off2:**
+- 213.36.253.208/27 used for the host (vmbr0)
+- 213.36.253.214/27 used for the reverse proxy container
+
+<Callout type="info">
+**Network Details:**
+- Gateway: 213.36.253.222
+- DNS: 213.36.253.10 (gw4-vl12.free.org)
+- Reverse names:
+  - off1.openfoodfacts.org for 213.36.253.206
+  - off2.openfoodfacts.org for 213.36.253.208
+</Callout>
+
+Also we have a vmbr1 on each host with a private network, which is forwarded through vmbr0 on the host.
+</Tab>
+
+<Tab value="ipv6" label="IPv6 Configuration">
+<Callout type="note">
+For each IPv4 address correspond an IPv6 range of `2a01:e0d:0001:c:58bf:fa<last-part-of-ipv4-address>::*/64`
+last-part-of-ipv4-address is a two digit hexadecimal number.
+</Callout>
+
+For example `206` is `ce` in hexadecimal so `213.36.253.206` correspond to `2a01:e0d:0001:c:58bf:face::*/64`.
+
+So we have:
+- **off2:** 2a01:e0d:0001:c:58bf:fad0:1/64 for the host (vmbr0)
+
+**Network Details:**
+- Gateway: `2a01:e0d:1:c::1` (gw6-vl12.free.org)
+- DNS: We use ipv4 for DNS
+
+<Callout type="info">
+We also have a private ipv6 network (vmbr1) which can be shared between the two servers. The prefix is `fd28:7f08:b8fe`, so containers can have an ipv6 access to the internet, while not being publicly accessible. It is forwarded through vmbr0 on the host.
+</Callout>
+</Tab>
+</Tabs>
+
+## Disks
+
+<Callout type="tip">
+SATA Disks are on the front panel. You just have to push a small red button, it makes a small handle comes out and you can rack them out.
+</Callout>
+
+<Callout type="warning">
+We had to use Dell SATA disks because otherwise there maybe compatibility issues (this is one of the limitation of DELL servers).
+</Callout>
+
+SSDs are in the back of the server (extension card)
+
+## off2 Configuration
+
+<Card title="off2.openfoodfacts.org">
+**Hardware Specifications:**
+- 4x14TB disks
+- 2x2TB SSD
+- 1x1TB SSD
+- 1x60GB [optane disk](https://en.wikipedia.org/wiki/3D_XPoint)
+</Card>
+
+<Callout type="info">
+Optane disk are as fast as flash drives but without being sensitive to rewrites (no limited life).
+
+The 14TB disks are in a ZFS pool mounted as RAID 1 (rpool)
+</Callout>
+
+Since Feb. 2023, off2 uses [Proxmox](./proxmox.md).
+
+### BIOS Settings
+
+<Steps>
+<Step>
+**Slot Bifurcation**
+This is to specify how the PCI card supporting SSD will work (16 port divided in 4x4).
+
+In System BIOS / Integrated devices / Slot bifurcation: *Auto discovery of bifurcation*
+</Step>
+
+<Step>
+**PERC Adapter**
+PERC Adapter Bios (Power Edge RAID Controller) is set to be *HBA mode* for we use ZFS and don't want system RAID.
+</Step>
+
+<Step>
+**IDRAC / IPMI Settings**
+Those settings are in the BIOS settings. They enable a distant reboot of the server through a specific interface.
+
+<Callout type="info">
+**Configuration:**
+- Disable DHCP and auto-discovery
+- Static IP address: 213.36.253.209
+- Gateway: 213.36.253.222
+- Subnet Mask: 255.255.255.224
+- Static DNS: 213.36.253.10
+- Static Alter: 213.36.252.131
+</Callout>
+</Step>
+</Steps>
+
+### Network
+
+Apart from the IDRAC address, off2 has the 213.36.253.208 IP address.
+
+<Callout type="note">
+We also have 213.36.253.214 which is dedicated to the [NGINX reverse proxy](./nginx-reverse-proxy.md).
+</Callout>

@@ -1,0 +1,186 @@
+---
+title: "Deploying New Service"
+description: "This guide outlines the process for deploying new services within the Open Food Facts infrastructure. It covers choosing deployment methods like Docker Compose or Proxmox containers, separating data from the system, and monitoring performance after deployment."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# How to Deploy a New Service
+
+Open Food Facts is made of several components and tools for the community and infrastructure management.
+
+<Callout type="info">
+Each service will cost resources and have certain requirements to run. It's important to keep those things in mind when deploying a new service.
+</Callout>
+
+## Deployment Process Overview
+
+<Steps>
+  <Step>
+    **Decide Deployment Method**
+    
+    Choose between Docker Compose or Proxmox containers based on service requirements.
+  </Step>
+  
+  <Step>
+    **Select Target Server**
+    
+    Choose the best server considering resources, latency, and criticality.
+  </Step>
+  
+  <Step>
+    **Separate Data from System**
+    
+    Implement proper data separation for reliability and maintenance.
+  </Step>
+  
+  <Step>
+    **Monitor Performance**
+    
+    Track system performance before and after deployment.
+  </Step>
+</Steps>
+
+## Deployment Methods
+
+<Tabs>
+  <Tab value="docker" label="Docker Compose">
+    ### Docker Compose Deployment
+    
+    <Callout type="tip">
+    Using [Docker Compose](./docker_architecture.md) is the **preferred way** to deploy services that have active development.
+    </Callout>
+    
+    **Benefits:**
+    - Easy upgrade of main components
+    - Good reproducibility of the environment
+    - Excellent integration with [CI/CD tools](./cicd.md)
+    
+    **Deployment target:**
+    - Deploy in a VM (recommended)
+    - Container deployment is experimental (no official support yet)
+  </Tab>
+  
+  <Tab value="proxmox" label="Proxmox Container">
+    ### Proxmox Container Deployment
+    
+    <Callout type="note">
+    Using a [Proxmox container](./proxmox.md#how-to-create-a-new-container) is the second-best option.
+    </Callout>
+    
+    **Best for:**
+    - Services packaged in Debian
+    - Software that updates easily in container environments (e.g., PHP applications)
+    
+    **Use cases:**
+    - Static services with minimal development
+    - Well-established applications with stable requirements
+  </Tab>
+</Tabs>
+
+## Server Selection
+
+<Callout type="warning">
+Server selection should be done in coordination with the infrastructure team.
+</Callout>
+
+<Cards>
+  <Card title="Resource Requirements" href="#factors-to-consider">
+    CPU, RAM, and storage needs analysis
+  </Card>
+  <Card title="Network Latency" href="#factors-to-consider">
+    Access to other services and external systems
+  </Card>
+  <Card title="Service Criticality" href="#factors-to-consider">
+    Uptime requirements and failure impact
+  </Card>
+</Cards>
+
+### Factors to Consider
+
+- **Resources needed by the service**: CPU, RAM, storage requirements
+- **Latency needed to access other services**: Network topology considerations
+- **How critical the service is**: Uptime requirements and redundancy needs
+
+## Separating Data from System
+
+<Callout type="info">
+It's important to try to separate data from the system for reliability and maintainability.
+</Callout>
+
+### Data Types
+
+<Cards>
+  <Card title="Primary Source Data" href="#data-types">
+    Critical data that cannot be regenerated
+  </Card>
+  <Card title="Indexes" href="#data-types">
+    Data that can be rebuilt from primary sources
+  </Card>
+  <Card title="Caches & Temp Data" href="#data-types">
+    Temporary data that can be safely lost
+  </Card>
+  <Card title="Logs & Configs" href="#data-types">
+    System logs and configuration files
+  </Card>
+</Cards>
+
+### Benefits of Data Separation
+
+<Steps>
+  <Step>
+    **Safe System Updates**
+    
+    Update the system without putting data at risk and enable rollback without losing data.
+  </Step>
+  
+  <Step>
+    **Performance Optimization**
+    
+    Put data on faster disks if needed for better performance.
+  </Step>
+  
+  <Step>
+    **Backup Strategy**
+    
+    Implement targeted backup strategies for different data types.
+  </Step>
+</Steps>
+
+<Callout type="note">
+If your service is not very important, doesn't have much data, and you can afford losing some data, separation might not be worth the effort.
+</Callout>
+
+## Performance Monitoring
+
+<Callout type="warning">
+If your service is heavy duty, try to do some performance checks in staging before production deployment.
+</Callout>
+
+### Post-Deployment Monitoring
+
+After deployment, check how the new service impacts overall system performance.
+
+<Callout type="tip">
+[Munin](./munin.md) offers a good way to check system performance, as you can compare before and after deployment metrics.
+</Callout>
+
+### Key Performance Indicators
+
+<Cards>
+  <Card title="CPU Usage" href="#key-indicators">
+    Monitor CPU utilization and I/O wait time
+  </Card>
+  <Card title="Memory Usage" href="#key-indicators">
+    Track RAM consumption and swap usage
+  </Card>
+  <Card title="Disk Usage" href="#key-indicators">
+    Monitor utilization per device and I/O patterns
+  </Card>
+  <Card title="Pressure Stall Information" href="#key-indicators">
+    Identify bottlenecks between CPU, disk, and RAM
+  </Card>
+</Cards>

@@ -1,0 +1,182 @@
+---
+title: "Explain Web Frontend"
+description: "This document explains the Search-a-licious web frontend, built with Lit and TypeScript. Learn about the code structure, including the search controller and event system, and find information on documentation, tools, testing, and translations."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Explain Web Frontend
+
+<Callout type="info">
+The search-a-licious web frontend supplies web components built using [Lit](https://lit.dev) and [TypeScript](https://www.typescriptlang.org/).
+</Callout>
+
+<Card title="Web Components Reference" href="../users/ref-web-components.mdx">
+Find the documentation for each widget in the Reference for Search-a-licious Web Components
+</Card>
+
+## Code Structure Overview
+
+<Callout>
+We use web-components because they enable integration in a very wide variety of situations.
+</Callout>
+
+### Core Components
+
+<Cards>
+<Card title="search-ctl.ts" description="Search controller responsible for launching search and dispatching results" />
+<Card title="events.ts" description="Event system for component communication" />
+<Card title="search-results-ctl.ts" description="Mixin for components that need search results" />
+</Cards>
+
+### Architecture Details
+
+<Steps>
+<Step title="Search Controller">
+
+The `search-ctl.ts` file contains the search controller, which is responsible for launching search and dispatching results. In practice this is a mixin, used by the search bar components which gets this role of controller. It is the contact point with the API.
+
+The controller has a specific name, and components that are linked to it refer to the search bar name (`search-name` property). The default is 'searchalicious'.
+
+</Step>
+<Step title="Event System">
+
+Components communicate with the search controller through events (see `events.ts`).
+
+**Event Types:**
+- Event to launch a search or change page
+- Event to dispatch search results
+
+<Callout type="tip">
+Events always contain the search name, so we could have more than one search on the same page.
+</Callout>
+
+</Step>
+<Step title="Code Reusability">
+
+We factor code when it makes sense using mixins. For example, since there are lots of components that need the search results, there is a mixin that contains the logic to register to such events (see `search-results-ctl.ts`).
+
+</Step>
+</Steps>
+
+## Writing Documentation
+
+<Callout type="info">
+We render the reference on web components using [`api-viewer`](https://api-viewer.open-wc.org/docs) web component.
+</Callout>
+
+<Callout type="warning">
+**Documentation Requirements**
+
+Please comply with JSDoc and [document every property / slots](https://api-viewer.open-wc.org/docs/guide/writing-jsdoc/) etc. on each web component.
+</Callout>
+
+## Development Tools
+
+<Callout type="tip">
+Thanks to the Makefile in root folder, you have access to various development commands:
+</Callout>
+
+<Cards>
+<Card title="make check_front" description="Run all checks in frontend" />
+<Card title="make lint_front" description="Lint JavaScript code" />
+<Card title="make tsc_watch" description="Compile TypeScript on file save (recommended while coding)" />
+</Cards>
+
+### Documentation Generation
+
+<Steps>
+<Step title="Custom Elements Manifest">
+
+We generate a [custom-elements.json manifest](https://github.com/webcomponents/custom-elements-manifest) using [custom elements manifest analyzer](https://custom-elements-manifest.open-wc.org/analyzer).
+
+</Step>
+<Step title="JSDoc Documentation">
+
+<Card title="JSDoc Markers" href="https://custom-elements-manifest.open-wc.org/analyzer/getting-started/#supported-jsdoc">
+Please use supported JSDoc markers in your code to document components
+</Card>
+
+</Step>
+<Step title="Component Documentation">
+
+The components documentation is rendered in `web-components.html`, using the [api-viewer component](https://api-viewer.open-wc.org/)
+
+</Step>
+</Steps>
+
+## Testing
+
+<Callout>
+Run frontend tests with the following command:
+</Callout>
+
+```bash title="Run Frontend Tests"
+make test_front
+```
+
+### Testing Stack
+
+<Cards>
+<Card title="Open Web Component Testing" href="https://open-wc.org/docs/testing/testing-package/" description="Main testing framework" />
+<Card title="Mocha" href="https://mochajs.org/" description="Test runner" />
+<Card title="Playwright" href="https://playwright.dev/" description="Browser automation for running tests" />
+<Card title="Chai" href="https://www.chaijs.com/" description="Assertion library" />
+</Cards>
+
+## Translations
+
+<Callout type="info">
+In the frontend, we utilize [lit-localize](https://lit.dev/docs/localization/overview/), a library that leverages lit-element for managing translations from hardcoded text.
+</Callout>
+
+### Language Configuration
+
+- **Language Detection**: Set to the browser's language if supported by the project
+- **Fallback**: Default language is English
+- **Storage**: Translations are stored in `xliff` files in the `frontend/xliff` directory
+
+### Adding New Translations
+
+<Steps>
+<Step title="Add Message Tags">
+
+Add `msg` in your code like this: [Message Types Documentation](https://lit.dev/docs/localization/overview/#message-types)
+
+</Step>
+<Step title="Extract Translations">
+
+```bash title="Extract New Translations"
+npm run translations:extract
+```
+
+</Step>
+<Step title="Add Target Translations">
+
+Add your translation with 'target' tag in the `xliff/<your_language>.xlf` files
+
+</Step>
+<Step title="Build Translations">
+
+```bash title="Build Translation Files"
+npm run translations:build
+```
+
+This updates the translations in the `src/generated/locales/<your_language>.js` file
+
+</Step>
+</Steps>
+
+### Adding New Languages
+
+<Callout type="tip">
+To add a language, add the language code to `targetLocales` in `lit-localize.json`
+</Callout>
+
+### Crowdin Integration
+
+<Card title="Crowdin Translation Management" href="https://store.crowdin.com/xliff">
+We can use Crowdin to manage translations. All files in the xliff/ folder can be uploaded to Crowdin, as it supports the xlf format.
+</Card>

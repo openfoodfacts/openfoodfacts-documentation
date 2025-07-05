@@ -1,0 +1,399 @@
+---
+title: "NGINX Reverse Proxy"
+description: "This document explains the configuration and management of NGINX reverse proxies at OVH and Free datacenters. It covers network setup, banning bots, configuring new services, adding HTTPS with Certbot, and performance tips."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# NGINX Reverse Proxy
+
+At OVH and at Free we have a LXC container dedicated to reverse proxy http/https applications.
+
+<Callout type="info">
+It serves applications that are located in servers at the same provider (and same Proxmox cluster).
+</Callout>
+
+## Network Configuration
+
+It has a specific network configuration with two ethernet addresses:
+
+<Cards>
+<Card title="Internal Interface">
+One internal, to communicate with other VMs
+</Card>
+<Card title="Public Interface">
+One which is bridged on host network card, with IP fail over mechanism
+</Card>
+</Cards>
+
+<Callout type="warning">
+**Important**: Only the public IP should have a gateway. The default proxmox interface does not offer options to indicate which gateway should be the default gateway, and the public IP needs to have its gateway as the default one.
+</Callout>
+
+### Important Routing Limitation
+
+<Callout type="danger">
+**Never call an internal service using reverse proxy**
+
+Because of the gateway limitation, if a service uses another service which is on the same proxmox cluster, it should use its internal address and not the public / reverse proxy address, otherwise packets routing will be broken, and request will never land.
+</Callout>
+
+## Bot Management
+
+<Card title="Ban Bots" href="./how-to-fail2ban-ban-bots.md">
+We ban bots from the reverse proxy (more efficient and centralized). Most of the time this is a manual ban.
+</Card>
+
+## Configuring a New Service
+
+To make a new service, hosted on Proxmox, available you need to:
+
+<Steps>
+<Step>
+**Service Availability**
+Have this service available on proxmox internal network
+</Step>
+
+<Step>
+**DNS Configuration**
+In the DNS, CNAME your service name to:
+- `proxy1.openfoodfacts.org` for OVH (ovh1..3)
+- `off-proxy.openfoodfacts.org` for Free (off1..2)
+</Step>
+
+<Step>
+**NGINX Configuration**
+Write a configuration on nginx for this service
+</Step>
+
+<Step>
+**HTTPS Setup**
+Eventually add https
+</Step>
+</Steps>
+
+### Steps to Create NGINX Configuration
+
+Imagine we have to configure **my-service.openfoodfacts.net**, to route request to container `222`, port `8888`.
+
+<Callout type="warning">
+You will have to be root to do that.
+</Callout>
+
+<Steps>
+<Step>
+**Access Container**
+Login on the Nginx reverse proxy container (101) and launch a Bash session as root.
+</Step>
+
+<Step>
+**Test Connectivity**
+It's a good idea to first test it exists, using nc and curl:
+
+```bash title="Test Connectivity"
+nc -vz 10.1.0.222 8888
+curl  http://10.1.0.222:8888
+```
+</Step>
+
+<Step>
+**Create Configuration File**
+Create the basic configuration file for your service in `/etc/nginx/conf.d` directory, named after your service, eg. `my-service.openfoodfacts.net.conf`.
+
+<Callout type="warning">
+**Important**: Your file has to end with `.conf` to be taken into account.
+</Callout>
+
+```nginx title="Basic NGINX Configuration"
+server {
+
+    listen 80;
+    listen [::]:80;
+    server_name  my-service.openfoodfacts.net;
+
+    access_log  /var/log/nginx/my-service.off.net.log  main;
+    error_log   /var/log/nginx/my-service.off.net.err;
+
+    location / {
+        proxy_pass http://10.1.0.222:8888$request_uri;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_read_timeout 90;
+        client_max_body_size 512M;
+    }
+
+}
+```
+
+<Callout type="info">
+If you need more [nginx docs are here](https://nginx.org/en/docs/)
+</Callout>
+</Step>
+
+<Step>
+**Test Configuration**
+We test nginx configuration is ok (**Mandatory**):
+
+```bash title="Test NGINX Configuration"
+nginx -t
+# Expected output:
+# nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+# nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+<Callout type="note">
+The nginx script will normally do the check before trying to restart nginx, but this way you are able to also see warnings.
+</Callout>
+</Step>
+
+<Step>
+**Reload NGINX**
+If it's ok, we reload:
+
+```bash title="Reload NGINX"
+systemctl reload nginx
+```
+</Step>
+</Steps>
+
+Next step is probably to setup HTTPS (putting something in HTTP should be an exception, with good reason for that!)
+
+### How to Add HTTPS
+
+Most of the time HTTPS certificates are managed on the nginx reverse proxy VM. Here is how to configure them to enable HTTPS.
+
+<Callout type="info">
+We use certbot to manage certificates.
+</Callout>
+
+<Steps>
+<Step>
+**Prepare Service Definition**
+First prepare the service definition to answer on port 443 and 80:
+
+<Tabs>
+<Tab value="https" label="HTTPS Configuration">
+Change your current configuration to listen on 443:
+
+```nginx title="HTTPS Server Block"
+server{
+  listen 443;
+  listen [::]:443;
+  server_name  my-service.openfoodfacts.net;
+}
+```
+</Tab>
+
+<Tab value="http" label="HTTP Redirect">
+Add a new bare section for port 80:
+
+```nginx title="HTTP Server Block"
+server {
+  listen 80;
+  listen [::]:80;
+  server_name  my-service.openfoodfacts.net;
+}
+```
+</Tab>
+</Tabs>
+</Step>
+
+<Step>
+**Test Certificate First**
+<Callout type="danger">
+**WARNING**: Only skip this part if you really are used to certbot and nginx configuration, as after five tentatives, we won't be able to renew any certificates on the domain for one full week, and if you do too much error, the IP itself might be out of limit. See [letsencrypt Rate limits](https://letsencrypt.org/docs/rate-limits/)
+</Callout>
+
+```bash title="Test Certificate"
+certbot --test-cert -d my-service.openfoodfacts.net
+```
+
+Follow the prompts:
+- Enter email address: `root@openfoodfacts.org`
+- Agree to terms of service: `A`
+- Share email: `n`
+
+<Callout type="info">
+**Note**: Verify it's the right file which has been impacted! If it's not you may have the option to restore the file with `git checkout wrong-touched-file`
+</Callout>
+</Step>
+
+<Step>
+**Install Real Certificate**
+Test it's working (apart from the security alert in your browser, because certificate is from an unknown issuer).
+
+Then install the real certificate:
+
+```bash title="Install Real Certificate"
+certbot -d my-service.openfoodfacts.net
+```
+
+When prompted:
+1. Select: `2: Renew & replace the cert (limit ~5 per 7 days)`
+2. Follow the same prompts as the test certificate
+
+Test again if it's working.
+</Step>
+</Steps>
+
+#### Multiple Domains
+
+If you're in the case where same configuration must serve multiple domains, like `ui.my-site.openfoodfacts.net` and `api.my-site.openfoodfacts.net`, simply add all those domains to the certbot command with the `-d` parameters.
+
+```bash title="Multiple Domain Certificate"
+certbot -d ui.my-site.openfoodfacts.net -d api.my-site.openfoodfacts.net -d my-site.openfoodfacts.net
+```
+
+<Callout type="info">
+If a certificate already exists for a domain, certbot will propose to extend it with the other domains.
+</Callout>
+
+### Wildcard Certificates
+
+Certbot can deliver wildcard certificates for domains based on DNS challenges. So you need a plugin for your DNS provider.
+
+<Callout type="info">
+In our case, this is the plugin for OVH. Installing `python3-certbot-dns-ovh` works in our case.
+
+Access tokens are stored in `/root/.ovhapi/<domain-name>` and are only readable by root (0600).
+</Callout>
+
+#### How to Add Wildcard Certificates
+
+<Steps>
+<Step>
+**Install Required Packages**
+```bash title="Install Certbot OVH Plugin"
+sudo apt update
+sudo apt install certbot python3-certbot-dns-ovh
+```
+
+<Callout type="note">
+Official documentation requires snapd… we are not keen on that, and moreover, in a LXC container [it does not seem to work well](https://forum.proxmox.com/threads/cant-install-snap-in-lxc-container.68708/). So we go the alternate way, using the debian package.
+</Callout>
+</Step>
+
+<Step>
+**Generate OVH Credentials**
+Generate credential, following https://eu.api.ovh.com/createToken/
+
+You can manage the existing keys at [ovh.com/manager/#/iam/dashboard/applications](https://www.ovh.com/manager/#/iam/dashboard/applications).
+
+Using:
+- GET `/domain/zone/` (Note: the trailing slash is important!)
+- GET/PUT/POST/DELETE `/domain/zone/openpetfoodfacts.org/*`
+
+![token creation at form at OVH](../img/2023-05-ovh-create-token-openfoodfacts.org-form.png "token creation at form at OVH")
+![token creation result](../img/2023-05-ovh-create-token-openfoodfacts.org-result.png "token creation result")
+
+And we put config file in `/root/.ovhapi/openpetfoodfacts.org`:
+
+```bash title="Setup OVH API Credentials"
+mkdir /root/.ovhapi
+vim /root/.ovhapi/openpetfoodfacts.org
+
+# Content:
+# OVH API credentials used by Certbot
+dns_ovh_endpoint = ovh-eu
+dns_ovh_application_key = ***********
+dns_ovh_application_secret = ***********
+dns_ovh_consumer_key = ***********
+
+# ensure no reading by others
+chmod og-rwx -R /root/.ovhapi
+```
+</Step>
+
+<Step>
+**Test Wildcard Certificate**
+```bash title="Test Wildcard Certificate"
+certbot certonly --test-cert --dns-ovh --dns-ovh-credentials /root/.ovhapi/openpetfoodfacts.org -d openpetfoodfacts.org -d "*.openpetfoodfacts.org"
+```
+</Step>
+
+<Step>
+**Install Real Wildcard Certificate**
+```bash title="Install Real Wildcard Certificate"
+certbot certonly --dns-ovh --dns-ovh-credentials /root/.ovhapi/openpetfoodfacts.org -d openpetfoodfacts.org -d "*.openpetfoodfacts.org"
+```
+
+When asked, choose to replace existing certificate.
+</Step>
+
+<Step>
+**Manual NGINX Configuration**
+Now we install it on our website, we did it manually:
+
+```nginx title="Wildcard SSL Configuration"
+server {
+    listen 80;
+    listen [::]:80;
+    server_name openpetfoodfacts.org *.openpetfoodfacts.org;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name openpetfoodfacts.org *.openpetfoodfacts.org;
+
+    # SSL/TLS settings
+    ssl_certificate /etc/letsencrypt/live/openpetfoodfacts.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/openpetfoodfacts.org/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/openpetfoodfacts.org/chain.pem;
+
+    # ... rest of configuration
+}
+```
+</Step>
+</Steps>
+
+### EtcKeeper
+
+<Callout type="info">
+We use [etckeeper](./linux-server.md#etckeeper)
+</Callout>
+
+Do not forget to commit your changes:
+
+```bash title="Commit Changes"
+etckeeper commit -m "Configured my-service.openfoodfacts.net"
+```
+
+Now we are done 🎉
+
+## Performance Tips
+
+### Use a Buffer for Access Log
+
+Use a buffer for access log for high traffic websites:
+
+```nginx title="Buffered Access Log"
+access_log /var/log/nginx/off-access.log proxied_requests buffer=256K flush=1s;
+```
+
+## Installation
+
+Install was quite simple: we simply install nginx package, as well as stunnel4.
+
+<Cards>
+<Card title="Analysis Tools">
+Along with nginx, some other tools can be installed:
+- **apachetop**: to analyze realtime web traffic
+- **[lnav](https://lnav.org/)**: to analyze logs
+</Card>
+</Cards>
+
+## IPv6 Configuration
+
+<Callout type="info">
+An IPv6 address was added to the reverse proxy CT, so that the reverse proxy can reach `docker-prod-2` VM on Moji, where Robotoff services are running. Moji server is currently only accessible through IPv6 as it does not have a public IPv4 address.
+
+See [Moji Datacenter](moji-datacenter.md) and [moji server installation report](reports/2024-08-13-moji-server-installation.md) for more information.
+</Callout>

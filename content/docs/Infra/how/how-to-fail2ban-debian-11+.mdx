@@ -1,0 +1,180 @@
+---
+title: "Fail2ban on Debian 11+"
+description: "Learn how to install and configure Fail2ban on Debian 11+ systems, which use NFTables instead of iptables. This guide covers setting up NFTables integration, configuring Fail2ban rules, and verifying its operation."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# How to Install Fail2ban on Debian 11+
+
+<Callout type="warn">
+On Debian 11+ (excluding Proxmox versions), NFTables is used instead of iptables. Fail2ban requires additional configuration to work with NFTables.
+</Callout>
+
+## Overview
+
+<Card title="NFTables Integration" description="Setting up Fail2ban with modern firewall system">
+
+Fail2ban is not configured out of the box to use NFTables. This guide follows the approach from [wiki.meurisse.org](https://wiki.meurisse.org/wiki/Fail2Ban#nftables) to enable NFTables integration.
+
+</Card>
+
+## Installation Process
+
+<Steps>
+  <Step title="Configure NFTables">
+    Set up NFTables table with Fail2ban integration
+  </Step>
+  
+  <Step title="Configure Fail2ban">
+    Link Fail2ban configuration files for NFTables support
+  </Step>
+  
+  <Step title="Setup Service Dependencies">
+    Ensure Fail2ban waits for NFTables to start
+  </Step>
+  
+  <Step title="Verify Installation">
+    Test the installation and monitor jail status
+  </Step>
+</Steps>
+
+## Configuration Steps
+
+### Step 1: Setup NFTables Table
+
+<Card title="NFTables Configuration" description="Create NFTables configuration with Fail2ban support">
+
+```bash title="Configure NFTables"
+# Backup original configuration
+mv /etc/nftables.conf{,.distrib}
+
+# Link to infrastructure configuration
+ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/nftables.conf
+
+# Create configuration directory
+mkdir /etc/nftables.conf.d
+
+# Link Fail2ban NFTables configuration
+ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/nftables.conf.d/fail2ban.conf /etc/nftables.conf.d/
+
+# Restart NFTables service
+systemctl restart nftables
+```
+
+</Card>
+
+### Step 2: Configure Fail2ban for NFTables
+
+<Card title="Fail2ban NFTables Integration" description="Configure Fail2ban to use NFTables backend">
+
+```bash title="Link Fail2ban Configuration"
+# Link common NFTables action
+ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/action.d/nftables-common.local /etc/fail2ban/action.d/
+
+# Override default NFTables action (handles IP intervals like 10.0.0.0/24)
+ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/action.d/nftables.local /etc/fail2ban/action.d/
+
+# Configure jail to use NFTables
+ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/jail.d/use-nftable.local /etc/fail2ban/jail.d/
+```
+
+</Card>
+
+### Step 3: Configure Service Dependencies
+
+<Card title="Service Dependencies" description="Ensure proper service startup order">
+
+```bash title="Configure Service Dependencies"
+# Link systemd override configuration
+ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/systemd/fail2ban.service.d /etc/systemd/system/
+
+# Reload systemd and restart services
+systemctl daemon-reload
+systemctl restart fail2ban
+```
+
+</Card>
+
+## Verification and Monitoring
+
+<Tabs items={["Status Commands", "NFTables Inspection", "Troubleshooting"]}>
+  <Tab value="Status Commands">
+    ### Check Fail2ban Status
+    
+    ```bash title="Basic Status Check"
+    # View all jails
+    fail2ban-client status
+    
+    # View specific jail details
+    fail2ban-client status <jail-name>
+    ```
+  </Tab>
+  
+  <Tab value="NFTables Inspection">
+    ### Inspect NFTables Rules
+    
+    ```bash title="NFTables Rule Inspection"
+    # View all rules
+    nft list ruleset
+    
+    # View Fail2ban table specifically
+    nft list table inet f2b-table
+    
+    # View specific jail address set
+    nft list set inet f2b-table addr-set-<jail-name>
+    ```
+    
+    <Callout type="info">
+    Banned IPs will appear in the corresponding `addr-set-<jailname>` elements.
+    </Callout>
+  </Tab>
+  
+  <Tab value="Troubleshooting">
+    ### Common Issues
+    
+    <Cards>
+      <Card title="Service Dependencies" description="Ensure NFTables starts before Fail2ban" />
+      <Card title="Configuration Links" description="Verify all symbolic links are correct" />
+      <Card title="Log Analysis" description="Check /var/log/fail2ban.log for errors" />
+    </Cards>
+  </Tab>
+</Tabs>
+
+## Additional Tools
+
+<Card title="IPTables to NFTables Translation" description="For administrators familiar with iptables syntax">
+
+### Using iptables-translate
+
+If you're more familiar with iptables syntax, you can use the translation tool:
+
+```bash title="Testing iptables-translate"
+# Run in Docker container
+docker run --rm --name test-deb -ti debian:12 bash
+
+# Install iptables tools
+apt update && apt install iptables
+
+# Example translation
+iptables-translate -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
+# Output: nft 'add rule ip filter INPUT ct state established counter accept'
+```
+
+<Callout type="tip">
+The `iptables-translate` command helps convert familiar iptables rules to NFTables syntax.
+</Callout>
+
+</Card>
+
+## Key Differences
+
+<Cards>
+  <Card title="Backend Change" description="NFTables replaces iptables as the default firewall backend" />
+  <Card title="Rule Format" description="Different syntax and structure for firewall rules" />
+  <Card title="Performance" description="NFTables offers improved performance and flexibility" />
+  <Card title="Configuration" description="Requires specific Fail2ban configuration for integration" />
+</Cards>

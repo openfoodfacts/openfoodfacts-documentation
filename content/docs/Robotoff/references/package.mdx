@@ -1,0 +1,132 @@
+---
+title: "Package Reference"
+description: "This document provides a high-level overview of Robotoff's library features, including how to use the Open Food Facts dataset and interact with taxonomies (ingredient, label, category). It also covers installation and provides code examples."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Package Reference
+
+Robotoff is deployed on a web server, but is also distributed as a library.
+This document presents a brief, high-level overview of Robotoff's library primary features. This guide will cover:
+
+<Cards>
+  <Card title="OFF Dataset Usage" description="Learn how to work with the Open Food Facts dataset" />
+  <Card title="Taxonomies" description="Interact with ingredient, label, and category taxonomies" />
+</Cards>
+
+## Installation
+
+<Callout type="info">
+  Robotoff is currently compatible with Python 3.11.
+</Callout>
+
+Robotoff can be installed [following dev install doc](/docs/Robotoff/how-to-guides/deployment/dev-install.mdx)
+
+## Working with the Open Food Facts Dataset
+
+<Steps>
+  <Step>
+    ### Download Dataset
+    
+    First, download the dataset:
+    
+    ```bash title="Download dataset"
+    python -m robotoff download-dataset
+    ```
+  </Step>
+
+  <Step>
+    ### Use Dataset Tools
+    
+    Robotoff includes a set of tools to easily handle the OFF dataset.
+    As an example, we can print the product name of all complete products from France that have ingredients in French:
+
+    ```python title="Filter and iterate products"
+    from robotoff.products import ProductDataset
+
+    ds = ProductDataset.load()
+
+    product_iter = (ds.stream()
+                      .filter_by_country_tag('en:france')
+                      .filter_nonempty_text_field('ingredients_text_fr')
+                      .filter_by_state_tag('en:complete')
+                      .iter())
+
+    for product in product_iter:
+        print(product['product_name'])
+    ```
+
+    <Callout type="info">
+      We first lazily load the dataset using `ProductDataset.load()`.
+      Then, we create a ProductStream using the `ProductDataset.stream()` method, and apply filters on the stream of products.
+    </Callout>
+  </Step>
+</Steps>
+
+### Available Filters
+
+<Cards>
+  <Card title="filter_by_country_tag" description="Filter products by country" />
+  <Card title="filter_by_state_tag" description="Filter by product completion state" />
+  <Card title="filter_nonempty_text_field" description="Filter products with non-empty text fields" />
+  <Card title="filter_empty_text_field" description="Filter products with empty text fields" />
+  <Card title="filter_nonempty_tag_field" description="Filter products with non-empty tag fields" />
+  <Card title="filter_empty_tag_field" description="Filter products with empty tag fields" />
+  <Card title="filter_by_modified_datetime" description="Filter by modification date" />
+</Cards>
+
+## Working with Taxonomies
+
+Taxonomies contain items (such as ingredients, labels or categories) organized in a hierarchical way.
+Some items are children of other items. For instance, `en:brown-rice` is a child of `en:rice`.
+
+### Basic Usage
+
+```python title="Basic taxonomy operations"
+from robotoff.taxonomy import get_taxonomy
+
+# supported taxonomies: ingredient, category, label
+taxonomy = get_taxonomy('category')
+
+brown_rice = taxonomy['en:brown-rices']
+rice = taxonomy['en:rices']
+print(brown_rice)
+# Output: <TaxonomyNode en:brown-rices>
+
+print(brown_rice.children)
+# Output: [<TaxonomyNode en:brown-jasmine-rices>, <TaxonomyNode en:brown-basmati-rices>]
+
+assert brown_rice.is_child_of(rice)
+assert rice.is_parent_of(brown_rice)
+```
+
+### Localization and Hierarchy
+
+<Callout type="tip">
+  **Supported Taxonomies**: ingredient, category, label
+</Callout>
+
+```python title="Advanced taxonomy operations"
+# Get localized names
+assert brown_rice.get_localized_name('fr') == 'Riz complet'
+
+# find_deepest_item takes a list of string as input and outputs a string
+deepest_node = taxonomy.find_deepest_nodes([rice, brown_rice])
+assert deepest_node == [brown_rice]
+
+# Get synonyms in different languages
+print(brown_rice.get_synonyms('fr'))
+# Output: ['Riz complet', 'riz cargo', 'riz brun', 'riz semi-complet']
+
+# Get parent hierarchy
+print(brown_rice.get_parents_hierarchy())
+# Output: [<TaxonomyNode en:rices>, <TaxonomyNode en:cereal-grains>, 
+#          <TaxonomyNode en:cereals-and-their-products>, 
+#          <TaxonomyNode en:cereals-and-potatoes>, 
+#          <TaxonomyNode en:plant-based-foods>, 
+#          <TaxonomyNode en:plant-based-foods-and-beverages>, 
+#          <TaxonomyNode en:seeds>]
+```

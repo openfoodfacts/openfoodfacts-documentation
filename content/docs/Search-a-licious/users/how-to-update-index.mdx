@@ -1,0 +1,104 @@
+---
+title: "How to Update Index"
+description: "Learn the two strategies for keeping your Search-a-licious index up-to-date. This guide covers both continuous updates via Redis streams and periodic full data re-imports, including initial setup and advanced customization options."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+<Callout type="info">
+As you use search-a-licious, you will first import the data, but then you might need to update the index to keep it up to date with the latest data.
+</Callout>
+
+## Update Strategies
+
+<Cards>
+<Card title="Continuous Updates" description="Push events to Redis stream for real-time index updates" />
+<Card title="Periodic Re-imports" description="Update the index periodically using full dataset imports" />
+</Cards>
+
+<Steps>
+<Step title="First Import">
+
+First import will populate Elasticsearch index with all the data.
+
+<Cards>
+<Card title="Tutorial Guide" href="./tutorial.mdx#initial-import" description="See initial import section in tutorial" />
+<Card title="CLI Reference" href="../devs/ref-python/cli.html#python3-m-app-import" description="Import reference documentation" />
+</Cards>
+
+<Callout type="warning">
+**Important Note**
+
+If you don't use the *continuous updates* strategy, you need to use the `--skip-updates` option.
+</Callout>
+
+</Step>
+<Step title="Continuous Updates">
+
+<Callout>
+To have continuous updates, you need to push events to the Redis stream. Normally this will be done by your application.
+</Callout>
+
+### Event Requirements
+
+On each update/removal/etc. your application must push events with at least:
+- The document id
+- Eventually more info (if you need them to filter out items, for example)
+
+<Callout type="tip">
+You can also push events from another service if you have another way of getting changes, but this part is up to you.
+</Callout>
+
+### Run the Updater
+
+Start the `updater` container that comes in the docker-compose configuration:
+
+```bash title="Start Continuous Updater"
+docker-compose up -d updater
+```
+
+This will continuously fetch updates from the event stream and update the index accordingly.
+
+<Card title="Configuration Reference" href="./ref-config/searchalicious-config-schema.html#indices_additionalProperties_index_last_modified_field_name">
+At start it will compute last update time using the `last_modified_field_name` from the configuration
+</Card>
+
+</Step>
+<Step title="Periodic Re-imports">
+
+<Callout>
+Another way to update the index is to periodically re-import all the data, or changed data.
+</Callout>
+
+This is less compelling to your users, but this might be the best way if you are using an external database publishing changes on a regular basis.
+
+<Card title="Import Command" href="../devs/ref-python/cli.html#python3-m-app-import">
+For that you can use the `import` command
+</Card>
+
+**Key Options:**
+- Use `--skip-updates` option
+- Use `--partial` option if importing only changed data
+- For full reimports, use the normal import process (creates a new index that can be rolled back)
+
+</Step>
+</Steps>
+
+## Advanced Configuration
+
+<Callout type="tip">
+**Document Processing**
+
+In the configuration, you can define advanced processing options to transform the data.
+</Callout>
+
+<Cards>
+<Card title="Document Fetcher" href="./ref-config/searchalicious-config-schema.html#indices_additionalProperties_document_fetcher" description="Used only on continuous updates" />
+<Card title="Preprocessor" href="./ref-config/searchalicious-config-schema.html#indices_additionalProperties_preprocessor" description="Used on both continuous updates and initial import" />
+</Cards>
+
+<Callout type="info">
+Those are fully qualified dotted names to Python classes.
+</Callout>

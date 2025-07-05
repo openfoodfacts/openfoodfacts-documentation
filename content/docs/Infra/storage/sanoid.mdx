@@ -1,0 +1,337 @@
+---
+title: "Sanoid Overview"
+description: "This document provides an overview of Sanoid, a tool used for ZFS snapshot management, retention, and dataset synchronization via Syncoid. It covers configuration, checks, service setup, and installation, including detailed steps for building and enabling services."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Sanoid Overview
+
+We use [Sanoid](https://github.com/jimsalterjrs/sanoid/) for comprehensive ZFS snapshot management and dataset synchronization.
+
+<Callout type="info">
+Sanoid provides automated ZFS snapshot creation, retention management, and cross-server dataset synchronization through Syncoid.
+</Callout>
+
+## Core Functions
+
+<Cards>
+  <Card title="Snapshot Management" href="#sanoid-snapshot-configuration">
+    Automatic regular snapshots of ZFS datasets
+  </Card>
+  <Card title="Retention Policies" href="#sanoid-snapshot-configuration">
+    Automated cleanup based on retention rules
+  </Card>
+  <Card title="Dataset Sync" href="#syncoid-service-and-configuration">
+    Cross-server synchronization via Syncoid
+  </Card>
+  <Card title="Health Monitoring" href="#sanoid-checks">
+    Automated checks for snapshot freshness
+  </Card>
+</Cards>
+
+## Sanoid Snapshot Configuration
+
+Configuration is managed through `/etc/sanoid/sanoid.conf` which defines:
+- Snapshot frequency
+- Retention policies
+
+<Callout type="note">
+See [reference documentation](https://github.com/jimsalterjrs/sanoid/wiki/Sanoid) for detailed configuration options.
+</Callout>
+
+<Tabs>
+  <Tab value="synced" label="Synced Datasets">
+    ### Synced from Remote Server
+    
+    For datasets synced from different servers:
+    - **No local snapshots**: Receive snapshots from source
+    - **Purge only**: Remove old snapshots based on retention policy
+    - **No creation**: Source server handles snapshot creation
+  </Tab>
+  
+  <Tab value="local" label="Local Datasets">
+    ### Local Source Datasets
+    
+    For datasets where this server is the source:
+    - **Regular snapshots**: Create snapshots on schedule
+    - **Retention management**: Purge old snapshots automatically
+    - **Source control**: This server controls snapshot lifecycle
+  </Tab>
+</Tabs>
+
+### Handling vzdump Snapshots
+
+<Callout type="warning">
+vzdump snapshots created by Proxmox during backups can interfere with Syncoid synchronization.
+</Callout>
+
+<Steps>
+  <Step>
+    **Problem**: vzdump snapshots have the same name but are created/destroyed each time, potentially blocking sync operations.
+  </Step>
+  
+  <Step>
+    **Solution**: Use `sanoid_post_remove_vzdump.sh` script to remove vzdump snapshots on destination after Sanoid runs.
+  </Step>
+  
+  <Step>
+    **Configuration**: Add to "synced" templates in sanoid.conf:
+    ```ini title="Post-snapshot Script Configuration"
+    post_snapshot_script = /opt/openfoodfacts-infrastructure/scripts/zfs/sanoid_post_remove_vzdump.sh
+    ```
+  </Step>
+</Steps>
+
+## Sanoid Checks
+
+We run automated checks via `sanoid_check` timer/service to verify recent snapshots exist.
+
+<Callout type="tip">
+This helps verify that Sanoid is running correctly and Syncoid is performing its synchronization job.
+</Callout>
+
+### Configuration
+
+By default, all ZFS datasets are checked except those listed with `no_sanoid_checks:` in `sanoid.conf` comments.
+
+```ini title="Exclude Datasets from Checks"
+# no_sanoid_checks:rpool/logs-nginx:
+# no_sanoid_checks:rpool/obf-old:rpool/opf-old:
+```
+
+<Callout type="info">
+Multiple datasets can be specified per line, separated by colons (:).
+</Callout>
+
+## Syncoid Service and Configuration
+
+<Callout type="note">
+Sanoid doesn't include a systemd service for Syncoid, so we created our own: `confs/common/systemd/system/syncoid.service`
+</Callout>
+
+### Security Model
+
+<Callout type="warning">
+Always prefer **pull mode** to avoid elevated privileges on distant servers. This prevents attackers from gaining access to backup servers if they compromise a source server.
+</Callout>
+
+<Steps>
+  <Step>
+    **Create Operator User**
+    
+    Create user named `<server_name>operator` (e.g., `off2operator`) on remote server.
+  </Step>
+  
+  <Step>
+    **Grant ZFS Permissions**
+    
+    Use [zfs allow command](https://openzfs.github.io/openzfs-docs/man/8/zfs-allow.8.html) to grant `hold,send` permissions.
+  </Step>
+  
+  <Step>
+    **Configure Service**
+    
+    Service reads `/etc/sanoid/syncoid-args.conf` where each line contains arguments for `syncoid` command.
+  </Step>
+</Steps>
+
+## Getting Status
+
+<Tabs>
+  <Tab value="services" label="Service Status">
+    ### Check Service Status
+    
+    ```bash title="Service Status Commands"
+    systemctl status sanoid.service   # Sanoid snapshot service
+    systemctl status syncoid.service  # Syncoid sync service
+    ```
+  </Tab>
+  
+  <Tab value="snapshots" label="Snapshot Status">
+    ### List Snapshots
+    
+    ```bash title="List ZFS Snapshots"
+    /usr/sbin/zfs list -t snap <pool>/<dataset/path>
+    ```
+    
+    Check for recent snapshots on both source and destination datasets.
+  </Tab>
+</Tabs>
+
+## Installation
+
+<Callout type="info">
+Sanoid is installed by building from the official repository and creating a Debian package.
+</Callout>
+
+### Build and Install Sanoid
+
+<Steps>
+  <Step>
+    **Clone Repository**
+    
+    ```bash title="Clone Sanoid Repository"
+    cd /opt
+    git clone https://github.com/jimsalterjrs/sanoid.git
+    cd sanoid
+    ```
+  </Step>
+  
+  <Step>
+    **Checkout Stable Release**
+    
+    ```bash title="Get Latest Stable"
+    git checkout $(git tag | grep "^v" | tail -n 1)
+    ln -s packages/debian .
+    ```
+  </Step>
+  
+  <Step>
+    **Install Dependencies**
+    
+    ```bash title="Install Build Dependencies"
+    apt install debhelper libcapture-tiny-perl libconfig-inifiles-perl pv lzop mbuffer build-essential git
+    ```
+  </Step>
+  
+  <Step>
+    **Build and Install Package**
+    
+    ```bash title="Build Debian Package"
+    dpkg-buildpackage -uc -us
+    sudo apt install ../sanoid_*_all.deb
+    ```
+  </Step>
+</Steps>
+
+### Enable Sanoid Service
+
+<Steps>
+  <Step>
+    **Link Configuration**
+    
+    ```bash title="Link Sanoid Config"
+    ln -s /opt/openfoodfacts-infrastructure/confs/$SERVER_NAME/sanoid/sanoid.conf /etc/sanoid/
+    ```
+  </Step>
+  
+  <Step>
+    **Enable Services**
+    
+    ```bash title="Enable Sanoid Services"
+    for unit in email-failures@.service sanoid_check.service sanoid_check.timer sanoid.service.d; \
+      do ln -s /opt/openfoodfacts-infrastructure/confs/off1/systemd/system/$unit /etc/systemd/system ; \
+    done
+    systemctl daemon-reload
+    systemctl enable --now sanoid_check.timer
+    systemctl enable --now sanoid.service
+    ```
+  </Step>
+</Steps>
+
+### Enable Syncoid Service
+
+<Steps>
+  <Step>
+    **Link Configuration**
+    
+    ```bash title="Link Syncoid Config"
+    ln -s /opt/openfoodfacts-infrastructure/confs/$SERVER_NAME/sanoid/syncoid-args.conf /etc/sanoid/
+    ```
+  </Step>
+  
+  <Step>
+    **Enable Service**
+    
+    ```bash title="Enable Syncoid Service"
+    ln -s /opt/openfoodfacts-infrastructure/confs/$SERVER_NAME/systemd/system/syncoid.service /etc/systemd/system
+    systemctl daemon-reload
+    systemctl enable --now syncoid.service
+    ```
+  </Step>
+</Steps>
+
+## Setting Up Cross-Server Synchronization
+
+### Creating Operator on Source Server
+
+<Steps>
+  <Step>
+    **Create User**
+    
+    ```bash title="Create Operator User"
+    OPERATOR=${BACKUP_SERVER}operator
+    adduser $OPERATOR
+    # Choose a random password and discard it
+    ```
+  </Step>
+  
+  <Step>
+    **Setup SSH Access**
+    
+    ```bash title="Configure SSH"
+    mkdir /home/$OPERATOR/.ssh
+    vim /home/$OPERATOR/.ssh/authorized_keys
+    # Copy BACKUP_SERVER root public key
+    
+    chown $OPERATOR:$OPERATOR -R /home/$OPERATOR
+    chmod go-rwx -R /home/$OPERATOR/.ssh
+    ```
+  </Step>
+  
+  <Step>
+    **Grant ZFS Permissions**
+    
+    ```bash title="Grant ZFS Permissions"
+    # For --no-sync-snap mode (recommended):
+    zfs allow $OPERATOR hold,send zfs-hdd
+    zfs allow $OPERATOR hold,send zfs-nvme
+    zfs allow $OPERATOR hold,send rpool
+    
+    # For full sync mode (if needed):
+    # zfs allow $OPERATOR destroy,hold,mount,send,snapshot rpool
+    ```
+  </Step>
+</Steps>
+
+### Configure Syncoid on Backup Server
+
+<Steps>
+  <Step>
+    **Test Connection**
+    
+    ```bash title="Test SSH Connection"
+    OPERATOR=${BACKUP_SERVER}operator
+    ssh $OPERATOR@<ip_or_host>
+    ```
+  </Step>
+  
+  <Step>
+    **Configure Syncoid**
+    
+    Add lines to `syncoid-args.conf` using:
+    - `--no-privilege-elevation` flag
+    - `--no-sync-snap` flag (recommended)
+    - `--recursive` for subdatasets
+    
+    <Callout type="warning">
+    Configure sane retention policy with `autosnap=no` in Sanoid on backup server.
+    </Callout>
+  </Step>
+  
+  <Step>
+    **Initial Sync**
+    
+    <Callout type="tip">
+    Due to 6h timeout, consider doing the first synchronization manually before enabling the service.
+    </Callout>
+  </Step>
+</Steps>
+
+<Callout type="important">
+**Dataset Hierarchy**: Maintain good dataset organization. Put other servers' backups in an `off-backups` dataset, separate from the server's own backups dataset.
+</Callout>

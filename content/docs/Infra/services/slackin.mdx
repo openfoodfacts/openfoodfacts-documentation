@@ -1,0 +1,161 @@
+---
+title: "Slack Invitation System"
+description: "This document details the Open Food Facts Slack invitation system, including the deprecated Slackin tool and the current static page approach. It provides instructions for updating the Slack invitation link and explains the previous Node.js service setup."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Auto Slack Invitation
+
+<Callout type="warning">
+**Important**: As of 2023-03-23, Slackin no longer works due to [Slack API changes that won't be replaced](https://github.com/rauchg/slackin/issues/417). We have moved to a static page solution.
+</Callout>
+
+## Current Solution
+
+We replaced the Slackin service with a simple static page on the [nginx reverse proxy](nginx-reverse-proxy.md).
+
+<Cards>
+  <Card title="Static Page" href="#current-implementation">
+    Simple HTML page with permanent invitation link
+  </Card>
+  <Card title="Invitation Limits" href="#limitations">
+    400 invitations per permanent link
+  </Card>
+  <Card title="Link Updates" href="#updating-slack-invitation">
+    Process for updating invitation links
+  </Card>
+</Cards>
+
+### Current Implementation
+
+- **Location**: Static page on nginx reverse proxy
+- **Method**: Permanent invitation link from Slack
+- **Limitation**: 400 invitations per link, then requires manual renewal
+
+## Updating Slack Invitation
+
+<Steps>
+  <Step>
+    **Generate New Invitation**
+    
+    In Slack administration:
+    1. Go to ["invitations" section](https://openfoodfacts.slack.com/admin/invites)
+    2. Click "Invite people" (top right corner)
+    3. Click "Copy invitation link"
+    4. Click "Modify link parameters"
+    5. Set expire parameter to "never expire"
+  </Step>
+  
+  <Step>
+    **Update Static Page**
+    
+    On OVH reverse proxy (server hosting slack.openfoodfacts.org):
+    
+    ```bash title="Update Invitation Link"
+    # Edit the HTML file
+    vim /var/www/slack/index.html
+    
+    # Change the href for the "Join our slack" link with your new link
+    # Save the file
+    ```
+  </Step>
+  
+  <Step>
+    **Commit Changes**
+    
+    ```bash title="Save Configuration"
+    cd /opt/openfoodfacts-infrastructure
+    # Commit your changes following the git workflow
+    ```
+    
+    See [how to have server config in git](./how-to-have-server-config-in-git.md) for details.
+  </Step>
+</Steps>
+
+<Callout type="note">
+The permanent invitation link will expire after 400 uses and needs to be manually renewed.
+</Callout>
+
+## Slackin (Deprecated)
+
+<Callout type="info">
+This section documents the previous Slackin implementation for historical reference.
+</Callout>
+
+### Previous Implementation
+
+The original system at https://slack.openfoodfacts.org enabled users to join our Slack without manual invitations.
+
+<Tabs>
+  <Tab value="tech" label="Technical Details">
+    ### Technical Stack
+    
+    - **Base**: [Slackin project](https://github.com/rauchg/slackin)
+    - **Runtime**: Node.js service
+    - **Container**: Container 109 on ovh1
+    - **Location**: `/home/nodejs`
+    - **Process Manager**: [PM2](https://pm2.io/docs/runtime/guide/process-management/)
+    - **Service**: systemd service named `pm2-nodejs`
+  </Tab>
+  
+  <Tab value="network" label="Network Configuration">
+    ### Network Setup
+    
+    - **Port**: Listened on port 3000
+    - **Access**: Through [NGINX reverse proxy](./nginx-reverse-proxy.md)
+    - **Domain**: slack.openfoodfacts.org
+  </Tab>
+  
+  <Tab value="issues" label="Deprecation Reasons">
+    ### Why It Stopped Working
+    
+    <Callout type="warning">
+    Slackin became non-functional due to Slack API changes:
+    </Callout>
+    
+    - [Main issue](https://github.com/rauchg/slackin/issues/417)
+    - [Extended version issue](https://github.com/emedvedev/slackin-extended/issues/205)
+    - [Slack integration issue](https://github.com/integrations/slack/issues/1063)
+    
+    Slack deprecated the APIs that Slackin relied on, with no replacement planned.
+  </Tab>
+</Tabs>
+
+## Migration Notes
+
+<Cards>
+  <Card title="From Slackin" href="#slackin-deprecated">
+    Automated Node.js service with real-time invitation
+  </Card>
+  <Card title="To Static Page" href="#current-solution">
+    Simple HTML page with manual link management
+  </Card>
+  <Card title="Trade-offs" href="#trade-offs">
+    Reduced automation for increased reliability
+  </Card>
+</Cards>
+
+### Trade-offs
+
+<Tabs>
+  <Tab value="benefits" label="Benefits">
+    ### Advantages of Static Page
+    
+    - **Reliability**: No dependency on deprecated APIs
+    - **Simplicity**: Easy to maintain and update
+    - **Performance**: Fast loading, no server processing
+    - **Stability**: Less likely to break with Slack changes
+  </Tab>
+  
+  <Tab value="limitations" label="Limitations">
+    ### Disadvantages
+    
+    - **Manual Updates**: Requires manual link renewal every 400 invitations
+    - **No Analytics**: Can't track invitation usage automatically
+    - **Less Features**: No real-time user count or other dynamic features
+  </Tab>
+</Tabs>

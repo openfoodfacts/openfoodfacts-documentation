@@ -1,0 +1,151 @@
+---
+title: "Folksonomy API"
+description: "This document describes the Folksonomy API, a service enabling contributors to add labels and values to products. It covers deployment on LXC containers, systemd management, useful commands, upgrade procedures, and installation steps."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Folksonomy API
+
+Folksonomy is a service to allow contributors to freely add labels and values to products.
+
+<Card title="Source Code" href="https://github.com/openfoodfacts/folksonomy_api/">
+View the Folksonomy API repository on GitHub
+</Card>
+
+## Deployment
+
+<Callout type="info">
+Folksonomy is deployed on a LXC container (108 at the time of writing).
+</Callout>
+
+### Deployment Details
+
+<Cards>
+<Card title="Code Location">
+Code is in `/home/folksonomy/folksonomy_api`
+</Card>
+<Card title="Service Management">
+Started thanks to a systemd unit: `folksonomy.service` (config at `/etc/systemd/system/folksonomy.service`)
+</Card>
+<Card title="Server Configuration">
+Server is running uvicorn on port 8000 with user folksonomy
+</Card>
+<Card title="Reverse Proxy" href="./nginx-reverse-proxy.md">
+It is served behind the NGINX reverse proxy
+</Card>
+</Cards>
+
+<Callout type="note">
+The python environment has been setup using uv, to get python3.10 and poetry on top of that. So poetry executable is in `/home/folksonomy/.local/bin/poetry`
+</Callout>
+
+## Useful Commands
+
+<Tabs>
+<Tab value="status" label="Service Status">
+```bash title="Check Service Status"
+systemctl status folksonomy
+```
+
+<Callout type="tip">
+You can also use reload/restart/etc. with this command.
+</Callout>
+</Tab>
+
+<Tab value="logs" label="Service Logs">
+```bash title="View Service Logs"
+sudo journalctl -u folksonomy
+```
+</Tab>
+</Tabs>
+
+## Upgrade Process
+
+<Callout type="warning">
+Before every upgrade, make a snapshot of the Proxmox container.
+</Callout>
+
+<Steps>
+<Step>
+**Switch to Folksonomy User**
+```bash title="Switch User"
+su - folksonomy
+cd ~/folksonomy_api
+```
+</Step>
+
+<Step>
+**Upgrade from Git Repository**
+```bash title="Upgrade Code"
+git fetch
+git checkout vX.y.z
+```
+</Step>
+
+<Step>
+**Install Dependencies**
+```bash title="Install Dependencies"
+poetry install
+```
+</Step>
+
+<Step>
+**Database Migration**
+```bash title="Run Database Migration"
+poetry run yoyo apply --database postgresql:///folksonomy
+```
+</Step>
+
+<Step>
+**Restart Service**
+```bash title="Restart Service"
+# go back root
+exit
+# Finally, restart the service (with root user or root rights or sudo rights)
+systemctl daemon-reload
+systemctl restart folksonomy
+```
+</Step>
+</Steps>
+
+## Installation
+
+<Steps>
+<Step>
+**Clone Repository**
+We simply clone the repository in `/home/folksonomy/folksonomy_api`.
+</Step>
+
+<Step>
+**Install Python Environment**
+We installed the python environment with uv:
+
+```bash title="Install Python Environment"
+# as root
+pip install uv
+/usr/local/bin/uv python install 3.10
+
+# as folksonomy
+su - folksonomy
+uv tool install poetry --python=3.10
+
+# ensure PATH is correct
+which poetry
+# /home/folksonomy/.local/bin/poetry
+```
+</Step>
+
+<Step>
+**Setup Systemd Unit**
+The systemd unit is linked from the repository:
+
+```bash title="Setup Systemd Service"
+ln -s /home/folksonomy/folksonomy_api/confs/systemd/folksonomy.service /etc/systemd/system/folksonomy.service
+systemctl daemon-reload
+```
+</Step>
+</Steps>

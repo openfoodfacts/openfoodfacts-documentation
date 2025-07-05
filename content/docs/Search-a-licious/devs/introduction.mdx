@@ -1,0 +1,61 @@
+---
+title: "Developer Introduction"
+description: "This developer introduction outlines the Search-a-licious project structure, including the FastAPI backend, Lit-based web components, and Docker deployment. It also covers the core technologies used and provides links to get started with development."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+<Callout type="info">
+The Search-a-licious project is centered around a few main components that work together to provide a comprehensive search solution.
+</Callout>
+
+## Project Structure
+
+<Cards>
+<Card title="FastAPI Backend" description="API implementation in the app folder - see ref documentation" />
+<Card title="Web Components" description="Lit-based UI components in the frontend folder" />
+<Card title="Docker Deployment" description="Container orchestration with docker-compose.yml and docker/ folder" />
+</Cards>
+
+### Core Technologies
+
+<Steps>
+<Step title="Search Engine">
+[Elasticsearch](https://www.elastic.co/elasticsearch) for the search engine^[OpenSearchWanted]
+</Step>
+<Step title="Event Stream">
+[Redis](https://redis.io/) for event stream^[AltRedisWanted]
+</Step>
+<Step title="Visualizations">
+[Vega](https://vega.github.io/) for the charts
+</Step>
+</Steps>
+
+<Card title="Architecture Details" href="./explain-architecture.mdx">
+See Explain Architecture for more detailed information about the system design.
+</Card>
+
+## Getting Started
+
+<Card title="Local Development Setup" href="./how-to-install.mdx">
+Install the project locally for development
+</Card>
+
+## Development Resources
+
+<Cards>
+<Card title="Backend Debugging" href="./how-to-debug-backend.mdx" description="Learn how to debug the backend API" />
+<Card title="Frontend Components" href="./explain-web-frontend.mdx" description="Understanding the web component architecture" />
+</Cards>
+
+## Future Compatibility
+
+<Callout type="tip">
+**Contribution Opportunities**
+
+^[OpenSearchWanted]: [OpenSearch](https://opensearch.org/) is also a desirable target, contribution to verify compatibility and provide it as default would be appreciated.
+
+^[AltRedisWanted]: An alternative to Redis for event stream would also be a desirable target.
+</Callout>

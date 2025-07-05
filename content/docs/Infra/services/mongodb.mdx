@@ -1,0 +1,151 @@
+---
+title: "MongoDB Management"
+description: "This document details MongoDB usage within Open Food Facts, covering its role in product search and aggregations. It outlines production and staging deployments, including refresh scripts, installation specifics, and log rotation configurations for optimal performance and data management."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# MongoDB Management
+
+MongoDB is the database used to search products and run aggregations (like facets), etc.
+
+<Cards>
+<Card title="Production Instance">
+We have a single instance in production
+</Card>
+<Card title="Staging Instance">
+For staging also we have a single instance
+</Card>
+</Cards>
+
+## Refresh Products Scripts
+
+<Callout type="info">
+The machine with MongoDB must have a product opener clone to be able to run [`refresh_products_tags.js`](https://github.com/openfoodfacts/openfoodfacts-server/blob/640c6d1d8c121bbe2987e4811a555b9305ae2a62/scripts/refresh_products_tags.js) in crontab.
+
+This creates small collections that are used for aggregations (mainly for facets for anonymous users).
+</Callout>
+
+## Deployment Environments
+
+<Tabs>
+<Tab value="staging" label="Staging Instance">
+<Card title="Staging Deployment">
+This is an instance for staging (aka .net) product opener instances.
+</Card>
+
+<Callout type="info">
+It is deployed on [staging containers VM](./docker_architecture.md#docker-server-for-staging).
+
+See https://github.com/openfoodfacts/openfoodfacts-server/blob/main/.github/workflows/mongo-deploy.yml script.
+</Callout>
+</Tab>
+
+<Tab value="production" label="Production Instance">
+<Card title="Production Setup">
+We installed the [MongoDB Community Edition Packages](https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-debian/#std-label-debian-package-content) for Debian in version 4.4.x.
+</Card>
+
+<Callout type="note">
+Currently this is hosted on off3, a temporary server gracefully lended by OSM France, you can access it via ssh from off1 or off2 as root (`sudo ssh 10.0.0.3`).
+</Callout>
+
+### Configuration
+
+The configuration file is in `/etc/mongod.conf`.
+
+<Cards>
+<Card title="Storage Path">
+`storage.dbPath` is set to a specific volume: `/mongo/db`
+</Card>
+<Card title="Log Rotation">
+`systemLog.LogRotate` is set to `reopen` (needed by logrotate)
+</Card>
+<Card title="PID File Path">
+`processManagement.pidFilePath` is set to `"/var/run/mongodb/mongod.pid"`
+</Card>
+</Cards>
+
+<Callout type="warning">
+I also had to create the `/var/run/mongodb` directory and give it to `mongodb` user:
+
+```bash title="Create MongoDB Runtime Directory"
+mkdir /var/run/mongodb/
+chown mongodb:mongodb /var/run/mongodb/
+```
+</Callout>
+
+### Log Rotation
+
+<Callout type="info">
+In production, logs have to be rotated. Following [this blog post](https://www.zoonman.com/blog/mongodb-logrotated/) cross checked with official docs.
+</Callout>
+
+<Steps>
+<Step>
+**Configure MongoDB**
+See above to configure `/etc/mongod.conf` correctly.
+</Step>
+
+<Step>
+**Setup Main Log Rotation**
+Create `/etc/logrotate.d/mongod`:
+
+```bash title="/etc/logrotate.d/mongod"
+/var/log/mongodb/mongod.log
+{
+   # keep 7 files (one week)
+   rotate 7
+   # every day
+   daily
+   # min file size
+   size 100M
+   # no problem if it does not yet exists
+   missingok
+   # create it if needed with owner mongodb
+   create 0600 mongodb mongodb
+   # compress only old file (as switch is not immediate)
+   delaycompress
+   # but compress old archives
+   compress
+   # the postrotate tells mongo to change log
+   # Be sure to have processManagement.pidFilePath set to this path in mongod.conf
+   # and that folder exists and is owned by mongodb
+   sharedscripts
+   postrotate
+     /bin/kill -SIGUSR1 $(cat /var/run/mongodb/mongod.pid)
+   endscript
+}
+```
+</Step>
+
+<Step>
+**Setup Refresh Tags Log Rotation**
+We also have logs for refresh products tags `/etc/logrotate.d/mongo_refresh_tags`:
+
+```bash title="/etc/logrotate.d/mongo_refresh_tags"
+/var/log/mongodb/refresh_products_tags_*.log
+{
+  rotate 7
+  weekly
+  size 100M
+  missingok
+  # we don't know when logrotate will happen
+  # script might be working, so only compress previous files
+  delaycompress
+  compress
+}
+```
+</Step>
+</Steps>
+</Tab>
+</Tabs>
+
+---
+
+<Callout type="note">
+On staging logs are sent to docker stdout/err and we let docker handle logs.
+</Callout>

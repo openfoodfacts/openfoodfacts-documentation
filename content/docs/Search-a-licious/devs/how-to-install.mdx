@@ -1,0 +1,175 @@
+---
+title: "Install for Development"
+description: "Set up your local development environment for Search-a-licious. This guide covers prerequisites, installing pre-commit and direnv, configuring your environment, building containers, and importing data for a smooth development experience."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+<Callout type="info">
+This guide will help you set up your local development environment for Search-a-licious.
+</Callout>
+
+<Steps>
+<Step title="Prerequisites">
+
+First, follow the same [prerequisites as for normal installation](../users/how-to-install.mdx#prerequisites):
+
+<Cards>
+<Card title="mmap Count" description="Configure system mmap count for Elasticsearch" />
+<Card title="Docker Setup" description="Install Docker and Docker Compose" />
+</Cards>
+
+</Step>
+<Step title="Install Development Tools">
+
+### Pre-commit
+
+<Callout>
+We use pre-commit to check the code quality.
+</Callout>
+
+<Card title="Pre-commit Installation" href="https://pre-commit.com/#install">
+Follow the official tutorial to install pre-commit on your machine
+</Card>
+
+### Direnv
+
+<Callout type="tip">
+Direnv is a tool to automatically set environment variables depending on the current directory. This is handy to personalize the environment for each project as environment variables have priority over the `.env` file.
+</Callout>
+
+<Card title="Direnv Tutorial" href="https://openfoodfacts.github.io/openfoodfacts-server/dev/how-to-use-direnv/">
+For Linux and macOS users, follow our tutorial to install direnv^[winEnvrc]
+</Card>
+
+</Step>
+<Step title="Environment Setup">
+
+<Callout type="info">
+**Environment Configuration Options**
+
+You have several options to set up your environment:
+1. Use direnv with the `.envrc` file (recommended)
+2. Add a `.envrc` that you source in your terminal (recommended)
+3. Modify the `.env` file directly (not recommended for development)
+</Callout>
+
+The following steps are for the recommended options. If you edit the `.env` directly, ignore the "export " keywords.
+
+**Get your user information:**
+
+```bash title="Get User IDs"
+id -u  # for USER_UID
+id -g  # for USER_GID
+```
+
+**Create `.envrc` file:**
+
+Add a `.envrc` file at the root of the project:
+
+```bash title="Environment Configuration"
+export USER_GID=<your_user_gid>
+export USER_UID=<your_user_uid>
+
+export CONFIG_PATH=data/config/openfoodfacts.yml
+export OFF_API_URL=https://world.openfoodfacts.org
+export ALLOWED_ORIGINS='http://localhost,http://127.0.0.1'
+```
+
+<Callout type="tip">
+^[winEnvrc]: For Windows users, the .envrc is only taken into account by the `make` commands.
+</Callout>
+
+</Step>
+<Step title="Build Containers">
+
+To build the containers, run the following command:
+
+```bash title="Build Development Containers"
+make build
+```
+
+Note: the Makefile will align the user id with your own uid for a smooth editing experience (having same user id in container and host, so that you have permission to edit files).
+
+## Running
+
+Now you can run the project with Docker `docker compose up `.
+
+After that run the following command on another shell to compile the project:
+
+```bash title="Watch TypeScript Compilation"
+make tsc_watch
+```
+
+<Callout type="tip">
+Do this for next installation steps and to run the project.
+</Callout>
+
+<Callout type="warning">
+**Common Issues**
+
+- **Permission Error**: If your user is not part of the `docker` group, you should either [add it](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) or modify the Makefile to prefix `sudo` to all docker and docker compose commands.
+- **Update Container Crash**: Container crashes because we are not connected to Redis, this is not a problem for development.
+</Callout>
+
+</Step>
+<Step title="Verify Installation">
+
+Docker spins up several services:
+
+<Cards>
+<Card title="Elasticsearch" description="Two nodes, one exposed on port 9200 - test at http://127.0.0.1:9200" />
+<Card title="Elasticvue" description="Management UI on port 8080 - test at http://127.0.0.1:8080" />
+<Card title="Search Service" description="API and UI on port 8000" />
+</Cards>
+
+**Test the services:**
+- API: http://search.localhost:8000/docs
+- UI: http://search.localhost:8000/
+
+<Callout type="tip">
+By default we only expose on the localhost interface. This is driven by the `*_EXPOSE` variables in `.env`.
+</Callout>
+
+**Congratulations, you have successfully installed the project!**
+
+</Step>
+<Step title="Import Development Data">
+
+You will need to import data from a JSONL dump:
+
+**Import Taxonomies:**
+
+```bash title="Import Taxonomies"
+make import-taxonomies
+```
+
+**Import Products:**
+
+```bash title="Import Sample Products"
+# Get some sample data
+curl https://world.openfoodfacts.org/data/exports/products.random-modulo-10000.jsonl.gz --output data/products.random-modulo-10000.jsonl.gz
+gzip -d data/products.random-modulo-10000.jsonl.gz
+
+# Import data (skip updates because we're not connected to Redis)
+make import-dataset filepath='products.random-modulo-10000.jsonl' args='--skip-updates'
+```
+
+**Verify your data:** Visit http://search.localhost:8000/
+
+</Step>
+<Step title="Explore Data">
+
+<Callout>
+When you need to explore the Elasticsearch data, you can use Elasticvue.
+</Callout>
+
+1. Go to http://127.0.0.1:8080/welcome
+2. Click on "Add Elasticsearch cluster"
+3. Change the cluster name to "docker-cluster" at http://127.0.0.1:9200
+4. Click on "Connect"
+
+</Step>
+</Steps>

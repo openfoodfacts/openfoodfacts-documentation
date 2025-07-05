@@ -1,0 +1,525 @@
+---
+title: OFF2 OFF Reinstall
+description: This report details the reinstallation of OFF and OFF-pro on off2, following the OPFF, OPF, and OBF reinstall procedures. It covers physical hardware changes, BIOS configuration, Proxmox installation, ZFS pool setup, and the migration of data and services.
+author: Unknown Author
+mail: 
+date: "2023-07-07"
+---
+
+# 2023-06-07 OFF and OFF-pro reinstall on off2
+
+We will follow closely what we did for [OPFF reinstall on off2](./2023-03-14-off2-opff-reinstall.md).
+Refer to it if you need more explanation on a step.
+Also following [OPF and OBF reinstall on off2](./2023-06-07-off2-opf-obf-reinstall.md).
+
+
+## switching to right branch of off2 and ovh3
+
+On ovh3 and off2 we will set the branch to `off2-off-reinstall` to have modifications synced.
+```bash
+cd /opt/openfoodfacts-infrastructure
+git fetch
+git checkout off2-off-reinstall
+```
+
+We will continuously push and pull on this branch.
+
+## removing zfs-old and adding as cache to zfs-hdd
+
+`nvme3n1p2` is in zfs-old and has no utility right  now.
+
+```bash
+zpool destroy zfs-old
+```
+
+But as `zfs-nvme` is in mirror it's no use adding it as a new  device there.
+
+Instead we can add it as a cache to `zfs-hdd` to improve performance.
+
+```bash
+zpool add zfs-hdd cache nvme3n1p2
+```
+
+## installing a postgresql container
+
+### Created CT
+
+I created a CT for OFF followings [How to create a new Container](../proxmox.md#how-to-create-a-new-container) it went all smooth.
+
+It's 120 (off-postgres)
+
+I choosed a 20Gb disk on zfs-hdd, 0B swap, 2 Cores and 2 Gb memory.
+I added a disk on zfs-nvme mounted on /var/lib/postgresql/ with 5Gb size and noatime option.
+
+I did not create a user.
+
+I also [configure postfix](../mail.md#postfix-configuration) and tested it.
+
+### Installed Postgres
+
+I simply used standard distribution package.
+
+```bash
+sudo apt install postgresql postgresql-contrib
+```
+
+Change `/etc/postgresql/*/main/postgresql.conf` to set `listen_addresses` to `*` (listen on all ip).
+
+Change `/etc/postgresql/*/main/pg_hba.conf` to add:
+```ini
+# IPv4 local network connections:
+host    all             all             10.0.0.1/8            md5
+```
+
+and restart postgresql
+
+### create off user
+
+On off1 we get user info:
+
+```bash
+sudo -u postgres pg_dumpall --globals-only   |less
+...
+CREATE ROLE off;
+ALTER ROLE off WITH NOSUPERUSER INHERIT NOCREATEROLE NOCREATEDB LOGIN NOREPLICATION NOBYPASSRLS PASSWORD '******';
+...
+```
+
+And we take relevant line to create off user in the container using `sudo -u postgres psql`.
+
+### testing database restore
+
+On off1, I did a dump of postgres minion database:
+
+```bash
+sudo -u postgres pg_dump -d minion --format=custom --file /tmp/$(date -Is -u)-minion.dump
+```
+
+On off2, we scp the file and restore it:
+
+```bash
+sudo scp 10.0.0.1:/tmp/2023-08-21T21:41:09+00:00-minion.dump /zfs-hdd/pve/subvol-120-disk-0/var/tmp/
+```
+
+and in the container:
+```bash
+sudo -u postgres pg_restore --create --clean -d postgres /var/tmp/2023-08-21T21:41:09+00:00-minion.dump
+```
+We have two errors, but they are expected.
+
+## installing a memcached container
+
+### Creating the container
+
+I created a CT for OFF followings [How to create a new Container](../proxmox.md#how-to-create-a-new-container) it went all smooth.
+
+It's 121 (off-memcached)
+I choosed a 15Gb disk on zfs-hdd, 0B swap, 2 Cores and 4 Gb memory.
+
+I also [configure postfix](../mail.md#postfix-configuration) and tested it.
+
+I did not create a user.
+
+### installing memcached
+
+Inside container:
+
+```bash
+apt install memcached
+```
+
+### adding off-infrastructure repository
+
+```bash
+sudo ssh-keygen -f /root/.ssh/github_off-infra -t ed25519 -C "root-off-memcached-off-infra@openfoodfacts.org"
+sudo vim /root/.ssh/config
+...
+# deploy key for openfoodfacts-infra
+Host github.com-off-infra
+        Hostname github.com
+        IdentityFile=/root/.ssh/github_off-infra
+...
+cat /root/.ssh/github_off-infra.pub
+```
+
+Go to github add the off pub key for off to [off infra repository](https://github.com/openfoodfacts/openfoodfacts-infrastructure/settings/keys) with write access.
+
+Then clone repo in /opt:
+```bash
+git clone git@github.com-off-infra:openfoodfacts/openfoodfacts-infrastructure.git /opt/openfoodfacts-infrastructure
+```
+
+### configuring memcached
+
+We will use the file in git:
+
+```bash
+rm /etc/memcached.conf
+ln -s /opt/openfoodfacts-infrastructure/confs/off-memcached/memcached.conf /etc/
+systemctl restart memcached
+```
+
+
+## Putting data in zfs datasets
+
+### fixing a syslog bug
+
+In syslog I saw a lot of `zfs error: cannot open 'zfs-nvme/pve': dataset does not exist`
+
+I decided to fix it by creating this dataset:
+```bash
+zfs create zfs-nvme/pve
+```
+
+
+### creating datasets
+
+Products and images datasets are already there, we create the other datasets.
+We also create a dataset for logs as they are big on off.
+
+```bash
+SERVICE=off
+zfs create zfs-hdd/$SERVICE/cache
+zfs create zfs-hdd/$SERVICE/html_data
+zfs create zfs-hdd/$SERVICE/logs
+```
+same for `off-pro`
+
+but also created `images` for `off-pro`
+
+```bash
+zfs create zfs-hdd/off-pro/images
+```
+
+and change permissions:
+
+```bash
+sudo chown 1000:1000  /zfs-hdd/off{,-pro}/{,html_data,images,cache,logs}
+```
+
+We also need to create off/orgs
+```bash
+zfs create zfs-hdd/off/orgs
+sudo chown 1000:1000  /zfs-hdd/off/orgs
+```
+
+
+### adding to sanoid conf
+
+We do it asap, as we need some snapshots to be able to use syncoid later on.
+
+We edit sanoid.conf to put our new datasets with `use_template=prod_data`.
+
+We can launch the service immediately if we want: `systemctl start sanoid.service`
+
+
+### Moving products to vme zfs
+
+#### creating datasets
+
+Because of problems at server install, we have the products in `zfs-hdd` datasets while, at least for off and off-pro, we want them in `zfs-nvme`. This will improve performances.
+
+So we will move products there.
+To do this:
+
+On off2, we create the new zfs datasets:
+```bash
+zfs create zfs-nvme/off
+zfs create zfs-nvme/off/products
+zfs create zfs-nvme/off-pro
+zfs create zfs-nvme/off-pro/products
+```
+
+#### disabling sync
+
+On off1, we temporarily disable sync to off2 by editing `$REMOTE` in `sto-products-sync.sh`.
+
+On off1 we verify no send  to off2 is in progress `ps -elf|grep zfs.send`
+
+#### copying datasets
+
+On off2, we sync the `zfs-hdd` datasets to the `zfs-nvme` ones:
+```bash
+SERVICE=off
+# get first and last snapshot
+zfs list -t snap zfs-hdd/$SERVICE/products
+zfs-hdd/off/products@20230417-0000  7.93G      -      300G  -
+...
+zfs-hdd/off/products@20230719-0930     0B      -      317G  -
+
+# TIP from Christian Quest:
+# * on sending side, use "-w" to send raw data (avoid compression etc.),
+# * on receiving side, use -s to be able to restart from where you stopped if needed
+
+# send first snapshot, this took about 5 hours (damn me, I didn't add the time…)
+time zfs send -w zfs-hdd/$SERVICE/products@20230417-0000 | pv | zfs recv zfs-nvme/$SERVICE/products -s -F
+# send all snapshots incrementally
+time zfs send -w -I 20230417-0000 zfs-hdd/$SERVICE/products@20230719-0930 | pv | zfs recv zfs-nvme/$SERVICE/products -s
+```
+
+We do the same for `off-pro` (this time first snapshot was `20230418-0000` and last was `20230719-0930`)
+
+#### enabling sync again
+
+On off1, we change the  `sto-products-sync.sh`
+
+* adding off2 IP back to`$REMOTE`
+* using zfs-nvme instead of zfs-hdd
+
+After some time we verify it's working.
+
+#### changing containers mount points
+
+As we did this operation, the lxc configuration for 113 and 114 where still using zfs-hdd mount points, we changed them to zfs-nvme for products.
+
+
+### migrating root datasets on ovh3
+
+If we want to synchronize off and off-pro root dataset, they have to be created by syncing from off2 to ovh3.
+But as they already exists on ovh3, we have to create them, move products in them, and swap the old and the new one (avoiding doing so during a sync).
+
+#### prepare
+
+Verify which datasets exists under the old root datasets on ovh3:
+
+```bash
+$ zfs list -r rpool/off{,-pro}
+NAME                        USED  AVAIL     REFER  MOUNTPOINT
+rpool/off                  13.9T  21.8T      272K  /rpool/off
+rpool/off-pro              34.2G  21.8T      216K  /rpool/off-pro
+rpool/off-pro/products     34.2G  21.8T     25.0G  /rpool/off-pro/products
+rpool/off/clones           1.89G  21.8T      224K  /rpool/off/clones
+rpool/off/clones/images    1.22G  21.8T     10.1T  /rpool/off/clones/images
+rpool/off/clones/orgs       272K  21.8T     51.4M  /rpool/off/clones/orgs
+rpool/off/clones/products   678M  21.8T      411G  /rpool/off/clones/products
+rpool/off/clones/users     5.32M  21.8T     3.10G  /rpool/off/clones/users
+rpool/off/images           12.0T  21.8T     10.6T  /rpool/off/images
+rpool/off/orgs             58.0M  21.8T     54.2M  /rpool/off/orgs
+rpool/off/products         1.88T  21.8T      430G  /rpool/off/products
+rpool/off/users            5.20G  21.8T     3.18G  /rpool/off/users
+```
+
+So we have to move products for off-pro, and for off we have to move products, images.
+
+`users` and `orgs` are just rsynced backup from off1, so we don't have to move them, we will just keep them until we re-create the clones that use them.
+
+The problem now will be to pass between ZFS synchronizations.
+
+#### create new target datasets
+On off2:
+
+```bash
+sudo syncoid --no-sync-snap zfs-hdd/off  root@ovh3.openfoodfacts.org:rpool/off-new
+sudo syncoid --no-sync-snap zfs-hdd/off-pro  root@ovh3.openfoodfacts.org:rpool/off-pro-new
+```
+it's very fast.
+
+#### move off-pro products to new dataset and swap datasets
+on ovh3, we wait to have no off-pro sync running.
+
+```bash
+zfs rename rpool/off{,-new}/products && \
+zfs rename rpool/off-pro{,-old} && \
+zfs rename rpool/off-pro{-new,}
+```
+zfs-hdd/off/cache       140K  23.9T      140K  /zfs-hdd/off/cache
+zfs-hdd/off/html_data   140K  23.9T      140K  /zfs-hdd/off/html_data
+zfs-hdd/off/images     11.4T  23.9T     10.3T  /zfs-hdd/off/images
+zfs-hdd/off/logs        140K  23.9T      140K  /zfs-hdd/off/logs
+zfs-hdd/off/orgs        140K  23.9T      140K  /zfs-hdd/off/orgs
+zfs-hdd/off/products    898G  23.9T      317G  /zfs-hdd/off/products
+zfs-hdd/off/users      3.73G  23.9T     2.32G  /zfs-hdd/off/users
+
+#### moving off products and images to new dataset and swapping
+
+As sync are taking a lot of time on products and images, we will disable them until we do the move…
+
+On off2, temporarily edit `/etc/sanoid/syncoid-args.conf` to remove the line corresponding to images.
+On off1, temporarily edit `sto-products-sync.sh` and disable ovh3 target.
+
+Wait until current syncs finishes (sto-products-sync.sh run newer than config change on off1 and syncoid run newer than config change on off2).
+
+Because of clones, we also have to shutdown the off staging container which use those datasets. On off staging container (on ovh1):
+```bash
+cd /home/off/off-net/
+sudo -u off docker-compose stop
+```
+
+And remove clones on ovh3:
+
+```bash
+# need this to clean stalled NFS connections
+systemctl restart nfs-server.service
+zfs destroy rpool/off/clones/users
+zfs destroy rpool/off/clones/products
+zfs destroy rpool/off/clones/orgs
+```
+
+Then we do the move on ovh3:
+```bash
+zfs rename rpool/off{,-new}/products && \
+zfs rename rpool/off{,-new}/images && \
+zfs rename rpool/off{,-new}/clones && \
+zfs rename rpool/off{,-old} && \
+zfs rename rpool/off{-new,}
+```
+
+Now we can re-enable syncoid on off2 and sto-products-sync off1.
+
+
+#### Recreating clones
+
+**IMPORTANT**: Before re-creating users and orgs and recreating clones, I follow the step to add users and orgs to syncoid and rsync users and orgs from prod (so that we have something worthful) (see [copying users and orgs](#copying-users-and-orgs)).
+
+I created the `off/clones` dataset and enable NFS share.
+```bash
+zfs create rpool/off/clones
+zfs set sharenfs="rw=@10.0.0.1/32,rw=@10.1.0.200/32,no_root_squash" rpool/off/clones
+```
+Then I manually created the clones following the `maj-clones-nfs-VM-dockers.sh` script.
+
+I then restart the docker compose on off-net.
+
+
+#### setup sync
+
+We can now sync them regularly by editing `/etc/sanoid/syncoid-args.conf`:
+
+```ini
+# off
+--no-sync-snap zfs-hdd/opf root@ovh3.openfoodfacts.org:rpool/opf
+# off-pro
+--no-sync-snap zfs-hdd/$SERVICE root@ovh3.openfoodfacts.org:rpool/$SERVICE
+```
+
+I also added it to `sanoid.conf` ovh3, but using synced template.
+
+
+
+### Copying users and orgs
+
+I already have setup syncoid on off2 to sync users and orgs to ovh3:
+
+On off2 (in a screen), as root:
+
+```bash
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/users  /zfs-hdd/off/users && \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/orgs  /zfs-hdd/off/orgs
+```
+this took a few minutes.
+
+I was lucky enough that syncoid just started at this very moment and let it finish.
+
+After checking sync did happen correctly (`zfs list -t snap rpool/off/{orgs,users} && ls rpool/off/{orgs,users}`), we can also remove old `users` and `orgs` from the old off dataset on ovh3:
+```bash
+zfs destroy rpool/off-old/{users,orgs}
+```
+and as they were the last, also removed `rpool/off-old`
+
+I also decided to temporarily do a regular rsync of users and orgs through a cron on off1.
+
+I added it to root crontab on off1:
+
+```ini
+# rsync users and orgs to off2 every hour
+48 * * * *\trsync -a /srv/off/users/ 10.0.0.2:/zfs-hdd/off/users/; rsync -a /srv/off/orgs/ 10.0.0.2:/zfs-hdd/off/orgs/
+```
+
+### Copying off-pro images
+
+```bash
+time rsync --info=progress2 -a -x 10.0.0.1:/srv2/off-pro/html/images/products /zfs-hdd/off-pro/images/
+```
+
+### Copying other data
+
+
+I rsync cache data and other data on ofF2:
+
+```bash
+# cache
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/{build-cache,tmp,debug,new_images} /zfs-hdd/off/cache/ ;\
+echo "== data folders (shared with off-pro)" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/data /zfs-hdd/off/ ;\
+echo "== other data" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/{deleted.images,deleted_products,deleted_products_images} /zfs-hdd/off/ ;\
+echo "== imports for off" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv2/off/imports /zfs-hdd/off/ ;\
+echo "== translations for off" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/translate /zfs-hdd/off/ ;\
+echo "== reverted_products on off" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/reverted_products /zfs-hdd/off/ ;\
+echo "== html/data" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/html/data/ /zfs-hdd/off/html_data ;\
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off/html/{files,exports} /zfs-hdd/off/html_data/ ;\
+time rsync --info=progress2 -a -x 10.0.0.1:/srv2/off/html/dump /zfs-hdd/off/html_data/ ;\
+date
+```
+
+off-pro:
+
+```bash
+date ; \
+echo "== pro images" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv2/off-pro/html/images/products /zfs-hdd/off-pro/images/ ;\
+echo "== some cache folders" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off-pro/{build-cache,tmp,debug} /zfs-hdd/off-pro/cache/ ;\
+echo "== other data" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off-pro/{deleted.images,deleted_private_products} /zfs-hdd/off-pro/ ;\
+echo "== html/data" ; \
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off-pro/html/data/ /zfs-hdd/off-pro/html_data ;\
+time rsync --info=progress2 -a -x 10.0.0.1:/srv/off-pro/html/files /zfs-hdd/off-pro/html_data/ ;\
+echo "== sftp" ; \
+time rsync -a --info=progress2 10.0.0.1:/srv/sftp/ /zfs-hdd/off-pro/sftp/ ;\
+echo "== sugar" ; \
+time rsync -a 10.0.0.1:/srv/sugar/logs/sugar_log /zfs-hdd/off/data/sugar/old_sugar_log ;\
+date
+```
+
+This took a bit more than 6 hours on 2023-11-22.
+
+Don't forget to also change ownership if needed
+
+```bash
+chown -R 1000:1000 /zfs-hdd/off{,-pro}/cache
+```
+
+### Procedure for switch of off and off-pro from off1 to off2
+
+**NOTE**: we do both in a row because we don't want to deal with NFS for off / off-pro communication
+
+**WARNING**: finish writing it before running it !!!
+
+
+1. change TTL to a low value in DNS
+  * **DONE** for openfoodfacts domains (including pro)
+  * for madenear.me madenear.me.uk cestemballepresdechezvous and all other domains
+  * for howmuchsugar.in combiendesucres.fr and all other domains
+
+1. update the product to latest changes in `/srv/off` or `/srv/off-pro` and `/srv/openfoodfacts-web`
+
+1. Redeploy the dist of off and off-pro on off2
+
+1. verify differences between Config2 files (for off and off-pro) between off1 and off
+   * I had to add `query_url` which is new
+
+1. restart:
+
+   * on off: `sudo systemctl restart apache2.service nginx.service cloud_vision_ocr@off.service minion@off.service`
+   * on off-pro: `sudo systemctl restart apache2.service nginx.service cloud_vision_ocr@off-pro.service minion@off-pro.service`
+
+1. do a last test:
+   * I had to redo a `sudo cpanm --notest --quiet --skip-satisfied --installdeps .`
+   * I forgot to run the build_lang and build_taxonomies scripts…
+   * problem on pro platform for products without barcode: `internal_code.sto` not accessible on pro platform
+
+
+1. shutdown:
+   * off on **off2** `sudo systemctl stop apache2 nginx`
+   * off-pro on **off2** `sudo systemctl stop apache2 nginx`
+
+1. on off1 comment users and orgs rsync in crontab
+
+1. Rync all data (on off2):
+   see above  [Rsync data](#rsync-data)
+```

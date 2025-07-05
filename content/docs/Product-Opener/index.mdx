@@ -1,0 +1,103 @@
+---
+title: "Product Opener"
+description: "The core web server and database system powering Open Food Facts. Learn about the backend infrastructure, API, and database architecture."
+---
+
+import { Cards, Card } from 'fumadocs-ui/components/card';
+import { Callout } from 'fumadocs-ui/components/callout';
+
+# Product Opener
+
+**Product Opener** is the core web server and backend system that powers Open Food Facts and its sibling projects (Open Beauty Facts, Open Pet Food Facts, Open Products Facts).
+
+<Callout type="info">
+Product Opener handles product data storage, API endpoints, user management, image processing, and serves the main website frontend for millions of users worldwide.
+</Callout>
+
+## What is Product Opener?
+
+Product Opener is the heart of the Open Food Facts ecosystem:
+
+- **Web Server**: Serves the main Open Food Facts website
+- **Database**: Stores product information, images, and user data
+- **API Backend**: Provides REST and GraphQL APIs for data access
+- **Image Processing**: Handles product image uploads and transformations
+- **User Management**: Manages user accounts and contributions
+- **Data Pipeline**: Processes and validates product information
+
+## Documentation Sections
+
+<Cards>
+  <Card href="/docs/Product-Opener/api" title="API Documentation">
+    Complete API reference for accessing Open Food Facts data
+  </Card>
+  <Card href="/docs/Product-Opener/dev" title="Developer Guide">
+    Development setup, architecture, and contribution guidelines
+  </Card>
+  <Card href="/docs/Product-Opener/images" title="Image Processing">
+    How Product Opener handles product images and transformations
+  </Card>
+</Cards>
+
+## Core Components
+
+### Web Application
+- **Frontend**: Main website interface for browsing and editing products
+- **Admin Interface**: Tools for managing data quality and users
+- **Mobile Interface**: Optimized views for mobile devices
+
+### Database System
+- **MongoDB**: Primary database for product data
+- **Redis**: Caching layer for performance
+- **File Storage**: Image and document storage system
+
+### API Layer
+- **REST API**: Standard HTTP endpoints for data access
+- **GraphQL API**: Flexible query interface
+- **Bulk Export**: Large dataset downloads
+- **Real-time Updates**: WebSocket notifications
+
+## Key Features
+
+### Product Management
+- Add and edit product information
+- Upload and manage product images
+- Collaborative editing with history tracking
+- Data quality validation and scoring
+
+### Search & Discovery
+- Full-text search across products
+- Advanced filtering by categories, labels, ingredients
+- Faceted search interface
+- Geographic data analysis
+
+### Data Export
+- JSONL exports of complete database
+- CSV exports for specific data sets
+- API access for real-time data
+- Integration with research platforms
+
+## Technology Stack
+
+- **Backend**: Perl with modern web frameworks
+- **Database**: MongoDB for document storage
+- **Cache**: Redis for performance optimization
+- **Search**: Elasticsearch for full-text search
+- **Images**: ImageMagick for processing
+- **Web Server**: Apache/Nginx
+
+## Getting Started
+
+1. **API Documentation**: Start with the [API guides](/docs/Product-Opener/api) to understand data access
+2. **Development Setup**: Follow the [Developer guide](/docs/Product-Opener/dev) to set up a local environment
+3. **Image Processing**: Learn about [image handling](/docs/Product-Opener/images) capabilities
+
+<Callout type="tip">
+Product Opener is designed to handle millions of products and users. The architecture emphasizes performance, scalability, and data integrity.
+</Callout>
+
+## Related Projects
+
+- **[Robotoff](/docs/Robotoff)**: AI service for automated data extraction
+- **[Search-a-licious](/docs/Search-a-licious)**: Advanced search infrastructure
+- **[Open Prices](/docs/Open-price)**: Price tracking system

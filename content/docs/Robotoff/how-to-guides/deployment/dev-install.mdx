@@ -1,0 +1,224 @@
+---
+title: "Robotoff Dev Install"
+description: "This document provides instructions for installing Robotoff for development, offering both Docker and local installation methods. It covers environment setup, ML model downloads, and restoring database dumps for PostgreSQL and MongoDB."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Dev Install
+
+You may choose Docker install (recommended, less chance to mess up with your system, all included) or local install.
+
+<Tabs items={['Docker Install', 'Local Install']}>
+  <Tab value="Docker Install">
+    ## Docker Install
+
+    <Steps>
+      <Step>
+        ### Clone and Setup Environment
+        
+        After cloning the repository, customize parameters by editing the `.env` file.
+        You should consider these changes:
+
+        - If you want to use ML models, add `docker/ml.yml` to `COMPOSE_FILE`, using `;` as separator.
+          You should also run `make dl-models` to download all machine learning models locally.
+        - Change `OFF_UID` and `OFF_GID` to match your own user UID/GID (optional, only if you experience file permission issues)
+
+        <Callout type="warn">
+          **Important:** Beware not to commit your local changes to `.env` file!
+        </Callout>
+
+        <Callout type="info">
+          For file permission issues, see [Getting developer uid for docker](https://gist.github.com/alexgarel/6e6158ee869d6db2192e0441fd58576e)
+        </Callout>
+      </Step>
+
+      <Step>
+        ### Configure Elasticsearch
+        
+        Because of Elasticsearch service, you may need to increase a system parameter (`vm.max_map_count=262144`), as described in the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html).
+      </Step>
+
+      <Step>
+        ### Build and Run
+        
+        Simply run:
+
+        ```bash title="Start development environment"
+        make dev
+        ```
+
+        This will build containers, pull images based containers, create containers and run them.
+      </Step>
+
+      <Step>
+        ### Verify Installation
+        
+        Verify whether robotoff is running as expected, by executing the following command in CLI:
+        
+        ```bash title="Check Robotoff status"
+        curl http://localhost:5500/api/v1/status
+        ```
+        
+        The expected response is `{"status":"running"}`.
+
+        <Callout type="info">
+          Also take a look at [maintenance](/docs/Robotoff/how-to-guides/deployment/maintenance.mdx) for ongoing maintenance tasks.
+        </Callout>
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab value="Local Install">
+    ## Local Install with Poetry
+
+    This is an alternative if you are reluctant to use Docker, or have some other reasons to prefer manual install.
+
+    <Steps>
+      <Step>
+        ### Setup Poetry
+        
+        After cloning the repository:
+        1. Make sure a [recent version of Poetry is installed](https://python-poetry.org/docs/#installation)
+        2. Configure Poetry to use Python 3.11:
+           ```bash title="Configure Python version"
+           poetry env use python3.11
+           ```
+      </Step>
+
+      <Step>
+        ### Install Dependencies
+        
+        Install the dependencies:
+
+        ```bash title="Install dependencies"
+        poetry install
+        ```
+      </Step>
+
+      <Step>
+        ### Configure Test Files
+        
+        Configure files required for the tests to run locally:
+
+        Compile the i18n files:
+        ```bash title="Compile i18n files"
+        cd i18n && bash compile.sh && cd ..
+        ```
+      </Step>
+
+      <Step>
+        ### Database Configuration
+        
+        Configure your settings to point to your dev postgresql database (that you should have installed the way you want)
+
+        <Callout type="info">
+          If you want to use Elasticsearch predictions, you'll also have to set up an Elasticsearch instance
+        </Callout>
+      </Step>
+
+      <Step>
+        ### Debugging in Container
+        
+        To debug in a running container, you need to run poetry in the container. For example:
+
+        ```bash title="Debug in container"
+        docker compose run --rm api poetry run python
+        ```
+        
+        Here we run the `api` service. This opens a Python command prompt, you may debug with [pdb](https://docs.python.org/3/library/pdb.html) or play with the code.
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Restore DB Dumps
+
+To have real-world data, you're probably interested in restoring data from production server.
+
+<Cards>
+  <Card title="PostgreSQL Dump" description="Main database restore process" />
+  <Card title="MongoDB Dump" description="Product data restore process" />
+</Cards>
+
+### PostgreSQL Dump
+
+Robotoff uses PostgreSQL as main database.
+
+<Steps>
+  <Step>
+    ### Download Database Dump
+    
+    First, download the latest DB dump:
+
+    ```bash title="Download PostgreSQL dump"
+    wget https://openfoodfacts.org/data/dumps/robotoff_postgres_latest.dump
+    ```
+  </Step>
+
+  <Step>
+    ### Start Container and Copy Dump
+    
+    Start PostgreSQL container and copy the dump inside the container:
+
+    ```bash title="Start PostgreSQL and copy dump"
+    make up service=postgres
+    docker cp -a robotoff_postgres_latest.dump robotoff_postgres_1:/tmp/
+    ```
+  </Step>
+
+  <Step>
+    ### Restore Database
+    
+    Then launch dump restore:
+
+    ```bash title="Restore PostgreSQL database"
+    docker exec -it robotoff_postgres_1 pg_restore -v -d postgres -U postgres -c -j 8 --if-exists /tmp/robotoff_postgres_latest.dump
+    ```
+
+    <Callout type="warn">
+      This command drops all existing tables (`-c` command) and performs restore using 8 cores. The database is huge, it may take several hours to run depending on your hardware.
+    </Callout>
+  </Step>
+</Steps>
+
+### MongoDB Dump
+
+Robotoff also relies on MongoDB to fetch product data. On staging and production, it interacts directly with the same MongoDB instance used by Product Opener.
+
+<Steps>
+  <Step>
+    ### Download and Extract Archive
+    
+    To restore Product Opener MongoDB dump, start by downloading and extracting the archive:
+
+    ```bash title="Download and extract MongoDB dump"
+    wget https://static.openfoodfacts.org/data/openfoodfacts-mongodbdump.tar.gz
+    tar xvzf openfoodfacts-mongodbdump.tar.gz
+    ```
+  </Step>
+
+  <Step>
+    ### Start Container and Copy Dump
+    
+    Make sure the MongoDB container is up and running and copy the dump directory inside the container:
+
+    ```bash title="Start MongoDB and copy dump"
+    make up service=mongodb
+    docker cp -a dump robotoff_mongodb_1:/var/tmp/
+    ```
+  </Step>
+
+  <Step>
+    ### Restore Database
+    
+    Then launch dump restore:
+
+    ```bash title="Restore MongoDB database"
+    docker exec -it robotoff_mongodb_1 mongorestore --drop /var/tmp/dump
+    ```
+  </Step>
+</Steps>

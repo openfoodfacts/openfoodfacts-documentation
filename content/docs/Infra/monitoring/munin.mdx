@@ -1,0 +1,100 @@
+---
+title: "Munin Monitoring"
+description: "This document describes how Munin is used to monitor Open Food Facts servers, including configuration steps for installing munin-node and extra plugins, activating ZFS and NGINX plugins, and managing server-specific configurations for effective monitoring."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Munin
+
+We use munin to monitor some of our servers.
+
+<Cards>
+<Card title="Munin Dashboard" href="https://www.computel.fr/munin/openfoodfacts">
+Access the monitoring dashboard to view server metrics and performance data
+</Card>
+<Card title="Alert System">
+Munin sends alert messages to off@openfoodfacts.org when issues are detected
+</Card>
+</Cards>
+
+<Callout type="tip">
+Munin can help you understand problems that occur on the server by providing detailed performance metrics and historical data.
+</Callout>
+
+## How to Configure a Server
+
+<Steps>
+<Step>
+**Install Required Packages**
+You must install the munin-node package and extra plugins on the server:
+
+```bash title="Install Munin Node"
+sudo apt install munin-node munin-plugins-extra
+```
+</Step>
+
+<Step>
+**Configure Munin Node**
+You then configure in `/etc/munin/munin-node.conf`. The best is to have the config in this repository and symlink it:
+
+```bash title="Link Configuration"
+rm /etc/munin/munin-node.conf && \
+ln -s /opt/openfoodfacts-infrastructure/confs/<YOUR-SERVER>/munin/munin-node.conf /etc/munin/
+systemctl restart munin-node
+```
+
+<Callout type="note">
+Look at other conf for munin, eg. `confs/off2/munin/munin-node.conf`.
+</Callout>
+</Step>
+</Steps>
+
+### More Plugins
+
+To get ZFS plugins we have to install contrib plugins.
+
+<Steps>
+<Step>
+**Clone Contrib Repository**
+Clone in `/opt`:
+
+```bash title="Clone Munin Contrib"
+sudo git clone git@github.com:munin-monitoring/contrib.git munin-contrib
+
+sudo mkdir -p /usr/local/munin/lib/
+sudo ln -s /opt/munin-contrib/plugins /usr/local/munin/lib/
+```
+</Step>
+</Steps>
+
+<Tabs>
+<Tab value="zfs" label="ZFS Plugins">
+Activate ZFS plugins by linking. We prefer to keep the standard directory as a link:
+
+```bash title="Activate ZFS Plugins"
+# activate zfs_arcstats zfs_cache_efficiency zpool_capacity and zpool_iostat
+sudo ln -s /usr/local/munin/lib/plugins/zfs/{zfs_arcstats,zfs_cache_efficiency,zpool_capacity,zpool_iostat} /etc/munin/plugins/
+sudo systemctl restart munin-node
+```
+
+<Callout type="info">
+This activates monitoring for ZFS ARC statistics, cache efficiency, pool capacity, and I/O statistics.
+</Callout>
+</Tab>
+
+<Tab value="nginx" label="NGINX Plugins">
+```bash title="Activate NGINX Plugins"
+# activate nginx-cache-hit-rate nginx_error nginx_memory nginx_connection_request
+sudo ln -s /usr/local/munin/lib/plugins/nginx/{nginx-cache-hit-rate,nginx_error,nginx_memory,nginx_connection_request} /etc/munin/plugins/
+sudo systemctl restart munin-node
+```
+
+<Callout type="info">
+This activates monitoring for NGINX cache hit rates, error rates, memory usage, and connection requests.
+</Callout>
+</Tab>
+</Tabs>

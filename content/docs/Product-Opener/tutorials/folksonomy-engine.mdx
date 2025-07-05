@@ -1,0 +1,50 @@
+---
+title: "Folksonomy Engine"
+description: "Guide to using the experimental Folksonomy API for adding key-value data beyond traditional product formats to Open Food Facts"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+
+<Callout>
+**Key-Value Extension System**
+
+Folksonomy Engine API (Our K/V - Key-Value system to extend our data model in a collaborative way)
+</Callout>
+
+<Callout type="info">
+**Experimental API**
+
+The Experimental Folksonomy API allows you to add and read information beyond the traditional product format to Open Food Facts, Open Products Facts, Open Pet Food Facts and Open Beauty Facts.
+</Callout>
+
+## Resources
+
+<Cards>
+<Card title="API Documentation" href="https://api.folksonomy.openfoodfacts.org/docs" description="Complete API reference and documentation" />
+<Card title="Current Key Values" href="https://world.openfoodfacts.org/properties" description="View existing properties in the system" />
+</Cards>
+
+## Implementation Options
+
+<Callout>
+**Flexible Implementation**
+
+You can choose to implement a generic key value CRUD system, or have bespoke input and visualization interfaces, based on your usecase (for example a boolean toggle, or a date picker for introduction date… and a bespoke UI to show the value, with additional logic)
+</Callout>
+
+### Reference Implementation
+
+<Callout type="info">
+**Available Implementations**
+
+A reference implementation is available to logged in users on the website, and in DEV mode in the mobile app
+</Callout>
+
+## Important Notice
+
+<Callout type="warn">
+**Data Stability Warning**
+
+Please be aware that there's a chance that all data added using this API could be deleted without notice, until we mark it as stable, due to unforeseen technical issues.
+</Callout>

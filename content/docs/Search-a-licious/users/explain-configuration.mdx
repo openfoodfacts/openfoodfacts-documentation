@@ -1,0 +1,217 @@
+---
+title: "Explain Configuration File"
+description: "This document explains the Search-a-licious configuration file. Learn how to manage multiple datasets, configure indices, define fields for searching and faceting, and use taxonomies, processors, and scripts for advanced customization and data handling."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Explain Configuration File
+
+<Callout type="info">
+The idea of Search-a-licious is that you provide all your configurations details in a central file, and all the rest works (at least for main scenarios).
+</Callout>
+
+The configuration file is a YAML file.
+
+## One Configuration, Multiple Datasets
+
+<Callout>
+A Search-a-licious instance only has one configuration file, but is capable of serving multiple datasets.
+</Callout>
+
+It provides a section for each index you want to create (corresponding to a dataset).
+
+<Callout type="tip">
+If you have more than one dataset, one must be declared the default (see [default_index](./ref-config/searchalicious-config-schema.html#default_index))
+</Callout>
+
+## Main Sections
+
+<Cards>
+<Card title="index" description="Configuration of the Elasticsearch index" />
+<Card title="fields" description="Fields for the index, their type and configurations" />
+<Card title="taxonomy" description="Definitions of taxonomies used by this index" />
+<Card title="redis_stream_name" description="Required for continuous updates" />
+<Card title="document_fetcher" description="Required for continuous updates" />
+<Card title="preprocessor" description="Handle dataset specificities" />
+<Card title="result_processor" description="Handle dataset specificities" />
+<Card title="scripts" description="Use sort by script functionality" />
+</Cards>
+
+<Card title="Scripts Documentation" href="./how-to-use-scripts.md">
+Learn how to use sort by script functionality
+</Card>
+
+
+## Index Configuration
+
+<Callout type="info">
+Search-a-licious is really based upon Elasticsearch.
+</Callout>
+
+This section provides some important fields to control the way it is used.
+
+<Steps>
+<Step title="ID Field Configuration">
+
+`id_field_name` is particularly important as it must contain a field that uniquely identifies each items.
+
+<Callout type="warning">
+If you don't have such field, you might use `preprocessor` to compute one. It is important to have such an id to be able to use continuous updates.
+</Callout>
+
+</Step>
+<Step title="Last Modified Field">
+
+`last_modified_field_name` is also important for continuous updates to decide where to start the event stream processing.
+
+</Step>
+</Steps>
+
+## Fields
+
+<Callout type="tip">
+This is one of the most important sections.
+</Callout>
+
+It specifies what will be stored in your index, which fields will be searchable, and how.
+
+<Callout type="warning">
+**Planning Required**
+
+You have to plan in advance how you configure this. Changing this section will probably involve a full re-indexing of all your items.
+</Callout>
+
+### Think About
+
+<Cards>
+<Card title="Search Fields" description="Fields you want to search and how you want to search them" />
+<Card title="Display Information" description="Information you need to display in search results" />
+<Card title="Sorting" description="What you need to sort on" />
+<Card title="Facets" description="Which facets you want to display" />
+<Card title="Charts" description="Which charts you need to build" />
+</Cards>
+
+### Typical Field Configurations
+
+<Steps>
+<Step title="Tags Field (Keyword)">
+
+A tags field that has values that are searched as an exact value (aka keyword), e.g., a tag:
+
+```yaml title="Tags Field Configuration"
+tags:
+    type: keyword
+```
+
+</Step>
+<Step title="Full Text Search Field">
+
+An ingredients field that is used for full text search when no field is specified:
+
+```yaml title="Full Text Search Configuration"
+ingredients:
+    type: text
+    full_text_search: true
+```
+
+</Step>
+<Step title="Multilingual Text Field">
+
+A field `product_name` that is used for full text search, but with multilingual support:
+
+```yaml title="Multilingual Field Configuration"
+product_name:
+    full_text_search: true
+    type: text_lang
+```
+
+</Step>
+<Step title="Integer Field">
+
+A scans_n field is an integer field:
+
+```yaml title="Integer Field Configuration"
+scans_n:
+    type: integer
+```
+
+</Step>
+<Step title="Field-Specific Text Search">
+
+A `specific_warnings` field that is used for full text search, but only when you specify the field:
+
+```yaml title="Field-Specific Search Configuration"
+specific_warnings:
+    type: text
+```
+
+</Step>
+<Step title="Split Field">
+
+A field brands_tags that needs to be split in multiple values (according to `split_separator` option):
+
+```yaml title="Split Field Configuration"
+brands_tags:
+    type: keyword
+    split: true
+```
+
+</Step>
+<Step title="Taxonomy Field with Faceting">
+
+A field labels_tags, that is used for exact match but with support of a taxonomy, and that can be used for faceting, and bar graph generation:
+
+```yaml title="Taxonomy Field Configuration"
+labels_tags:
+    type: keyword
+    taxonomy_name: label
+    bucket_agg: true
+```
+
+</Step>
+</Steps>
+
+<Card title="Field Reference Documentation" href="./ref-config/searchalicious-config-schema.html#fields">
+Read more in the reference documentation
+</Card>
+
+## Document Fetcher, Pre-processors and Post-processors
+
+<Callout>
+It is not always straightforward to index an item.
+</Callout>
+
+Search-a-licious offers a way for you to customize some critical operations using Python code.
+
+<Steps>
+<Step title="Preprocessor">
+
+Adapts your document before being indexed
+
+</Step>
+<Step title="Result Processor">
+
+<Callout type="warning">
+Adapts each result returned by a search - keep it lightweight!
+</Callout>
+
+</Step>
+<Step title="Document Fetcher">
+
+Only used for continuous updates to fetch documents using an API
+
+</Step>
+</Steps>
+
+<Card title="Detailed Reference" href="./ref-config/searchalicious-config-schema.html">
+Read more in the reference documentation
+</Card>
+
+## Scripts
+
+<Card title="Scripts Guide" href="./how-to-use-scripts.md">
+You can also add scripts for sorting documents. See How to use scripts.
+</Card>

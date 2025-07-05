@@ -1,0 +1,64 @@
+---
+title: "Hetzner Servers"
+description: "This document provides an overview of Hetzner servers, including how to access their console and the use of vSwitch for private network connectivity, especially useful for Proxmox clusters with single NIC servers."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Hetzner Servers
+
+We have some servers at Hetzner hosting parts of our infrastructure.
+
+<Callout type="info">
+Hetzner provides reliable dedicated servers for Open Food Facts infrastructure, with console access through their Robot interface.
+</Callout>
+
+## Management
+
+<Cards>
+  <Card title="Console Access" href="#console">
+    Access server management through Hetzner Robot interface
+  </Card>
+  <Card title="vSwitch Networking" href="#vswitch">
+    Private network connectivity for multi-server setups
+  </Card>
+</Cards>
+
+### Console
+
+You can access the console at [Hetzner Robot](https://robot.hetzner.com).
+
+<Callout type="note">
+The Hetzner Robot interface provides comprehensive server management including power controls, rescue system, and network configuration.
+</Callout>
+
+### vSwitch
+
+Because some of our servers have only one NIC (Network Interface Card), we need to use a vSwitch to connect our servers in a private network (which is handy for a Proxmox cluster).
+
+<Steps>
+  <Step>
+    **Configure vSwitch**
+    
+    Set up the vSwitch in Hetzner Robot for private networking.
+  </Step>
+  
+  <Step>
+    **Connect Servers**
+    
+    Add servers to the vSwitch to enable private communication.
+  </Step>
+  
+  <Step>
+    **Configure Proxmox Networking**
+    
+    Set up cluster networking using the private vSwitch network.
+  </Step>
+</Steps>
+
+<Callout type="tip">
+Check the [Official documentation for vSwitch](https://docs.hetzner.com/robot/dedicated-server/network/vswitch/) for detailed configuration instructions.
+</Callout>

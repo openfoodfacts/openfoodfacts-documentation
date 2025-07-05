@@ -1,13 +1,67 @@
 ---
-title: Hello World
-description: Your first document
+title: Overview
+description: Comprehensive API documentation for Open Food Facts ecosystem
 ---
 
-Welcome to the docs! You can start writing documents in `/content/docs`.
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Callout } from 'fumadocs-ui/components/callout';
 
-## What is Next?
+# Open Food Facts API Documentation
+
+Welcome to the comprehensive API documentation for the Open Food Facts ecosystem. Our APIs provide access to the world's largest collaborative food database and related services.
+
+<Callout type='info'>
+  Open Food Facts is a collaborative, free and open database of food products from around the world.
+  All data is available under open licenses.
+</Callout>
+
+## Available APIs
 
 <Cards>
-  <Card title="Learn more about Next.js" href="https://nextjs.org/docs" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.vercel.app" />
+  <Card
+    title='API v2'
+    description='The original Open Food Facts API for product data access and management'
+    href='/docs/v2'
+  />
+  <Card
+    title='API v3'
+    description='Modern endpoints with enhanced capabilities and improved performance'
+    href='/docs/v3'
+  />
+  <Card
+    title='Knowledge Panels'
+    description='FastAPI service providing structured knowledge panels for products and facets'
+    href='/docs/kPanel'
+  />
+  <Card
+    title='Robotoff'
+    description='Machine learning predictions and crowd-sourced annotations service'
+    href='/docs/robotoff'
+  />
+  <Card
+    title='Open Prices'
+    description='Comprehensive price database with location-based price information'
+    href='/docs/open-prices'
+  />
 </Cards>
+
+## Getting Started
+
+Choose the API that best fits your needs:
+
+- **Product Data**: Use API v2 or v3 for accessing product information, nutrition data, and images
+- **Smart Insights**: Use Knowledge Panels for structured, ready-to-display product information
+- **AI Predictions**: Use Robotoff for machine learning predictions and annotation workflows
+- **Price Information**: Use Open Prices for product pricing data and store locations
+
+<Callout type='success'>
+  All APIs are free to use and don't require authentication for read operations. Check individual
+  API sections for specific usage guidelines.
+</Callout>
+
+## Resources
+
+- [Open Food Facts Website](https://openfoodfacts.org)
+- [GitHub Repository](https://github.com/openfoodfacts)
+- [Community Forum](https://forum.openfoodfacts.org)
+- [Developer Slack](https://slack.openfoodfacts.org)

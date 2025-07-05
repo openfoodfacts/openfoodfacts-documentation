@@ -1,0 +1,129 @@
+---
+title: "OVH Servers Overview"
+description: "This document provides an overview of Open Food Facts' OVH servers, including their roles (compute, storage, backup), sponsorship details, and how domain names and DNS are managed within the OVH console."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# OVH Servers Overview
+
+We currently have 4 servers at OVH providing compute, storage, and backup services for Open Food Facts infrastructure.
+
+<Callout type="info">
+ovh1, ovh2, and ovh3 are fully sponsored by OVH, and we are very grateful for their support of the Open Food Facts project.
+</Callout>
+
+## Server Inventory
+
+<Cards>
+  <Card title="ovh1 & ovh2" href="#compute-servers">
+    Compute servers for tools and staging environments
+  </Card>
+  <Card title="ovh3" href="#storage-server">
+    Storage and backup server
+  </Card>
+  <Card title="ks1" href="#kimsufi-server">
+    Kimsufi server dedicated to image serving
+  </Card>
+</Cards>
+
+<Tabs>
+  <Tab value="compute" label="Compute Servers">
+    ### ovh1 & ovh2 - Compute Servers
+    
+    These are our primary compute servers that serve:
+    - Production tools and applications
+    - Staging environments for testing
+    - Development instances
+    
+    <Callout type="tip">
+    Both servers are fully sponsored by OVH as part of their support for open source projects.
+    </Callout>
+  </Tab>
+  
+  <Tab value="storage" label="Storage Server">
+    ### ovh3 - Storage and Backup Server
+    
+    Dedicated to:
+    - Data storage and archival
+    - Backup operations
+    - Long-term data retention
+    
+    <Callout type="note">
+    This server is also fully sponsored by OVH and serves as our primary backup infrastructure.
+    </Callout>
+  </Tab>
+  
+  <Tab value="kimsufi" label="Kimsufi Server">
+    ### ks1 - Image Server
+    
+    Small "Kimsufi" server with specific purpose:
+    - Dedicated to serving images
+    - Cost-effective solution for static content
+    - Optimized for web delivery
+  </Tab>
+</Tabs>
+
+## OVH Console Management
+
+<Callout type="warning">
+We have two separate OVH accounts with different purposes. Always verify which account you are using before making changes.
+</Callout>
+
+<Cards>
+  <Card title="Main Account" href="#ovh-accounts">
+    DNS, registered domain names, and paid services
+  </Card>
+  <Card title="Sponsored Account" href="#ovh-accounts">
+    Sponsored servers - no paid transactions allowed
+  </Card>
+</Cards>
+
+### Account Types
+
+<Steps>
+  <Step>
+    **Main Account**
+    
+    - DNS management
+    - Registered domain names
+    - Paid services and transactions
+  </Step>
+  
+  <Step>
+    **Sponsored Account**
+    
+    - Sponsored servers (ovh1, ovh2, ovh3)
+    - **No paid transactions must ever be made**
+    - Managed under sponsorship agreement
+  </Step>
+</Steps>
+
+## Domain Names and DNS
+
+<Callout type="info">
+Domain names and DNS are managed in the "Web Cloud" → "Domain names" section of the OVH console.
+</Callout>
+
+<Steps>
+  <Step>
+    **Access Console**
+    
+    Log into the appropriate OVH account (main account for DNS).
+  </Step>
+  
+  <Step>
+    **Navigate to DNS**
+    
+    Go to "Web Cloud" → "Domain names" in the console.
+  </Step>
+  
+  <Step>
+    **Manage Records**
+    
+    Configure DNS records for Open Food Facts domains.
+  </Step>
+</Steps>

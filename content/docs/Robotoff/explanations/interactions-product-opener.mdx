@@ -1,0 +1,160 @@
+---
+title: "Product Opener interactions"
+description: "Understand how Robotoff interacts with Product Opener through Redis notifications, MongoDB access, and API calls for product updates, image processing, and data synchronization."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Product Opener Interactions
+
+<Callout title="Integration Overview">
+Robotoff mainly interacts with Product Opener (Open Food Facts backend service) through three means:
+</Callout>
+
+<Cards>
+  <Card title="Redis Notifications" description="Receives updates when products are created/modified/deleted or images uploaded" />
+  <Card title="MongoDB Access" description="Direct read/write access to the underlying MongoDB database" />
+  <Card title="API Calls" description="Calls Product Opener API to update/delete products and images" />
+</Cards>
+
+## Redis Notification
+
+### Product Update Events
+
+A new event is published on the `product_updates_off` Redis stream whenever a product is updated or deleted.
+
+<Callout title="Event Fields">
+This event contains the following fields:
+</Callout>
+
+- **`code`**: the barcode of the product
+- **`action`**: the action performed, either `updated` or `deleted`. Image upload uses the `updated` action
+- **`flavor`**: the flavor (`off`, `obf`, `opff`, `off_pro`)
+- **`user_id`**: the user ID that performed the action
+- **`comment`**: the user comment associated with the action
+- **`diffs`**: the differences between the old and new product data
+- **`product_type`**: the product type (`food`, `petfood`, `beauty`,...)
+
+#### Processing Updated Events
+
+<Steps>
+<Step>
+### Category Prediction
+Predict categories and import category predictions/insights.
+</Step>
+
+<Step>
+### Name-based Predictions
+Generate and import predictions/insights from product name (regex/flashtext-based).
+</Step>
+
+<Step>
+### Insight Refresh
+Refresh all insights for this product (i.e: import all predictions again, and update insight table accordingly).
+</Step>
+</Steps>
+
+### Image Upload Events
+
+Uploaded images trigger an `updated` event, with the following diffs:
+
+```json title="Image Upload Event"
+{
+    "uploaded_images": {
+        "add": ["1"]
+    }
+}
+```
+
+<Callout type="info">
+With `1` being the ID of the uploaded image.
+</Callout>
+
+#### Processing Image Events
+
+After receiving this event, Robotoff performs the following [^image_import]:
+
+<Steps>
+<Step>
+### Image Metadata
+Save the image metadata in the `Image` DB table.
+</Step>
+
+<Step>
+### Insight Import
+Import insights from the image.
+</Step>
+
+<Step>
+### Logo Detection
+Run logo detection pipeline on the image.
+</Step>
+</Steps>
+
+#### Insight Import Process
+
+<Callout title="Import Steps">
+Insight import includes the following steps:
+</Callout>
+
+- **OCR Processing**: Extract and import regex/flashtext predictions and insights from the image OCR
+- **Nutriscore Detection**: Run the nutriscore object detection model, if the "NUTRISCORE" string was detected in the OCR text (to avoid wasting compute resources and preventing false positive results)
+- **Logo Pipeline**: Run logo detection pipeline: detect logos using the object detection models, generate embeddings from logo crops and index them in the Elasticsearch ANN index
+
+## MongoDB Interaction
+
+<Callout title="Direct Database Access">
+Robotoff often needs to access the latest information about product. As the API is sometimes unresponsive, Robotoff has a direct access to the MongoDB.
+</Callout>
+
+### Read Access
+
+<Card title="Product Data" description="Used to fetch the product data in the products collection for real-time information access" />
+
+### Write Access
+
+<Callout type="info" title="Facet Addition">
+Robotoff also has a write access, that allows it to add facets dynamically. This process is done every night; only the `en:missing-nutrition-facts-fibers-present-on-photos` quality facet is currently added by Robotoff.
+</Callout>
+
+## Product Opener API
+
+<Callout title="Direct API Integration">
+Robotoff also interacts directly with Product Opener through its API. Everytime an insight is annotated (`annotation=1`), either manually or automatically, Robotoff calls Product Opener API to perform the associated action (update the product, delete an image,...).
+</Callout>
+
+### Static Resources
+
+Robotoff also depends on static resources from Product Opener:
+
+<Cards>
+  <Card title="Taxonomy Files" description="Downloaded and cached in RAM (e.g., categories.full.json)" />
+  <Card title="JSONL Dump" description="Used to scan entire database and update predictions/insights without full MongoDB scan" />
+  <Card title="Images/OCR Files" description="Image and OCR processing resources" />
+</Cards>
+
+#### Resource Details
+
+<Steps>
+<Step>
+### Taxonomy Files
+Example: `https://static.openfoodfacts.org/data/taxonomies/categories.full.json` - downloaded and cached in RAM.
+</Step>
+
+<Step>
+### Database Dump
+The JSONL dump: `https://static.openfoodfacts.org/data/openfoodfacts-products.jsonl.gz` - used to scan the entire database and update predictions/insights without having to do a full MongoDB scan.
+</Step>
+
+<Step>
+### Media Resources
+Images and OCR files for processing and analysis.
+</Step>
+</Steps>
+
+---
+
+[^product_update]: see `update_insights_job` function in `robotoff.workers.tasks.product_updated`
+[^image_import]: see `run_import_image_job` function in `robotoff.workers.tasks.import_image`

@@ -1,0 +1,196 @@
+---
+title: "API Cheatsheet"
+description: "Quick reference guide for Open Food Facts API endpoints, parameters, and common operations for developers"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+<Callout type="info">
+**Quick Reference Guide**
+
+This reference cheatsheet gives you a quick reminder to send requests to the OFF API.
+</Callout>
+
+<Cards>
+  <Card href="tutorial-off-api.mdx" title="API Tutorial" description="New to API usage? Start with our comprehensive tutorial" />
+  <Card href="ref-v2.mdx" title="API Reference" description="Complete API reference documentation" />
+</Cards>
+
+## Add/Edit an Existing Product
+
+### Indicate the absence of nutrition facts
+
+```text title="Nutrition Data Parameter"
+no_nutrition_data=on (indicates if the nutrition facts are not indicated on the food label)
+```
+
+### Add nutrition facts values, units and base
+
+<Tabs items={['Per 100g', 'Per Serving']}>
+<Tab value="Per 100g">
+```text
+nutrition_data_per=100g
+```
+</Tab>
+<Tab value="Per Serving">
+```text
+nutrition_data_per=serving
+serving_size=38g
+```
+</Tab>
+</Tabs>
+
+```text title="Energy Value Example"
+nutriment_energy=450
+nutriment_energy_unit=kJ
+```
+
+### Adding values to a field that is already filled
+
+<Callout type="warning">
+**Important**: You just have to prefix `add_` before the name of the field to append values instead of replacing them.
+</Callout>
+
+```text title="Add Prefix Examples"
+add_categories
+add_labels
+add_brands
+```
+
+### Adding nutrition facts for the prepared product
+
+<Callout type="info">
+**Prepared Values**
+
+You can send prepared nutritional values alongside regular values for products that require preparation.
+</Callout>
+
+```text title="Regular vs Prepared Nutrients"
+nutriment_energy-kj (regular)
+nutriment_energy-kj_prepared (prepared)
+```
+
+## Search for Products
+
+<Callout type="warning">
+**Important**: Full text search currently works only for v1 API (or search-a-licious, which is in beta)
+</Callout>
+
+<Cards>
+  <Card href="https://wiki.openfoodfacts.org/API/Read/Search" title="v1 Search API" description="Documentation for v1 Search API with full text search" external />
+  <Card href="https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-/api/v2/search" title="v2 Search API" description="Reference documentation for v2 search API" external />
+  <Card href="https://search.openfoodfacts.org/docs" title="Search-a-licious API" description="The future of search in Open Food Facts (beta)" external />
+</Cards>
+
+<Callout type="info">
+**Future of Search**
+
+The future of search in Open Food Facts is the [search-a-licious project](https://github.com/openfoodfacts/search-a-licious), deployed in beta at [search.openfoodfacts.org](https://search.openfoodfacts.org/).
+</Callout>
+
+## Get suggestions for fields
+
+<Tabs items={['Search-a-licious (Recommended)', 'Legacy suggest.pl']}>
+<Tab value="Search-a-licious (Recommended)">
+<Callout type="info">
+**New Solution: Search-a-licious**
+
+Get brands, categories, labels… suggestions using the Search-a-licious API. This has all actually used values.
+</Callout>
+
+<Card href="https://search.openfoodfacts.org/docs" title="Search-a-licious API Documentation" description="Access comprehensive suggestion API with all used values" external />
+
+You can also use the classic suggest.pl route for compatibility.
+</Tab>
+
+<Tab value="Legacy suggest.pl">
+<Callout type="warning">
+**Legacy Solution: suggest.pl**
+
+This has all taxonomized values, and only taxonomized values.
+</Callout>
+
+```text title="Common Suggestion Endpoints"
+# Emb codes
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=emb_codes&term=FR
+
+# Categories
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=categories&term=f
+
+# Labels
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=labels&term=f
+
+# Ingredients
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=ingredients&term=f
+
+# Packaging
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=packaging_shapes&term=f
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=packaging_materials&term=f
+
+# Languages and Stores
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=languages&term=f
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=stores&term=f
+
+# Brands and Countries
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=brands&term=f
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=countries&term=f
+
+# Nutritional Information
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=traces&term=f
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=origins&term=f
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=nutrients&term=f
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=additives&term=f
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=allergens&term=f
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=minerals&term=f
+
+# States
+https://world.openfoodfacts.org/cgi/suggest.pl?tagtype=states&term=f
+```
+</Tab>
+</Tabs>
+
+### Get data for a list of products
+
+<Callout type="info">
+**Bulk Requests**
+
+You can use comma to separate multiple values of a query parameter. This allows you to make bulk requests. The product result can also be limited to specified data using `fields`.
+</Callout>
+
+```text title="Bulk Product Request Example"
+https://world.openfoodfacts.org/api/v2/search?code=3263859883713,8437011606013,6111069000451&fields=code,product_name
+```
+
+## Get taxonomy-based suggestions (v3 API)
+
+<Callout type="info">
+**v3 API Features**
+
+The v3 API provides suggestions based on taxonomy fields such as synonyms, categories, and packaging shapes.
+</Callout>
+
+<Card href="https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v3/#get-/api/v3/taxonomy_suggestions" title="v3 API Reference Documentation" description="Complete documentation for taxonomy suggestions endpoint" external />
+
+### Example requests
+
+<Tabs items={['Synonyms', 'Categories', 'Packaging']}>
+<Tab value="Synonyms">
+```text title="Get suggestions from synonyms"
+https://world.openfoodfacts.org/api/v3/taxonomy_suggestions?tagtype=labels&lc=fr&string=f&get_synonyms=1
+```
+</Tab>
+
+<Tab value="Categories">
+```text title="Get suggestions for a specific category"
+https://world.openfoodfacts.org/api/v3/taxonomy_suggestions?tagtype=categories&string=organic
+```
+</Tab>
+
+<Tab value="Packaging">
+```text title="Get suggestions based on packaging shape"
+https://world.openfoodfacts.org/api/v3/taxonomy_suggestions?tagtype=packaging_materials&shape=box
+```
+</Tab>
+</Tabs>

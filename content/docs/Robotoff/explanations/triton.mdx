@@ -1,0 +1,69 @@
+---
+title: "Triton server"
+description: "Configure and manage Triton Inference Server for serving machine learning models in ONNX format with gRPC API integration for Robotoff predictions."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Triton Server
+
+We use the [Triton Inference Server](https://github.com/triton-inference-server/) to serve ML models.
+
+<Callout title="Model Formats">
+Models are exported in ONNX format (or SavedModel for some specific models trained with Tensorflow), and added in the `models/triton` directory.
+</Callout>
+
+## Directory Structure
+
+Triton expects the models to be in a specific directory structure:
+
+<Steps>
+<Step>
+### Model Directory
+The model files should be in a subdirectory named after the model. For example, the model `my_model` should be in a directory named `my_model` in the `models/triton` directory.
+</Step>
+
+<Step>
+### Version Directory
+Each model version should be in a subdirectory named after the version number, for example `1`.
+</Step>
+</Steps>
+
+## API Communication
+
+<Cards>
+  <Card
+    title="HTTP API"
+    description="Available for general REST-based communication"
+  />
+  <Card
+    title="gRPC API"
+    description="Used by Robotoff for high-performance communication"
+  />
+</Cards>
+
+<Callout type="info" title="API Choice">
+Triton offers APIs in HTTP and gRPC. Robotoff uses the gRPC API to communicate with the server.
+</Callout>
+
+## Model Management
+
+<Callout title="Explicit Mode">
+Triton possesses several model management modes, we use the **'explicit' mode**. In this mode, the server does not load any model by default, and models must be explicitly loaded and unloaded by the client.
+</Callout>
+
+We ask Triton to load all the models in the `models/triton` directory at startup.
+
+<Callout type="success" title="Benefits">
+Using this mode, we don't have to restart the server when we add or remove models.
+</Callout>
+
+## Loading New Models
+
+Once a new model directory is added, you can load it with the following command (within the triton container):
+
+```bash title="Load Model Command"
+curl -X POST localhost:8000/v2/repository/models/${MODEL_NAME}/load
+```

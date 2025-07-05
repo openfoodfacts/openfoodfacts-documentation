@@ -1,0 +1,20 @@
+---
+title: "Cloud Vision Setup"
+description: "This report details setting up cloud vision on OBF, OPF, and OPFF containers. It outlines the process of linking and activating the `cloud_vision_ocr@.service` for each service, ensuring proper daemon reload and service startup for image processing capabilities."
+author: "Unknown Author"
+mail: ""
+date: "2024-11-06"
+---
+
+as root in the obf, opf, opff containers:
+
+```bash
+export SERVICE=obf
+cd /etc/systemd/system
+sudo ln -s /srv/$SERVICE/conf/systemd/cloud_vision_ocr@.service cloud_vision_ocr@$SERVICE.service
+sudo systemctl daemon-reload
+sudo systemctl start cloud_vision_ocr@$SERVICE
+sudo systemctl status cloud_vision_ocr@$SERVICE
+```
+
+Also added to the end of [2024-04-26 New install of OBF on OFF2 with new generic code](./2024-04-26-off2-obf-new-install.md)

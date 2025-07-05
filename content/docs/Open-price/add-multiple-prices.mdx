@@ -1,0 +1,74 @@
+---
+title: "Add Multiple Prices"
+description: "Learn how to contribute to Open Prices by adding multiple product prices using the web interface. This tutorial guides you through taking proof photos, adding location and date details, and efficiently inputting product barcodes and prices."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Contribute by adding prices
+
+## Multiple price mode (shop shelf)
+
+<Callout type="info">
+This tutorial is a step-by-step guide to add multiple prices using [the web interface](https://prices.openfoodfacts.org). If you have any questions, please ask us on [Slack](https://openfoodfacts.slack.com), on the #prices channel!
+</Callout>
+
+<Callout type="warning">
+**Product Restriction**
+
+Only the prices of food products are currently accepted.
+</Callout>
+
+To add the prices, we need some information, such as a proof photo of the shelf containing the products and their corresponding prices, as well as a location (=store), etc.
+
+<Steps>
+<Step title="Take a Photo (Proof)">
+
+We need a picture of the shelf, showing the products with their price tags. This picture will be used as a proof so that the data can be verified independently. The products should be clearly visible, and the price tags should be readable.
+
+### Proof Examples
+
+<Cards>
+<Card title="✅ Good Example 1" description="Clear view of multiple products with readable price tags">
+![Good multiple proof example 1](./assets/img/proof-example-good-multiple.png)
+</Card>
+<Card title="✅ Good Example 2" description="Another good example of shelf pricing">
+![Good multiple proof example 2](./assets/img/proof-example-good-multiple-2.png)
+</Card>
+</Cards>
+
+</Step>
+<Step title="Add Location & Date">
+
+<Callout type="info">
+**Location Requirements**
+
+The location is the store where the products are found. This can be a supermarket, a local store, a farmer's market, etc. The only requirement is that it is a physical location where you can buy food.
+</Callout>
+
+**Important:** The location needs to be registered in OpenStreetMap, otherwise you won't be able to select it. If your store is not in OpenStreetMap, you can add it there first (ask for help if you're not familiar with OpenStreetMap!).
+
+**Date:** The date is when you found the prices. It can be different from the date you actually add the prices. This is important because prices change over time, and we want to be able to track these changes.
+
+</Step>
+<Step title="Add Product Prices One by One">
+
+<Callout type="tip">
+**Fast Entry Process**
+
+If the products contain barcodes, you can now click on "Add a price", and start adding the product prices one by one. It's fast, as we need only 2 information per product: its barcode, and its price.
+</Callout>
+
+<Cards>
+<Card title="Products with Barcodes" description="Simply scan or enter the barcode and price" />
+<Card title="Raw Products" description="Select the category from the dropdown list" />
+</Cards>
+
+<Callout type="warning">
+If it doesn't have a barcode (raw products), you should select the category among the dropdown list. Not all categories are available yet, so if you can't find the right one, please let us know. Support for other units (e.g. 1 apple) is not yet available, but will be added soon.
+</Callout>
+
+</Step>
+</Steps>

@@ -1,0 +1,120 @@
+---
+title: "Server Configuration Git"
+description: "Learn how Open Food Facts uses git repositories to manage server configurations, linking config files, and maintaining infrastructure changes across production environments effectively."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Server Configuration with Git
+
+<Callout title="Configuration Management">
+For more and more services and servers, we use git to store the configuration files that are different from basic configuration.
+</Callout>
+
+The idea is to be able to follow server configuration evolution without (for now) using tools like ansible or similar tools (which may require more work and are not always as declarative as they pretend)[^pyinfra].
+
+[^pyinfra]: By the way I would rather use [pyinfra](https://docs.pyinfra.com/en/2.x/) which is faster and far more flexible
+
+## Implementation
+
+### For Servers and Most Services
+
+<Steps>
+<Step>
+### Repository Setup
+On every server we have a `/opt/openfoodfacts-infrastructure` repository which is a clone of this project by `root`.
+</Step>
+
+<Step>
+### Deploy Key Configuration
+To be able to commit changes we add the root public key in deploy keys of the GitHub repository, with write access.
+</Step>
+
+<Step>
+### Folder Structure
+For each server, container, or VM, we have a folder in `/opt/openfoodfacts-infrastructure/confs`.
+</Step>
+
+<Step>
+### Configuration Linking
+As much as we can, we link the configuration files from the `/opt/openfoodfacts-infrastructure/confs` folder to the corresponding `/etc` folder of the server.
+</Step>
+</Steps>
+
+<Callout type="info" title="Configuration Principles">
+- We only commit files that differ from main distribution
+- We try to commit minimal files, using includes and .d directories as much as possible
+- Example: We use override definitions for existing systemd units ([use `systemctl edit`](https://www.freedesktop.org/software/systemd/man/latest/systemctl.html#edit%20UNIT%E2%80%A6))
+</Callout>
+
+<Card
+  title="Setup Guide"
+  href="./how-to-have-server-config-in-git"
+  description="See How to have server config in git for detailed setup instructions"
+/>
+
+### For Services with Their Own Repository
+
+<Callout title="Repository-Specific Configuration">
+For services with their own repository we might prefer to store corresponding files in the repository itself.
+</Callout>
+
+**Example:**
+This is the case for Product Opener (aka openfoodfacts-server), where we use the [conf directory](https://github.com/openfoodfacts/openfoodfacts-server/tree/main/conf)
+
+## Best Practices
+
+<Cards>
+  <Card title="Documentation" description="Try not to forget any specific configurations!" />
+  <Card title="Comments" description="Always add comments in configuration files to explain specific settings" />
+  <Card title="Version Control" description="Track all changes through git commits" />
+</Cards>
+
+<Card
+  title="Configuration Guide"
+  href="./how-to-have-server-config-in-git"
+  description="See also: How to have server config in git"
+/>
+
+### Committing Changes from a Server
+
+<Callout title="Direct Commits">
+While it's better to do a pull request for documentation and other things, it's perfectly ok to commit a configuration change or script change directly from the server on develop branch[^commit_develop].
+</Callout>
+
+<Steps>
+<Step>
+### Set Authorship
+Ensure you put right authorship, setting GIT_AUTHOR_NAME and GIT_AUTHOR_EMAIL[^git_author]
+</Step>
+
+<Step>
+### Commit Changes
+Commit your changes with a meaningful message (eventually more than one commit)
+</Step>
+
+<Step>
+### Fetch and Rebase
+Use `git pull --rebase --autostash` to fetch remote updates, while keeping your working changes (autostash)
+</Step>
+
+<Step>
+### Push Changes
+Use `git push` to push your changes to the remote
+</Step>
+</Steps>
+
+[^commit_develop]: It's even the best choice on production servers to avoid having part of the configurations failing out of sync because you are on a specific branch, or taking the risk of messing things up, just for small changes.
+
+[^git_author]: Don't hesitate to add a script in utils folder to do that.
+
+## Limitations
+
+<Callout type="warn" title="Known Limitations">
+- There is no guarantee every needed configuration file is linked and monitored in git
+- Some (rare) services do not accept symlinks
+- Proxmox `/etc/pve` files are in fact a fuse mount of pve server configurations and not real files and can't be symlinked
+- You must **take attention not to push files which contain secrets!**
+</Callout>

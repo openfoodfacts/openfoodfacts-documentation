@@ -1,0 +1,129 @@
+---
+title: "Test and Debug Robotoff"
+description: "This document guides you through testing and debugging Robotoff. It covers generating data, running test cases (including single tests), when to write new tests, and debugging techniques using PDB and local checks."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Test and Debug
+
+This documentation intends to:
+1. Familiarize you with running our test cases
+2. Give you some tips to avoid getting stuck if you are working only on Robotoff and don't need complete installation of Open Food Facts server
+
+## Data Generation
+
+Robotoff is an API that pulls prediction data, annotation data, product data, nutrition data from MongoDB database in Open Food Facts server.
+
+<Callout type="info">
+If your development instance is not connected to a product-opener instance (which happens automatically if you have a running product-opener instance), you won't have a MongoDB instance. This means you won't have any product data on your local setup.
+
+Though you may populate your postgres database with some predictions, insights, images references, etc.
+</Callout>
+
+We recommend [Factory](https://factoryboy.readthedocs.io/en/stable/) to create some data in your local database.
+
+If you have installed Robotoff via Docker, you can run Python using Poetry and execute Factory like so:
+
+```bash title="Generate test data with Factory"
+docker compose run --rm api poetry run python
+```
+
+```python title="Create test data"
+from tests.integration.models_utils import *
+PredictionFactory()
+```
+
+<Callout type="warn">
+**Windows Users:** We recommend using [Git bash](https://git-scm.com/downloads) to run commands.
+</Callout>
+
+## Running Test Cases
+
+We use [pytest](https://docs.pytest.org/en/7.1.x/) to run test cases and [Makefile](https://github.com/openfoodfacts/robotoff/blob/main/Makefile) to run our commands.
+
+### Run All Tests
+
+The following command will run all the test cases one by one:
+
+```bash title="Run all tests"
+make tests
+```
+
+### Run a Single Test Case
+
+The simplest is to use the *pytest* make target for that:
+
+```bash title="Run single test"
+make pytest args='path/to/test_file.py::the_function_name'
+```
+
+**Example:**
+To call `test_get_type()` from `tests/unit/insights/test_importer.py`:
+
+```bash title="Example single test"
+make pytest args="tests/unit/insights/test_importer.py::TestLabelInsightImporter::test_get_type"
+```
+
+<Callout type="tip">
+Remember to put quotes especially if you have multiple arguments.
+</Callout>
+
+<Callout type="warn">
+Be sure to run `make create_external_networks` before if needed (especially if you get `Network po_test declared as external, but could not be found`)
+</Callout>
+
+## When to Write Test Cases
+
+<Cards>
+  <Card title="New Features" description="Write test cases every time you write a new feature" />
+  <Card title="Feature Testing" description="Test existing features to ensure they work correctly" />
+  <Card title="Code Understanding" description="Write tests to understand the working of existing functions" />
+  <Card title="Bug Prevention" description="Automated testing helps prevent future bugs as we introduce new features or refactor" />
+</Cards>
+
+<Callout type="info">
+There are instances when Robotoff tries to connect to MongoDB via Open Food Facts server. To disable this feature (this is disabled by default on local environments), set `ENABLE_MONGODB_ACCESS=0` in your `.env`.
+</Callout>
+
+## Debugging Guide
+
+We encourage using [PDB](https://docs.python.org/3/library/pdb.html) to debug.
+
+### Using PDB with Tests
+
+Running test with `--pdb` flags, pytest will stop and open the pdb console as soon as there is an error or an assert fails. This can be a good way to try to understand why a test is failing.
+
+```bash title="Run tests with PDB"
+make pytest args="path/to/test.py --pdb"
+```
+
+<Callout type="tip">
+If it's a `mock.assert_called_with`, you can look at the real data passed to a test case by calling `mock.call_args` in the pdb console.
+</Callout>
+
+### Manual Debugging
+
+If you need more precise control to see code path before it breaks, you can add the following lines in your function to find out what your code does and where it breaks:
+
+```python title="Add PDB breakpoint"
+import pdb; pdb.set_trace()
+```
+
+and then run the `pytest`, with the `--pdb` option (as above).
+
+<Callout type="note">
+We need the `--pdb` option, to view the inputs and outputs captured by pytest and access the pdb console.
+</Callout>
+
+## Local Checks
+
+When committing your modifications to the main branch, your code has to pass several tests automatically run by Github in order to be merged.
+
+You can run these checks locally before committing by using the following command:
+
+```bash title="Run local checks"
+make checks
+```

@@ -1,0 +1,246 @@
+---
+title: "Odoo Management"
+description: "This document outlines the management of Odoo, Open Food Facts' relationship management tool. It covers installation, start/stop procedures, module installation, and creating test environments from production instances, emphasizing careful planning and testing."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Odoo: Our Relationship Management
+
+Odoo serves as Open Food Facts' relationship management tool, accessible at [connect.openfoodfacts.org](https://connect.openfoodfacts.org).
+
+<Callout type="warning">
+Odoo is a very rich tool: we need to think carefully before making changes. Some actions cannot be canceled; for example, some modules, when installed, cannot be removed.
+</Callout>
+
+## Management Guidelines
+
+<Cards>
+  <Card title="Access Control" href="#guidelines">
+    Separate technical and functional admin rights
+  </Card>
+  <Card title="Planning Required" href="#guidelines">
+    Clear usage requirements and discussion before module installation
+  </Card>
+  <Card title="Testing First" href="#guidelines">
+    All changes must be tested in staging environment
+  </Card>
+</Cards>
+
+### Quick Guidelines
+
+<Steps>
+  <Step>
+    **Separate Permissions**
+    
+    Technical and functional admin rights should be separated.
+  </Step>
+  
+  <Step>
+    **Document Requirements**
+    
+    Usages should be clearly expressed and modules should be discussed before implementation. An issue must be opened before each module or group of module installation.
+  </Step>
+  
+  <Step>
+    **Test Everything**
+    
+    Tests need to be made in a staging environment.
+  </Step>
+</Steps>
+
+## Installation
+
+The current test instance (Odoo 15) has been installed with the following process:
+
+<Steps>
+  <Step>
+    **System Preparation**
+    
+    ```bash title="Install Base System"
+    # Install Debian 11
+    apt install postgresql -y
+    apt install wkhtmltopdf
+    apt install gnupg gnupg1 gnupg2
+    ```
+  </Step>
+  
+  <Step>
+    **Add Odoo Repository**
+    
+    ```bash title="Configure Odoo Repository"
+    wget -O - https://nightly.odoo.com/odoo.key | apt-key add -
+    echo "deb http://nightly.odoo.com/15.0/nightly/deb/ ./" >> /etc/apt/sources.list.d/odoo.list
+    ```
+  </Step>
+  
+  <Step>
+    **Install Odoo**
+    
+    ```bash title="Install Odoo Package"
+    apt-get update && apt-get install odoo
+    ```
+  </Step>
+  
+  <Step>
+    **Configure Proxy**
+    
+    Set up Nginx proxy configuration.
+  </Step>
+</Steps>
+
+## Service Management
+
+<Tabs>
+  <Tab value="basic" label="Basic Commands">
+    ### Basic Service Control
+    
+    ```bash title="Service Management Commands"
+    sudo systemctl start odoo      # Start service
+    sudo systemctl stop odoo       # Stop service
+    sudo systemctl restart odoo    # Restart service
+    sudo systemctl status odoo     # Check status
+    sudo systemctl enable odoo     # Start at boot
+    sudo systemctl disable odoo    # Disable at boot
+    ```
+  </Tab>
+  
+  <Tab value="monitoring" label="Monitoring">
+    ### Service Monitoring
+    
+    <Callout type="tip">
+    Use `systemctl status odoo` to check current service status and recent log entries.
+    </Callout>
+    
+    For detailed logs:
+    ```bash title="View Logs"
+    journalctl -u odoo -f
+    ```
+  </Tab>
+</Tabs>
+
+## Module Installation
+
+<Callout type="warning">
+Always test module installation in a staging environment first. Some modules cannot be uninstalled once installed.
+</Callout>
+
+### Installing Modules from Apps Store
+
+<Steps>
+  <Step>
+    **Download Module**
+    
+    ```bash title="Download and Extract Module"
+    cd /usr/lib/python3/dist-packages/odoo/addons
+    wget https://apps.odoo.com/loempia/download/formio/15.0/formio.zip
+    unzip formio.zip
+    ```
+  </Step>
+  
+  <Step>
+    **Install in Odoo Interface**
+    
+    - Access Odoo as admin
+    - Enable developer mode (Ctrl+K, type "debug")
+    - Go to Apps menu → Update Apps List
+    - Search and install the module
+  </Step>
+</Steps>
+
+### Installing OCA Community Modules
+
+<Callout type="info">
+OCA (Odoo Community Association) hosts hundreds of modules across multiple Git repositories. Always use the correct branch for your Odoo version.
+</Callout>
+
+<Steps>
+  <Step>
+    **Clone Repository**
+    
+    ```bash title="Clone OCA Repository"
+    cd /usr/lib/python3/dist-packages/odoo/addons
+    # For Odoo version 15.0 - adapt according to desired version
+    git clone https://github.com/OCA/server-ux --branch 15.0
+    ```
+  </Step>
+  
+  <Step>
+    **Update Configuration**
+    
+    Update the addon path in `/etc/odoo/odoo.conf`:
+    
+    ```bash title="Update Addon Path"
+    addons_path = /usr/lib/python3/dist-packages/odoo/addons,/usr/lib/python3/dist-packages/odoo/addons/server-ux
+    ```
+  </Step>
+  
+  <Step>
+    **Check Dependencies**
+    
+    Look at the `__manifest__.py` for any Python module dependencies that need to be installed.
+  </Step>
+  
+  <Step>
+    **Restart and Install**
+    
+    ```bash title="Restart Service"
+    systemctl restart odoo
+    ```
+    
+    Then install through Odoo interface as described above.
+  </Step>
+</Steps>
+
+## Creating Test Environment
+
+<Callout type="note">
+This process creates a staging environment from the production instance using Proxmox snapshots.
+</Callout>
+
+<Steps>
+  <Step>
+    **Prepare Environment**
+    
+    Verify that CT 112 is currently connect-staging, and delete it before renewal if necessary.
+  </Step>
+  
+  <Step>
+    **Create and Clone Snapshot**
+    
+    ```bash title="Clone Production to Staging"
+    pct snapshot 110 temp  # Create snapshot of CT 110 (production)
+    pct clone 110 112 --hostname connect-staging --snapname temp  # Clone to CT 112
+    pct delsnapshot 110 temp  # Delete production snapshot
+    ```
+  </Step>
+  
+  <Step>
+    **Configure New Container**
+    
+    ```bash title="Configure Staging Container"
+    pct set 112 --cores 2 --memory 4096 --net0 name=eth0,bridge=vmbr0,gw=10.0.0.1,ip=10.1.0.112/24
+    pct start 112
+    ```
+  </Step>
+  
+  <Step>
+    **Post-Configuration**
+    
+    <Callout type="info">
+    Additional configuration steps may be required depending on specific staging requirements.
+    </Callout>
+    
+    ```bash title="Execute Commands on Container"
+    # Use this pattern to execute commands on the container from host
+    pct exec 112 [command]
+    ```
+  </Step>
+</Steps>
+
+<Callout type="warning">
+**Note**: This process is still being documented and may require additional steps for complete staging environment setup.
+</Callout>

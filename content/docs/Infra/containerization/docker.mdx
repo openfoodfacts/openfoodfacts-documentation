@@ -1,0 +1,234 @@
+---
+title: "Docker at Open Food Facts"
+description: "This document details the use of Docker and Docker Compose at Open Food Facts, covering best practices for containerization, orchestration, and secret management. It also provides guidelines for creating robust and secure Docker images and configurations."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Docker at Open Food Facts
+
+## Technology Stack
+
+<Callout title="Related Documentation">
+See also: [Continuous Integration and Continuous Delivery](cicd#technology-stack)
+</Callout>
+
+### Docker (Idempotency)
+
+<Callout title="Modern CI/CD">
+The process of dockerizing applications is an important step towards achieving a modern-day great Continuous Integration and Continuous Delivery process.
+</Callout>
+
+**Benefits of Dockerization:**
+- **Avoids deployment pitfalls**: No need for idempotent deployment scripts
+- **Repeatability**: Docker container builds produce identical images every time
+- **Testing**: Used for both local development and automated testing
+- **Deployment**: Enables automated deployments through idempotency
+
+<Cards>
+  <Card title="Idempotency" description="Ability to re-run deployments multiple times without problems" />
+  <Card title="Consistency" description="Same environment across development, testing, and production" />
+  <Card title="Isolation" description="Applications run in isolated containers" />
+</Cards>
+
+### Docker Compose (Orchestration)
+
+<Callout type="info" title="Simple Orchestration">
+We use `docker-compose` to deploy our applications to our servers: it is a simple **orchestrator** that can deploy to a single machine at once.
+</Callout>
+
+**Future Considerations:**
+An alternative like `docker swarm` or `kubernetes` could be considered in the future to deploy to multiple machines at scale, but it currently does not make much sense considering the small amount of servers used to run Open Food Facts.
+
+### Environment Files (Secret Management)
+
+<Steps>
+<Step>
+### Default Configuration
+Every OFF repository has a `.env` file that contains the secrets needed by the application to run properly. The `.env` file is loaded by the `docker-compose` commands.
+</Step>
+
+<Step>
+### Development Ready
+The default `.env` file in the repo is ready for local development and should rarely be modified.
+</Step>
+
+<Step>
+### Production Deployment
+In pre-production and production, the `.env` file is populated by the GitHub action (using GitHub environment secrets) before deploying to the target environment.
+</Step>
+</Steps>
+
+<Callout type="warn" title="Important Warnings">
+- **Default .env**: Should rarely change
+- **Local environments**: Create new env file (e.g `.env.test`) and set `ENV_FILE=.env.test`
+- **Security**: Do not commit your env files to the repos!
+- **Tool support**: You may use `direnv` to override variables on a folder basis
+</Callout>
+
+## Best Practices for Docker Containers
+
+<Callout title="Consistency Rules">
+Here are some important rules. The document also explains why we follow those rules. From time to time you might have good reason to bend or break the rules, but only do it if needed. Rules also enable having a consistent experience between projects.
+</Callout>
+
+### Images
+
+<Cards>
+  <Card title="Official Images" description="If possible use an official image. If you use another image take a look at how it's built." />
+  <Card title="Debian Base" description="We try to favor images based on Debian for consistency and manageability" />
+  <Card title="Future Proof" description="Important to be future proof and rely on a good base" />
+</Cards>
+
+### Configuration Through Environment
+
+<Callout title="Multiple Deployments">
+We really want to be able to run the same project multiple times on the same machine/server. For that we need to ensure that we can configure the docker-compose project.
+</Callout>
+
+**Configuration Mechanisms:**
+- **Docker-compose file composition**: Use for structural changes
+- **.env files**: Preferred way to change configuration (but can't solve everything)
+
+#### Configuration Guidelines
+
+<Steps>
+<Step>
+### Service Naming
+Avoid too generic names for services. Like `postgresql` - it's better to use `myproject_db`.
+</Step>
+
+<Step>
+### Network Configuration
+Every public network should have a configurable name to enable running the project multiple times and connecting docker-compose projects.
+</Step>
+
+<Step>
+### Port Management
+Every port exposure should be changeable through env to change ports and keep exposure to localhost on dev.
+</Step>
+
+<Step>
+### Naming Conventions
+- Never use *container_name* (let docker-compose build the name)
+- Never use static names for volumes, let docker-compose add a prefix
+</Step>
+
+<Step>
+### Network Strategy
+Try to stick to the default network and setup a network with a configurable name for exchanges with other project services.
+</Step>
+
+<Step>
+### Restart Policies
+Restart directive should always be configurable. While we want auto-start in production, we don't want it on dev machines.
+</Step>
+</Steps>
+
+<Callout type="success" title="Production Safety">
+Always prefer prod defaults for variables, or safe defaults. For example, it's better to only expose to localhost. If a variable is missing in prod it should never create a disaster.
+</Callout>
+
+## Environment-Specific Configurations
+
+<Tabs defaultValue="dev" items={["dev", "prod", "security"]}>
+  <Tab value="dev">
+    ### Development Configuration
+    
+    <Callout title="Production Parity">
+    The docker-compose.yml should be as close as possible to production.
+    </Callout>
+    
+    **Development-Specific Settings:**
+    Put specific configurations in a `docker/dev.yml`
+    
+    <Steps>
+    <Step>
+    ### Build Configuration
+    The build part should only be in dev docker-compose (see why we use images only in prod).
+    </Step>
+    
+    <Step>
+    ### User Alignment
+    Use USER_UID / USER_GID parameter to align docker user with host user uid. This avoids problems with file permissions.
+    </Step>
+    
+    <Step>
+    ### Code Mounting
+    Bind mount code so that it's easy to develop.
+    </Step>
+    
+    <Step>
+    ### Integration Testing
+    Make it possible to connect projects between them on dev, as if it was on production. This enables manual integration testing.
+    </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab value="prod">
+    ### Production Configuration
+    
+    <Callout type="info">
+    Here I talk about production, but staging is as much as possible identical to prod.
+    </Callout>
+    
+    **Production Requirements:**
+    
+    <Steps>
+    <Step>
+    ### No Build in Production
+    There should be no build in production, containers should be defined by their images. We want to be able to redeploy easily only depending on the container registry.
+    </Step>
+    
+    <Step>
+    ### External Volumes
+    Every volume containing production data should be external (to avoid a `docker-compose down` fatality if `-v` is added). The Makefile should contain a creation target (`create_external_volumes`).
+    </Step>
+    
+    <Step>
+    ### Network Naming
+    Shared network name should have a prefix which reflects the environment: like staging / prod.
+    </Step>
+    
+    <Step>
+    ### Project Naming
+    COMPOSE_PROJECT_NAME should use `<project_name>`: like po_staging, po_prod, ...
+    </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab value="security">
+    ### Security Best Practices
+    
+    <Callout type="warn" title="Security Guidelines">
+    Security considerations for Docker deployments:
+    </Callout>
+    
+    <Steps>
+    <Step>
+    ### Non-Root Users
+    Try hard not to use root in docker images. (It's ok if root is only used to launch a service that immediately drops privileges)
+    - Especially for containers that contain code or elements edited by developers and bind mounted at dev time
+    </Step>
+    
+    <Step>
+    ### Network Exposure
+    Expose to localhost only whenever possible. Only expose to all interfaces when needed.
+    </Step>
+    
+    <Step>
+    ### IP Tables Awareness
+    Be aware that docker uses an alternative table for iptables. A blocking INPUT or OUTPUT rule won't apply to docker exposed ports. You can instead add rules to DOCKER-USER chain.
+    </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+<Card
+  title="Infrastructure Issue"
+  href="https://github.com/openfoodfacts/openfoodfacts-infrastructure/issues/146"
+  description="See related infrastructure issue for more details"
+/>

@@ -1,0 +1,28 @@
+---
+title: "Moving Monitoring to Google Cloud"
+description: "This report details the migration of our monitoring infrastructure to Google Cloud Platform. It covers the provisioning of a new VM, adding a 300GB persistent disk for Elasticsearch backups, and the decision to use a zpool volume for easier synchronization."
+author: "Unknown Author"
+mail: ""
+date: "2025-05-15"
+---
+
+We decided to move our monitoring to Google Cloud, so that it's on an external data-center,
+and does not go down with one of our servers as today on ovh1.
+
+It will also free some space on ovh1, which is currently full.
+
+## Creating the server in google cloud
+
+We provisioned a VM in Google Cloud in "robotoff" project, with 160GB of disk space.
+
+## Adding a disk
+
+Elasticsearch backups are quite big, so we added a 300G disk to the VM.
+
+To do that, goes on the VM in Google Cloud, click on "modify", and then add another disk.
+
+As it's just for backups, we just added a one zone standard persistent disk.
+
+This disk is immediately available as `/etc/sdb`.
+
+We will make it a zpool volume so that it's easier to sync on other servers.

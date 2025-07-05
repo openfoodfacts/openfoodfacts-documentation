@@ -1,0 +1,53 @@
+---
+title: "Add Translations"
+description: "Step-by-step guide to adding translations in Open Food Facts using Crowdin platform and proper .pot/.po file management for internationalization."
+---
+
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+You can translate Open Food Facts at https://translate.openfoodfacts.org thanks to the Crowdin platform. Please do not translate directly in the code, or your translations will be overwritten.
+
+## Adding a translatable string in the code
+
+<Steps>
+<Step title="Modify the .pot file">
+Modify the file with the `.pot` extension related to your context. Eg.
+
+```pot title="Example .pot File"
+msgctxt "name_of_your_string"
+msgid "Hello world!"
+msgstr ""
+```
+</Step>
+<Step title="Modify the en.po file">
+Modify the file `en.po` related to your context, to be sure at least an english string will be displayed before Crowdin send back all `.po` files (which can take several days). It should be the same code as the one from `.pot` + the english translation (see `msgstr` field). Eg.
+
+```po title="Example en.po File"
+msgctxt "name_of_your_string"
+msgid "Hello world!"
+msgstr "Hello world!"
+```
+</Step>
+<Step title="Use the string in your code">
+Use your new string with the `lang()` function. Eg. in a template file: `[% lang('name_of_your_string') %]`
+</Step>
+</Steps>
+
+## Testing your modifications in dev environment
+
+If you want to test your modifications in your dev environment:
+
+<Steps>
+<Step title="Modify test translation files">
+Modify the `fr.po` files if you want to test in French; be aware it's just for test: these files will be overwritten by Crowdin. Eg. in French:
+
+```po title="Example fr.po File"
+msgctxt "name_of_your_string"
+msgid "Hello world!"
+msgstr "Salut le monde!"
+```
+</Step>
+<Step title="Build language files">
+Don't forget to `make build_lang` to let docker take your modifications into account
+</Step>
+</Steps>

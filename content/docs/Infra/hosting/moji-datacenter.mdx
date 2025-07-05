@@ -1,0 +1,106 @@
+---
+title: "Moji Datacenter Overview"
+description: "This document provides an overview of the Moji Datacenter, a new server hosted by Moji through Open Street Map. It details the server's specifications, including hardware, Proxmox installation, and its current IPv6-only network configuration."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Moji Datacenter
+
+<Callout type="info">
+Through Open Street Map, we have a new server hosted by [Moji](https://moji.fr/) located in Paris.
+</Callout>
+
+<Card title="Documentation Reference" description="Additional server information available">
+Detailed information about the server can be found on the Open Street Map [wiki](https://wiki.openstreetmap.org/wiki/FR:Serveurs_OpenStreetMap_France/Moji).
+</Card>
+
+## Server Specifications
+
+<Card title="Dell T630 Server" description="High-performance server with GPU capabilities">
+
+### Hardware Configuration
+
+<Tabs items={["CPU & Memory", "Storage", "Graphics", "Installation"]}>
+  <Tab value="CPU & Memory">
+    - **CPU:** 56 cores
+    - **RAM:** 128GB
+  </Tab>
+  
+  <Tab value="Storage">
+    - **NVMe:** 1x 8TB high-speed storage
+    - **HDD:** 8x 8TB traditional drives
+  </Tab>
+  
+  <Tab value="Graphics">
+    - **GPUs:** 2x NVIDIA GeForce GTX 1080Ti
+  </Tab>
+  
+  <Tab value="Installation">
+    - **OS:** Proxmox 8.2 (installed by Christian)
+    - **Virtualization:** Ready for VM/Container deployment
+  </Tab>
+</Tabs>
+
+</Card>
+
+## Network Configuration
+
+<Callout type="warn">
+The server currently has **IPv6-only** public connectivity. No public IPv4 address is available.
+</Callout>
+
+<Card title="Network Access" description="IPv6-only server with proxy access options">
+
+### Connection Details
+
+<Steps>
+  <Step title="IPv6 Direct Access">
+    Server IPv6 address: `2a06:c484:5::45`
+  </Step>
+  
+  <Step title="IPv4 Proxy Access">
+    Connect via proxy server: `45.147.209.254` (has public IPv4)
+  </Step>
+  
+  <Step title="VM/Container Access">
+    Use individual VM/CT IPv6 addresses for direct connection
+  </Step>
+</Steps>
+
+### Access Methods
+
+<Tabs items={["IPv6 Direct", "IPv4 Proxy", "VM Access"]}>
+  <Tab value="IPv6 Direct">
+    For clients with IPv6 connectivity:
+    ```bash title="Direct IPv6 Connection"
+    ssh user@2a06:c484:5::45
+    ```
+  </Tab>
+  
+  <Tab value="IPv4 Proxy">
+    For IPv4-only clients:
+    ```bash title="Proxy Connection"
+    ssh user@45.147.209.254
+    # Then connect to internal server
+    ```
+  </Tab>
+  
+  <Tab value="VM Access">
+    Each VM/Container has its own IPv6 address for direct access when deployed.
+  </Tab>
+</Tabs>
+
+</Card>
+
+## Key Features
+
+<Cards>
+  <Card title="GPU Computing" description="Dual 1080Ti GPUs for ML/AI workloads" />
+  <Card title="High Memory" description="128GB RAM for memory-intensive applications" />
+  <Card title="Multi-Core" description="56 CPU cores for parallel processing" />
+  <Card title="Hybrid Storage" description="Fast NVMe + bulk HDD storage" />
+</Cards>

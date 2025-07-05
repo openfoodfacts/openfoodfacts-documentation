@@ -1,0 +1,115 @@
+---
+title: "Project Setup"
+description: "This guide explains how to set up the Facets Knowledge Panels project locally. It covers two methods: using Docker Compose (recommended) for quick setup and a virtual environment for more control, detailing prerequisites and commands for each."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+# Project Setup
+
+<Callout type="info">
+You may choose Docker compose (recommended), or through virtual environment for more control.
+</Callout>
+
+<Tabs items={['Docker (Recommended)', 'Virtual Environment']}>
+<Tab value="Docker (Recommended)">
+
+<Callout>
+**Prerequisites**
+
+Make sure you have [Docker](https://docs.docker.com/get-docker/) installed on your system.
+</Callout>
+
+After forking the repository:
+
+<Steps>
+<Step title="Build the Project">
+
+```bash title="Build with Docker Compose"
+docker compose build
+```
+
+or
+
+```bash title="Build with Make"
+make build
+```
+
+</Step>
+<Step title="Run the Project">
+
+```bash title="Run with Docker Compose"
+docker compose up
+```
+
+or
+
+```bash title="Run with Make"
+make up
+```
+
+</Step>
+<Step title="Access the Application">
+
+Visit `http://127.0.0.1/` with the endpoints or `/docs` for documentation
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Virtual Environment">
+
+<Cards>
+<Card title="Python" href="https://www.python.org/downloads/" description="Python programming language" />
+<Card title="Git Bash" href="https://gitforwindows.org/#bash" description="Use git bash console to run the commands below" />
+</Cards>
+
+After forking the repository:
+
+<Steps>
+<Step title="Create Virtual Environment">
+
+Create [virtual environment](https://docs.python.org/3/library/venv.html)
+
+</Step>
+<Step title="Activate Environment">
+
+Activate your virtual environment:
+
+```bash title="Activate Virtual Environment"
+. path/to/virtualenv/bin/activate
+```
+
+</Step>
+<Step title="Install Dependencies">
+
+Install requirements.txt:
+
+```bash title="Install Python Dependencies"
+pip install -r requirements.txt
+```
+
+</Step>
+<Step title="Load Environment Variables">
+
+```bash title="Load Environment"
+. load_env.sh
+```
+
+</Step>
+<Step title="Run Server">
+
+```bash title="Start Development Server"
+uvicorn app.main:app --reload
+```
+
+Checkout your local host `http://127.0.0.1:8000/` with the endpoints or `/docs` for documentation
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>

@@ -1,0 +1,120 @@
+---
+title: "AWS Images Dataset"
+description: "Guide to accessing and downloading Open Food Facts images dataset hosted on AWS S3 with OCR results and batch processing examples"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+<Callout type="info">
+**Complete Images Dataset**
+
+The Open Food Facts images dataset contains all images uploaded to Open Food Facts and the OCR results on these images obtained using Google Cloud Vision.
+</Callout>
+
+## Dataset Location
+
+<Cards>
+<Card title="S3 Bucket" description="openfoodfacts-images" />
+<Card title="AWS Region" description="eu-west-3" />
+<Card title="Data Folder" description="/data" />
+</Cards>
+
+<Callout type="warning">
+**Data Synchronization**
+
+Data is synchronized monthly between the Open Food Facts server and the bucket; as such some recent images are likely missing. You should not assume all images are present in the bucket.
+</Callout>
+
+## Understanding File Paths
+
+<Steps>
+<Step>
+**Barcode Splitting for EAN13**: For barcode '4012359114303', split as `/401/235/911/4303` (three groups of 3 digits + one group of 4 digits)
+</Step>
+<Step>
+**Shorter Barcodes**: For barcodes with fewer digits (like EAN8), no splitting: `/20065034`
+</Step>
+<Step>
+**Add Image ID**: For raw image '1': `/401/235/911/4303/1.jpg`
+</Step>
+</Steps>
+
+## Available File Types
+
+<Callout>
+**Multiple Formats Available**
+
+Each image is available in different formats and with OCR results.
+</Callout>
+
+### Image Formats
+
+<Cards>
+<Card title="Raw Image" description="Full resolution as uploaded: /401/235/911/4303/1.jpg" />
+<Card title="Resized Image" description="400px version: /401/235/911/4303/1.400.jpg" />
+<Card title="OCR Results" description="Gzipped JSON: /401/235/911/4303/1.json.gz" />
+</Cards>
+
+## Downloading Images
+
+### Direct HTTP Download
+
+```bash title="Download Single Image"
+wget https://openfoodfacts-images.s3.eu-west-3.amazonaws.com/data/401/235/911/4303/1.jpg
+```
+
+### List All Available Files
+
+```bash title="Download File List"
+wget https://openfoodfacts-images.s3.eu-west-3.amazonaws.com/data/data_keys.gz
+```
+
+### Filter Files
+
+```bash title="Filter 400px Images"
+zcat data_keys.gz | grep '.400.jpg'
+```
+
+## Batch Processing Example
+
+<Callout type="info">
+**Sample Extraction**
+
+Here's a complete example for extracting a random sample of images.
+</Callout>
+
+```bash title="Extract Random Sample of Images"
+# Extract images from AWS
+n=1000
+images_dir="images"
+bucket_url="https://openfoodfacts-images.s3.eu-west-3.amazonaws.com/"
+
+zcat data_keys.gz |
+grep '.jpg' | # Filter
+shuf -n "$n" | # Random sample
+sed "s|^|$bucket_url|" | #Add bucket_url: "https://openfoodfacts-images.s3.eu-west-3.amazonaws.com/data/376/005/047/0099/1.jpg"
+while read -r url; do
+    filename=$(echo "$url" | sed "s|$bucket_url||" | tr '/' '_' | sed 's|data_||') # Filename as 376_005_047_0099_1.jpg
+    wget -O "$images_dir/$filename" "$url"
+done
+```
+
+## Advanced Filtering with DuckDB
+
+<Callout type="info">
+**Enhanced Processing**
+
+You can further refine the image extraction process by applying additional filters like `last_editor` or `last_edited_date`.
+</Callout>
+
+<Card href="https://world.openfoodfacts.org/data" title="OFF Database Dump" description="Download the complete Open Food Facts database" external />
+
+<Card href="https://medium.com/@jeremyarancio/duckdb-open-food-facts-the-largest-open-food-database-in-the-palm-of-your-hand-0d4ab30d0701" title="DuckDB Tutorial" description="Detailed instructions on using DuckDB to efficiently process the OFF database" external />
+
+<Callout>
+**Combine Multiple Data Sources**
+
+This can be done by combining the Open Food Facts database dump with **DuckDB** and the `data_keys.gz` file.
+</Callout>

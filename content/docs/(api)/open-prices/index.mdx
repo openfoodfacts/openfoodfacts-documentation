@@ -1,0 +1,90 @@
+---
+title: Open Prices API
+description: API for the Open Food Facts prices database - a comprehensive collection of food product prices from around the world.
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Callout } from 'fumadocs-ui/components/callout';
+
+# Open Prices API
+
+The Open Prices API provides access to the Open Food Facts prices database, offering comprehensive price information for food products worldwide. This collaborative database helps consumers make informed purchasing decisions.
+
+<Callout type='info'>
+  Open Prices is a collaborative project to collect and share food product prices from stores around
+  the world, complementing the Open Food Facts database.
+</Callout>
+
+## Key Features
+
+<Cards>
+  <Card
+    title='Price Management'
+    description='Create, update, and retrieve price information for products'
+    href='/docs/open-prices/prices'
+  />
+  <Card
+    title='Location Data'
+    description='Access store locations and geographic price distribution'
+    href='/docs/open-prices/locations'
+  />
+  <Card
+    title='Product Catalog'
+    description='Browse and search products with associated price data'
+    href='/docs/open-prices/products'
+  />
+  <Card
+    title='Receipt Processing'
+    description='Upload and process receipts to extract price information'
+    href='/docs/open-prices/proofs'
+  />
+  <Card
+    title='User Management'
+    description='Handle user accounts and authentication for contributors'
+    href='/docs/open-prices/users'
+  />
+  <Card
+    title='Statistics'
+    description='Access aggregated statistics and analytics about price data'
+    href='/docs/open-prices/stats'
+  />
+</Cards>
+
+## Base URL
+
+```
+https://prices.openfoodfacts.org
+```
+
+## API Features
+
+- **RESTful Design**: Standard HTTP methods and status codes
+- **JSON Responses**: All endpoints return JSON data
+- **Pagination**: Large datasets are paginated for performance
+- **Filtering**: Advanced filtering options for price queries
+- **Real-time Data**: Access to the latest price information
+
+<Callout type='success'>
+  The API supports both anonymous access for reading data and authenticated access for contributing
+  price information.
+</Callout>
+
+## Use Cases
+
+- **Price Comparison**: Build applications that compare prices across stores
+- **Market Research**: Analyze pricing trends and geographic variations
+- **Consumer Apps**: Help users find the best deals in their area
+- **Data Analysis**: Research food pricing patterns and accessibility
+
+<Callout type='warn'>
+  Please be respectful with API usage. Rate limiting may be applied to ensure fair access for all
+  users.
+</Callout>
+
+## Support
+
+For questions or support regarding the Open Prices API:
+
+- [GitHub Repository](https://github.com/openfoodfacts/open-prices)
+- [Community Forum](https://forum.openfoodfacts.org/)
+- [Documentation](https://prices.openfoodfacts.org)

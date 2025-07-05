@@ -1,0 +1,369 @@
+---
+title: "OFF1 Proxy"
+description: "OFF1 reverse proxy installation and images container setup with performance investigation."
+author: "Unknown Author"
+mail: ""
+date: "2024-06-05"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+<Callout type="warning">
+**IMPORTANT:** We finally didn't use this reverse proxy which was intended to serve images due to unexplained performance issues. We didn't have the time to investigate more.
+</Callout>
+
+## Project Overview
+
+A new IP address was allocated to install an nginx reverse proxy on off1. The reverse proxy was intended to directly serve static OFF product images.
+
+<Callout type="info">
+Following the setup done by Alex for the reverse proxy on off2: [2023-03-14-off2-opff-reinstall.md](../reports/2023-03-14-off2-opff-reinstall.md)
+</Callout>
+
+## NGINX Reverse Proxy Installation
+
+### Container Setup
+
+<Steps>
+  <Step>
+    **Create Container**
+    
+    Following [How to create a new Container](../proxmox.md#how-to-create-a-new-container):
+    - **CT number**: 100
+    - **CPU**: 4 cores
+    - **RAM**: 2 GB
+    - **Disk**: 32 GB
+    - **OS**: debian-12-standard_12.2-1
+    - **Network**: name=eth0,bridge=vmbr1,ip=10.1.0.100/24,gw=10.0.0.1
+  </Step>
+  
+  <Step>
+    **Install Base Software**
+    
+    ```bash title="Install Nginx and Configure Mail"
+    apt install nginx
+    # Configure postfix following mail documentation
+    ```
+  </Step>
+  
+  <Step>
+    **Add Public IP**
+    
+    Using Proxmox interface, add net1 on vmbr0:
+    - **IP**: 213.36.253.215/27
+    - **Gateway**: 213.36.253.222
+  </Step>
+  
+  <Step>
+    **DNS Configuration**
+    
+    Added A record `off1-proxy.openfoodfacts.org` pointing to this IP in OVH DNS zones.
+  </Step>
+</Steps>
+
+### Repository Setup
+
+<Steps>
+  <Step>
+    **Create SSH Key**
+    
+    ```bash title="Generate SSH Key"
+    ssh-keygen -t ed25519 -C "off@off1-proxy.openfoodfacts.org"
+    cat /root/.ssh/id_ed25519.pub
+    ```
+  </Step>
+  
+  <Step>
+    **Add Deploy Key**
+    
+    Add key as [authorized key in openfoodfacts-infrastructure](https://github.com/openfoodfacts/openfoodfacts-infrastructure/settings/keys) with write authorization.
+  </Step>
+  
+  <Step>
+    **Clone Repository**
+    
+    ```bash title="Clone Infrastructure Repo"
+    cd /opt
+    git clone git@github.com:openfoodfacts/openfoodfacts-infrastructure.git
+    ```
+  </Step>
+</Steps>
+
+### Security Configuration
+
+<Callout type="info">
+Install fail2ban for security reinforcement using existing configurations.
+</Callout>
+
+```bash title="Setup Fail2ban"
+apt install fail2ban
+ln -s /opt/openfoodfacts-infrastructure/confs/proxy-off/fail2ban/jail.d/nginx.conf /etc/fail2ban/jail.d/
+systemctl reload fail2ban
+```
+
+<Callout type="note">
+This basic setup analyzes standard logs but doesn't handle 403/401 analysis which requires a specific plugin.
+</Callout>
+
+### Volume Mounting
+
+<Callout type="info">
+Serve images directly from the reverse proxy to avoid an extra nginx layer for frequently requested image files.
+</Callout>
+
+<Steps>
+  <Step>
+    **Configure Container Mounts**
+    
+    Edit `/etc/pve/lxc/100.conf` and add:
+    
+    ```ini title="Container Mount Points"
+    mp0: /zfs-hdd/off/images,mp=/mnt/off/images
+    mp1: /zfs-hdd/obf/images,mp=/mnt/obf/images
+    mp2: /zfs-hdd/opf/images,mp=/mnt/opf/images
+    mp3: /zfs-hdd/opff/images,mp=/mnt/opff/images
+    ```
+  </Step>
+  
+  <Step>
+    **Fix Missing Dataset**
+    
+    `/zfs-hdd/opf` didn't exist due to typo in `/etc/sanoid/syncoid-args.conf`:
+    
+    ```bash title="Manual Sync"
+    syncoid --no-sync-snap --no-privilege-elevation --recursive off1operator@10.0.0.2:zfs-hdd/opf zfs-hdd/opf
+    ```
+  </Step>
+</Steps>
+
+## SSL Configuration
+
+<Tabs>
+  <Tab value="copy" label="Certificate Copy">
+    ### Copy Existing Certificates
+    
+    Copy letsencrypt certificates and configurations from off2 host to off1 reverse proxy.
+  </Tab>
+  
+  <Tab value="install" label="Install Certbot">
+    ### Install Certbot
+    
+    ```bash title="Install Certbot with Nginx Plugin"
+    apt install certbot python3-certbot-nginx
+    ```
+  </Tab>
+  
+  <Tab value="test" label="Test Renewal">
+    ### Test SSL Renewal
+    
+    ```bash title="Test Certificate Renewal"
+    certbot renew --dry-run
+    ```
+    
+    <Callout type="warning">
+    Initial test failed due to connection issues - images.openfoodfacts.org was pointing to off2 at the time.
+    </Callout>
+  </Tab>
+</Tabs>
+
+## NGINX Configuration
+
+<Steps>
+  <Step>
+    **Replace Main Config**
+    
+    ```bash title="Setup Main Nginx Config"
+    mv /etc/nginx/nginx.conf /etc/nginx/nginx.conf.old
+    ln -s /opt/openfoodfacts-infrastructure/confs/proxy-off/nginx/nginx.conf /etc/nginx/
+    ```
+  </Step>
+  
+  <Step>
+    **Add Log Format**
+    
+    ```bash title="Setup Log Format"
+    ln -s /opt/openfoodfacts-infrastructure/confs/proxy-off/nginx/log_format.conf /etc/nginx/conf.d/log_format.conf
+    ```
+  </Step>
+  
+  <Step>
+    **Configure Site**
+    
+    ```bash title="Enable Images Site"
+    ln -s /opt/openfoodfacts-infrastructure/confs/off1-reverse-proxy/nginx/sites-available/images-off /etc/nginx/sites-enabled/
+    ```
+    
+    **Changes from static-off**:
+    - Log files in `/var/log/nginx` instead of ZFS mount
+    - Image paths to `/mnt/off` (container paths)
+    - Removed unused upstream directive
+    - Fixed SSL certificate paths
+  </Step>
+</Steps>
+
+### Testing and Fixes
+
+<Callout type="note">
+Initial testing revealed upstream timeout issues. Fixed by changing from domain to direct IP access.
+</Callout>
+
+```bash title="Upstream Fix"
+# Changed from:
+proxy_pass https://proxy2.openfoodfacts.org;
+# To:
+proxy_pass http://10.1.0.113:80;
+```
+
+## Services Setup
+
+<Steps>
+  <Step>
+    **Link Service Configurations**
+    
+    ```bash title="Setup Systemd Service Links"
+    ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/systemd/fail2ban.service.d /etc/systemd/system
+    ln -s /opt/openfoodfacts-infrastructure/confs/off1-reverse-proxy/systemd/system/prometheus-nginx-exporter.service.d /etc/systemd/system/
+    ln -s /opt/openfoodfacts-infrastructure/confs/off1-reverse-proxy/systemd/system/logrotate.service.d /etc/systemd/system/
+    ln -s /opt/openfoodfacts-infrastructure/confs/off1-reverse-proxy/systemd/system/nginx.service.d /etc/systemd/system/
+    ln -s /opt/openfoodfacts-infrastructure/confs/off1-reverse-proxy/systemd/system/certbot.service.d /etc/systemd/system/
+    ```
+  </Step>
+</Steps>
+
+## Nginx Exporter Setup
+
+### Installation and Configuration
+
+<Steps>
+  <Step>
+    **Install Exporter**
+    
+    ```bash title="Install Prometheus Nginx Exporter"
+    apt install prometheus-nginx-exporter
+    ```
+  </Step>
+  
+  <Step>
+    **Configure Security**
+    
+    Restrict to internal IP for security:
+    
+    ```ini title="Override Configuration"
+    [Service]
+    # ONLY listen on 10.1.0.100 for security reasons
+    Environment="LISTEN_ADDRESS=10.1.0.100:9113"
+    ```
+  </Step>
+  
+  <Step>
+    **Enable Nginx Stats**
+    
+    Configure `/stub_status` endpoint on port 8080 (limited to 127.0.0.1).
+  </Step>
+  
+  <Step>
+    **Test Configuration**
+    
+    ```bash title="Test Exporter"
+    # Test from off2 proxy container
+    curl http://10.1.0.100:9113/metrics
+    
+    # Verify not accessible publicly
+    nc -vz 213.36.253.215 9113
+    ```
+  </Step>
+</Steps>
+
+### Monitoring Integration
+
+<Steps>
+  <Step>
+    **Update Nginx Config**
+    
+    Add to `/etc/nginx/sites-enabled/free-exporters.openfoodfacts.org`:
+    
+    ```ini title="Add Exporter Mapping"
+    map $uri $exporter {
+        # nginx on this proxy
+        "/proxy/nginx/metrics" 127.0.0.1:9113;
+    }
+    ```
+  </Step>
+  
+  <Step>
+    **Add to Prometheus**
+    
+    Edit `prometheus/config.yml` to add service path to free-exporters section.
+  </Step>
+</Steps>
+
+## Performance Issues Investigation
+
+<Callout type="danger">
+**2024/06/06**: Severe performance issues detected with serving images on off1 proxy container 100.
+</Callout>
+
+### Problem Description
+
+- **Symptoms**: Images taking up to 10 seconds to serve
+- **Impact**: Clearly visible when loading product lists on website
+- **Suspected Cause**: Bind mount of ZFS pool with images
+
+### Attempted Solutions
+
+<Tabs>
+  <Tab value="container" label="Container Issues">
+    ### Container Performance
+    
+    Performance issues suspected to be related to:
+    - ZFS pool bind mounts in container
+    - Container overhead for high-frequency image requests
+    - Network configuration within container
+  </Tab>
+  
+  <Tab value="host" label="Host Direct Serving">
+    ### Direct Host Serving Attempt
+    
+    ```bash title="Setup Direct Host Nginx"
+    apt-get install nginx
+    ln -s /opt/openfoodfacts-infrastructure/confs/off1/nginx/sites-available/images-off /etc/nginx/sites-enabled/
+    rm /etc/nginx/sites-enabled/default 
+    rm /etc/nginx/nginx.conf 
+    ln -s /opt/openfoodfacts-infrastructure/confs/proxy-off/nginx/nginx.conf /etc/nginx/
+    cp -a /zfs-hdd/pve/subvol-100-disk-0/etc/letsencrypt /etc/
+    ```
+  </Tab>
+</Tabs>
+
+## Project Conclusion
+
+<Callout type="warning">
+**Final Decision**: The OFF1 reverse proxy project was abandoned due to unexplained performance issues that could not be resolved within the available time frame.
+</Callout>
+
+### Outstanding Tasks
+
+<Cards>
+  <Card title="Multi-Brand Setup" href="#outstanding-tasks">
+    Configure OBF, OPF, OPFF nginx and SSL certificates
+  </Card>
+  <Card title="SSL Renewal" href="#outstanding-tasks">
+    Verify images.openfoodfacts.org SSL certificate renewal
+  </Card>
+  <Card title="Log Export" href="#outstanding-tasks">
+    Export proxy and static logs to Prometheus
+  </Card>
+  <Card title="Performance Analysis" href="#outstanding-tasks">
+    Investigate root cause of performance issues
+  </Card>
+</Cards>
+
+### Lessons Learned
+
+- **Container Performance**: High-frequency file serving may be better suited for host-level deployment
+- **ZFS Bind Mounts**: Potential performance impact in containerized environments
+- **Testing Importance**: Thorough performance testing required before production deployment
+- **Fallback Planning**: Always have rollback plans for critical infrastructure changes

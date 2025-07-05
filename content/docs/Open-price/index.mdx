@@ -1,0 +1,54 @@
+---
+title: "Open Prices"
+description: "Explore Open Prices, a project dedicated to collecting and sharing food product prices globally. This document introduces its REST API and web interface, and provides tutorials for contributors on adding single or multiple prices."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# Open Prices
+
+<Callout type="info">
+Open Prices is a project to collect and share prices of food products around the world. Learn more at [prices.openfoodfacts.org](https://prices.openfoodfacts.org/).
+</Callout>
+
+## System Architecture
+
+The Open Prices ecosystem consists of:
+
+<Cards>
+<Card title="REST API" href="https://github.com/openfoodfacts/open-prices" description="Backend API built using Django for data management" />
+<Card title="Web Interface" href="https://prices.openfoodfacts.org" description="Frontend built using Vue.js for user interactions" />
+</Cards>
+
+## Getting Started
+
+<Callout type="tip">
+**Ready to Contribute?**
+
+If you're a contributor, explore our comprehensive tutorials to start adding prices to the database.
+</Callout>
+
+<Cards>
+<Card title="Add a Single Price" href="./add-a-price.mdx" description="Step-by-step guide to add individual product prices" />
+<Card title="Add Multiple Prices" href="./add-multiple-prices.mdx" description="Efficient method to add prices from shop shelves" />
+<Card title="Maintenance Guide" href="./maintenance.mdx" description="Technical maintenance procedures and OCR operations" />
+</Cards>
+
+## How It Works
+
+<Steps>
+<Step title="Data Collection">
+Contributors take photos of price tags and products as proof of pricing information.
+</Step>
+<Step title="Location Verification">
+All locations are verified through OpenStreetMap to ensure accuracy and consistency.
+</Step>
+<Step title="Price Validation">
+Each price entry includes timestamp and location data for tracking price changes over time.
+</Step>
+<Step title="Community Access">
+All collected data is made available through the API and web interface for public use.
+</Step>
+</Steps>

@@ -1,0 +1,78 @@
+---
+title: Robotoff API
+description: API endpoints for Robotoff predictions and annotations service
+---
+
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Callout } from 'fumadocs-ui/components/callout';
+
+# Robotoff API
+
+Robotoff is Open Food Facts' machine learning service that provides AI-powered predictions for product data and enables crowd-sourced validation through annotations. It helps improve data quality by suggesting corrections and enhancements.
+
+<Callout type='info'>
+  Robotoff provides both production (`robotoff.openfoodfacts.org`) and staging
+  (`robotoff.openfoodfacts.net`) environments for testing and development.
+</Callout>
+
+## Key Features
+
+<Cards>
+  <Card
+    title='Predictions'
+    description='Access AI-generated predictions for categories, ingredients, and product attributes'
+    href='/docs/robotoff/predictions'
+  />
+  <Card
+    title='Insights'
+    description='Get actionable insights and suggestions for improving product data quality'
+    href='/docs/robotoff/insights'
+  />
+  <Card
+    title='Annotations'
+    description='Submit crowd-sourced annotations to validate or correct predictions'
+    href='/docs/robotoff/insights'
+  />
+  <Card
+    title='Questions'
+    description='Access gamified questions for contributors to help improve data quality'
+    href='/docs/robotoff/questions'
+  />
+  <Card
+    title='Image Analysis'
+    description='OCR and computer vision capabilities for extracting data from product images'
+    href='/docs/robotoff/images'
+  />
+  <Card
+    title='Logos Detection'
+    description='Detect and classify logos, brands, and labels in product images'
+    href='/docs/robotoff/logos'
+  />
+</Cards>
+
+## Base URL
+
+All endpoints are prefixed with `/api/v1`:
+
+```
+https://robotoff.openfoodfacts.org/api/v1/{endpoint}
+```
+
+## Authentication
+
+Most read operations are public. For write operations (annotations, batch processing), you may need to provide Open Food Facts credentials using Basic Authentication.
+
+<Callout type="warn">
+When submitting annotations as a registered user, include `Authorization: Basic {base64(username:password)}` header.
+</Callout>
+
+## Prediction Types
+
+Robotoff provides predictions for:
+
+- **Categories**: Product category classification
+- **Ingredients**: Ingredient list parsing and analysis
+- **Nutrition**: Nutrition facts extraction from images
+- **Labels**: Detection of quality labels and certifications
+- **Brands**: Brand identification and verification
+- **Packaging**: Package type and material detection

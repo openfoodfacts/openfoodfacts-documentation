@@ -1,0 +1,110 @@
+---
+title: "Add New Predictor"
+description: "This guide explains how to integrate a new model or predictor into Robotoff. It covers prediction generation, calling the predictor, importing predictions/insights, triggering actions after annotation, and testing your new predictor."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+
+# How to Add a New Model/Predictor to Robotoff
+
+You have a shiny new model and you want to add it to Robotoff? Great!
+
+Here is a step-by-step guide to help you.
+
+<Steps>
+  <Step>
+    ## Prediction Generation
+
+    All prediction-related code lives in `robotoff.prediction` module.
+
+    **Code Location Guidelines:**
+    - **OCR-based predictions**: Should be in `robotoff.prediction.ocr`
+    - **Other predictions**: At the root of the module (you can create a deeper module if necessary)
+
+    <Callout type="info">
+      If you want to deploy an ML model, the best place to serve it is on Triton, our ML inference server. You should first convert your model to SavedModel or ONNX format and make it servable through Triton. Inference requests to Triton are sent through gRPC.
+    </Callout>
+
+    <Callout type="note">
+      For gRPC implementation example, see `generate_clip_embedding` in `robotoff.triton`
+    </Callout>
+
+    The result of the computation should be a list of `Prediction`s. If you want the insight to be automatically applied, set `automatic_processing=True` when creating the Prediction. 
+
+    <Callout type="warn">
+      You may need to create a new entry in `PredictionType` and `InsightType` in `robotoff.types` depending on your predictor.
+    </Callout>
+  </Step>
+
+  <Step>
+    ## Calling the Predictor
+
+    If the prediction is not OCR-based, you will either want the predictor to be called:
+
+    <Cards>
+      <Card 
+        title="New Image Upload" 
+        description="Add a call to your predictor function in robotoff.workers.tasks.import_image"
+      />
+      <Card 
+        title="Product Update" 
+        description="Add a call to your predictor function in robotoff.workers.tasks.product_updated"
+      />
+    </Cards>
+  </Step>
+
+  <Step>
+    ## Importing Predictions/Insights
+
+    The next step is to import the predictions in database and generate insights from these predictions. 
+
+    <Callout type="info">
+      If you don't know the difference between insights and predictions, [check this page](/docs/Robotoff/explanations/predictions.mdx).
+    </Callout>
+
+    You should create a new importer class subclassing `InsightImporter` in `robotoff.insights.importer` and add it to the `IMPORTERS` list.
+  </Step>
+
+  <Step>
+    ## Trigger Actions After Insight Annotation
+
+    To perform some actions when the insight has been annotated and marked as correct (`annotation=1`), you should add a new class subclassing `InsightAnnotator` in `robotoff.insights.annotate` and add it to the `ANNOTATOR_MAPPING` dictionary.
+
+    <Callout type="tip">
+      If you need a call to Product Opener API that is not implemented yet, add it to `robotoff.off`.
+    </Callout>
+  </Step>
+
+  <Step>
+    ## Test Your Predictor
+
+    To test your predictor, you can simulate an image import by adding an event to the Redis Stream. There is a CLI command that does this for you:
+
+    ```bash title="Simulate image import"
+    make robotoff-cli args='create-redis-update --barcode 3770016266048 --uploaded-image-id 1'
+    ```
+
+    This command will create an event in the `product_updates_off` stream with:
+    - **Barcode**: `3770016266048`
+    - **Action**: `updated`
+    - **Diffs**: `{"uploaded_images": {"add": ["1"]}}`
+
+    ### Verification Checklist
+
+    <Cards>
+      <Card title="Predictor Called" description="Verify the predictor is indeed called" />
+      <Card title="Database Storage" description="Check it generates predictions/insights and saves them in DB when expected" />
+      <Card title="Error Checking" description="Ensure no errors occurred (check the logs)" />
+    </Cards>
+
+    <Callout type="info">
+      If you add an OCR-only predictor, you should also add unit tests in `tests/unit`. We don't yet have the possibility to perform integration tests on ML models served by Triton though.
+    </Callout>
+  </Step>
+</Steps>
+
+<Callout type="success">
+  That's it, congratulations 🎉!
+</Callout>

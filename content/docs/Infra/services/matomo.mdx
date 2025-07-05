@@ -1,0 +1,346 @@
+---
+title: "Matomo Analytics Platform"
+description: "This document details the Matomo web analytics platform, covering its services, alerts, temporary patches, site setup, GDPR compliance, installation, performance tuning, and troubleshooting tips for monitoring tracking and archive jobs."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Matomo Analytics Platform
+
+[Matomo](https://matomo.org/) is the web analytics platform.
+
+<Card title="Access Matomo" href="https://analytics.openfoodfacts.org/">
+Available at: https://analytics.openfoodfacts.org/
+</Card>
+
+<Callout type="warning">
+You must have a user account to access it (hopefully!). Ask for an admin to create you an account if you need it (Beware, there are personal information in the sense of GDPR like ip addresses). Ask for it to *contact* email.
+</Callout>
+
+## Main Running Services
+
+<Cards>
+<Card title="NGINX">
+Used as HTTP frontend
+</Card>
+<Card title="PHP7.3-FPM">
+Runs the Matomo software
+</Card>
+<Card title="MariaDB">
+Main database for Matomo, some configurations are made for performance
+</Card>
+<Card title="Redis">
+Used to fast track Matomo requests
+</Card>
+<Card title="Systemd Timers">
+Different systemd timer takes care of putting tracking from redis to mariadb and to consolidate archive reports
+</Card>
+<Card title="Prometheus Exporters">
+Installed for nginx and mysql monitoring
+</Card>
+</Cards>
+
+<Callout type="info">
+Most of those systemd services should email on failures.
+
+Important configuration files are linked to this git repository (see [using git, below](#using-git))
+</Callout>
+
+## Alerts Configuration
+
+You can setup alerts in matomo. In personal alerts.
+
+<Callout type="note">
+We have setup alerts for main website and app if there are 0 visits.
+</Callout>
+
+![alerts settings](../img/matomo-alerts.png "Matomo alerts settings")
+
+## Important: Temporary Patches
+
+<Callout type="warning">
+Because of [Queue id should try to be more random #231](https://github.com/matomo-org/plugin-QueuedTracking/issues/231) and [Set a random visitor ID at each requests instead of using 0000000… for anonymous analytics](https://github.com/openfoodfacts/smooth-app/issues/5095)
+
+until enough mobile app are deployed, I manually patched these files:
+</Callout>
+
+<Tabs>
+<Tab value="manager" label="Queue Manager Patch">
+In `plugins/QueuedTracking/Queue/Manager.php`:
+
+```php title="Manager.php Patch"
+protected function getQueueIdForVisitor($visitorId)
+{
+    # 2024-03-08 patch from ALEX
+    if ($visitorId === '0000000000000000') {
+        $visitorId = chr(rand(ord('a'), ord('z')));
+    }
+    $visitorId = strtolower(substr($visitorId, 0, 1));
+  ...
+```
+</Tab>
+
+<Tab value="processor" label="Queue Processor Patch">
+In `plugins/QueuedTracking/Queue/Processor.php`:
+
+```php title="Processor.php Patch"
+private function extendLockExpireToMakeSureWeCanProcessARequestSet(RequestSet $requestSet)
+{
+    // 2 seconds per tracking request should give it enough time to process it
+    // 2024-03-15 ALEX try 15 s per requests instead of 2s
+    $ttl = $requestSet->getNumberOfRequests() * 150;
+    $ttl = max($ttl, 30); // lock for at least 30 seconds
+
+    return $this->queueManager->expireLock($ttl);
+}
+```
+</Tab>
+</Tabs>
+
+## Site Setup
+
+<Steps>
+<Step>
+**Add Website**
+Go to manage / websites and add a website
+</Step>
+</Steps>
+
+### GDPR Compliance
+
+<Callout type="info">
+To be GDPR compliant (and user friendly):
+</Callout>
+
+<Cards>
+<Card title="Disable Cookies">
+In your Matomo Tag, you can check the option « Disable cookies » which will disable all first party tracking cookies for Matomo
+</Card>
+<Card title="IP Anonymization">
+To ensure that you do not store the visitor IP, which is Personally Identifiable Information (PII), please go to Administration > Privacy > Anonymize data, to enable IP anonymization, and check you have 2 bytes or 3 bytes masked from the IP address
+</Card>
+</Cards>
+
+### In Product Opener
+
+<Callout type="note">
+We use the `$google_analytics` variable in config to add the javascript snippet for Matomo.
+</Callout>
+
+## Matomo Installation
+
+<Callout type="info">
+See also [Install log](./reports/2021-02-22-matomo-install.md) and [2023-12-11 Matomo down](./reports/2023-12-11-matomo-down.md)
+</Callout>
+
+### Using Git
+
+<Callout type="note">
+We use git to track some important configurations files in this repository.
+
+The repository is checked out in `/opt/openfoodfacts-infrastructure` and specific `/etc` configurations files are symlinked there (see `confs/matomo`).
+</Callout>
+
+### Matomo Setup for Performance
+
+We setup matomo for performance (our websites requires it) with several main points:
+
+<Cards>
+<Card title="Archive Processing">
+It does not process archives on incoming requests but instead on a systemd timer (see `confs/matomo/systemd/matomo-archive.{service,timer}`)
+</Card>
+<Card title="Redis Queue">
+On incoming update request, it does not immediately updates the database but goes in redis instead, we configured it with 8 queues
+</Card>
+<Card title="MariaDB Tuning">
+MariaDB has been tuned a bit toward performance (using more memory)
+</Card>
+<Card title="Split Archiving">
+Archiving is split in more than one systemctl timer / service
+</Card>
+</Cards>
+
+<Callout type="info">
+**Performance Details:**
+- Systemd timers jobs process redis entries every minute (see `confs/matomo/systemd/matomo-tracking@.{timer,service}`)
+- We have instances 0, 1, 2,… 7, to process each queue
+- MariaDB configuration: `/etc/mysql/mariadb.conf.d/90-off-configs.cnf` (linked to this repository `confs/matomo/mysql/mariadb.conf.d/90-off-configs.cnf`)
+- We also tried to avoid "2006 MySQL server has gone away" following https://matomo.org/faq/troubleshooting/faq_183/
+</Callout>
+
+**Archiving Configuration:**
+- One archiver specialized for the openfoodfacts.org website
+- One specialized for the mobile app
+- One for all the other websites
+
+(All this thanks to `--skip-idsites`/`--force-idsites` options)
+
+Both tracking and archiving logs to `/var/log/matomo`.
+
+### Prometheus Exporters
+
+<Cards>
+<Card title="NGINX Exporter">
+Nginx prometheus exporter is installed and needs the stub_status site, which exposes nginx metrics
+</Card>
+<Card title="MySQL Exporter">
+Mysql server prometheus exporter is installed (for MariaDB), its `/etc/default` configuration file sets the connection string. The corresponding mysql user had to be manually created
+</Card>
+</Cards>
+
+### Updating the Matomo Version
+
+<Callout type="warning">
+**Read this whole section before anything**
+
+Always do a snapshot before updating.
+
+**IMPORTANT:** after an upgrade, you must re-apply the [temporary patches](#important-temporary-patch), you need root access to the server to do that.
+</Callout>
+
+We use the web administration to update the software.
+
+### Setup robots.txt
+
+Setup `/var/www/html/matomo/robots.txt` as:
+
+```txt title="robots.txt"
+User-agent: *
+Disallow: /
+```
+
+## How To
+
+### How to Investigate 0 Visit Problems
+
+<Steps>
+<Step>
+**Check Browser Requests**
+You first have to see if the request made by a browser to matomo returns a `204 No Content` response (use the network panel of developer tools).
+
+Also verify that the site_id is correct.
+</Step>
+
+<Step>
+**Check Real-time Visits**
+If it's ok but you don't see the visit, you may look at real time visits of your website. If there is no data it may means the tracking jobs are not running correctly.
+
+You can log on the server and use `mysql matomo_db` to look at the database, in particular `matomo_log_visit` table contains visit logs.
+
+<Callout type="warning">
+Beware that it's a huge table, try to limit your query with something like:
+`WHERE idsite=5 AND visit_last_action_time > '2024-01-16'`
+</Callout>
+
+You can also see section below [How to monitor tracking jobs](#how-to-monitor-tracking-jobs).
+</Step>
+
+<Step>
+**Check Archive Processing**
+Incomplete graph might also come from archive processing. Sometimes, in this case, scaling down to days might show you right results, whereas you get incomplete result at the week or month level.
+
+See [How to monitor archive jobs](#how-to-monitor-archive-jobs).
+</Step>
+</Steps>
+
+### How to Monitor Tracking Jobs
+
+When a request arrive, it is logged into redis. We then have matomo-tracking systemd services to process the redis queue.
+
+<Tabs>
+<Tab value="status" label="Service Status">
+```bash title="Check Service Status"
+# see jobs status
+systemctl status matomo-tracking@{1..3}.service
+# see timers status
+systemctl status matomo-tracking@{1..3}.timer
+```
+</Tab>
+
+<Tab value="matomo-commands" label="Matomo Commands">
+Matomo also offers some commands to follow the status of the tracking jobs:
+
+```bash title="Monitor Tracking"
+cd /var/www/html/matomo
+./console queuedtracking:monitor
+
+# you might also look at lock status
+./console queuedtracking:lock-status
+```
+
+<Callout type="tip">
+Use `--help` for more options.
+</Callout>
+</Tab>
+
+<Tab value="logs" label="Logs">
+Logs are in `/var/log/matomo`
+</Tab>
+</Tabs>
+
+### How to Monitor Archive Jobs
+
+<Tabs>
+<Tab value="status" label="Service Status">
+```bash title="Check Archive Status"
+# see jobs status
+systemctl status matomo-archive@{main,2,5}.service
+# see timers status
+systemctl status matomo-archive@{main,2,5}.timer
+```
+</Tab>
+
+<Tab value="logs" label="Logs">
+Logs are in `/var/log/matomo`
+</Tab>
+</Tabs>
+
+### How to Monitor Database
+
+<Tabs>
+<Tab value="analyze" label="Analyze Tables">
+`diagnostics:analyze-archive-table` can help see informations about tables.
+
+Use it with `YYYY_MM` argument.
+
+```bash title="Analyze Archive Table"
+cd /var/www/html/matomo
+./console diagnostics:analyze-archive-table 2023_12
+```
+</Tab>
+
+<Tab value="optimize" label="Optimize Tables">
+`database:optimize-archive-table` can optimize tables if needed. Do it on old tables that are not moving any more. Use with a `YYYY-MM-DD` argument.
+
+```bash title="Optimize Archive Table"
+./console database:optimize-archive-table 2023-12-01
+```
+</Tab>
+</Tabs>
+
+### How to Test a Command in PHP CLI
+
+For example I wanted to determine if we support async in CliMulti (used by `core::archive`).
+
+<Callout type="info">
+The important thing is to go in the right directory and include the `console` script.
+</Callout>
+
+```bash title="PHP CLI Testing"
+cd /var/www/html/matomo/
+php -a
+
+php > include "console";
+...
+php > use Piwik\CliMulti\Process;
+php > echo Piwik\CliMulti\Process::isSupported();
+1
+php > use Piwik\CliMulti;
+php > $p = new Piwik\CliMulti();
+php > echo $p->supportsAsync();
+1
+```
+

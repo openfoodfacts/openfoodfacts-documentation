@@ -1,0 +1,149 @@
+---
+title: "Off3 Server Logs"
+description: "Timeline of incidents and interventions on off3 server including MongoDB connection issues, network routing problems, and system overload situations with resolution approaches."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Off3 Server Logs
+
+Timeline of incidents and interventions on the off3 server. This document tracks major issues and their resolutions.
+
+<Callout type="info">
+Keep entries short or write detailed reports. Link to full incident reports when available.
+</Callout>
+
+## Incident Timeline
+
+<Cards>
+  <Card title="MongoDB Issues" href="#mongodb-incidents">
+    Database connection and performance problems
+  </Card>
+  <Card title="Network Issues" href="#network-incidents">
+    Routing and connectivity problems
+  </Card>
+  <Card title="System Overload" href="#system-incidents">
+    Resource exhaustion and performance issues
+  </Card>
+</Cards>
+
+## Recent Incidents
+
+### 2023-10-14 and 15: MongoDB Not Responding
+
+<Callout type="warning">
+MongoDB became unresponsive, affecting production services.
+</Callout>
+
+**Resolution**: See detailed [2023-10-14: mongodb-down](./reports/2023-10-14-mongodb-down.md) report.
+
+### 2023-12-17: MongoDB Down - Connection Limit Exceeded
+
+<Tabs>
+  <Tab value="incident" label="Incident Details">
+    **Started**: 6:25 AM
+    
+    **Root Cause**: Too many open connections
+    
+    ```json title="MongoDB Error Log"
+    {
+      "t": {"$date": "2023-12-17T10:40:30.014+01:00"},
+      "s": "I",
+      "c": "NETWORK",
+      "id": 22942,
+      "ctx": "listener",
+      "msg": "Connection refused because there are too many open connections",
+      "attr": {"connectionCount": 301}
+    }
+    ```
+  </Tab>
+  
+  <Tab value="resolution" label="Resolution">
+    **Action Taken**: Service restarted by Charles (on Sunday)
+    
+    **Status**: Resolved - MongoDB service restored
+    
+    <Callout type="note">
+    Connection limit exceeded due to high traffic or connection pooling issues.
+    </Callout>
+  </Tab>
+</Tabs>
+
+## Network Incidents
+
+### 2023-05-23: Unable to Connect from OPFF on Off2 After Reboot
+
+<Callout type="note">
+Network routing issue after server reboot affecting OPFF connectivity.
+</Callout>
+
+**Resolution**:
+```bash title="Route Addition"
+sudo ip route add 10.1.0.0/16 dev ens19 proto kernel scope link src 10.0.0.3
+```
+
+### 2023-05-05: MongoDB Access from Off2
+
+**Issue**: MongoDB connectivity problems from off2 server.
+
+**Resolution**: See [*MongoDB access* in 2023-03 OFF2 reinstall - OPFF migration](./reports/2023-03-14-off2-opff-reinstall.md#mongodb-access) report.
+
+## System Incidents
+
+### 2023-05-19: MongoDB Down - System Overload
+
+<Callout type="warning">
+MongoDB service failure due to system resource exhaustion.
+</Callout>
+
+**Resolution**: See detailed [2023-05-18 MongoDB down](./reports/2023-05-19-overload-of-osm-machine.md) report.
+
+## Incident Categories
+
+<Tabs>
+  <Tab value="mongodb" label="MongoDB Issues">
+    ### Common MongoDB Problems
+    
+    - **Connection Limits**: Exceeded maximum connections (301 limit)
+    - **Service Unresponsiveness**: Complete service failures
+    - **Resource Exhaustion**: System overload affecting database performance
+    - **Network Connectivity**: Inter-server communication issues
+  </Tab>
+  
+  <Tab value="network" label="Network Issues">
+    ### Network Connectivity Problems
+    
+    - **Routing Issues**: Missing routes after reboots
+    - **Inter-server Communication**: OPFF to MongoDB connectivity
+    - **Configuration Persistence**: Routes not surviving reboots
+  </Tab>
+  
+  <Tab value="system" label="System Issues">
+    ### System-Level Problems
+    
+    - **Resource Overload**: CPU, memory, or I/O exhaustion
+    - **Service Dependencies**: Cascading failures
+    - **Configuration Loss**: Settings not persisting after restarts
+  </Tab>
+</Tabs>
+
+## Prevention Measures
+
+<Cards>
+  <Card title="Monitoring" href="#monitoring">
+    Enhanced monitoring for early detection
+  </Card>
+  <Card title="Automation" href="#automation">
+    Automated recovery procedures
+  </Card>
+  <Card title="Documentation" href="#documentation">
+    Detailed incident response procedures
+  </Card>
+</Cards>
+
+<Callout type="tip">
+For detailed incident reports and resolution procedures, check the `/reports/` directory for comprehensive documentation.
+</Callout>

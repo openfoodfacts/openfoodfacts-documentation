@@ -1,0 +1,41 @@
+---
+title: "Docker Architecture"
+description: "This document outlines the Docker architecture used for Open Food Facts applications, illustrating how various apps interact within Docker environments. It details the setup for both staging and production Docker servers and provides useful commands for managing Docker."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Docker Architecture
+
+Below is a diagram of how the various OFF apps interact within the Docker environments:
+
+![Docker architecture](../img/docker_arch.png)
+
+## Docker Servers
+
+<Tabs>
+<Tab value="staging" label="Staging Server">
+<Card title="VM 200 on ovh2">
+The 200 VM on ovh2 is the server hosting the docker for staging.
+</Card>
+</Tab>
+
+<Tab value="production" label="Production Server">
+<Card title="VM 201 on ovh2">
+The 201 VM on ovh2 is the server hosting the docker for production.
+</Card>
+</Tab>
+</Tabs>
+
+## Useful Commands
+
+<Callout type="tip">
+List all mapped ports on a VM:
+
+```bash title="List Docker Port Mappings"
+docker ps --format 'table {{.Names}}\t{{.Ports}}'|grep '\->'
+```
+</Callout>

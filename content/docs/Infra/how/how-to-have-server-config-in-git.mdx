@@ -1,0 +1,232 @@
+---
+title: "Server Config in Git"
+description: "Learn how to manage server configurations using Git. This guide covers setting up the repository, handling multiple repositories with SSH keys, storing server configurations and scripts, and managing sensitive files with passwords."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# How to Have Server Config in Git
+
+We use Git to store and track server/container/VM specific configurations for better management and version control.
+
+<Callout type="info">
+See [Explanation on server configuration with Git](./explain-server-config-in-git.md) for detailed concepts and rationale.
+</Callout>
+
+## Repository Setup Overview
+
+<Cards>
+  <Card title="Clone Repository" href="#setup-the-repository">
+    Set up the infrastructure configuration repository
+  </Card>
+  <Card title="SSH Keys" href="#create-a-ssh-key">
+    Configure authentication with deploy keys
+  </Card>
+  <Card title="Store Configs" href="#use-repository-to-store-server-configurations">
+    Organize and symlink configuration files
+  </Card>
+  <Card title="Secure Files" href="#files-with-passwords">
+    Handle sensitive files and passwords safely
+  </Card>
+</Cards>
+
+## Setup the Repository
+
+<Steps>
+  <Step>
+    **Clone Location**
+    
+    Clone the repository as root to `/opt/openfoodfacts-infrastructure`
+  </Step>
+  
+  <Step>
+    **Authentication Setup**
+    
+    Use a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys) for repository access.
+  </Step>
+  
+  <Step>
+    **Clone Repository**
+    
+    ```bash title="Clone Infrastructure Repository"
+    cd /opt
+    git clone git@github.com-my-project:openfoodfacts/openfoodfacts-infrastructure.git
+    ```
+  </Step>
+</Steps>
+
+### SSH Key Management
+
+<Tabs>
+  <Tab value="single" label="Single Repository">
+    ### Create SSH Key
+    
+    If root doesn't have an SSH key yet:
+    
+    ```bash title="Generate SSH Key"
+    ssh-keygen -t ed25519 -C "root@some-descriptive-host-name"
+    ```
+    
+    <Steps>
+      <Step>
+        **Copy Public Key**
+        
+        ```bash title="Get Public Key"
+        cat /root/.ssh/id_ed25519.pub
+        ```
+      </Step>
+      
+      <Step>
+        **Add Deploy Key**
+        
+        Add the public key as a [deploy key to this repository](https://github.com/openfoodfacts/openfoodfacts-infrastructure/settings/keys)
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab value="multiple" label="Multiple Repositories">
+    ### Multiple Repository Access
+    
+    <Callout type="note">
+    GitHub only allows one repository per public key. For multiple repositories, create separate keys with SSH config aliases.
+    </Callout>
+    
+    <Steps>
+      <Step>
+        **Create Project-Specific Key**
+        
+        ```bash title="Generate Project Key"
+        ssh-keygen -t ed25519 -C "root@my-project-my-server-name" -f "/root/.ssh/github_my-project"
+        cat /root/.ssh/github_my-project.pub
+        ```
+      </Step>
+      
+      <Step>
+        **Configure SSH Client**
+        
+        Edit `/root/.ssh/config`:
+        
+        ```ini title="SSH Config"
+        Host github.com-my-project
+            Hostname github.com
+            IdentityFile=/root/.ssh/github_my-project
+        ```
+      </Step>
+      
+      <Step>
+        **Clone with Alias**
+        
+        ```bash title="Clone with SSH Alias"
+        git clone git@github.com-my-project:my-org/my-project.git
+        ```
+      </Step>
+    </Steps>
+    
+    <Callout type="tip">
+    See [GitHub documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#using-multiple-repositories-on-one-server) for more details.
+    </Callout>
+  </Tab>
+</Tabs>
+
+## Store Server Configurations
+
+<Callout type="info">
+See [Explanation on server configuration with Git](./explain-server-config-in-git.md) for concepts and implementation details.
+</Callout>
+
+### Configuration Structure
+
+<Steps>
+  <Step>
+    **Create Service Folder**
+    
+    Create a folder for your service in the `confs/` directory.
+  </Step>
+  
+  <Step>
+    **Mirror /etc Structure**
+    
+    Create a structure that loosely mimics `/etc` for files you need to modify.
+  </Step>
+  
+  <Step>
+    **Symlink Files**
+    
+    Symlink `/etc` files to your repository files for automatic synchronization.
+  </Step>
+</Steps>
+
+### Important Considerations
+
+<Callout type="danger">
+**NEVER** put files with passwords in the Git repository! See [Files with passwords](#files-with-passwords) section.
+</Callout>
+
+<Callout type="note">
+**Proxmox Special Case**: `/etc/pve` on Proxmox hosts is a specific FUSE mount that exposes Proxmox configuration as files. You won't be able to use symlinks for this part.
+</Callout>
+
+<Callout type="warning">
+**Logrotate Requirement**: Logrotate needs files to be owned by root, or it will fail silently.
+</Callout>
+
+## Files with Passwords
+
+<Callout type="warning">
+Isolate private files with minimal content as much as possible. Most services support this through includes or specific directives.
+</Callout>
+
+### Handling Sensitive Files
+
+<Tabs>
+  <Tab value="recreatable" label="Recreatable Files">
+    ### Easy to Recreate
+    
+    For files that are easy to recreate:
+    - Let's Encrypt certificates
+    - API keys that can be regenerated
+    - Passwords that can be reset easily
+    
+    **Solution**: Leave these files on the server only, don't commit to Git.
+  </Tab>
+  
+  <Tab value="important" label="Important Files">
+    ### Not Easy to Recreate
+    
+    For files that are difficult to recreate or contain critical data:
+    
+    **Solution**: Store in the shared KeePass database for secure backup and team access.
+    
+    <Callout type="tip">
+    This ensures sensitive data is backed up but not exposed in version control.
+    </Callout>
+  </Tab>
+</Tabs>
+
+## Store Server Scripts
+
+<Callout type="info">
+Server-specific scripts can also be stored in this repository for backup and evolution tracking.
+</Callout>
+
+<Cards>
+  <Card title="Backup Scripts" href="#store-server-scripts">
+    Keep server-specific automation scripts versioned
+  </Card>
+  <Card title="Evolution Tracking" href="#store-server-scripts">
+    Track changes and improvements over time
+  </Card>
+  <Card title="Team Collaboration" href="#store-server-scripts">
+    Share scripts and knowledge across team members
+  </Card>
+</Cards>
+
+### Benefits of Script Storage
+
+- **Version Control**: Track script evolution and changes
+- **Backup**: Ensure scripts aren't lost with server failures  
+- **Collaboration**: Team members can review and improve scripts
+- **Documentation**: Scripts serve as infrastructure documentation

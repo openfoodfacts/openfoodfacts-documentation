@@ -1,0 +1,166 @@
+---
+title: "Finding Healthy Cereals"
+description: "Tutorial demonstrating how to search for healthy breakfast cereals using Open Food Facts API with filtering by categories, additives, and Nutri-Score"
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+<Callout>
+**Use Case Scenario**
+
+**Dave** wants his app to make an API call to provide Stefano healthy plant-based breakfast cereals.
+</Callout>
+
+<Callout type="warn">
+**Search vs. Data Export**
+
+This is a search use case. Please note that search is not a good way to extract info from the database, and anyone trying to do that will be rate-limited and banned. Please use the [data export](https://world.openfoodfacts.org/data) for convenient data extraction of the whole database and images.
+</Callout>
+
+<Callout type="info">
+**Search-a-licious - New Search API**
+
+We have an elastic-based revamp of the Search API upcoming, called search-a-licious. We need developer help to make it broadly available. Join the effort at [GitHub](https://github.com/openfoodfacts/search-a-licious) and on [Slack](https://slack.openfoodfacts.org) (#search channel).
+</Callout>
+
+## Authentication and Header
+
+<Callout type="info">
+**No Authentication Required**
+
+To make the API query that returns products that might be interesting for Anna, Dave doesn't need to authenticate.
+</Callout>
+
+<Callout type="warn">
+**User-Agent Header Required**
+
+He has to add a User-Agent HTTP Header with the name of his app, the version, system and a URL (if any), not to be blocked by mistake.
+</Callout>
+
+```bash title="User-Agent Example"
+User-Agent: HealthyFoodChoices - Android - Version 1.0
+```
+
+## Subdomain
+
+Since Stefano lives in Italy, Dave wants to define the subdomain for the query as `it`. The subdomain automatically defines:
+- Country code (`cc`)
+- Language of the interface (`lc`)
+
+```bash title="Italian Market URL"
+https://it.openfoodfacts.org
+```
+
+<Callout>
+**Region-Specific Results**
+
+The country code determines that only products sold in Italy are displayed. The language of the interface for the country code `it` is Italian.
+</Callout>
+
+## Query Parameters
+
+Dave wants to fine-tune the query to provide Anna with products that match her buying preferences. To do so, he wants to drill down the results to display only breakfast cereals.
+
+<Steps>
+<Step>
+**Base Search Path**: First, add the search sequence after the https call: `/cgi/search.pl?`
+</Step>
+<Step>
+**Define Tags**: Set tags and appropriate values
+</Step>
+<Step>
+**Parameter Concatenation**: Parameters are concatenated with `&`
+</Step>
+</Steps>
+
+### Basic Category Filter
+
+```bash title="Category Filter Parameters"
+action=process
+tagtype_0=categories
+tag_contains_0=contains
+tag_0=breakfast_cereals
+```
+
+<Tabs items={['Parameter Explanation', 'Complete URL']}>
+<Tab value="Parameter Explanation">
+- `action`: introduces the action to be performed (process)
+- `tagtype_0`: adds the first search criterion (categories)
+- `tag_contains_0=contains`: determines that results should be included
+- `tag_0`: defines the category to be filtered by (breakfast_cereals)
+</Tab>
+<Tab value="Complete URL">
+```
+https://us.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=breakfast_cereals
+```
+</Tab>
+</Tabs>
+
+<Callout>
+**Search Results**
+
+With this query, the nutrition facts of more than 200 products are displayed.
+</Callout>
+
+### Adding Filters Progressively
+
+<Steps>
+<Step>
+**Exclude Palm Oil**: Add parameter to exclude products containing palm oil ingredients
+
+```bash title="Palm Oil Filter"
+ingredients_from_palm_oil=without
+```
+
+<Card title="Updated URL" href="https://us.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=breakfast_cereals&ingredients_from_palm_oil=without">
+Breakfast cereals without palm oil
+</Card>
+</Step>
+
+<Step>
+**Exclude Additives**: Add parameter to exclude products containing additives
+
+```bash title="Additives Filter"
+additives=without
+```
+
+<Card title="Updated URL" href="https://us.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=breakfast_cereals&ingredients_from_palm_oil=without&additives=without">
+Breakfast cereals without palm oil and additives
+</Card>
+</Step>
+
+<Step>
+**Filter by Nutri-Score A**: Include only products with the highest nutrition grade
+
+```bash title="Nutri-Score Filter Parameters"
+tagtype_1=nutrition_grades
+tag_contains_1=contains
+tag_1=A
+```
+
+<Card title="Complete Filtered URL" href="https://us.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=breakfast_cereals&tagtype_1=nutrition_grades&tag_contains_1=contains&tag_1=A&additives=without&ingredients_from_palm_oil=without">
+Healthy breakfast cereals with Nutri-Score A
+</Card>
+</Step>
+
+<Step>
+**Add JSON Output**: Add parameter to get JSON response instead of HTML
+
+```bash title="JSON Parameter"
+json=true
+```
+
+<Card title="Final API Endpoint" href="https://us.openfoodfacts.org/cgi/search.pl?action=process&tagtype_0=categories&tag_contains_0=contains&tag_0=breakfast_cereals&tagtype_1=nutrition_grades&tag_contains_1=contains&tag_1=A&additives=without&ingredients_from_palm_oil=without&json=true">
+Complete JSON API call for healthy cereals
+</Card>
+</Step>
+</Steps>
+
+<Callout type="info">
+**Final Results**
+
+Anna can now see at a glance which products match her search criteria. In this case, around 20 brands of breakfast cereals.
+</Callout>

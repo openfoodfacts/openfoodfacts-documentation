@@ -1,0 +1,12 @@
+{
+  "title": "Knowledge Panel",
+  "description": "Product knowledge panel system",
+  "icon": "Brain",
+  "root": true,
+  "pages":[
+    "index",
+    "---Project Guide---",
+    "...how-to-guides",
+    "..."
+  ]
+}

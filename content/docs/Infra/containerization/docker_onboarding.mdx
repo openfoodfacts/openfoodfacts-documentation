@@ -1,0 +1,49 @@
+---
+title: "Docker Onboarding"
+description: "This document outlines the rules for the Open Food Facts Docker onboarding process, emphasizing simplicity, speed, and platform independence to facilitate contributions from both developers and non-developers, ensuring a repeatable and tested workflow."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Docker Onboarding
+
+<Callout type="info">
+Focusing on the developer onboarding process into a project is a very important step to make a repository popular: no one wants to struggle for hours to setup an application and start developing on it.
+</Callout>
+
+A streamlined and easy setup process is thus critical to having meaningful contributions on an open-source repository.
+
+## Rules of the OFF Onboarding Process
+
+The setup steps should be as simple as possible and stick by the following rules:
+
+<Cards>
+<Card title="Respect the User's Time">
+- Reduce the amount of time needed to setup a project to the least amount possible
+- Make it as fast as possible to take into account code modifications (ideally live reload, if needed a container restart)
+</Card>
+
+<Card title="Accessibility for Non-Developers">
+Make it easy for non-developers to contribute: the dev setup should not require a high comprehension of the application at hand
+</Card>
+
+<Card title="Repeatable and Tested Workflow">
+The dev setup should be automated and tested with every pull request to ensure that it does not break accidentally when making changes
+</Card>
+
+<Card title="Wide Platform Support">
+Try to make the dev deployment platform agnostic, at least for commands used to develop in a normal process
+</Card>
+</Cards>
+
+<Callout type="tip">
+**Platform Compatibility Note:**
+On Windows, git comes with *git bash* which should be privileged as a console. You can use symlink on Windows.
+</Callout>
+
+<Callout type="note">
+The `make dev` command should work across all repos to streamline the applications setup process.
+</Callout>

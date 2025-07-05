@@ -1,0 +1,72 @@
+---
+title: "Testing Guide"
+description: "This guide provides instructions on how to test the Facets Knowledge Panels project. It covers both Docker-based and virtual environment setups, including commands for building and running tests."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+
+# Testing
+
+<Callout type="info">
+This guide covers testing for both Docker and virtual environment setups.
+</Callout>
+
+<Tabs items={['Docker Setup', 'Virtual Environment']}>
+<Tab value="Docker Setup">
+
+<Steps>
+<Step title="Build Language Dependencies">
+
+```bash title="Build Language Files"
+make build_lang
+```
+
+</Step>
+<Step title="Run Tests">
+
+```bash title="Run Tests with Docker"
+docker compose run --rm facets-api pytest tests
+```
+
+or
+
+```bash title="Run All Tests"
+make all
+```
+
+</Step>
+</Steps>
+
+</Tab>
+<Tab value="Virtual Environment">
+
+<Steps>
+<Step title="Build Language Dependencies">
+
+```bash title="Build Language Files"
+make build_lang
+```
+
+</Step>
+<Step title="Check Tests Directory">
+
+Checkout `tests` directory
+
+</Step>
+<Step title="Run Tests">
+
+```bash title="Run Tests with Pytest"
+pytest 
+```
+
+</Step>
+</Steps>
+
+</Tab>
+</Tabs>
+
+<Callout type="tip">
+Make sure all tests pass before submitting your pull request!
+</Callout>

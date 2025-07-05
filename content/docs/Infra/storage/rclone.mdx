@@ -1,0 +1,229 @@
+---
+title: "Rclone Configuration"
+description: "This document outlines the use of Rclone for backing up Google Drive data. It covers usage, systemd service configuration, and steps for setting up a new drive, including important security considerations for configuration files."
+---
+
+import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+# Rclone Configuration
+
+<Card title="Google Drive Backup Solution" description="Automated backup system for Google Drive data using Rclone">
+
+We use Rclone to backup our Google Drive data, providing reliable cloud-to-server synchronization for important documents and files.
+
+</Card>
+
+## Current Setup
+
+<Card title="Container 150 Configuration" description="Dedicated backup container on ovh3">
+
+### Infrastructure Details
+
+<Tabs items={["Container Setup", "Storage", "Configuration"]}>
+  <Tab value="Container Setup">
+    - **Location:** Container 150 on ovh3 server
+    - **Purpose:** Dedicated Google Drive backup service
+    - **Isolation:** Separate container for backup operations
+  </Tab>
+  
+  <Tab value="Storage">
+    - **Backup Drive:** Separate drive mounted at `/mnt/gdrive-backup`
+    - **Dedicated Storage:** Isolated storage for backup data
+    - **Scalable:** Can accommodate growing backup needs
+  </Tab>
+  
+  <Tab value="Configuration">
+    - **Git Management:** Configuration stored in version control
+    - **Security:** Passwords excluded from repository
+    - **Automated:** Systemd timer-based execution
+  </Tab>
+</Tabs>
+
+</Card>
+
+## Configuration Management
+
+<Card title="Secure Configuration Handling" description="Version-controlled configuration with security considerations">
+
+### Configuration Storage
+
+The drive configuration is stored in Git **without passwords** for security.
+
+<Steps>
+  <Step title="Generate Redacted Config">
+    Create a password-free configuration file:
+    ```bash title="Update Configuration"
+    rclone config redacted > confs/gdrive/rclone-drives-config
+    ```
+  </Step>
+  
+  <Step title="Security Verification">
+    Always verify that no passwords are included before committing
+  </Step>
+  
+  <Step title="Version Control">
+    Commit the sanitized configuration to the repository
+  </Step>
+</Steps>
+
+<Callout type="error">
+**Security Critical:** Verify that no passwords are present in the configuration file before committing to Git.
+</Callout>
+
+</Card>
+
+## Systemd Service Configuration
+
+<Card title="Automated Backup Execution" description="Timer-based systemd service for scheduled backups">
+
+### Service Architecture
+
+<Tabs items={["Timer Service", "Naming Convention", "Execution"]}>
+  <Tab value="Timer Service">
+    ### Components
+    - **Timer:** Schedules backup execution
+    - **Service:** Performs the actual backup operation
+    - **Isolation:** Each drive has its own service instance
+  </Tab>
+  
+  <Tab value="Naming Convention">
+    ### Naming Requirements
+    
+    <Steps>
+      <Step title="Service Instance">
+        Instance name must match the rclone driver name
+      </Step>
+      
+      <Step title="Backup Folder">
+        Instance name must correspond to the backup folder
+      </Step>
+      
+      <Step title="Consistency">
+        Ensures proper mapping between configuration and execution
+      </Step>
+    </Steps>
+  </Tab>
+  
+  <Tab value="Execution">
+    ### Service Operation
+    - **Scheduled:** Runs on systemd timer schedule
+    - **Automated:** No manual intervention required
+    - **Logged:** Service logs available via journalctl
+  </Tab>
+</Tabs>
+
+<Callout type="info">
+The instance name must correspond to both the rclone driver name and the backup folder for proper operation.
+</Callout>
+
+</Card>
+
+## Setup Process
+
+<Card title="New Drive Setup" description="Comprehensive guide for adding new Google Drive backups">
+
+### Setup Documentation
+
+For detailed instructions on setting up a new Google Drive backup, see:
+
+**[2023-11-28 Setup Google Drive Backup](reports/2023-11-28-google-drive-backup-setup.md)**
+
+### Setup Overview
+
+<Steps>
+  <Step title="Drive Authentication">
+    Configure OAuth authentication with Google Drive
+  </Step>
+  
+  <Step title="Rclone Configuration">
+    Set up rclone remote configuration for the new drive
+  </Step>
+  
+  <Step title="Systemd Service">
+    Create and configure systemd timer and service files
+  </Step>
+  
+  <Step title="Testing">
+    Verify backup operations and scheduling
+  </Step>
+  
+  <Step title="Monitoring">
+    Set up logging and monitoring for the backup process
+  </Step>
+</Steps>
+
+</Card>
+
+## Security Considerations
+
+<Tabs items={["Configuration Security", "Access Control", "Monitoring"]}>
+  <Tab value="Configuration Security">
+    ### Configuration Protection
+    
+    <Cards>
+      <Card title="No Passwords in Git" description="Passwords excluded from version control" />
+      <Card title="Redacted Config" description="Use rclone config redacted for safe storage" />
+      <Card title="Access Tokens" description="Secure handling of OAuth tokens" />
+    </Cards>
+  </Tab>
+  
+  <Tab value="Access Control">
+    ### Service Security
+    
+    - **Container Isolation:** Backup service runs in dedicated container
+    - **Minimal Permissions:** Service runs with minimal required permissions
+    - **Network Security:** Controlled network access for Google Drive API
+  </Tab>
+  
+  <Tab value="Monitoring">
+    ### Operational Security
+    
+    - **Backup Verification:** Regular verification of backup integrity
+    - **Access Logging:** Monitor API access and backup operations
+    - **Alert Systems:** Notifications for backup failures or issues
+  </Tab>
+</Tabs>
+
+## Best Practices
+
+<Card title="Operational Guidelines" description="Recommended practices for rclone backup management">
+
+### Configuration Management
+
+<Steps>
+  <Step title="Regular Updates">
+    Keep rclone configuration synchronized with Git repository
+  </Step>
+  
+  <Step title="Security Audits">
+    Periodically review configuration files for security
+  </Step>
+  
+  <Step title="Backup Testing">
+    Regularly test backup restoration procedures
+  </Step>
+  
+  <Step title="Documentation">
+    Maintain up-to-date documentation for all configured drives
+  </Step>
+</Steps>
+
+</Card>
+
+## Related Documentation
+
+<Cards>
+  <Card 
+    title="Google Drive Setup Guide" 
+    description="Detailed setup instructions for new Google Drive backups"
+    href="reports/2023-11-28-google-drive-backup-setup.md"
+  />
+  <Card 
+    title="Rclone Official Docs" 
+    description="Official rclone documentation and configuration reference"
+    href="https://rclone.org/docs/"
+  />
+</Cards>
