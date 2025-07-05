@@ -1,0 +1,487 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Open Food Facts knowledge Panels API",
+    "description": "\nProviding knowledge panels for a particular Open Food Facts facet (category, brand, etc...)\n\nA standardized way for clients to get semi-structured but generic data that they can present to users on product pages.\n",
+    "contact": {
+      "name": "Slack",
+      "url": "https://openfoodfacts.slack.com/archives/C03LFRKLVBQ"
+    },
+    "license": {
+      "name": "GNU Affero General Public License v3.0",
+      "url": "https://www.gnu.org/licenses/agpl-3.0.en.html"
+    },
+    "version": "0.0.1"
+  },
+  "paths": {
+    "/metrics": {
+      "get": {
+        "summary": "Metrics",
+        "description": "Endpoint that serves Prometheus metrics.",
+        "operationId": "metrics_metrics_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/": {
+      "get": {
+        "summary": "Hello",
+        "operationId": "hello__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/knowledge_panel": {
+      "get": {
+        "tags": [
+          "knowledge-panel"
+        ],
+        "summary": "Knowledge Panel",
+        "description": "FacetName is the model that have list of values\nfacet_tag are the list of values connecting to FacetName\neg:- category/beer, here beer is the value",
+        "operationId": "knowledge_panel_knowledge_panel_get",
+        "parameters": [
+          {
+            "description": "Facet tag string for the items to search in the database eg:- `category` etc.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Facet tag string",
+              "description": "Facet tag string for the items to search in the database eg:- `category` etc."
+            },
+            "name": "facet_tag",
+            "in": "query"
+          },
+          {
+            "description": "value tag string for the items to search in the database eg:-`en:beers` etc.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Value tag string",
+              "description": "value tag string for the items to search in the database eg:-`en:beers` etc."
+            },
+            "name": "value_tag",
+            "in": "query"
+          },
+          {
+            "description": "secondary facet tag string for the items to search in the database eg:-`brand` etc.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "secondary facet tag string",
+              "description": "secondary facet tag string for the items to search in the database eg:-`brand` etc."
+            },
+            "name": "sec_facet_tag",
+            "in": "query"
+          },
+          {
+            "description": "secondary value tag string for the items to search in the database eg:-`lidl` etc.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "secondary value tag string",
+              "description": "secondary value tag string for the items to search in the database eg:-`lidl` etc."
+            },
+            "name": "sec_value_tag",
+            "in": "query"
+          },
+          {
+            "description": "To return knowledge panels in native language, default lang: `en`.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "language code string",
+              "description": "To return knowledge panels in native language, default lang: `en`."
+            },
+            "name": "lang_code",
+            "in": "query"
+          },
+          {
+            "description": "To return knowledge panels for specific country, ex: `france` or `fr`.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Country tag string",
+              "description": "To return knowledge panels for specific country, ex: `france` or `fr`."
+            },
+            "name": "country",
+            "in": "query"
+          },
+          {
+            "description": "a list of panel names to include, it is incompatible with `exclude` parameter. If neither `include` or `exclude` is provided, we display `hunger_game` and `wikidata` by default.",
+            "required": false,
+            "schema": {
+              "items": {
+                "$ref": "#/components/schemas/PanelName"
+              },
+              "type": "array",
+              "title": "Panel name exclude list",
+              "description": "a list of panel names to include, it is incompatible with `exclude` parameter. If neither `include` or `exclude` is provided, we display `hunger_game` and `wikidata` by default."
+            },
+            "name": "include",
+            "in": "query"
+          },
+          {
+            "description": "a list of panel names to exclude, it is incompatible with `include` parameter",
+            "required": false,
+            "schema": {
+              "items": {
+                "$ref": "#/components/schemas/PanelName"
+              },
+              "type": "array",
+              "title": "Panel name exclude list",
+              "description": "a list of panel names to exclude, it is incompatible with `include` parameter"
+            },
+            "name": "exclude",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FacetResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/render-to-html": {
+      "get": {
+        "tags": [
+          "Render to HTML"
+        ],
+        "summary": "Render Html",
+        "description": "Render item.html using jinja2\nThis is helper function to make thing easier while injecting facet_kp in off-server",
+        "operationId": "render_html_render_to_html_get",
+        "parameters": [
+          {
+            "description": "Facet tag string for the items to search in the database eg:- `category` etc.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Facet tag string",
+              "description": "Facet tag string for the items to search in the database eg:- `category` etc."
+            },
+            "name": "facet_tag",
+            "in": "query"
+          },
+          {
+            "description": "value tag string for the items to search in the database eg:-`en:beers` etc.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Value tag string",
+              "description": "value tag string for the items to search in the database eg:-`en:beers` etc."
+            },
+            "name": "value_tag",
+            "in": "query"
+          },
+          {
+            "description": "secondary facet tag string for the items to search in the database eg:-`brand` etc.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "secondary facet tag string",
+              "description": "secondary facet tag string for the items to search in the database eg:-`brand` etc."
+            },
+            "name": "sec_facet_tag",
+            "in": "query"
+          },
+          {
+            "description": "secondary value tag string for the items to search in the database eg:-`lidl` etc.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "secondary value tag string",
+              "description": "secondary value tag string for the items to search in the database eg:-`lidl` etc."
+            },
+            "name": "sec_value_tag",
+            "in": "query"
+          },
+          {
+            "description": "To return knowledge panels in native language, default lang: `en`.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "language code string",
+              "description": "To return knowledge panels in native language, default lang: `en`."
+            },
+            "name": "lang_code",
+            "in": "query"
+          },
+          {
+            "description": "To return knowledge panels for specific country, ex: `france` or `fr`.",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Country tag string",
+              "description": "To return knowledge panels for specific country, ex: `france` or `fr`."
+            },
+            "name": "country",
+            "in": "query"
+          },
+          {
+            "description": "a list of panel names to include, it is incompatible with `exclude` parameter. If neither `include` or `exclude` is provided, we display `hunger_game` and `wikidata` by default.",
+            "required": false,
+            "schema": {
+              "items": {
+                "$ref": "#/components/schemas/PanelName"
+              },
+              "type": "array",
+              "title": "Panel name exclude list",
+              "description": "a list of panel names to include, it is incompatible with `exclude` parameter. If neither `include` or `exclude` is provided, we display `hunger_game` and `wikidata` by default."
+            },
+            "name": "include",
+            "in": "query"
+          },
+          {
+            "description": "a list of panel names to exclude, it is incompatible with `include` parameter",
+            "required": false,
+            "schema": {
+              "items": {
+                "$ref": "#/components/schemas/PanelName"
+              },
+              "type": "array",
+              "title": "Panel name exclude list",
+              "description": "a list of panel names to exclude, it is incompatible with `include` parameter"
+            },
+            "name": "exclude",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BaseElement": {
+        "properties": {
+          "element_type": {
+            "type": "string",
+            "title": "Element Type",
+            "description": "The type of the included element object.The type also indicates which field contains the included element object. e.g. if the type is \"text\", the included element object will be in the \"text_element\" field."
+          },
+          "text_element": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTextElement"
+              }
+            ],
+            "title": "Text Element",
+            "description": "A text in simple HTML format to display."
+          }
+        },
+        "type": "object",
+        "required": [
+          "element_type",
+          "text_element"
+        ],
+        "title": "BaseElement",
+        "description": "Element container"
+      },
+      "BaseTextElement": {
+        "properties": {
+          "html": {
+            "type": "string",
+            "title": "Html",
+            "description": "Text to display in HTML format"
+          },
+          "source_text": {
+            "type": "string",
+            "title": "Source Text",
+            "description": "name of the source"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url",
+            "description": "Link to the source"
+          }
+        },
+        "type": "object",
+        "title": "BaseTextElement",
+        "description": "An element with simple HTML to display"
+      },
+      "BaseTitleElement": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "title of the panel"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title"
+        ],
+        "title": "BaseTitleElement",
+        "description": "An element containing a title"
+      },
+      "FacetResponse": {
+        "properties": {
+          "knowledge_panels": {
+            "$ref": "#/components/schemas/KnowledgePanel"
+          }
+        },
+        "type": "object",
+        "title": "FacetResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "KnowledgePanel": {
+        "properties": {
+          "HungerGames": {
+            "$ref": "#/components/schemas/KnowledgePanelItem"
+          },
+          "Quality": {
+            "$ref": "#/components/schemas/KnowledgePanelItem"
+          },
+          "LastEdits": {
+            "$ref": "#/components/schemas/KnowledgePanelItem"
+          },
+          "WikiData": {
+            "$ref": "#/components/schemas/KnowledgePanelItem"
+          }
+        },
+        "type": "object",
+        "title": "KnowledgePanel"
+      },
+      "KnowledgePanelItem": {
+        "properties": {
+          "elements": {
+            "items": {
+              "$ref": "#/components/schemas/BaseElement"
+            },
+            "type": "array",
+            "title": "Elements"
+          },
+          "title_element": {
+            "$ref": "#/components/schemas/BaseTitleElement"
+          }
+        },
+        "type": "object",
+        "required": [
+          "title_element"
+        ],
+        "title": "KnowledgePanelItem",
+        "description": "A Panel, made of multiple sub elements"
+      },
+      "PanelName": {
+        "type": "string",
+        "enum": [
+          "last_edits",
+          "data_quality",
+          "hunger_game",
+          "wikidata"
+        ],
+        "title": "PanelName",
+        "description": "An enumeration."
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "knowledge-panel",
+      "description": "Return different knowledge panels based on the facet provided."
+    },
+    {
+      "name": "Render to HTML",
+      "description": "Render html based on knowledge panels."
+    }
+  ]
+}
