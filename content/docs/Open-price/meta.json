@@ -6,7 +6,7 @@
   "pages": [
     "index",
     "---Project Guide---",
-    "...docs",
+    "...(docs)/docs",
     "---API References---",
     "...(api)/open-prices"
   ]
