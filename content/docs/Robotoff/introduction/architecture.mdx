@@ -53,7 +53,7 @@ The `robotoff-low` queue is used for all lower-priority jobs.
   Each worker listens to a single high priority queue. It handles high-priority jobs first, then low-priority jobs if the high-priority queue it's listening to is empty. This ensures low priority jobs don't use excessive system resources.
 </Callout>
 
-<Callout type="note">
+<Callout type="info">
   For implementation details, see:
   - Worker jobs: `robotoff.workers.queues` and `robotoff.workers.tasks`
   - Product-specific queues: `get_high_queue` function in `robotoff.workers.queues`
@@ -118,7 +118,7 @@ These new insights are then accessible to all annotation tools (Hunger Games, mo
 **Automatic Application**
 - Some insights with high confidence are applied automatically, 10 minutes after import
 
-<Callout type="note">
+<Callout type="info">
   Robotoff is also notified by Product Opener every time a product is updated or deleted. This is used to delete insights associated with deleted products, or to update them accordingly.
 </Callout>
 

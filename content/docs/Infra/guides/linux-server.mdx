@@ -33,7 +33,7 @@ Guidelines for managing Linux servers within the Open Food Facts infrastructure.
   </Card>
 </Cards>
 
-<Callout type="note">
+<Callout type="info">
 Every server is referenced in the [CT and VM list of OFF infrastructure](https://docs.google.com/document/d/14x5yPdcJ8uLoc5zb0HYjb_EYUIWZzOlaPWYyLSuIcTw/edit?resourcekey=0-h0h9ksbTUBykEDuBkXH4fg#).
 </Callout>
 
@@ -70,7 +70,7 @@ We use `etckeeper` with Git backend on as many servers as possible for configura
   </Step>
 </Steps>
 
-<Callout type="tip">
+<Callout type="info">
 See [etckeeper documentation](https://etckeeper.branchable.com/README/) for more details.
 </Callout>
 
@@ -94,7 +94,7 @@ We use either Postfix or Exim as a satellite of a smart_host. All outgoing mail 
   </Card>
 </Cards>
 
-<Callout type="note">
+<Callout type="info">
 The Proxmox Mail Gateway is registered in SPF records and adds DKIM signatures to ensure email deliverability.
 </Callout>
 
@@ -159,7 +159,7 @@ Docker has its own chains that are not affected by `INPUT` and `OUTPUT` rules. I
 
 ### Root Bash Configuration
 
-<Callout type="note">
+<Callout type="info">
 Root is often created before autocompletion packages are installed, leading to limited shell features.
 </Callout>
 

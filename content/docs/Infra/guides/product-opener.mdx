@@ -20,7 +20,7 @@ Product Opener is the backend that powers the Open Food Facts website and mobile
 In staging, Open Food Facts is deployed on the ovh1 server (ovh1.openfoodfacts.org), in a proxmox VM (201) specific to all staging services.
 </Card>
 
-<Callout type="note">
+<Callout type="info">
 Other sibling projects are not deployed in staging.
 </Callout>
 </Tab>
@@ -135,7 +135,7 @@ sudo systemctl restart apache2
 </Tab>
 
 <Tab value="cron" label="Scheduled Tasks">
-<Callout type="note">
+<Callout type="info">
 We don't use cron anymore to manage scheduled tasks, we use systemd timers instead.
 </Callout>
 

@@ -35,7 +35,7 @@ One which is bridged on host network card, with IP fail over mechanism
 
 ### Important Routing Limitation
 
-<Callout type="danger">
+<Callout type="error">
 **Never call an internal service using reverse proxy**
 
 Because of the gateway limitation, if a service uses another service which is on the same proxmox cluster, it should use its internal address and not the public / reverse proxy address, otherwise packets routing will be broken, and request will never land.
@@ -146,7 +146,7 @@ nginx -t
 # nginx: configuration file /etc/nginx/nginx.conf test is successful
 ```
 
-<Callout type="note">
+<Callout type="info">
 The nginx script will normally do the check before trying to restart nginx, but this way you are able to also see warnings.
 </Callout>
 </Step>
@@ -205,7 +205,7 @@ server {
 
 <Step>
 **Test Certificate First**
-<Callout type="danger">
+<Callout type="error">
 **WARNING**: Only skip this part if you really are used to certbot and nginx configuration, as after five tentatives, we won't be able to renew any certificates on the domain for one full week, and if you do too much error, the IP itself might be out of limit. See [letsencrypt Rate limits](https://letsencrypt.org/docs/rate-limits/)
 </Callout>
 
@@ -273,7 +273,7 @@ sudo apt update
 sudo apt install certbot python3-certbot-dns-ovh
 ```
 
-<Callout type="note">
+<Callout type="info">
 Official documentation requires snapd… we are not keen on that, and moreover, in a LXC container [it does not seem to work well](https://forum.proxmox.com/threads/cant-install-snap-in-lxc-container.68708/). So we go the alternate way, using the debian package.
 </Callout>
 </Step>

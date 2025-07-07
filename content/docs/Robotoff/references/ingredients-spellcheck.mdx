@@ -139,7 +139,7 @@ The model training consists of a succession of steps, each requiring different r
     
     Configurations and hyperparameters are imported from config yaml files.
     
-    <Callout type="note">
+    <Callout type="info">
       See `spellcheck/config/training` for configuration files.
     </Callout>
   </Step>
@@ -174,7 +174,7 @@ The model training consists of a succession of steps, each requiring different r
     ![Human-evaluation with Argilla](../assets/argilla.png)
     *Human-evaluation with Argilla*
     
-    <Callout type="note">
+    <Callout type="info">
       See `spellcheck/src/spellcheck/argilla` for Argilla integration modules.
     </Callout>
   </Step>
@@ -193,7 +193,7 @@ dataset = load_dataset(
 )
 ```
 
-<Callout type="note">
+<Callout type="info">
   See `scripts/dags` for pipeline DAG definitions.
 </Callout>
 
@@ -207,7 +207,7 @@ Once the model is selected, the inference script with its dependencies are conta
     
     The inference script and dependencies are packaged into a Docker Image.
     
-    <Callout type="note">
+    <Callout type="info">
       See `robotoff/batch/spellcheck` for inference containerization.
     </Callout>
   </Step>
@@ -217,7 +217,7 @@ Once the model is selected, the inference script with its dependencies are conta
     
     The image is pushed to Google Artifact Registry.
     
-    <Callout type="note">
+    <Callout type="info">
       See `robotoff/makefile` for deployment commands.
     </Callout>
   </Step>

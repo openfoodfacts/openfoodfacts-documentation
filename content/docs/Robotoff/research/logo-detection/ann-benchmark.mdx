@@ -32,7 +32,7 @@ For each framework, multiple parameters were used to find the best index in our 
 - **Production Dimension**: 512 (after projection layer)
 - **Data Type**: float32
 
-<Callout type="note">
+<Callout type="info">
   The dimension of each vector used in the benchmark is 768, the size of embeddings CLIP outputs before processing through the projection layer. However, in production, as this last layer of the CLIP model is used, the dimension of the embeddings that are indexed is actually 512. The process to go from 768 to 512 being only a projection, the change of dimensionality should not impact the results.
 </Callout>
 

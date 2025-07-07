@@ -104,7 +104,7 @@ ln -s /opt/openfoodfacts-infrastructure/confs/proxy-off/fail2ban/jail.d/nginx.co
 systemctl reload fail2ban
 ```
 
-<Callout type="note">
+<Callout type="info">
 This basic setup analyzes standard logs but doesn't handle 403/401 analysis which requires a specific plugin.
 </Callout>
 
@@ -206,7 +206,7 @@ Serve images directly from the reverse proxy to avoid an extra nginx layer for f
 
 ### Testing and Fixes
 
-<Callout type="note">
+<Callout type="info">
 Initial testing revealed upstream timeout issues. Fixed by changing from domain to direct IP access.
 </Callout>
 
@@ -302,7 +302,7 @@ proxy_pass http://10.1.0.113:80;
 
 ## Performance Issues Investigation
 
-<Callout type="danger">
+<Callout type="error">
 **2024/06/06**: Severe performance issues detected with serving images on off1 proxy container 100.
 </Callout>
 

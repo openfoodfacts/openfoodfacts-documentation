@@ -77,7 +77,7 @@ Understanding the client/server distinction is critical for proper security conf
   </Card>
 </Cards>
 
-<Callout type="danger">
+<Callout type="error">
 **CRITICAL**: Always double-check to only use `client=yes` on the internal container (private network), never on the proxy exposed to public internet.
 </Callout>
 
@@ -148,7 +148,7 @@ We use PSK (Private Shared Key) for security - easier and more performant than c
 
 ## Configuration Testing
 
-<Callout type="danger">
+<Callout type="error">
 **BEWARE**: Stunnel is used for other services! Don't restart the service without testing configuration first.
 </Callout>
 
@@ -162,7 +162,7 @@ We use PSK (Private Shared Key) for security - easier and more performant than c
     stunnel /etc/stunnel/off.conf
     ```
     
-    <Callout type="note">
+    <Callout type="info">
     This will fail due to port conflicts, but you can verify if configuration parses correctly.
     </Callout>
   </Step>
@@ -216,7 +216,7 @@ The `stunnel@off` service corresponds to `/etc/stunnel/off.conf` configuration.
   <Tab value="process" label="Process Management">
     ### Foreground Execution
     
-    <Callout type="note">
+    <Callout type="info">
     Stunnel is launched in foreground mode to let systemd handle process management properly.
     </Callout>
     

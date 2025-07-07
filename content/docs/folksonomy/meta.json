@@ -1,0 +1,10 @@
+{
+  "title": "Folksonomy Engine API",
+  "description": "API for adding free-form property/value pairs",
+  "root": true,
+  "pages": [
+    "index",
+    "---API References---",
+    "...(api)"
+  ]
+}

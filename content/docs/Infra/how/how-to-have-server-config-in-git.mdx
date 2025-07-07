@@ -90,7 +90,7 @@ See [Explanation on server configuration with Git](./explain-server-config-in-gi
   <Tab value="multiple" label="Multiple Repositories">
     ### Multiple Repository Access
     
-    <Callout type="note">
+    <Callout type="info">
     GitHub only allows one repository per public key. For multiple repositories, create separate keys with SSH config aliases.
     </Callout>
     
@@ -125,7 +125,7 @@ See [Explanation on server configuration with Git](./explain-server-config-in-gi
       </Step>
     </Steps>
     
-    <Callout type="tip">
+    <Callout type="info">
     See [GitHub documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#using-multiple-repositories-on-one-server) for more details.
     </Callout>
   </Tab>
@@ -161,11 +161,11 @@ See [Explanation on server configuration with Git](./explain-server-config-in-gi
 
 ### Important Considerations
 
-<Callout type="danger">
+<Callout type="error">
 **NEVER** put files with passwords in the Git repository! See [Files with passwords](#files-with-passwords) section.
 </Callout>
 
-<Callout type="note">
+<Callout type="info">
 **Proxmox Special Case**: `/etc/pve` on Proxmox hosts is a specific FUSE mount that exposes Proxmox configuration as files. You won't be able to use symlinks for this part.
 </Callout>
 
@@ -200,7 +200,7 @@ Isolate private files with minimal content as much as possible. Most services su
     
     **Solution**: Store in the shared KeePass database for secure backup and team access.
     
-    <Callout type="tip">
+    <Callout type="info">
     This ensures sensitive data is backed up but not exposed in version control.
     </Callout>
   </Tab>

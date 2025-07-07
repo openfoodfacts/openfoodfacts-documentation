@@ -6,7 +6,8 @@
   "pages":[
     "index",
     "---Project Guide---",
-    "...how-to-guides",
-    "..."
+    "...(docs)",
+    "---API References---",
+    "...(api)/kPanel"
   ]
 }

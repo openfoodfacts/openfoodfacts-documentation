@@ -36,7 +36,7 @@ Follow the official tutorial to install pre-commit on your machine
 
 ### Direnv
 
-<Callout type="tip">
+<Callout type="info">
 Direnv is a tool to automatically set environment variables depending on the current directory. This is handy to personalize the environment for each project as environment variables have priority over the `.env` file.
 </Callout>
 
@@ -78,7 +78,7 @@ export OFF_API_URL=https://world.openfoodfacts.org
 export ALLOWED_ORIGINS='http://localhost,http://127.0.0.1'
 ```
 
-<Callout type="tip">
+<Callout type="info">
 ^[winEnvrc]: For Windows users, the .envrc is only taken into account by the `make` commands.
 </Callout>
 
@@ -103,7 +103,7 @@ After that run the following command on another shell to compile the project:
 make tsc_watch
 ```
 
-<Callout type="tip">
+<Callout type="info">
 Do this for next installation steps and to run the project.
 </Callout>
 
@@ -129,7 +129,7 @@ Docker spins up several services:
 - API: http://search.localhost:8000/docs
 - UI: http://search.localhost:8000/
 
-<Callout type="tip">
+<Callout type="info">
 By default we only expose on the localhost interface. This is driven by the `*_EXPOSE` variables in `.env`.
 </Callout>
 

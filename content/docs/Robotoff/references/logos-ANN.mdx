@@ -68,7 +68,7 @@ After the detection of a logo, Robotoff uses a computer vision model to vectoriz
 - **Serving**: Model is loaded with [Triton](https://developer.nvidia.com/nvidia-triton-inference-server) and used only for inference
 - **Storage**: Embeddings are stored in Robotoff's PostgreSQL database
 
-<Callout type="note">
+<Callout type="info">
   With the logo crop of the initial image as input, CLIP returns an embedding and Robotoff stores it in its PostgreSQL database.
   
   For implementation details, see `robotoff.workers.tasks.import_image.save_logo_embeddings`
@@ -113,6 +113,6 @@ Each generated embedding is stored in an ElasticSearch index for nearest neighbo
   <Card title="Hunger Games" href="https://hunger.openfoodfacts.org/" description="Annotation game that uses the ANN search API" />
 </Cards>
 
-<Callout type="note">
+<Callout type="info">
   For API implementation details, see `robotoff.app.api.ANNResource`
 </Callout>

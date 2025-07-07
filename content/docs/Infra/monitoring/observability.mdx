@@ -92,7 +92,7 @@ The observability stack used in the OFF infrastructure comprises the following a
 
 We use the [multi-target exporter pattern](https://prometheus.io/docs/guides/multi-target-exporter/#querying-multi-target-exporters-with-prometheus) on some configurations.
 
-<Callout type="note">
+<Callout type="info">
 This pattern helps writing a lot of targets that follow same rules in the same way.
 </Callout>
 
@@ -118,7 +118,7 @@ This pattern helps writing a lot of targets that follow same rules in the same w
   </Step>
 </Steps>
 
-<Callout type="tip">
+<Callout type="info">
 You can look at https://prometheus.openfoodfacts.org/targets to see if your targets are processed correctly. A mouse over in the "labels" column shows you parameter before processing.
 </Callout>
 
@@ -182,7 +182,7 @@ curl "http://localhost:9115/probe?module=icmp&app=ovh1&target=ov1.openfoodfacts.
     http://127.0.0.1:9115/probe?module=http_probe&target=https%3A%2F%2FMYSERVER.TLD/MY/PATH
     ```
     
-    <Callout type="tip">
+    <Callout type="info">
     Add `debug=true` parameter to the URL to see debug output. Look for `probe_success` and `probe_http_status_code` values.
     </Callout>
   </Step>

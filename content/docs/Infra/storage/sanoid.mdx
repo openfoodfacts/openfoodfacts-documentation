@@ -39,7 +39,7 @@ Configuration is managed through `/etc/sanoid/sanoid.conf` which defines:
 - Snapshot frequency
 - Retention policies
 
-<Callout type="note">
+<Callout type="info">
 See [reference documentation](https://github.com/jimsalterjrs/sanoid/wiki/Sanoid) for detailed configuration options.
 </Callout>
 
@@ -90,7 +90,7 @@ vzdump snapshots created by Proxmox during backups can interfere with Syncoid sy
 
 We run automated checks via `sanoid_check` timer/service to verify recent snapshots exist.
 
-<Callout type="tip">
+<Callout type="info">
 This helps verify that Sanoid is running correctly and Syncoid is performing its synchronization job.
 </Callout>
 
@@ -109,7 +109,7 @@ Multiple datasets can be specified per line, separated by colons (:).
 
 ## Syncoid Service and Configuration
 
-<Callout type="note">
+<Callout type="info">
 Sanoid doesn't include a systemd service for Syncoid, so we created our own: `confs/common/systemd/system/syncoid.service`
 </Callout>
 
@@ -326,12 +326,12 @@ Sanoid is installed by building from the official repository and creating a Debi
   <Step>
     **Initial Sync**
     
-    <Callout type="tip">
+    <Callout type="info">
     Due to 6h timeout, consider doing the first synchronization manually before enabling the service.
     </Callout>
   </Step>
 </Steps>
 
-<Callout type="important">
+<Callout type="info">
 **Dataset Hierarchy**: Maintain good dataset organization. Put other servers' backups in an `off-backups` dataset, separate from the server's own backups dataset.
 </Callout>

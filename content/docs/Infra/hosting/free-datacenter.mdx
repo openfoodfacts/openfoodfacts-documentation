@@ -18,7 +18,7 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
 Those servers are located is Bezon, near Paris. To go there we need to ask to the team there.
 
-<Callout type="note">
+<Callout type="info">
 The two servers are piled one above another (off2 on top). It's a bay with different Open Source projects' servers. They have at small label on them "Open Food Facts"
 </Callout>
 
@@ -26,7 +26,7 @@ The two servers are piled one above another (off2 on top). It's a bay with diffe
 
 Those are DELL servers.
 
-<Callout type="tip">
+<Callout type="info">
 On the back side of server cover you find some useful instructions.
 </Callout>
 
@@ -61,7 +61,7 @@ You can make the LED blink to identify the server by a button on the left on the
 
 IPMI enables rebooting the server through the network.
 
-<Callout type="note">
+<Callout type="info">
 Connecting to 213.36.253.209 with a browser or ssh we get access to an emergency console on the machine. (note: it uses a self signed certificate).
 
 It has to be configured with the right static network configuration in BIOS to be able to work (see below)
@@ -110,7 +110,7 @@ Also we have a vmbr1 on each host with a private network, which is forwarded thr
 </Tab>
 
 <Tab value="ipv6" label="IPv6 Configuration">
-<Callout type="note">
+<Callout type="info">
 For each IPv4 address correspond an IPv6 range of `2a01:e0d:0001:c:58bf:fa<last-part-of-ipv4-address>::*/64`
 last-part-of-ipv4-address is a two digit hexadecimal number.
 </Callout>
@@ -132,7 +132,7 @@ We also have a private ipv6 network (vmbr1) which can be shared between the two 
 
 ## Disks
 
-<Callout type="tip">
+<Callout type="info">
 SATA Disks are on the front panel. You just have to push a small red button, it makes a small handle comes out and you can rack them out.
 </Callout>
 
@@ -195,6 +195,6 @@ Those settings are in the BIOS settings. They enable a distant reboot of the ser
 
 Apart from the IDRAC address, off2 has the 213.36.253.208 IP address.
 
-<Callout type="note">
+<Callout type="info">
 We also have 213.36.253.214 which is dedicated to the [NGINX reverse proxy](./nginx-reverse-proxy.md).
 </Callout>

@@ -189,7 +189,7 @@ zfs set sharenfs="rw=@10.0.0.1/32,rw=@10.1.0.200/32,no_root_squash" <pool_name>/
 </Step>
 </Steps>
 
-<Callout type="danger">
+<Callout type="error">
 **Very important**: Always filter on an internal sub network, otherwise your Dataset is exposed to the internet!!!
 
 Beware that all descendants inherit the property and will also be shared.

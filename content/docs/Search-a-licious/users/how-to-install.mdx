@@ -37,7 +37,7 @@ To make the change permanent, add `vm.max_map_count=262144` to the `/etc/sysctl.
 sudo sysctl -p
 ```
 
-<Callout type="tip">
+<Callout type="info">
 This ensures that the modified value is retained even after a system reboot. Without this step, the value will reset to its default after reboot.
 </Callout>
 
@@ -89,7 +89,7 @@ You must configure these settings for production deployment:
 <Card title="NGINX_BASIC_AUTH_USER_PASSWD" description="Configure authentication" />
 </Cards>
 
-<Callout type="tip">
+<Callout type="info">
 Monitor is optional but recommended for production deployments.
 </Callout>
 
@@ -121,7 +121,7 @@ Our CI deployment file might provide useful deployment insights
 
 ## Launching the Application
 
-<Callout type="tip">
+<Callout type="info">
 You should now be able to start the Docker services:
 </Callout>
 

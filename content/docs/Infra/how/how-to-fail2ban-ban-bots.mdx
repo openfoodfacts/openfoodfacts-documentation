@@ -30,7 +30,7 @@ Fail2ban monitors log files and automatically bans IP addresses that show malici
   <Step>
     **Debian 11+ Configuration**
     
-    <Callout type="note">
+    <Callout type="info">
     On Debian 11, additional configuration is required. Follow [How to install fail2ban on debian 11+](./how-to-fail2ban-debian-11+.md)
     </Callout>
   </Step>
@@ -80,7 +80,7 @@ Create a jail for manually banning problematic IP addresses that automated filte
   </Step>
 </Steps>
 
-<Callout type="note">
+<Callout type="info">
 **Persistence**: Fail2ban (recent versions) is naturally persistent across reboots using a SQLite database in `/var/lib/fail2ban/`.
 </Callout>
 
@@ -116,7 +116,7 @@ Create a jail for manually banning problematic IP addresses that automated filte
     sudo fail2ban-client set nginx-manual-ban banip <IP>
     ```
     
-    <Callout type="tip">
+    <Callout type="info">
     Supports IP ranges: `123.456.789.1/24`
     </Callout>
     

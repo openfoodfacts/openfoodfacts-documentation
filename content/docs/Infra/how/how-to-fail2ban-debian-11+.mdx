@@ -164,7 +164,7 @@ iptables-translate -A INPUT -m conntrack --ctstate ESTABLISHED -j ACCEPT
 # Output: nft 'add rule ip filter INPUT ct state established counter accept'
 ```
 
-<Callout type="tip">
+<Callout type="info">
 The `iptables-translate` command helps convert familiar iptables rules to NFTables syntax.
 </Callout>
 

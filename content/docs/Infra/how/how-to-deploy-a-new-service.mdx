@@ -50,7 +50,7 @@ Each service will cost resources and have certain requirements to run. It's impo
   <Tab value="docker" label="Docker Compose">
     ### Docker Compose Deployment
     
-    <Callout type="tip">
+    <Callout type="info">
     Using [Docker Compose](./docker_architecture.md) is the **preferred way** to deploy services that have active development.
     </Callout>
     
@@ -67,7 +67,7 @@ Each service will cost resources and have certain requirements to run. It's impo
   <Tab value="proxmox" label="Proxmox Container">
     ### Proxmox Container Deployment
     
-    <Callout type="note">
+    <Callout type="info">
     Using a [Proxmox container](./proxmox.md#how-to-create-a-new-container) is the second-best option.
     </Callout>
     
@@ -150,7 +150,7 @@ It's important to try to separate data from the system for reliability and maint
   </Step>
 </Steps>
 
-<Callout type="note">
+<Callout type="info">
 If your service is not very important, doesn't have much data, and you can afford losing some data, separation might not be worth the effort.
 </Callout>
 
@@ -164,7 +164,7 @@ If your service is heavy duty, try to do some performance checks in staging befo
 
 After deployment, check how the new service impacts overall system performance.
 
-<Callout type="tip">
+<Callout type="info">
 [Munin](./munin.md) offers a good way to check system performance, as you can compare before and after deployment metrics.
 </Callout>
 

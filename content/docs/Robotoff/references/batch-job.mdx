@@ -57,7 +57,7 @@ The batch job pipeline is structured as follows:
     - The number of tasks in parallel
     - The number of retries
 
-    <Callout type="note">
+    <Callout type="info">
       Configuration files are stored in `./robotoff/batch/configs/job_configs`
     </Callout>
 
@@ -80,7 +80,7 @@ The batch job pipeline is structured as follows:
 
     Docker images are maintained independently of the Robotoff micro-service. Each directory contains the files with their `Dockerfile`. Once built, the Docker image is pushed manually using the Make command written in the Makefile, such as `deploy-spellcheck`.
 
-    <Callout type="note">
+    <Callout type="info">
       Docker files are located in the `./batch/` directory
     </Callout>
 
@@ -142,7 +142,7 @@ The batch job pipeline is structured as follows:
     **Security:**
     Since this endpoint has only the vocation of importing the batch job results, it is secured with a `BATCH_JOB_KEY` from external requests. This secured endpoint follows a [Bearer Authentication](https://swagger.io/docs/specification/authentication/bearer-authentication/). The key is set as an environment variable in Robotoff and is defined as batch environment variable during a job launch.
 
-    <Callout type="note">
+    <Callout type="info">
       Each batch job has its own method to import, or not, the results of the batch job.
     </Callout>
   </Step>

@@ -67,7 +67,7 @@ To call `test_get_type()` from `tests/unit/insights/test_importer.py`:
 make pytest args="tests/unit/insights/test_importer.py::TestLabelInsightImporter::test_get_type"
 ```
 
-<Callout type="tip">
+<Callout type="info">
 Remember to put quotes especially if you have multiple arguments.
 </Callout>
 
@@ -100,7 +100,7 @@ Running test with `--pdb` flags, pytest will stop and open the pdb console as so
 make pytest args="path/to/test.py --pdb"
 ```
 
-<Callout type="tip">
+<Callout type="info">
 If it's a `mock.assert_called_with`, you can look at the real data passed to a test case by calling `mock.call_args` in the pdb console.
 </Callout>
 
@@ -114,7 +114,7 @@ import pdb; pdb.set_trace()
 
 and then run the `pytest`, with the `--pdb` option (as above).
 
-<Callout type="note">
+<Callout type="info">
 We need the `--pdb` option, to view the inputs and outputs captured by pytest and access the pdb console.
 </Callout>
 

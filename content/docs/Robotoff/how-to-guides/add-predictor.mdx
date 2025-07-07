@@ -27,7 +27,7 @@ Here is a step-by-step guide to help you.
       If you want to deploy an ML model, the best place to serve it is on Triton, our ML inference server. You should first convert your model to SavedModel or ONNX format and make it servable through Triton. Inference requests to Triton are sent through gRPC.
     </Callout>
 
-    <Callout type="note">
+    <Callout type="info">
       For gRPC implementation example, see `generate_clip_embedding` in `robotoff.triton`
     </Callout>
 
@@ -72,7 +72,7 @@ Here is a step-by-step guide to help you.
 
     To perform some actions when the insight has been annotated and marked as correct (`annotation=1`), you should add a new class subclassing `InsightAnnotator` in `robotoff.insights.annotate` and add it to the `ANNOTATOR_MAPPING` dictionary.
 
-    <Callout type="tip">
+    <Callout type="info">
       If you need a call to Product Opener API that is not implemented yet, add it to `robotoff.off`.
     </Callout>
   </Step>

@@ -31,7 +31,7 @@ PostgreSQL serves different purposes across our infrastructure, from primary dat
 
 Docker compose based projects like Robotoff or OpenFoodFacts Query use their own instance of the database in Docker containers.
 
-<Callout type="warning">
+<Callout type="warn">
 If data in the database is the primary source, it is advised to have a backup volume (typically an NFS or ZFS volume) to backup the database regularly with `pg_dump`. It might be more reliable and manageable than to only rely on the filesystem snapshot made by Proxmox/ZFS.
 </Callout>
 
@@ -59,7 +59,7 @@ If data in the database is the primary source, it is advised to have a backup vo
 
 For Product Opener instances we only use PostgreSQL for Minion tasks.
 
-<Callout type="note">
+<Callout type="info">
 It is deployed in a Proxmox container. Right now there is no customization. Backup is not implemented as it contains transient data.
 </Callout>
 

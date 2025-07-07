@@ -173,7 +173,7 @@ indices:
     lang_separator: "_"
 ```
 
-<Callout type="tip">
+<Callout type="info">
 **Language Configuration**
 
 1. The list of supported languages tells which languages will be retained in our index
@@ -242,7 +242,7 @@ We will then import this file in our index, we have a specific command for that:
 docker compose run --rm api python3 -m app import /opt/search/data/products.random-modulo-10000.jsonl --skip-updates
 ```
 
-<Callout type="tip">
+<Callout type="info">
 **Command Breakdown**
 
 - The first part is simply to run a command using our docker container
@@ -300,7 +300,7 @@ As you already guessed, the first contains our food products, and the second our
 
 ![Our two indices in ElasticVue](../assets/tutorial-elasticvue-indices-after-import.png "Our two indices in ElasticVue")
 
-<Callout type="tip">
+<Callout type="info">
 The "Lucene docs" column gives you an idea of the number of entries you have in each index. You can click on an index to view its content and have a feeling of what we just imported.
 </Callout>
 
@@ -327,7 +327,7 @@ docker compose up es01 es02 api frontend
 
 We start the `api` container, which is the search-a-licious backend, and the frontend as it is an nginx acting as a reverse proxy.
 
-<Callout type="tip">
+<Callout type="info">
 Now let's open http://127.0.0.1:8000/docs
 
 You can see the documentation of the various API offered by search-a-licious service.
@@ -374,7 +374,7 @@ For this we will use our query field in a more advanced way.
 
 We can use this value for the "q" field: `labels_tags:"en:fair-trade"`
 
-<Callout type="tip">
+<Callout type="info">
 Using this we specify that we search for the key "en:fair-trade" in the value.^[using-quotes]
 </Callout>
 
@@ -432,7 +432,7 @@ It returns something like:
 }
 ```
 
-<Callout type="tip">
+<Callout type="info">
 As you can see we have the "nutriscore_grade" facet with two values: "e" and "d", and we got the document count for each value.
 </Callout>
 
@@ -440,7 +440,7 @@ As you can see we have the "nutriscore_grade" facet with two values: "e" and "d"
 The `selected` field was deduced from an analysis of the request. If we were to ask for the `labels_tags` facets with the same request, the `en:fair-trade` label would be selected, as it is an active filter (note that it only works if you write the query in a specific way).
 </Callout>
 
-<Callout type="tip">
+<Callout type="info">
 You can try and ask both facets by using `nutriscore_grade,labels_tags` as the facets parameter.
 </Callout>
 
@@ -464,7 +464,7 @@ That's where Search-a-licious also got you covered. Search-a-licious provides we
 
 Let's try it and create a static HTML page. We won't care much about the "look and feel" for now, for sake of simplicity.
 
-<Callout type="tip">
+<Callout type="info">
 A simple way to serve the page is to add a file in the `frontend/public` folder^[devmode]
 </Callout>
 
@@ -586,7 +586,7 @@ We can type `fair trade` in the search bar, hit the search button and see result
 </Step>
 <Step title="Developer Tools">
 
-<Callout type="tip">
+<Callout type="info">
 If you are curious, you can open the dev toolbar (F12), go in the network tab, select to only view XHR requests (requests sent by JavaScript), and see how each search is using the search API.
 </Callout>
 

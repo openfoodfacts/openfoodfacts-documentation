@@ -16,7 +16,7 @@ Because mail is difficult to setup, we use [Proxmox Mail Gateway](https://www.pr
 
 The DKIM and SPF records are configured on main domain *openfoodfacts.org*.
 
-<Callout type="note">
+<Callout type="info">
 While DKIM is specific (because Brevo and Google keys are distinct by construction), main SPF rule includes Brevo and Google servers.
 
 No server receives mail, but they should be able to send them.
@@ -56,7 +56,7 @@ We use Brevo to send newsletters.
 We have a DKIM record configured for the Brevo domain in the DNS, we also take into account in SPF rule. They use the **hello.openfoodfacts.org** subdomain.
 </Callout>
 
-<Callout type="tip">
+<Callout type="info">
 You can find the public key if you are logged as admin in Brevo, in the top right corner menu, going in "Senders, domains and dedicated IPs". Clicking on domains, and then the hello.openfoodfacts.org domain, you can see the needed DNS records.
 </Callout>
 
@@ -90,7 +90,7 @@ You must have an account to connect to the service.
 </Step>
 </Steps>
 
-<Callout type="tip">
+<Callout type="info">
 The most important tools you will find is Administration where you can see queues of deferred mails or logs (on the administration entry).
 
 See https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html#_administration
@@ -98,7 +98,7 @@ See https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html#_administration
 
 ### Configuration Options
 
-<Callout type="note">
+<Callout type="info">
 First bear in mind that even if proxmox mail gateway is built to handle outgoing and incoming emails, we want to use it only for outgoing emails.
 </Callout>
 
@@ -153,7 +153,7 @@ sudo iptables -t nat -A PREROUTING -s 213.36.253.206,213.36.253.208,146.59.148.1
 Don't forget [to save iptables](./linux-server.md#iptables)
 </Callout>
 
-<Callout type="note">
+<Callout type="info">
 Note that the port 25 is in fact the private (trusted) port (not the public one, as we are not receiving emails). This is a tweak in default config.
 </Callout>
 </Tab>
@@ -207,7 +207,7 @@ On client servers (be it a VM, a host or a standalone server), we use either exi
 
 ### Email Aliases
 
-<Callout type="note">
+<Callout type="info">
 We normally keep a standard `/etc/aliases`. We have specific groups to receive emails: `root@openfoodfacts.org` and `off@openfoodfacts.org`
 
 You may add some redirections for non standard users to one of those groups.
@@ -289,7 +289,7 @@ With the `bsd-mailx` package installed:
 echo "test message from xxx" | mailx -s "test root xxx" -r alex@openfoodfacts.org root
 ```
 
-<Callout type="note">
+<Callout type="info">
 Note that we use bsd-mailx and not the alias from mailutils as it does not behave the same. Notably it won't use /etc/mailname to complete email address which leads to problems.
 </Callout>
 </Tab>
