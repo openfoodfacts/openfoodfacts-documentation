@@ -1,6 +1,7 @@
 {
   "title": "Folksonomy Engine API",
   "description": "API for adding free-form property/value pairs",
+  "icon": "Tags",
   "root": true,
   "pages": [
     "index",
