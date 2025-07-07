@@ -1,0 +1,12 @@
+{
+  "title": "Developer Guide",
+  "description": "Technical documentation for Product Opener developers",
+  "pages": [
+    "getting-started",
+    "development-environment",
+    "development-guides",
+    "data-architecture",
+    "reference",
+    "tutorials"
+  ]
+}

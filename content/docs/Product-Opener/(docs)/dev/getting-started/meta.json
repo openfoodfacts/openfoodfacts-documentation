@@ -1,0 +1,8 @@
+{
+  "title": "Getting Started",
+  "description": "Setup guides and quick start instructions for new developers",
+  "pages": [
+    "how-to-quick-start-guide",
+    "explain-pro-dev-setup"
+  ]
+}

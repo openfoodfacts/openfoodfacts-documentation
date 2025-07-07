@@ -1,0 +1,12 @@
+{
+  "title": "Tutorials",
+  "description": "Step-by-step tutorials for implementing Open Food Facts API features",
+  "pages": [
+    "getting-started",
+    "product-management",
+    "data-analytics",
+    "advanced-integration",
+    "compliance-best-practices",
+    "specialized-features"
+  ]
+}

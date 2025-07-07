@@ -1,0 +1,8 @@
+{
+  "title": "Product Management",
+  "description": "Adding, editing, and managing product data in Open Food Facts",
+  "pages": [
+    "adding-missing-products",
+    "scanning-cosmetics-pet-food-and-other-products"
+  ]
+}

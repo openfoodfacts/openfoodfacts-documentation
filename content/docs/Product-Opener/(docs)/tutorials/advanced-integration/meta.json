@@ -1,0 +1,8 @@
+{
+  "title": "Advanced Integration",
+  "description": "Advanced API usage, caching, facets, and complex integrations",
+  "pages": [
+    "creating-a-local-cache-of-open-food-facts-data",
+    "working-with-facets"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "title": "Data & Architecture",
+  "description": "Data structures, system architecture, and component explanations",
+  "pages": [
+    "explain-nutrition-data",
+    "explain-packaging-data",
+    "explain-personal-search",
+    "explain-taxonomy-build-cache",
+    "intro-robotoff"
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "title": "Specialized Features",
+  "description": "Folksonomy engine, product prices, and other specialized functionality",
+  "pages": [
+    "folksonomy-engine",
+    "product-prices"
+  ]
+}

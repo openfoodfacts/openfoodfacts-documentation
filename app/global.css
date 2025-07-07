@@ -4,3 +4,13 @@
 @import 'fumadocs-openapi/css/preset.css';
 
 @source '../node_modules/fumadocs-ui/dist/**/*.js';
+
+@layer base {
+    body {
+        @apply flex flex-col min-h-screen;
+    }
+
+    /* Custom underline color for all documentation links */
+    :where(a:not([data-card])):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+        text-decoration-color: #89b5fa !important;
+    } }

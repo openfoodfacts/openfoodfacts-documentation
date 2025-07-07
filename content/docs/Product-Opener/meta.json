@@ -7,11 +7,12 @@
     "index",
     "---Developer Documentation---",
     "...(docs)/dev",
+    "---Tutorial---",
+    "...(docs)/tutorials",
     "---API References---",
     "...(api)/v2",
     "...(api)/v3",
-    "---Tutorial---",
-    "...(docs)/tutorials",
-    "...(docs)"
+    "---API Documentation---",
+    "...(docs)/api-docs"
   ]
 }

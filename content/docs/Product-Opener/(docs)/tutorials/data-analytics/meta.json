@@ -1,0 +1,11 @@
+{
+  "title": "Data & Analytics",
+  "description": "Working with nutrition scores, data analysis, and product comparisons",
+  "pages": [
+    "get-the-nutriscore",
+    "get-the-green-score",
+    "get-ingredient-related-analysis",
+    "comparing-sodas",
+    "finding-healthy-cereals"
+  ]
+}

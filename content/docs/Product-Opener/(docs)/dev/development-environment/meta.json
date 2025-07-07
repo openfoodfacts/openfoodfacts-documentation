@@ -1,0 +1,11 @@
+{
+  "title": "Development Environment",
+  "description": "Tools and environment setup for development",
+  "pages": [
+    "how-to-develop-using-docker",
+    "how-to-use-direnv",
+    "how-to-use-gitpod",
+    "how-to-use-vscode",
+    "how-to-use-repl"
+  ]
+}

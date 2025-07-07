@@ -1,0 +1,15 @@
+{
+  "title": "Development Guides",
+  "description": "How-to guides for specific development tasks and workflows",
+  "pages": [
+    "how-to-add-a-translation",
+    "how-to-debug-minion-import-and-export-tasks",
+    "how-to-develop-producer-platform",
+    "how-to-develop-with-webcomponents",
+    "how-to-release",
+    "how-to-update-agribalyse-ecoscore",
+    "how-to-use-automated-pr-actions",
+    "how-to-use-pages-from-openfoodfacts-web",
+    "how-to-write-and-run-tests"
+  ]
+}

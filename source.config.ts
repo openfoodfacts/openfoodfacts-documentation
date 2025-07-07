@@ -7,5 +7,13 @@ export const docs = defineDocs({
 export default defineConfig({
   mdxOptions: {
     // MDX options
+    remarkPlugins: [],
+    rehypePlugins: [],
+    rehypeCodeOptions: {
+      themes: {
+        light: 'github-light',
+        dark: 'vesper',
+      },
+    },
   },
 });

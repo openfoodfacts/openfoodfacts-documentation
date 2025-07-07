@@ -2,35 +2,10 @@
   "title": "API Documentation",
   "description": "Complete guide to Open Food Facts API including authentication, rate limits, and features",
   "pages": [
-    {
-      "title": "Getting Started",
-      "pages": [
-        "getting-started"
-      ]
-    },
-    {
-      "title": "Advanced Features",
-      "pages": [
-        "advanced-features"
-      ]
-    },
-    {
-      "title": "Data Access",
-      "pages": [
-        "data-access"
-      ]
-    },
-    {
-      "title": "Reference",
-      "pages": [
-        "reference"
-      ]
-    },
-    {
-      "title": "Meta Documentation",
-      "pages": [
-        "meta-documentation"
-      ]
-    }
+    "getting-started",
+    "advanced-features",
+    "data-access",
+    "reference",
+    "meta-documentation"
   ]
 }

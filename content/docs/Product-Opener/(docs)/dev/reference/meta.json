@@ -1,0 +1,10 @@
+{
+  "title": "Reference",
+  "description": "Reference materials, command references, and language guides",
+  "pages": [
+    "ref-docker-commands",
+    "ref-perl-pod",
+    "ref-perl",
+    "how-to-learn-perl"
+  ]
+}

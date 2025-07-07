@@ -8,7 +8,6 @@ export const source = loader({
   baseUrl: '/docs',
   source: docs.toFumadocsSource(),
   pageTree: {
-    // adds a badge to each page item in page tree
     attachFile,
   },
 });
