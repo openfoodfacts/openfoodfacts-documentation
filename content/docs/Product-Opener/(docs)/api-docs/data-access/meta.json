@@ -1,0 +1,8 @@
+{
+  "title": "Data Access",
+  "description": "Images, datasets, and bulk data operations",
+  "pages": [
+    "aws-images-dataset",
+    "how-to-download-images"
+  ]
+}

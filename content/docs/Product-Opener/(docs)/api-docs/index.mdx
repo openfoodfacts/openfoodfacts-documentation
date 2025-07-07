@@ -4,6 +4,7 @@ description: "Complete guide to Open Food Facts API including authentication, ra
 ---
 
 import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from 'fumadocs-ui/components/card';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 
 Everything you need to know about Open Food Facts API.
@@ -178,10 +179,6 @@ We are building a complete OpenAPI reference. Here is a list of the current API 
 - Are you interested in contributing to this project? See our [Contribution Guidelines][contribution_guidelines].
  {/* Embed contribution guideline link.*/}
 
-[slack_url]: https://slack.openfoodfacts.org/
-[report_bugs]: https://github.com/openfoodfacts/openfoodfacts-server/issues/new/choose
-[contribution_guidelines]: https://github.com/openfoodfacts/openfoodfacts-server/blob/main/CONTRIBUTING.md
-
 ## SDKs
 
 SDKs are available for specific languages for easier use of the API. We may have a wrapper for your favourite programming language. If we do, you can use it and improve it. However, If we don't, you can help us create it!
@@ -210,3 +207,32 @@ Open-source contributors develop our SDKs, and more contributions are welcome to
 *   R: [GitHub](https://github.com/openfoodfacts/r-dashboard) - [Discussion channel](https://app.slack.com/client/T02KVRT1Q/C2CR356NR)
 *   Swift: [GitHub](https://github.com/openfoodfacts/openfoodfacts-swift) - [Discussion channel](https://app.slack.com/client/T02KVRT1Q/CE2A1E7MH)
 *   .NET/C#: [GitHub](https://github.com/openfoodfacts/openfoodfacts-csharp) - [Discussion channel](https://app.slack.com/client/T02KVRT1Q/C1JHT98HJ)
+
+## Documentation Categories
+
+<Cards>
+  <Card href="getting-started/" title="Getting Started" description="API introduction, tutorials, and basic usage guides" />
+  <Card href="advanced-features/" title="Advanced Features" description="Knowledge panels, Wikidata integration, and advanced API functionality" />
+  <Card href="data-access/" title="Data Access" description="Images, datasets, and bulk data operations" />
+  <Card href="reference/" title="Reference" description="Cheatsheets, schemas, changelogs, and technical references" />
+  <Card href="meta-documentation/" title="Meta Documentation" description="TODOs, development notes, and documentation improvement plans" />
+</Cards>
+
+## Quick Start Guide
+
+<Steps>
+<Step>
+**Start with Basics**: Read the [Getting Started](getting-started/) tutorials
+</Step>
+<Step>
+**Explore Features**: Learn about [Advanced Features](advanced-features/) like Knowledge Panels
+</Step>
+<Step>
+**Access Data**: Use [Data Access](data-access/) guides for images and bulk operations
+</Step>
+<Step>
+**Reference**: Check [Reference](reference/) materials for quick lookups
+</Step>
+</Steps>
+
+[slack_url]: https://slack.openfoodfacts.org/

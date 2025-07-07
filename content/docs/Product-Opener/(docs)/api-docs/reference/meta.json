@@ -1,0 +1,9 @@
+{
+  "title": "Reference",
+  "description": "Cheatsheets, schemas, changelogs, and technical references",
+  "pages": [
+    "ref-cheatsheet",
+    "ref-barcode-normalization",
+    "ref-api-and-product-schema-change-log"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "title": "Advanced Features",
+  "description": "Knowledge panels, Wikidata integration, and advanced API functionality",
+  "pages": [
+    "explain-knowledge-panels",
+    "leveraging-links-to-wikidata",
+    "tutorial-uploading-photo-to-a-product"
+  ]
+}
