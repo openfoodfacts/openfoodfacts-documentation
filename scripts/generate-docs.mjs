@@ -2,12 +2,12 @@ import * as OpenAPI from 'fumadocs-openapi';
 import { rimrafSync } from 'rimraf';
 import { existsSync } from 'fs';
 
-const outV2 = './content/docs/(api)/Product-Opener/v2'; 
-const outV3 = './content/docs/(api)/Product-Opener/v3';
-const outkPanel = './content/docs/(api)/kPanel';
-const outRobotoff = './content/docs/(api)/robotoff';
-const outOpenPrices = './content/docs/(api)/open-prices';
-const outFolksonomy = './content/docs/(api)/folksonomy';
+const outV2 = './content/docs/Product-Opener/(api)/v2'; 
+const outV3 = './content/docs/Product-Opener/(api)/v3';
+const outkPanel = './content/docs/Knowledge-Panel/(api)';
+const outRobotoff = './content/docs/robotoff/(api)';
+const outOpenPrices = './content/docs/Open-price/(api)';
+const outFolksonomy = './content/docs/folksonomy/(api)';
 
 rimrafSync(outV2, {
   filter(v) {
