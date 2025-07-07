@@ -1,0 +1,99 @@
+name: Update OpenAPI Documentation
+
+on:
+  schedule:
+    - cron: "0 2 * * *" # Daily at 2:00 AM UTC
+  workflow_dispatch:
+
+jobs:
+  update-docs:
+    name: Update OpenAPI Documentation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Fetch OpenAPI files from Product Opener specifications
+        uses: actions/checkout@v4
+        with:
+          repository: openfoodfacts/openfoodfacts-server
+          path: openfoodfacts-server
+
+      - name: Sync OpenAPI files with Product Opener specifications
+        run: |
+          rm -rf ref
+
+          if [ -d "openfoodfacts-server/docs/api/ref" ]; then
+            cp -r openfoodfacts-server/docs/api/ref ./
+          else
+            echo "Error: OpenAPI specifications not found"
+            exit 1
+          fi
+
+          rm -rf openfoodfacts-server
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "23"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Download Knowledge Panel specifications
+        run: ./.github/scripts/download-kpanels-spec.sh
+
+      - name: Download Open Prices specifications
+        run: ./.github/scripts/download-open-prices-spec.sh
+
+      - name: Download Folksonomy specifications
+        run: ./.github/scripts/download-folksonomy-spec.sh
+
+      - name: Download Robotoff specifications
+        run: ./.github/scripts/download-robotoff-spec.sh
+
+      - name: Process OpenAPI files of Product Opener to json
+        run: node scripts/compile-openapi-specs.js
+
+      - name: Generate documentation
+        run: node scripts/generate-docs.mjs
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git add .
+          if git diff --staged --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit changes
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git commit -m "docs: update OpenAPI specifications and documentation
+
+          Auto-generated from openfoodfacts-server@$(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+          git push origin main
+
+      - name: Summary
+        run: |
+          if [ "${{ steps.git-check.outputs.changed }}" == "true" ]; then
+            echo "Documentation updated successfully"
+          else
+            echo "No changes detected"
+          fi

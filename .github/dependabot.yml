@@ -1,0 +1,58 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "jagjeevanak"
+    assignees:
+      - "jagjeevanak"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore"
+      include: "scope"
+    ignore:
+      # Ignore major version updates for core dependencies
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+    groups:
+      fumadocs:
+        patterns:
+          - "fumadocs-*"
+      react-ecosystem:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      development-dependencies:
+        dependency-type: "development"
+        exclude-patterns:
+          - "fumadocs-*"
+          - "react*"
+          - "@types/react*"
+
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "jagjeevankashid"
+    assignees:
+      - "jagjeevankashid"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
