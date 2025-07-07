@@ -5,9 +5,22 @@
     "description": "\nFolksonomy Engine API allows you to add free property/value pairs to Open Food Facts products.\n\nThe API use the main following variables:\n* **product**: the product number\n* **k**: \"key\", meaning the property or tag\n* **v**: \"value\", the value for a related key\n\n## See also\n\n* [Project page](https://wiki.openfoodfacts.org/Folksonomy_Engine)\n* [Folksonomy Engine github repository](https://github.com/openfoodfacts/folksonomy_engine)\n* [Documented properties](https://wiki.openfoodfacts.org/Folksonomy/Property)\n",
     "version": "0.1.0"
   },
+  "servers": [
+    {
+      "url": "https://api.folksonomy.openfoodfacts.org",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:8000",
+      "description": "Local development server"
+    }
+  ],
   "paths": {
     "/": {
       "get": {
+        "tags": [
+          "System"
+        ],
         "summary": "Hello",
         "operationId": "hello__get",
         "responses": {
@@ -26,6 +39,9 @@
     },
     "/auth": {
       "post": {
+        "tags": [
+          "Authentication"
+        ],
         "summary": "Authentication",
         "description": "Authentication: provide user/password and get a bearer token in return\n\n- **username**: Open Food Facts user_id (not email)\n- **password**: user password (clear text, but HTTPS encrypted)\n\ntoken is returned, to be used in later requests with usual \"Authorization: bearer token\" headers",
         "operationId": "authentication_auth_post",
@@ -83,6 +99,9 @@
     },
     "/auth_by_cookie": {
       "post": {
+        "tags": [
+          "Authentication"
+        ],
         "summary": "Authentication By Cookie",
         "description": "Authentication: provide Open Food Facts session cookie and get a bearer token in return\n\n- **session cookie**: Open Food Facts session cookie\n\ntoken is returned, to be used in later requests with usual \"Authorization: bearer token\" headers",
         "operationId": "authentication_by_cookie_auth_by_cookie_post",
@@ -130,6 +149,9 @@
     },
     "/products/stats": {
       "get": {
+        "tags": [
+          "Products"
+        ],
         "summary": "Product Stats",
         "description": "Get the list of products with tags statistics\n\nThe products list can be limited to some tags (k or k=v)",
         "operationId": "product_stats_products_stats_get",
@@ -197,6 +219,9 @@
     },
     "/products": {
       "get": {
+        "tags": [
+          "Products"
+        ],
         "summary": "Product List",
         "description": "Get the list of products matching k or k=v",
         "operationId": "product_list_products_get",
@@ -264,6 +289,9 @@
     },
     "/product/{product}": {
       "get": {
+        "tags": [
+          "Product Tags"
+        ],
         "summary": "Product Tags List",
         "description": "Get a list of existing tags for a product, optionally filtering by specific keys.",
         "operationId": "product_tags_list_product__product__get",
@@ -334,6 +362,9 @@
     },
     "/product/{product}/{k}": {
       "get": {
+        "tags": [
+          "Product Tags"
+        ],
         "summary": "Product Tag",
         "description": "Get a specific tag or tag hierarchy on a product\n\n- /product/xxx/key returns only the requested key\n- /product/xxx/key* returns the key and subkeys (key:subkey)",
         "operationId": "product_tag_product__product___k__get",
@@ -395,6 +426,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "Product Tags"
+        ],
         "summary": "Product Tag Delete",
         "description": "Delete a product tag",
         "operationId": "product_tag_delete_product__product___k__delete",
@@ -465,6 +499,9 @@
     },
     "/product/{product}/{k}/versions": {
       "get": {
+        "tags": [
+          "Product Tags"
+        ],
         "summary": "Product Tag List Versions",
         "description": "Get a list of all versions of a tag for a product",
         "operationId": "product_tag_list_versions_product__product___k__versions_get",
@@ -532,6 +569,9 @@
     },
     "/product": {
       "put": {
+        "tags": [
+          "Product Tags"
+        ],
         "summary": "Product Tag Update",
         "description": "Update a product tag\n\n- **product**: which product\n- **k**: which key for the tag\n- **v**: which value to set for the tag\n- **version**: must be equal to previous version + 1\n- **owner**: None or empty for public tags, or your own user_id",
         "operationId": "product_tag_update_product_put",
@@ -572,6 +612,9 @@
         ]
       },
       "post": {
+        "tags": [
+          "Product Tags"
+        ],
         "summary": "Product Tag Add",
         "description": "Create a new product tag (version=1)\n\n- **product**: which product\n- **k**: which key for the tag\n- **v**: which value to set for the tag\n- **version**: none or empty or 1\n- **owner**: none or empty for public tags, or your own user_id\n\nBe aware it's not possible to create the same tag twice. Though, you can update\na tag and add multiple values the way you want (don't forget to document how); comma\nseparated list is a good option.",
         "operationId": "product_tag_add_product_post",
@@ -614,6 +657,9 @@
     },
     "/keys": {
       "get": {
+        "tags": [
+          "Keys & Values"
+        ],
         "summary": "Keys List",
         "description": "Get the list of keys with statistics, with an optional search filter.\n\nThe keys list can be restricted to private tags from some owner",
         "operationId": "keys_list_keys_get",
@@ -681,6 +727,9 @@
     },
     "/values/{k}": {
       "get": {
+        "tags": [
+          "Keys & Values"
+        ],
         "summary": "Get Unique Values",
         "description": "Get the unique values of a given property and the corresponding number of products\n\n- **k**: The property key to get unique values for\n- **owner**: None or empty for public tags, or your own user_id\n- **q**: Filter values by a query string\n- **limit**: Maximum number of values to return (default: 50; max: 1000)",
         "operationId": "get_unique_values_values__k__get",
@@ -760,6 +809,9 @@
     },
     "/ping": {
       "get": {
+        "tags": [
+          "System"
+        ],
         "summary": "Pong",
         "description": "Check server health",
         "operationId": "pong_ping_get",
@@ -1100,5 +1152,27 @@
         }
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "System",
+      "description": "System health and general API information"
+    },
+    {
+      "name": "Authentication",
+      "description": "User authentication and authorization endpoints"
+    },
+    {
+      "name": "Products",
+      "description": "Product discovery and statistics"
+    },
+    {
+      "name": "Product Tags",
+      "description": "CRUD operations for product tags and properties"
+    },
+    {
+      "name": "Keys & Values",
+      "description": "Browse available keys and their possible values"
+    }
+  ]
 }
