@@ -6,12 +6,12 @@
   "pages":[
     "index",
     "---Developer Documentation---",
-    "...dev",
-    "---API Reference---",
+    "...(docs)/dev",
+    "---API References---",
     "...(api)/v2",
     "...(api)/v3",
     "---Tutorial---",
-    "...tutorials",
-    "..."
+    "...(docs)/tutorials",
+    "...(docs)"
   ]
 }

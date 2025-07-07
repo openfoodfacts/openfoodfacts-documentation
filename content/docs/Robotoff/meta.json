@@ -2,5 +2,12 @@
   "title": "Robotoff",
   "description": "AI-powered product data extraction service",
   "icon": "Bot",
-  "root": true
+  "root": true,
+  "pages":[
+    "index",
+    "---Project Guide---",
+    "...(docs)",
+    "---API References---",
+    "...(api)"
+  ]
 }
