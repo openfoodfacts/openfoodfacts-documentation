@@ -1,42 +1,65 @@
 ---
 title: API v2
-description: The original Open Food Facts API for comprehensive product data access and management
+description: The original Open Food Facts API for comprehensive product data access and management - stable, production-ready, and widely adopted
 ---
 
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Open Food Facts API v2
 
-The original Open Food Facts API provides comprehensive access to the world's largest collaborative food database. This mature API offers reliable endpoints for accessing product information, nutrition data, images, and more.
+The original Open Food Facts API provides comprehensive access to the world's largest collaborative food database. This mature, stable API offers reliable endpoints for accessing product information, nutrition data, images, and extensive product metadata.
 
-<Callout className='prose' type='info'>
-  API v2 is the stable, production-ready API that powers many applications and services. It provides
-  backward compatibility and extensive functionality.
+<Callout type="info">
+  API v2 is the stable, production-ready API that powers thousands of
+  applications and services worldwide. It provides excellent backward
+  compatibility, extensive functionality, and has been battle-tested in
+  production environments.
 </Callout>
 
 ## API Categories
 
-<Cards className='prose'>
+<Cards>
   <Card
-    title='Read Requests'
-    description='Retrieve product information, search products, and access nutrition data'
-    href='/docs/v2/read-requests'
+    title="Products"
+    description="Retrieve and manage product information, including barcode lookup and product updates"
+    href="/docs/Product-Opener/(api)/v2/products"
   />
   <Card
-    title='Write Requests'
-    description='Upload product data, images, and update existing product information'
-    href='/docs/v2/write-requests'
+    title="Search"
+    description="Search for products using various criteria and filters"
+    href="/docs/Product-Opener/(api)/v2/search"
   />
   <Card
-    title='Authentication'
-    description='Session management and user authentication endpoints'
-    href='/docs/v2/authentication'
+    title="Images"
+    description="Upload, crop, rotate, and manage product images with OCR processing"
+    href="/docs/Product-Opener/(api)/v2/images"
   />
   <Card
-    title='Personal Search'
-    description='Personalized product searches and preference management'
-    href='/docs/v2/personal-search'
+    title="Authentication"
+    description="Session management, user authentication, and access control mechanisms"
+    href="/docs/Product-Opener/(api)/v2/authentication"
+  />
+  <Card
+    title="Personal Search"
+    description="Personalized product searches with preference management and filtering"
+    href="/docs/Product-Opener/(api)/v2/personal-search"
+  />
+  <Card
+    title="Nutrients"
+    description="Access nutrition data and nutrient information for products"
+    href="/docs/Product-Opener/(api)/v2/nutrients"
+  />
+  <Card
+    title="OCR"
+    description="Optical Character Recognition for extracting text from product images"
+    href="/docs/Product-Opener/(api)/v2/ocr"
+  />
+  <Card
+    title="Suggestions"
+    description="Get suggestions for product data completion and improvements"
+    href="/docs/Product-Opener/(api)/v2/suggestions"
   />
 </Cards>
 
@@ -48,31 +71,102 @@ All API v2 requests should be made to:
 https://world.openfoodfacts.org
 ```
 
+## Core Capabilities
+
+<Steps>
+  <Step title="Product Data Access">
+    Retrieve comprehensive product information including nutrition facts,
+    ingredients, allergens, and metadata
+  </Step>
+  <Step title="Multi-language Support">
+    Access products and data in multiple languages with proper localization and
+    country-specific information
+  </Step>
+  <Step title="Image Management">
+    Upload, crop, rotate, and manage product images with automatic OCR
+    processing and quality validation
+  </Step>
+  <Step title="Advanced Search">
+    Perform complex searches with filters, sorting, faceting, and geographic
+    constraints
+  </Step>
+  <Step title="Data Contribution">
+    Contribute new products and update existing information with validation and
+    quality checks
+  </Step>
+  <Step title="Batch Operations">
+    Efficiently handle multiple product operations with optimized endpoints and
+    bulk processing
+  </Step>
+</Steps>
+
 ## Key Features
 
-- **Comprehensive Data**: Access to nutrition facts, ingredients, images, and metadata
-- **Multi-language**: Support for products and data in multiple languages
-- **Image Management**: Upload, crop, and manage product images
-- **Search Capabilities**: Advanced search with filters and sorting options
-- **Batch Operations**: Efficient handling of multiple product operations
+### Data Access
 
-<Callout type='success'>
-  Most read operations are public and don't require authentication. Write operations may require
-  user credentials.
+- **Comprehensive Coverage**: Nutrition facts, ingredients, images, packaging, and environmental data
+- **Real-time Updates**: Access to the latest product information and contributions
+- **Historical Data**: Track changes and maintain audit trails for product information
+- **Quality Metrics**: Access to data quality scores and completeness indicators
+
+### Integration Features
+
+- **RESTful Design**: Standard HTTP methods and predictable URL patterns
+- **Multiple Formats**: JSON, XML, and HTML response formats
+- **CORS Support**: Cross-origin requests for web applications
+- **Rate Limiting**: Fair usage policies with clear limits and headers
+
+<Callout type="success">
+  Most read operations are public and don't require authentication. Write
+  operations require user credentials for data integrity and attribution.
 </Callout>
 
 ## Common Use Cases
 
-- **Product Lookup**: Get detailed information using barcodes or product IDs
-- **Nutrition Analysis**: Access comprehensive nutrition data for dietary applications
-- **Image Processing**: Upload and manage product photos for better data quality
-- **Data Contribution**: Add or update product information to help the community
+### For Developers
+
+- **Product Lookup**: Get detailed information using barcodes, product IDs, or search queries
+- **Nutrition Analysis**: Access comprehensive nutrition data for dietary and health applications
+- **Image Processing**: Upload and manage product photos for improved data quality
+- **Data Contribution**: Add or update product information to support the open data community
+
+### For Applications
+
+- **Mobile Apps**: Barcode scanning and product information display
+- **E-commerce**: Product catalog enrichment and nutrition labeling
+- **Research**: Food industry analysis and nutritional studies
+- **Compliance**: Regulatory reporting and ingredient analysis
 
 ## Getting Started
 
-The most commonly used endpoint is [Get Product by Barcode](/docs/v2/read-requests/get-product-by-barcode), which provides detailed product information using a standard barcode scan.
+<Steps>
+  <Step title="Explore the API">
+    Start with the [Get Product by
+    Barcode](/docs/Product-Opener/(api)/v2/products/get-product-by-barcode)
+    endpoint to understand the data structure
+  </Step>
+  <Step title="Understand Authentication">
+    Learn about authentication requirements for different operations
+  </Step>
+  <Step title="Test Integration">
+    Use the sandbox environment to test your integration
+  </Step>
+  <Step title="Go Live">
+    Deploy with proper error handling and rate limiting
+  </Step>
+</Steps>
 
-<Callout type='warn'>
-  Always include `json=1` parameter to receive responses in JSON format. Without it, responses will
-  be in HTML format.
+<Callout type="warn">
+  **Important**: Always include the `json=1` parameter to receive responses in
+  JSON format. Without it, responses will be in HTML format intended for web
+  browsers.
+</Callout>
+
+## Migration to v3
+
+<Callout type="info">
+  **API v3 Available**: Consider migrating to [API
+  v3](/docs/Product-Opener/(api)/v3) for new projects. It offers improved
+  performance, better error handling, and modern RESTful design patterns while
+  maintaining compatibility with Open Food Facts data.
 </Callout>

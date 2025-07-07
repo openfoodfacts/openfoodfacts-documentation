@@ -1,90 +1,104 @@
 ---
 title: Open Prices API
-description: API for the Open Food Facts prices database - a comprehensive collection of food product prices from around the world.
+description: Django REST API for the Open Food Facts prices database - a comprehensive collection of food product prices from around the world.
 ---
 
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Open Prices API
 
-The Open Prices API provides access to the Open Food Facts prices database, offering comprehensive price information for food products worldwide. This collaborative database helps consumers make informed purchasing decisions.
+The Open Prices API provides access to the Open Food Facts prices database, offering comprehensive price information for food products worldwide. Built with Django REST Framework, this API enables developers to access, contribute, and analyze global food pricing data.
 
-<Callout type='info'>
-  Open Prices is a collaborative project to collect and share food product prices from stores around
-  the world, complementing the Open Food Facts database.
+<Callout type="info">
+  Open Prices is a collaborative project to collect and share food product
+  prices from stores around the world, providing transparency and helping
+  consumers make informed purchasing decisions.
 </Callout>
+
+## API Overview
+
+The Open Prices API enables you to:
+
+<Steps>
+  <Step title="Price Data Access">
+    Retrieve price information for products across different stores and time
+    periods
+  </Step>
+  <Step title="Location Integration">
+    Access store locations and geographic price distribution data
+  </Step>
+  <Step title="Price Submission">
+    Contribute new price data with proof photos and location verification
+  </Step>
+  <Step title="Analytics">
+    Access price trends, statistics, and historical data analysis
+  </Step>
+</Steps>
 
 ## Key Features
 
 <Cards>
   <Card
-    title='Price Management'
-    description='Create, update, and retrieve price information for products'
-    href='/docs/open-prices/prices'
+    title="Price Management"
+    description="Create, update, and retrieve price information with proof photos and validation"
+    href="/docs/Open-price/(api)/prices"
   />
   <Card
-    title='Location Data'
-    description='Access store locations and geographic price distribution'
-    href='/docs/open-prices/locations'
+    title="Location Data"
+    description="Access store locations verified through OpenStreetMap integration"
+    href="/docs/Open-price/(api)/locations"
   />
   <Card
-    title='Product Catalog'
-    description='Browse and search products with associated price data'
-    href='/docs/open-prices/products'
+    title="Product Integration"
+    description="Link prices to Open Food Facts products using barcodes and identifiers"
+    href="/docs/Open-price/(api)/products"
   />
   <Card
-    title='Receipt Processing'
-    description='Upload and process receipts to extract price information'
-    href='/docs/open-prices/proofs'
+    title="User Management"
+    description="Authentication, user profiles, and contribution tracking"
+    href="/docs/Open-price/(api)/users"
   />
   <Card
-    title='User Management'
-    description='Handle user accounts and authentication for contributors'
-    href='/docs/open-prices/users'
+    title="Product Catalog"
+    description="Browse and search products with associated price data"
+    href="/docs/open-prices/products"
   />
   <Card
-    title='Statistics'
-    description='Access aggregated statistics and analytics about price data'
-    href='/docs/open-prices/stats'
+    title="Receipt Processing"
+    description="Upload and process receipts to extract price information"
+    href="/docs/open-prices/proofs"
+  />
+  <Card
+    title="User Management"
+    description="Handle user accounts and authentication for contributors"
+    href="/docs/open-prices/users"
+  />
+  <Card
+    title="Statistics"
+    description="Access aggregated statistics and analytics about price data"
   />
 </Cards>
 
 ## Base URL
 
 ```
-https://prices.openfoodfacts.org
+https://prices.openfoodfacts.org/api
 ```
 
 ## API Features
 
-- **RESTful Design**: Standard HTTP methods and status codes
-- **JSON Responses**: All endpoints return JSON data
-- **Pagination**: Large datasets are paginated for performance
-- **Filtering**: Advanced filtering options for price queries
-- **Real-time Data**: Access to the latest price information
+### Data Quality
 
-<Callout type='success'>
-  The API supports both anonymous access for reading data and authenticated access for contributing
-  price information.
-</Callout>
+- **Photo Verification**: All prices require proof photos for validation
+- **Location Validation**: Store locations verified through OpenStreetMap
+- **Duplicate Prevention**: Automatic detection and handling of duplicate entries
+- **Community Moderation**: User reporting and moderation tools
 
-## Use Cases
+### Developer Tools
 
-- **Price Comparison**: Build applications that compare prices across stores
-- **Market Research**: Analyze pricing trends and geographic variations
-- **Consumer Apps**: Help users find the best deals in their area
-- **Data Analysis**: Research food pricing patterns and accessibility
-
-<Callout type='warn'>
-  Please be respectful with API usage. Rate limiting may be applied to ensure fair access for all
-  users.
-</Callout>
-
-## Support
-
-For questions or support regarding the Open Prices API:
-
-- [GitHub Repository](https://github.com/openfoodfacts/open-prices)
-- [Community Forum](https://forum.openfoodfacts.org/)
-- [Documentation](https://prices.openfoodfacts.org)
+- **RESTful Design**: Clean, predictable API endpoints following REST principles
+- **Comprehensive Documentation**: Auto-generated OpenAPI documentation
+- **Rate Limiting**: Fair usage policies with clear limits
+- **CORS Support**: Cross-origin requests for web applications
