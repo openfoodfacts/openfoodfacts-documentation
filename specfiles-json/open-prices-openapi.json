@@ -1362,6 +1362,13 @@
           },
           {
             "in": "query",
+            "name": "location__osm_name__contains",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "location_id",
             "schema": {
               "type": "integer",
@@ -1513,6 +1520,13 @@
             "name": "product_id__isnull",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "product_name",
+            "schema": {
+              "type": "string"
             }
           },
           {
@@ -2192,6 +2206,13 @@
           },
           {
             "in": "query",
+            "name": "location__osm_name__contains",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "location_id",
             "schema": {
               "type": "integer",
@@ -2334,6 +2355,13 @@
             "name": "product_id__isnull",
             "schema": {
               "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "product_name",
+            "schema": {
+              "type": "string"
             }
           },
           {

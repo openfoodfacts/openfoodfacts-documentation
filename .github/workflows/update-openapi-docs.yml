@@ -85,7 +85,7 @@ jobs:
       - name: Commit changes
         if: steps.git-check.outputs.changed == 'true'
         run: |
-          git commit -m "docs: update OpenAPI specifications and documentation
+          git commit --no-verify -m "docs: update OpenAPI specifications and documentation
 
           Auto-generated from openfoodfacts-server@$(date -u '+%Y-%m-%d %H:%M:%S UTC')"
           git push origin main

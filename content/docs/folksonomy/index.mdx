@@ -1,53 +1,97 @@
 ---
 title: Folksonomy Engine API
-description: API for adding free-form property/value pairs to Open Food Facts products
+description: Collaborative tagging system for adding free-form property/value pairs to Open Food Facts products
 ---
 
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Callout } from 'fumadocs-ui/components/callout';
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Folksonomy Engine API
 
 The Folksonomy Engine API allows you to add free property/value pairs to Open Food Facts products. This collaborative tagging system enables users to contribute additional metadata and properties that enhance product information beyond the standard structured data.
 
-<Callout type='info'>
-  Folksonomy allows the community to add custom tags and properties to products, creating a rich
-  ecosystem of user-generated metadata.
+<Callout type="info">
+  Folksonomy enables the community to add custom tags and properties to
+  products, creating a rich ecosystem of user-generated metadata that
+  complements the core product database.
 </Callout>
+
+## What is Folksonomy?
+
+Folksonomy is a collaborative classification system that allows users to assign freely chosen keywords (tags) to products. Unlike traditional taxonomies that are hierarchical and controlled, folksonomy is:
+
+<Steps>
+  <Step title="User-Driven">
+    Community members can add any property/value pairs they find relevant
+  </Step>
+  <Step title="Flexible">
+    No predefined categories - tags can represent any aspect of a product
+  </Step>
+  <Step title="Collaborative">
+    Multiple users can contribute and validate tags for better data quality
+  </Step>
+  <Step title="Evolving">
+    The tag vocabulary grows organically based on community needs
+  </Step>
+</Steps>
 
 ## Key Features
 
 <Cards>
   <Card
-    title='Product Tags'
-    description='Add, update, and manage custom tags for products with key-value pairs'
-    href='/docs/folksonomy/unknown/product_tag_add_product_post'
+    title="Product Tags"
+    description="Add, update, and manage custom tags for products with key-value pairs"
+    href="/docs/folksonomy/product-tags"
   />
   <Card
-    title='Authentication'
-    description='Secure authentication using Open Food Facts credentials or session cookies'
-    href='/docs/folksonomy/unknown/authentication_auth_post'
+    title="Authentication"
+    description="Secure authentication using Open Food Facts credentials or session cookies"
+    href="/docs/folksonomy/authentication"
   />
   <Card
-    title='Search & Filter'
-    description='Find products and tags using flexible search and filtering capabilities'
-    href='/docs/folksonomy/unknown/product_list_products_get'
+    title="Search & Filter"
+    description="Find products and tags using flexible search and filtering capabilities"
+    href="/docs/folksonomy/search"
   />
   <Card
-    title='Statistics'
-    description='Access usage statistics and analytics for tags and products'
-    href='/docs/folksonomy/unknown/product_stats_products_stats_get'
+    title="Statistics"
+    description="Access usage statistics and analytics for tags and products"
+    href="/docs/folksonomy/statistics"
   />
 </Cards>
 
 ## API Overview
 
-The Folksonomy Engine uses the following main variables:
+The Folksonomy Engine uses the following main concepts:
 
 - **product**: the product barcode/identifier
 - **k**: "key", meaning the property or tag name
 - **v**: "value", the value for a related key
 - **owner**: optional ownership identifier for private tags
+
+## Common Use Cases
+
+### Product Enhancement
+
+- Add cooking instructions
+- Specify dietary restrictions
+- Note packaging details
+- Include preparation methods
+
+### Community Insights
+
+- Personal reviews and ratings
+- Usage recommendations
+- Allergen warnings
+- Regional availability
+
+### Data Quality
+
+- Correction suggestions
+- Additional product names
+- Translation contributions
+- Quality assessments
 
 ### Authentication
 
@@ -75,9 +119,10 @@ Each tag has a version number that increments with updates, ensuring data consis
 3. **Query Data**: Search for products and tags using the flexible API endpoints
 4. **Manage Tags**: Update, delete, and version your contributions
 
-<Callout type='warning'>
-  Be mindful of tag quality and relevance. The Folksonomy system is collaborative, so consider the
-  impact of your contributions on the broader community.
+<Callout type="warning">
+  Be mindful of tag quality and relevance. The Folksonomy system is
+  collaborative, so consider the impact of your contributions on the broader
+  community.
 </Callout>
 
 ## Related Resources
@@ -86,3 +131,12 @@ Each tag has a version number that increments with updates, ensuring data consis
 - [GitHub Repository](https://github.com/openfoodfacts/folksonomy_engine)
 - [Documented Properties](https://wiki.openfoodfacts.org/Folksonomy/Property)
 - [Open Food Facts Main API](/docs/v2)
+
+## Contributors
+
+<a href="https://github.com/openfoodfacts/folksonomy_api/graphs/contributors">
+  <img
+    alt="List of contributors to this repository"
+    src="https://contrib.rocks/image?repo=openfoodfacts/folksonomy_api"
+  />
+</a>

@@ -1,77 +1,116 @@
 ---
 title: "Product Opener"
-description: "The core web server and database system powering Open Food Facts. Learn about the backend infrastructure, API, and database architecture."
+description: "The core web server and database system powering Open Food Facts. Learn about the backend infrastructure, APIs, and database architecture."
 ---
 
-import { Cards, Card } from 'fumadocs-ui/components/card';
-import { Callout } from 'fumadocs-ui/components/callout';
+import { Cards, Card } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Product Opener
 
 **Product Opener** is the core web server and backend system that powers Open Food Facts and its sibling projects (Open Beauty Facts, Open Pet Food Facts, Open Products Facts).
 
 <Callout type="info">
-Product Opener handles product data storage, API endpoints, user management, image processing, and serves the main website frontend for millions of users worldwide.
+  Product Opener handles product data storage, API endpoints, user management,
+  image processing, and serves the main website frontend for millions of users
+  worldwide.
 </Callout>
 
 ## What is Product Opener?
 
-Product Opener is the heart of the Open Food Facts ecosystem:
+Product Opener is the heart of the Open Food Facts ecosystem, providing:
 
-- **Web Server**: Serves the main Open Food Facts website
-- **Database**: Stores product information, images, and user data
-- **API Backend**: Provides REST and GraphQL APIs for data access
-- **Image Processing**: Handles product image uploads and transformations
-- **User Management**: Manages user accounts and contributions
-- **Data Pipeline**: Processes and validates product information
+<Steps>
+  <Step title="Web Server">
+    Serves the main Open Food Facts website interface for browsing and editing
+    products
+  </Step>
+  <Step title="Database System">
+    Stores comprehensive product information, images, and user contribution data
+  </Step>
+  <Step title="API Backend">
+    Provides REST and GraphQL APIs for third-party applications and mobile apps
+  </Step>
+  <Step title="Image Processing">
+    Handles product image uploads, transformations, and OCR processing
+  </Step>
+  <Step title="User Management">
+    Manages user accounts, authentication, and contribution tracking
+  </Step>
+  <Step title="Data Pipeline">
+    Processes, validates, and enriches product information from multiple sources
+  </Step>
+</Steps>
 
 ## Documentation Sections
 
 <Cards>
-  <Card href="/docs/Product-Opener/api" title="API Documentation">
-    Complete API reference for accessing Open Food Facts data
+  <Card href="/docs/Product-Opener/(api)/v2" title="API v2 Reference">
+    Legacy API endpoints for product data access and management
   </Card>
-  <Card href="/docs/Product-Opener/dev" title="Developer Guide">
-    Development setup, architecture, and contribution guidelines
+  <Card href="/docs/Product-Opener/(api)/v3" title="API v3 Reference">
+    Modern API with enhanced capabilities and improved performance
   </Card>
-  <Card href="/docs/Product-Opener/images" title="Image Processing">
-    How Product Opener handles product images and transformations
+  <Card href="/docs/Product-Opener/(docs)/dev" title="Developer Documentation">
+    Development setup, architecture guides, and contribution guidelines
+  </Card>
+  <Card href="/docs/Product-Opener/(docs)/tutorials" title="Tutorials">
+    Step-by-step guides for common development tasks
+  </Card>
+  <Card href="/docs/Product-Opener/(docs)/api-docs" title="API Documentation">
+    Comprehensive API documentation with examples and best practices
   </Card>
 </Cards>
 
 ## Core Components
 
 ### Web Application
+
 - **Frontend**: Main website interface for browsing and editing products
 - **Admin Interface**: Tools for managing data quality and users
 - **Mobile Interface**: Optimized views for mobile devices
 
 ### Database System
+
 - **MongoDB**: Primary database for product data
 - **Redis**: Caching layer for performance
 - **File Storage**: Image and document storage system
 
 ### API Layer
+
 - **REST API**: Standard HTTP endpoints for data access
 - **GraphQL API**: Flexible query interface
 - **Bulk Export**: Large dataset downloads
 - **Real-time Updates**: WebSocket notifications
 
+## Contributors
+
+<a href="https://github.com/openfoodfacts/openfoodfacts-server/graphs/contributors">
+  <img
+    alt="List of contributors to this repository"
+    src="https://contrib.rocks/image?repo=openfoodfacts/openfoodfacts-server"
+  />
+</a>
+
 ## Key Features
 
 ### Product Management
+
 - Add and edit product information
 - Upload and manage product images
 - Collaborative editing with history tracking
 - Data quality validation and scoring
 
 ### Search & Discovery
+
 - Full-text search across products
 - Advanced filtering by categories, labels, ingredients
 - Faceted search interface
 - Geographic data analysis
 
 ### Data Export
+
 - JSONL exports of complete database
 - CSV exports for specific data sets
 - API access for real-time data
@@ -93,7 +132,8 @@ Product Opener is the heart of the Open Food Facts ecosystem:
 3. **Image Processing**: Learn about [image handling](/docs/Product-Opener/images) capabilities
 
 <Callout type="info">
-Product Opener is designed to handle millions of products and users. The architecture emphasizes performance, scalability, and data integrity.
+  Product Opener is designed to handle millions of products and users. The
+  architecture emphasizes performance, scalability, and data integrity.
 </Callout>
 
 ## Related Projects

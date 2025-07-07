@@ -1,56 +1,112 @@
 ---
 title: "Developer Guide"
-description: "Technical documentation for Product Opener developers including setup guides, Docker instructions, and development workflows."
+description: "Comprehensive technical documentation for Product Opener developers including setup guides, Docker instructions, and development workflows."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+# Product Opener Developer Guide
 
 <Callout type="info">
-**Developer Documentation**
+**Welcome Developers!**
 
-This documentation is for developers who want to understand technical aspects of Product Opener.
+This comprehensive guide covers everything you need to know to contribute to Product Opener, from initial setup to advanced development workflows.
+
 </Callout>
 
-<Card href="../api/index.mdx" title="Using the API?" description="To use the API, see API Documentation" />
+## Quick Navigation
+
+<Card
+  href="/docs/Product-Opener/(api)"
+  title="Using the API?"
+  description="Looking to integrate with Product Opener? Check out our API Documentation for endpoints and usage examples."
+/>
 
 <Callout>
 **Project Repository**
 
-The repository for the project is at [https://github.com/openfoodfacts/openfoodfacts-server/](https://github.com/openfoodfacts/openfoodfacts-server/)
+The main repository for Product Opener is at [openfoodfacts/openfoodfacts-server](https://github.com/openfoodfacts/openfoodfacts-server/) on GitHub.
+
 </Callout>
+
+## Development Path
+
+<Steps>
+  <Step title="Environment Setup">
+    Set up your development environment with Docker or native installation
+  </Step>
+  <Step title="Understand Architecture">
+    Learn about Product Opener's architecture and data structures
+  </Step>
+  <Step title="Start Contributing">
+    Make your first contribution with guided tutorials and workflows
+  </Step>
+  <Step title="Advanced Development">
+    Explore advanced topics and specialized development areas
+  </Step>
+</Steps>
 
 ## Documentation Categories
 
 <Cards>
-  <Card href="getting-started/" title="Getting Started" description="Setup guides and quick start instructions for new developers" />
-  <Card href="development-environment/" title="Development Environment" description="Tools and environment setup for development" />
-  <Card href="development-guides/" title="Development Guides" description="How-to guides for specific development tasks and workflows" />
-  <Card href="data-architecture/" title="Data & Architecture" description="Data structures, system architecture, and component explanations" />
-  <Card href="reference/" title="Reference" description="Reference materials, command references, and language guides" />
-  <Card href="tutorials/" title="Tutorials" description="Step-by-step tutorials for learning and development" />
+  <Card
+    href="getting-started/"
+    title="Getting Started"
+    description="Setup guides, installation instructions, and quick start tutorials for new developers"
+  />
+  <Card
+    href="development-environment/"
+    title="Development Environment"
+    description="Tools, Docker setup, and local environment configuration for efficient development"
+  />
+  <Card
+    href="development-guides/"
+    title="Development Guides"
+    description="Step-by-step guides for specific development tasks, workflows, and best practices"
+  />
+  <Card
+    href="data-architecture/"
+    title="Data & Architecture"
+    description="System architecture, data structures, database schemas, and component relationships"
+  />
+  <Card
+    href="tutorials/"
+    title="Tutorials"
+    description="Hands-on tutorials for common development scenarios and feature implementation"
+  />
+  <Card
+    href="reference/"
+    title="Reference"
+    description="Technical reference materials, APIs, and detailed documentation"
+  />
 </Cards>
 
 ## Getting Started Steps
 
 <Steps>
-<Step>
-**Choose Your Environment**: Start with [Getting Started](getting-started/) guides
-</Step>
-<Step>
-**Set Up Tools**: Configure your [Development Environment](development-environment/)
-</Step>
-<Step>
-**Learn the System**: Explore [Data & Architecture](data-architecture/) concepts
-</Step>
-<Step>
-**Start Developing**: Use [Development Guides](development-guides/) for specific tasks
-</Step>
+  <Step>
+    **Choose Your Environment**: Start with [Getting Started](getting-started/)
+    guides
+  </Step>
+  <Step>
+    **Set Up Tools**: Configure your [Development
+    Environment](development-environment/)
+  </Step>
+  <Step>
+    **Learn the System**: Explore [Data & Architecture](data-architecture/)
+    concepts
+  </Step>
+  <Step>
+    **Start Developing**: Use [Development Guides](development-guides/) for
+    specific tasks
+  </Step>
 </Steps>
 
 <Callout type="info">
 **Documentation Framework**
 
 Our documentation follows the [Diátaxis Framework](https://diataxis.fr/) for structured technical documentation.
+
 </Callout>
