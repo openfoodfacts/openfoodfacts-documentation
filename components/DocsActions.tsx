@@ -58,6 +58,12 @@ const isApiDocumentationPage = (slug?: string[]): boolean => {
 /**
  * Action buttons for documentation pages that provide copy markdown and GitHub edit functionality.
  * These buttons are automatically hidden on API documentation pages.
+ * 
+ * Environment Variables:
+ * - NEXT_PUBLIC_GITHUB_OWNER: GitHub repository owner/organization (default: 'openfoodfacts')
+ * - NEXT_PUBLIC_GITHUB_REPO: GitHub repository name (default: 'dev-api-docs')
+ * - NEXT_PUBLIC_GITHUB_BRANCH: GitHub branch name (default: 'main')
+ * - NEXT_PUBLIC_CONTENT_PATH: Path to content directory (default: 'content/docs')
  */
 
 export function DocsActions({ slug, markdownContent }: DocsActionsProps) {
@@ -67,7 +73,14 @@ export function DocsActions({ slug, markdownContent }: DocsActionsProps) {
   }
 
   const path = slug ? slug.join('/') : 'index';
-  const githubUrl = `https://github.com/openfoodfacts/dev-api-docs/blob/main/content/docs/${path}.mdx`;
+  
+  // Get GitHub repository info from environment variables
+  const githubOwner = process.env.NEXT_PUBLIC_GITHUB_OWNER || 'openfoodfacts';
+  const githubRepo = process.env.NEXT_PUBLIC_GITHUB_REPO || 'dev-api-docs';
+  const githubBranch = process.env.NEXT_PUBLIC_GITHUB_BRANCH || 'main';
+  const contentPath = process.env.NEXT_PUBLIC_CONTENT_PATH || 'content/docs';
+  
+  const githubUrl = `https://github.com/${githubOwner}/${githubRepo}/blob/${githubBranch}/${contentPath}/${path}.mdx`;
   const hasMarkdownContent = markdownContent && markdownContent.trim().length > 0;
   
   const [checked, onCopy] = useCopyButton(() => {
