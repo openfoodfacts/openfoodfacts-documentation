@@ -2,5 +2,12 @@
   "title": "Search-a-licious",
   "description": "Search infrastructure and APIs",
   "icon": "Search",
-  "root": true
+  "root": true,
+  "pages":[
+    "index",
+    "---Project Guide---",
+    "...(docs)",
+    "---API References---",
+    "...(api)"
+  ]
 }
