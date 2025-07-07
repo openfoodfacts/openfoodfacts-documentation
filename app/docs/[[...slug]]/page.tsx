@@ -1,4 +1,4 @@
-import { source } from '@/lib/source';
+import { source, reportsSource } from '@/lib/source';
 import {
   DocsPage,
   DocsBody,
@@ -8,6 +8,7 @@ import {
 import { notFound } from 'next/navigation';
 import { getMDXComponents } from '@/mdx-components';
 import { DocsActions } from '@/components/DocsActions';
+import { ReportBlogRenderer } from '@/components/ReportBlogRenderer';
 import { readFile } from 'fs/promises';
 import { join } from 'path';
 
@@ -15,6 +16,41 @@ export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
 }) {
   const params = await props.params;
+  
+  // Check if this is a report page (under Infra/reports)
+  const isReportPage = params.slug && 
+    params.slug.length >= 3 && 
+    params.slug[0] === 'Infra' && 
+    params.slug[1] === 'reports';
+
+  if (isReportPage && params.slug) {
+    // Use reports source for blog-style rendering
+    const reportSlug = params.slug.slice(2); // Remove 'Infra/reports' prefix
+    const reportPage = reportsSource.getPage(reportSlug);
+    
+    if (!reportPage) notFound();
+
+    let markdownContent = '';
+    // Try to read the report markdown file
+    const reportPath = params.slug.join('/');
+    const possiblePaths = [
+      join(process.cwd(), 'content/docs', `${reportPath}.mdx`),
+      join(process.cwd(), 'content/docs', reportPath, 'index.mdx'),
+    ];
+
+    for (const filePath of possiblePaths) {
+      try {
+        markdownContent = await readFile(filePath, 'utf-8');
+        break;
+      } catch {
+        // Continue to next path
+      }
+    }
+
+    return <ReportBlogRenderer page={reportPage as any} markdownContent={markdownContent} />;
+  }
+
+  // Regular docs page handling
   const page = source.getPage(params.slug);
   if (!page) notFound();
   
@@ -101,7 +137,13 @@ export default async function Page(props: {
 }
 
 export async function generateStaticParams() {
-  return source.generateParams();
+  // Combine regular docs params with reports params
+  const docsParams = source.generateParams();
+  const reportsParams = reportsSource.generateParams().map(param => ({
+    slug: ['Infra', 'reports', ...param.slug]
+  }));
+  
+  return [...docsParams, ...reportsParams];
 }
 
 export async function generateMetadata(props: {
