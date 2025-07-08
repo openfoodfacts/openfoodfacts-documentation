@@ -3,15 +3,15 @@ title: "Open Prices Maintenance"
 description: "This document outlines maintenance procedures for Open Prices, specifically how to launch OCR on previously uploaded images. It provides commands for running OCR and overriding existing results, ensuring data accuracy and completeness."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# Maintenance
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 ## OCR Operations
 
 <Callout type="info">
-OCR (Optical Character Recognition) through Google Cloud Vision is launched on every new proof image automatically. However, you may need to run OCR on previously uploaded images for maintenance purposes.
+  OCR (Optical Character Recognition) through Google Cloud Vision is launched on
+  every new proof image automatically. However, you may need to run OCR on
+  previously uploaded images for maintenance purposes.
 </Callout>
 
 <Steps>
@@ -36,6 +36,7 @@ make cli args='run_ocr --override'
 **Use Override Carefully**
 
 The `--override` flag will replace existing OCR results. Make sure you want to overwrite the current data before using this option.
+
 </Callout>
 
 </Step>
@@ -50,4 +51,4 @@ The `--override` flag will replace existing OCR results. Make sure you want to o
 - When processing images that failed during initial upload
 - For bulk reprocessing of historical data
 - When Google Cloud Vision API has been updated with better recognition capabilities
-</Callout>
+  </Callout>

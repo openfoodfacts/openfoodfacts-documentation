@@ -3,22 +3,24 @@ title: "Add a Price"
 description: "Learn how to contribute to Open Prices by adding a single product price using the web interface. This tutorial covers identifying the product, adding price with proof photos, and specifying the location and date of the price discovery."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# Contribute by adding prices
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 ## Single price mode
 
 <Callout type="info">
-This tutorial is a step-by-step guide to add a price using [the web interface](https://prices.openfoodfacts.org). If you have any questions, please ask us on [Slack](https://openfoodfacts.slack.com), on the #prices channel!
+  This tutorial is a step-by-step guide to add a price using [the web
+  interface](https://prices.openfoodfacts.org). If you have any questions,
+  please ask us on [Slack](https://openfoodfacts.slack.com), on the #prices
+  channel!
 </Callout>
 
 <Callout type="warning">
 **Product Restriction**
 
 Only the prices of food products are currently accepted.
+
 </Callout>
 
 To add a price, we need some information, such as the product price, the location (=store), a proof photo, etc.
@@ -31,12 +33,21 @@ Identifying the product helps users know if they have scanned the right product 
 The steps to add a product differ depending on whether the product is:
 
 <Cards>
-<Card title="With Barcode" description="Products that have a standard barcode for identification" />
-<Card title="Raw Products" description="Fruits, vegetables, and other unpackaged items" />
+  <Card
+    title="With Barcode"
+    description="Products that have a standard barcode for identification"
+  />
+  <Card
+    title="Raw Products"
+    description="Fruits, vegetables, and other unpackaged items"
+  />
 </Cards>
 
 <Callout type="info">
-If it doesn't have a barcode (raw products), you should select the category among the dropdown list. Not all categories are available yet, so if you can't find the right one, please let us know. Support for other units (e.g. 1 apple) is not yet available, but will be added soon.
+  If it doesn't have a barcode (raw products), you should select the category
+  among the dropdown list. Not all categories are available yet, so if you can't
+  find the right one, please let us know. Support for other units (e.g. 1 apple)
+  is not yet available, but will be added soon.
 </Callout>
 
 </Step>
@@ -46,10 +57,12 @@ If it doesn't have a barcode (raw products), you should select the category amon
 **For Raw Products**
 
 The price for 1 kg is expected for raw products.
+
 </Callout>
 
 <Callout type="warning">
-If the price is discounted, we currently expect the full price to be provided (improvements coming soon).
+  If the price is discounted, we currently expect the full price to be provided
+  (improvements coming soon).
 </Callout>
 
 We need a picture of the price tag that acts as a proof so that the data can be verified independently. Ideally, the image should contain both the price tag and the product. The product should be clearly visible, and the price tag should be readable.
@@ -57,12 +70,18 @@ We need a picture of the price tag that acts as a proof so that the data can be 
 ### Proof Examples
 
 <Cards>
-<Card title="✅ Good Example" description="Both the price tag and the product are visible">
-![Good proof example](../assets/img/proof-example-good.png)
-</Card>
-<Card title="❌ Bad Example" description="Here it's difficult to recognize the product using the photo alone">
-![Bad proof example](../assets/img/proof-example-bad.png)
-</Card>
+  <Card
+    title="✅ Good Example"
+    description="Both the price tag and the product are visible"
+  >
+    ![Good proof example](../assets/img/proof-example-good.png)
+  </Card>
+  <Card
+    title="❌ Bad Example"
+    description="Here it's difficult to recognize the product using the photo alone"
+  >
+    ![Bad proof example](../assets/img/proof-example-bad.png)
+  </Card>
 </Cards>
 
 </Step>
@@ -72,6 +91,7 @@ We need a picture of the price tag that acts as a proof so that the data can be 
 **Location Requirements**
 
 The location is the store where the product was found. This can be a supermarket, a local store, a farmer's market, etc. The only requirement is that it is a physical location where you can buy food.
+
 </Callout>
 
 **Important:** The location needs to be registered in OpenStreetMap, otherwise you won't be able to select it. If your store is not in OpenStreetMap, you can add it there first (ask for help if you're not familiar with OpenStreetMap!).

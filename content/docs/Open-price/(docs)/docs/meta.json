@@ -1,0 +1,5 @@
+{
+  "title": "Project Guide",
+  "description": "Comprehensive guides for contributing to and understanding Open Prices",
+  "pages": ["add-a-price", "add-multiple-prices", "schema", "maintenance"]
+}

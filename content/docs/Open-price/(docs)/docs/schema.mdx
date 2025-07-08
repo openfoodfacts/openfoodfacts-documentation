@@ -1,0 +1,191 @@
+---
+title: "Database Schema"
+description: "Comprehensive overview of the Open Prices database schema, including entity relationships, data structure evolution, and model definitions for prices, products, locations, and users."
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+
+## Database Schema Overview
+
+The Open Prices database is built with Django ORM and uses a relational model to efficiently store and manage price data, product information, locations, and user contributions.
+
+<Callout type="info">
+  The database schema has evolved over time to better support the growing needs
+  of the Open Prices project. This documentation covers both the previous schema
+  structure and the current updated version.
+</Callout>
+
+## Schema Evolution
+
+The Open Prices database schema has undergone significant improvements to enhance data integrity, performance, and functionality.
+
+<Tabs items={['Current Schema (2025)', 'Legacy Schema (2024)']}>
+<Tab value="Current Schema (2025)">
+
+### Updated Schema (June 16, 2025)
+
+The current schema reflects the latest improvements and optimizations made to the Open Prices database structure.
+
+![Current Database Schema](</docs/Open-price/(docs)/schema/2025-06-16_schema.png>)
+
+#### Key Features of the Updated Schema:
+
+- **Enhanced Product Management**: Improved product entity with better linking to Open Food Facts
+- **Optimized Price Storage**: More efficient price data structure with better indexing
+- **Enhanced Location Tracking**: Improved store and location management
+- **Better User Integration**: Enhanced user model with improved authentication and contribution tracking
+- **Improved Data Relationships**: Optimized foreign key relationships for better performance
+
+</Tab>
+<Tab value="Legacy Schema (2024)">
+
+### Legacy Schema (September 22, 2024)
+
+The previous schema version that was used in earlier versions of the Open Prices system.
+
+![Legacy Database Schema](</docs/Open-price/(docs)/schema/2024-09-22_schema.png>)
+
+#### Legacy Schema Characteristics:
+
+- **Basic Product Structure**: Simpler product entity structure
+- **Standard Price Model**: Basic price storage without advanced optimizations
+- **Simple Location Management**: Basic store and location tracking
+- **Basic User Model**: Standard user authentication and tracking
+
+</Tab>
+</Tabs>
+
+## Core Database Models
+
+The Open Prices database consists of several core models that work together to provide comprehensive price tracking functionality:
+
+<Cards>
+  <Card
+    title="Price Model"
+    description="Central entity storing product prices with proof photos, location, and temporal data"
+  />
+  <Card
+    title="Product Model"
+    description="Product information linked to Open Food Facts database with barcode and metadata"
+  />
+  <Card
+    title="Location Model"
+    description="Store and location information including geographic coordinates and store details"
+  />
+  <Card
+    title="User Model"
+    description="Contributor information and authentication details for price submissions"
+  />
+  <Card
+    title="Proof Model"
+    description="Image proofs and verification data for price authenticity"
+  />
+  <Card
+    title="Session Model"
+    description="User session management and bulk price submission tracking"
+  />
+</Cards>
+
+## Entity Relationships
+
+### Primary Relationships
+
+The database schema is built around the following core relationships:
+
+- **Price → Product**: Each price entry is linked to a specific product
+- **Price → Location**: Each price is associated with a store location
+- **Price → User**: Each price submission is attributed to a contributor
+- **Price → Proof**: Each price entry includes proof images for verification
+- **Product → Open Food Facts**: Products are linked to the Open Food Facts database via barcode
+
+### Data Integrity
+
+<Callout type="warning">
+**Data Consistency**
+
+The schema enforces data integrity through:
+
+- Foreign key constraints ensuring valid relationships
+- Validation rules for price values and dates
+- Unique constraints preventing duplicate entries
+- Index optimization for query performance
+  </Callout>
+
+## Schema Migration Notes
+
+### Migration from 2024 to 2025 Schema
+
+The schema update included several important changes:
+
+1. **Performance Improvements**: Enhanced indexing and query optimization
+2. **Data Structure Refinements**: Improved field types and relationships
+3. **New Features Support**: Schema changes to support new functionality
+4. **Better Data Validation**: Enhanced constraints and validation rules
+
+<Callout type="info">
+**Migration Impact**
+
+The schema migration was designed to be backward compatible while providing improved performance and functionality. Existing data was preserved during the transition.
+
+</Callout>
+
+## Technical Implementation
+
+### Database Technology
+
+- **Database Engine**: PostgreSQL (production) / SQLite (development)
+- **ORM**: Django ORM with custom model definitions
+- **Migration System**: Django migrations for schema versioning
+- **Indexing**: Optimized indexes for query performance
+
+### Key Technical Features
+
+- **Atomic Transactions**: Ensures data consistency during bulk operations
+- **Connection Pooling**: Efficient database connection management
+- **Query Optimization**: Indexed fields for common query patterns
+- **Data Validation**: Model-level validation for data integrity
+
+## Developer Resources
+
+For developers working with the Open Prices database:
+
+<Cards>
+  <Card
+    title="API Documentation"
+    href="/docs/Open-price/"
+    description="Complete API reference for database interactions"
+  />
+  <Card
+    title="Model Definitions"
+    href="#"
+    description="Django model definitions and field specifications"
+  />
+  <Card
+    title="Migration Guide"
+    href="#"
+    description="Database migration procedures and best practices"
+  />
+</Cards>
+
+## Best Practices
+
+When working with the Open Prices database schema:
+
+1. **Use Transactions**: Always wrap multiple related operations in transactions
+2. **Optimize Queries**: Use select_related() and prefetch_related() for efficient queries
+3. **Validate Data**: Implement proper validation before database operations
+4. **Monitor Performance**: Use database query analysis tools to optimize performance
+5. **Follow Migrations**: Use Django migrations for all schema changes
+
+<Callout type="warning">
+**Production Considerations**
+
+When deploying schema changes to production:
+
+- Always test migrations in staging environment
+- Consider query performance impact
+- Plan for potential downtime during major migrations
+- Maintain data backups before schema changes
+  </Callout>
