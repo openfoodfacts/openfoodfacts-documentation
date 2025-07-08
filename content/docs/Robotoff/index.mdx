@@ -7,7 +7,11 @@ import { Cards, Card } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 
-**Robotoff** is Open Food Facts' AI-powered service that extracts and processes product information using computer vision and machine learning techniques.
+[![Robotoff Code Quality](https://github.com/openfoodfacts/robotoff/actions/workflows/quality_check.yml/badge.svg)](https://github.com/openfoodfacts/robotoff/actions/workflows/quality_check.yml)
+[![codecov](https://codecov.io/gh/openfoodfacts/robotoff/branch/main/graph/badge.svg?token=BY2T0KXNO1)](https://codecov.io/gh/openfoodfacts/robotoff)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+**Robotoff** is a service that generates predictions from product data such as images, text, and metadata. These predictions can individually or collectively be refined into actionable suggestions known as insights.
 
 <Callout type="info">
   Robotoff automatically extracts data from product images, including
@@ -43,6 +47,13 @@ Robotoff performs various AI-powered tasks to enhance product data quality:
   </Step>
 </Steps>
 
+## Architecture
+
+Robotoff works together with:
+
+- [Product Opener](https://github.com/openfoodfacts/openfoodfacts-server) - Core Open Food Facts server
+- [Open Food Facts Apps](https://github.com/openfoodfacts/smooth-app) - Mobile applications
+
 ## Documentation Sections
 
 <Cards>
@@ -69,6 +80,13 @@ Robotoff performs various AI-powered tasks to enhance product data quality:
 - **Batch Processing**: Bulk data processing for existing products
 - **API Access**: RESTful API for third-party integrations
 - **Webhook Support**: Real-time notifications for processed data
+
+## Weekly Meetings
+
+- **When**: Tuesdays at 11:00 Paris Time (10:00 London Time, 15:30 IST, 02:00 AM PT)
+- **Video Call**: [Google Meet](https://meet.google.com/qvv-grzm-gzb)
+- **Phone**: https://tel.meet/qvv-grzm-gzb?pin=9965177492770
+- **Agenda**: [Weekly Agenda](https://drive.google.com/open?id=1RUfmWHjtFVaBcvQ17YfXu6FW6oRFWg-2lncljG0giKI)
 
 ## Contributors
 

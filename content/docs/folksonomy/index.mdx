@@ -7,7 +7,7 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 
-# Folksonomy Engine API
+A lightweight REST API designed for the Open Food Facts Folksonomy Engine.
 
 The Folksonomy Engine API allows you to add free property/value pairs to Open Food Facts products. This collaborative tagging system enables users to contribute additional metadata and properties that enhance product information beyond the standard structured data.
 
@@ -35,6 +35,21 @@ Folksonomy is a collaborative classification system that allows users to assign 
     The tag vocabulary grows organically based on community needs
   </Step>
 </Steps>
+
+### Integration
+
+The Folksonomy API integrates with:
+
+- Open Food Facts Product Opener
+- Open Food Facts mobile apps
+- Third-party applications via REST API
+
+<Callout type="info">
+  **Note**: Moderators can access the folksonomy engine directly on Open Food
+  Facts without any extension. The UI has not yet been deployed on Open Products
+  Facts, Open Pet Food Facts, or Open Beauty Facts, but has been proven to work
+  via the extension.
+</Callout>
 
 ## Key Features
 
@@ -128,7 +143,6 @@ Each tag has a version number that increments with updates, ensuring data consis
 ## Related Resources
 
 - [Folksonomy Engine Project Page](https://wiki.openfoodfacts.org/Folksonomy_Engine)
-- [GitHub Repository](https://github.com/openfoodfacts/folksonomy_engine)
 - [Documented Properties](https://wiki.openfoodfacts.org/Folksonomy/Property)
 
 ## Contributors

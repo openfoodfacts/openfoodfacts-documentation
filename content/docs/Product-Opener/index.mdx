@@ -7,9 +7,7 @@ import { Cards, Card } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 
-# Product Opener
-
-**Product Opener** is the core web server and backend system that powers Open Food Facts and its sibling projects (Open Beauty Facts, Open Pet Food Facts, Open Products Facts).
+**Product Opener** is the server software for **Open Food Facts** and its sibling projects (Open Beauty Facts, Open Pet Food Facts, Open Products Facts). It is released under the AGPL license and is being developed in Perl, HTML and JavaScript as [Free and Open-Source Software](https://en.wikipedia.org/wiki/Free_and_open-source_software).
 
 <Callout type="info">
   Product Opener handles product data storage, API endpoints, user management,
@@ -42,6 +40,26 @@ Product Opener is the heart of the Open Food Facts ecosystem, providing:
     Processes, validates, and enriches product information from multiple sources
   </Step>
 </Steps>
+
+[![Project Status](http://opensource.box.com/badges/active.svg)](http://opensource.box.com/badges)
+[![Crowdin](https://d322cqt584bo4o.cloudfront.net/openfoodfacts/localized.svg)](https://translate.openfoodfacts.org/)
+[![Open Source Helpers](https://www.codetriage.com/openfoodfacts/openfoodfacts-server/badges/users.svg)](https://www.codetriage.com/openfoodfacts/openfoodfacts-server)
+
+## Architecture
+
+Product Opener works together with:
+
+- [Robotoff](https://github.com/openfoodfacts/robotoff) - Open Food Facts' AI system (Python)
+- [Open Food Facts App](https://github.com/openfoodfacts/smooth-app) - Mobile applications
+- Open Food Facts query system
+- The upcoming openfoodfacts-auth system
+
+## Design & User Interface
+
+We strive to thoughtfully design every feature with respect to Open Food Facts' graphic charter and design system.
+
+- [![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?logo=figma&logoColor=white) Current Website Design](https://www.figma.com/design/Qg9URUyrjHgYmnDHXRsTTB/Current-Website-design?m=auto&t=jNwvjRR8nIgOzzJZ-6)
+- [Join the Design Team](https://github.com/openfoodfacts/openfoodfacts-design)
 
 ## Documentation Sections
 
@@ -83,15 +101,6 @@ Product Opener is the heart of the Open Food Facts ecosystem, providing:
 - **GraphQL API**: Flexible query interface
 - **Bulk Export**: Large dataset downloads
 - **Real-time Updates**: WebSocket notifications
-
-## Contributors
-
-<a href="https://github.com/openfoodfacts/openfoodfacts-server/graphs/contributors">
-  <img
-    alt="List of contributors to this repository"
-    src="https://contrib.rocks/image?repo=openfoodfacts/openfoodfacts-server"
-  />
-</a>
 
 ## Key Features
 
@@ -141,3 +150,24 @@ Product Opener is the heart of the Open Food Facts ecosystem, providing:
 - **[Robotoff](/docs/Robotoff)**: AI service for automated data extraction
 - **[Search-a-licious](/docs/Search-a-licious)**: Advanced search infrastructure
 - **[Open Prices](/docs/Open-price)**: Price tracking system
+
+## Weekly Meetings
+
+- **When**: Mondays at 17:00 Paris Time (CET/CEST)
+- **Video Call**: [Google Meet](https://meet.google.com/nnw-qswu-hza)
+- **Phone**: https://tel.meet/nnw-qswu-hza?pin=2111028061202
+- **Agenda**: [Weekly Agenda](https://drive.google.com/open?id=1LL8-aiSF482xaJ1o0AKmhXB5QWfVE0_jzvYakq3VXys)
+
+## Support
+
+- **Backers**: [Become a backer](https://opencollective.com/openfoodfacts-server#backer)
+- **Sponsors**: [Become a sponsor](https://opencollective.com/openfoodfacts-server#sponsor)
+
+## Contributors
+
+<a href="https://github.com/openfoodfacts/openfoodfacts-server/graphs/contributors">
+  <img
+    alt="List of contributors to this repository"
+    src="https://contrib.rocks/image?repo=openfoodfacts/openfoodfacts-server"
+  />
+</a>
