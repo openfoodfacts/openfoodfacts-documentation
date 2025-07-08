@@ -58,12 +58,14 @@ To overcome this, we can use a SSH tunnel that listens to your local port 80 and
   </Step>
   <Step title="Add Local Port Forwarding">
     Once you have copied the ssh command and ensure it works as-is, add a `-L
-    80:localhost:80` to the command to make it look like: ```bash title="SSH
-    Tunnel Command Example" ssh -L 80:localhost:80
-    'openfoodfac-openfoodfac-tok-openfoodfac-r9f61214h9vt.ssh.ws-c.gitpod.io'
-    ```
+    80:localhost:80` to the command to make it look like:
   </Step>
 </Steps>
+
+```bash title="SSH
+Tunnel Command Example" ssh -L 80:localhost:80
+'openfoodfac-openfoodfac-tok-openfoodfac-r9f61214h9vt.ssh.ws-c.gitpod.io'
+```
 
 Once you execute the altered command in your terminal, you should be able to access Open Food Facts on http://openfoodfacts.localhost just as documented in the quickstart guide!
 
