@@ -3,11 +3,10 @@ title: "Production Architecture"
 description: "This document details the production architecture of Open Food Facts, covering server infrastructure, Proxmox virtualization, Git-based server configuration, NGINX proxy setup, and Product Opener deployment strategies, including storage and ZFS synchronization."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
-import { DrawioViewer } from '@/components/DrawioViewer';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Production Architecture
 
@@ -22,29 +21,34 @@ This document outlines the complete production architecture of Open Food Facts, 
 <Tabs items={["Primary Servers", "Secondary Services", "Virtualization"]}>
   <Tab value="Primary Servers">
     ### Primary Web Servers
-    
     <Cards>
-      <Card title="off1 & off2" description="Main web servers hosted at Free Datacenter" href="./free-datacenter.md" />
-      <Card title="OVH Servers" description="Additional services hosted on OVH infrastructure" />
+      <Card
+        title="off1 & off2"
+        description="Main web servers hosted at Free Datacenter"
+        href="./free-datacenter.md"
+      />
+      <Card
+        title="OVH Servers"
+        description="Additional services hosted on OVH infrastructure"
+      />
     </Cards>
   </Tab>
-  
+
   <Tab value="Secondary Services">
-    ### Service Distribution
-    
-    - **Main web application:** off1 and off2 (Free Datacenter)
-    - **Supporting services:** OVH servers (ovh1, ovh2, ovh3)
-    - **Image serving:** Dedicated nginx instances
-    - **Database services:** Dedicated containers
+    ### Service Distribution - **Main web application:** off1 and off2 (Free
+    Datacenter) - **Supporting services:** OVH servers (ovh1, ovh2, ovh3) -
+    **Image serving:** Dedicated nginx instances - **Database services:**
+    Dedicated containers
   </Tab>
-  
+
   <Tab value="Virtualization">
     ### Proxmox Platform
-    
-    <Card title="Virtualization Strategy" description="Open-source virtualization for container management">
-    
-    We use the [Proxmox open-source virtualization platform](./proxmox.md) for managing LXC containers and virtual machines.
-    
+    <Card
+      title="Virtualization Strategy"
+      description="Open-source virtualization for container management"
+    >
+      We use the [Proxmox open-source virtualization platform](./proxmox.md) for
+      managing LXC containers and virtual machines.
     </Card>
   </Tab>
 </Tabs>
@@ -59,42 +63,46 @@ We maintain server configurations in the [infrastructure git repository](https:/
 
 <Steps>
   <Step title="Symlink Configuration">
-    Files in `/etc` are symlinked to the git repository for automatic updates with `git pull`
+    Files in `/etc` are symlinked to the git repository for automatic updates
+    with `git pull`
   </Step>
-  
+
   <Step title="Service Management">
     Updates may require service reloads, restarts, or `systemctl daemon-reload`
   </Step>
-  
+
   <Step title="Proxmox Exception">
-    `/etc/pve` cannot use symlinks (virtual filesystem), so files are copied to git after modifications
+    `/etc/pve` cannot use symlinks (virtual filesystem), so files are copied to
+    git after modifications
   </Step>
 </Steps>
 
 <Callout type="warn">
-Never commit secrets to the repository. Few files containing secrets exist outside version control.
+  Never commit secrets to the repository. Few files containing secrets exist
+  outside version control.
 </Callout>
 
 ### Current Status
 
 <Tabs items={["Completed", "In Progress", "Planned"]}>
   <Tab value="Completed">
-    - **off2:** Fully configured using git
-    - **ovh3:** Partially configured using git
+    - **off2:** Fully configured using git - **ovh3:** Partially configured
+    using git
   </Tab>
-  
+
   <Tab value="In Progress">
-    - Configuration files: `confs/off2/` directory
-    - Scripts: `scripts/off2/` directory
+    - Configuration files: `confs/off2/` directory - Scripts: `scripts/off2/`
+    directory
   </Tab>
-  
+
   <Tab value="Planned">
-    - **TODO:** Complete git configuration for ovh1 and ovh2
-    - **TODO:** Automate `/etc/pve` file sync for important (non-secret) files
+    - **TODO:** Complete git configuration for ovh1 and ovh2 - **TODO:**
+    Automate `/etc/pve` file sync for important (non-secret) files
   </Tab>
 </Tabs>
 
 **Related Documentation:**
+
 - [Explanation on server configuration with git](./explain-server-config-in-git.md)
 - [How to have server config in git](./how-to-have-server-config-in-git.md)
 
@@ -114,18 +122,19 @@ We implement a [NGINX reverse proxy](./nginx-reverse-proxy.md) container that ma
   <Step title="Bot Protection">
     Uses fail2ban to automatically ban malicious bots
   </Step>
-  
+
   <Step title="Rate Limiting">
     Implements traffic control and request limiting
   </Step>
-  
+
   <Step title="SSL Termination">
     Handles SSL certificates and HTTPS termination
   </Step>
 </Steps>
 
 <Callout type="info">
-Special exception: `images.openfoodfacts.org` is served by nginx installed directly on the host (off2 or ovh3).
+  Special exception: `images.openfoodfacts.org` is served by nginx installed
+  directly on the host (off2 or ovh3).
 </Callout>
 
 **Related:** [How to use fail2ban to ban bots](./how-to-fail2ban-ban-bots.md)
@@ -140,52 +149,46 @@ Special exception: `images.openfoodfacts.org` is served by nginx installed direc
 
 <Tabs items={["Application Containers", "Shared Services", "Request Flow"]}>
   <Tab value="Application Containers">
-    Each Product Opener instance runs in its own LXC container:
-    
-    - **Public flavors:** off, opf, opff, obf
-    - **Producer Platform:** Separate container (currently off only)
-    
-    ### Container Components
-    Each container includes:
-    - **nginx:** Frontend web server
-    - **apache:** Backend application server
-    - **minion:** Background job processor
-    - **incron:** File system event processor
+    Each Product Opener instance runs in its own LXC container: - **Public
+    flavors:** off, opf, opff, obf - **Producer Platform:** Separate container
+    (currently off only) ### Container Components Each container includes: -
+    **nginx:** Frontend web server - **apache:** Backend application server -
+    **minion:** Background job processor - **incron:** File system event
+    processor
   </Tab>
-  
+
   <Tab value="Shared Services">
     Databases are shared between instances:
-    
     <Cards>
       <Card title="MongoDB" description="Primary document database" />
-      <Card title="PostgreSQL" description="Relational database for structured data" />
+      <Card
+        title="PostgreSQL"
+        description="Relational database for structured data"
+      />
       <Card title="Memcached" description="Distributed memory caching system" />
     </Cards>
   </Tab>
-  
+
   <Tab value="Request Flow">
     ### Request Processing Path
-    
     <Steps>
       <Step title="Reverse Proxy">
         Client requests hit the main NGINX reverse proxy
       </Step>
-      
+
       <Step title="Project NGINX">
         Forwarded to project-specific NGINX instance
       </Step>
-      
-      <Step title="Apache Backend">
-        Dynamic requests processed by Apache
-      </Step>
-      
+
+      <Step title="Apache Backend">Dynamic requests processed by Apache</Step>
+
       <Step title="Static Resources">
         Static files served directly by project NGINX
       </Step>
     </Steps>
-    
     <Callout type="info">
-    The dual NGINX setup provides flexibility and easier management with project-specific rules.
+      The dual NGINX setup provides flexibility and easier management with
+      project-specific rules.
     </Callout>
   </Tab>
 </Tabs>
@@ -197,7 +200,7 @@ Special exception: `images.openfoodfacts.org` is served by nginx installed direc
 **Strategy:** Container configurations are stored in the main Product Opener repository and symlinked in `/etc/` for automatic updates on `git pull`.
 
 <Callout type="warn">
-Beware not to put files with secrets in version control!
+  Beware not to put files with secrets in version control!
 </Callout>
 
 </Card>
@@ -211,7 +214,9 @@ Beware not to put files with secrets in version control!
 ### Design Principle
 
 <Callout type="info">
-Deployments should only require `git pull` + build commands (like `build_lang`). We maintain git repository layout and add only necessary symlinks to data.
+  Deployments should only require `git pull` + build commands (like
+  `build_lang`). We maintain git repository layout and add only necessary
+  symlinks to data.
 </Callout>
 
 ### Important Paths
@@ -238,7 +243,8 @@ Deployments should only require `git pull` + build commands (like `build_lang`).
 </Tabs>
 
 <Callout type="warn">
-**Refactoring Needed:** The folder structure needs simplification to use fewer volumes: data, caches, and configuration data.
+  **Refactoring Needed:** The folder structure needs simplification to use fewer
+  volumes: data, caches, and configuration data.
 </Callout>
 
 </Card>
@@ -253,11 +259,9 @@ Deployments should only require `git pull` + build commands (like `build_lang`).
   <Step title="Separation">
     Maintain strict separation between data and software
   </Step>
-  
-  <Step title="ZFS Datasets">
-    All data stored on dedicated ZFS datasets
-  </Step>
-  
+
+  <Step title="ZFS Datasets">All data stored on dedicated ZFS datasets</Step>
+
   <Step title="Bind Mounts">
     Datasets mounted in containers using Proxmox bind mounts
   </Step>
@@ -306,29 +310,25 @@ Datasets are mounted using Proxmox Mount Point (`mp<number>`) entries in contain
 
 ### Storage Flow Diagram
 
-```mermaid
----
-title: Storage on ZFS Datasets and mounting in containers (principle)
----
+```mermaid title="Storage on ZFS Datasets and mounting in containers (principle)"
 flowchart TD
-    subgraph free Datacenter
-        subgraph off2 server
-            subgraph off-container
-                srv-off-products(/srv/off/products) --> |symlink| mnt-off-products
-                srv-off-images(/srv/off/html/images/products) --> |symlink| mnt-off-images
-                srv-off-other(/srv/off/xxx) --> |symlink| mnt-off-other
-                srv-off-pro-images(/srv/off-pro/html/images/products) --> |symlink| mnt-off-pro-images
+    subgraph freeDC["Free Datacenter"]
+        subgraph off2["off2 server"]
+            subgraph container["off-container"]
+                srvProducts["/srv/off/products"] --> |symlink| mntProducts["/mnt/off/products"]
+                srvImages["/srv/off/html/images/products"] --> |symlink| mntImages["/mnt/off/images"]
+                srvOther["/srv/off/xxx"] --> |symlink| mntOther["/mnt/off/xxx"]
+                srvProImages["/srv/off-pro/html/images/products"] --> |symlink| mntProImages["/mnt/off-pro/images"]
             end
-            subgraph zfs
-                OFF2products(OFF products)
-                OFF2images(OFF images)
-                OFF2other(OFF …)
-                OFF2ProImages(OFF pro images)
-                OFF2products --> |Bind mount| mnt-off-products(/mnt/off/products)
-                OFF2images --> |Bind mount| mnt-off-images(/mnt/off/images)
-                OFF2other  --> |Bind mount| mnt-off-other(/mnt/off/xxx)
-                OFF2ProImages --> |Bind mount| mnt-off-pro-images(/mnt/off-pro/images)
-                linkStyle 4,5,6,7 color:orange,stroke:orange;
+            subgraph zfs["ZFS"]
+                OFF2products["OFF products"]
+                OFF2images["OFF images"]
+                OFF2other["OFF other"]
+                OFF2ProImages["OFF pro images"]
+                OFF2products --> |Bind mount| mntProducts
+                OFF2images --> |Bind mount| mntImages
+                OFF2other --> |Bind mount| mntOther
+                OFF2ProImages --> |Bind mount| mntProImages
             end
         end
     end
@@ -346,11 +346,11 @@ flowchart TD
   <Step title="Sanoid Snapshots">
     Creates snapshots and manages retention policies
   </Step>
-  
+
   <Step title="Syncoid Replication">
     Synchronizes snapshots between servers
   </Step>
-  
+
   <Step title="Clone Creation">
     Uses snapshots for staging environment data
   </Step>
@@ -358,50 +358,67 @@ flowchart TD
 
 ### Replication Flow
 
-```mermaid
+```mermaid title="Replication Flow"
 flowchart TD
-    subgraph free Datacenter
-        subgraph off2 server
-            subgraph zfs off2
-                OFF2products(OFF products) --> |sanoid snapshots| OFF2productsSnapshots(OFF products snapshots)
-                OFF2images(OFF images)  --> |sanoid snapshots| OFF2imagesSnapshots(OFF images snapshots)
-                OFF2other(OFF other…) --> |sanoid snapshots| OFF2otherSnapshots(OFF other snapshots…)
+    subgraph freeDC["Free Datacenter"]
+        subgraph off2["off2 server"]
+            subgraph zfsOff2["ZFS off2"]
+                OFF2products["OFF products"] --> |sanoid snapshots| OFF2productsSnapshots["OFF products snapshots"]
+                OFF2images["OFF images"] --> |sanoid snapshots| OFF2imagesSnapshots["OFF images snapshots"]
+                OFF2other["OFF other"] --> |sanoid snapshots| OFF2otherSnapshots["OFF other snapshots"]
             end
         end
-        subgraph off1
-            subgraph zfs off1
-                OFF2productsSnapshots -->|ZFS sync| OFF1products(OFF products)
-                OFF2imagesSnapshots --> |ZFS sync| OFF1images(OFF images)
-                OFF2otherSnapshots --> |ZFS sync| OFF1other(OFF other…)
-                linkStyle 3,4,5 color:green,stroke:green;
+        subgraph off1["off1"]
+            subgraph zfsOff1["ZFS off1"]
+                OFF2productsSnapshots -->|ZFS sync| OFF1products["OFF products"]
+                OFF2imagesSnapshots -->|ZFS sync| OFF1images["OFF images"]
+                OFF2otherSnapshots -->|ZFS sync| OFF1other["OFF other"]
             end
         end
     end
-    subgraph OVH Datacenter
-        subgraph ovh3
-            OFF2productsSnapshots -->|ZFS sync| OVH3products(OFF products)
-            OFF2imagesSnapshots -->|ZFS sync| OVH3images(OFF images)
-            OFF2imagesSnapshots -->|ZFS sync| OVH3other(OFF other_)
-            linkStyle 6,7,8 color:green,stroke:green
+    subgraph ovhDC["OVH Datacenter"]
+        subgraph ovh3["ovh3"]
+            OFF2productsSnapshots -->|ZFS sync| OVH3products["OFF products"]
+            OFF2imagesSnapshots -->|ZFS sync| OVH3images["OFF images"]
+            OFF2otherSnapshots -->|ZFS sync| OVH3other["OFF other"]
 
-            OVH3products -->|replicated snapshots| OVH3ProductsSnapshots(OVH3 products snapshots)
-            OVH3ProductsSnapshots -->|ZFS clone  R/W| DotNETProductsClone(.net products)
-            OVH3images -->|replicated snapshots| OVH3ImgSnapshots(OVH3 images snapshots)
-            OVH3ImgSnapshots -->|ZFS clone  R/W| DotNETIMGclone(.net images)
+            OVH3products -->|replicated snapshots| OVH3ProductsSnapshots["OVH3 products snapshots"]
+            OVH3ProductsSnapshots -->|ZFS clone R/W| DotNETProductsClone[".net products"]
+            OVH3images -->|replicated snapshots| OVH3ImgSnapshots["OVH3 images snapshots"]
+            OVH3ImgSnapshots -->|ZFS clone R/W| DotNETIMGclone[".net images"]
         end
     end
+
+    %% Style the sync connections
+    linkStyle 3 stroke:#00aa00,stroke-width:3px
+    linkStyle 4 stroke:#00aa00,stroke-width:3px
+    linkStyle 5 stroke:#00aa00,stroke-width:3px
+    linkStyle 6 stroke:#00aa00,stroke-width:3px
+    linkStyle 7 stroke:#00aa00,stroke-width:3px
+    linkStyle 8 stroke:#00aa00,stroke-width:3px
 ```
 
 ### Tools and Configuration
 
 <Cards>
-  <Card title="Sanoid" description="Snapshot management and retention policies" href="./sanoid.md" />
-  <Card title="Syncoid" description="Snapshot synchronization between servers" href="./sanoid.md#syncoid-service-and-configuration" />
-  <Card title="Staging Clones" description="Data provision for staging environments via ZFS clones" />
+  <Card
+    title="Sanoid"
+    description="Snapshot management and retention policies"
+    href="./sanoid.md"
+  />
+  <Card
+    title="Syncoid"
+    description="Snapshot synchronization between servers"
+    href="./sanoid.md#syncoid-service-and-configuration"
+  />
+  <Card
+    title="Staging Clones"
+    description="Data provision for staging environments via ZFS clones"
+  />
 </Cards>
 
 <Callout type="info">
-OVH3 or OFF2 images are also served by NGINX for `images.openfoodfacts.org`.
+  OVH3 or OFF2 images are also served by NGINX for `images.openfoodfacts.org`.
 </Callout>
 
 </Card>
@@ -416,11 +433,11 @@ OVH3 or OFF2 images are also served by NGINX for `images.openfoodfacts.org`.
   <Step title="Internal Network">
     All applications communicate using internal network addresses
   </Step>
-  
+
   <Step title="Inter-Server Security">
     Communication between machines uses Stunnel or HTTPS
   </Step>
-  
+
   <Step title="Authentication">
     Stunnel with PSK (Pre-Shared Key) for fast, secure connections
   </Step>
@@ -430,31 +447,33 @@ OVH3 or OFF2 images are also served by NGINX for `images.openfoodfacts.org`.
 
 <Tabs items={["Advantages", "Configuration", "Security"]}>
   <Tab value="Advantages">
-    - **TCP Streams:** Handles any TCP stream (not UDP)
-    - **No Firewall Rules:** No need for specific firewall configuration
-    - **Built-in Auth:** Uses specific authentication mechanism
+    - **TCP Streams:** Handles any TCP stream (not UDP) - **No Firewall Rules:**
+    No need for specific firewall configuration - **Built-in Auth:** Uses
+    specific authentication mechanism
   </Tab>
-  
+
   <Tab value="Configuration">
-    - **PSK Method:** Pre-Shared Key for speed and simplicity
-    - **Unique Keys:** Each server connection uses unique PSK
-    - **TCP Only:** Limited to TCP traffic (UDP not supported)
+    - **PSK Method:** Pre-Shared Key for speed and simplicity - **Unique Keys:**
+    Each server connection uses unique PSK - **TCP Only:** Limited to TCP
+    traffic (UDP not supported)
   </Tab>
-  
+
   <Tab value="Security">
-    - **Encrypted Tunnels:** All inter-server communication encrypted
-    - **Authentication:** PSK-based connection authentication
-    - **No Open Ports:** No additional firewall rules required
+    - **Encrypted Tunnels:** All inter-server communication encrypted -
+    **Authentication:** PSK-based connection authentication - **No Open Ports:**
+    No additional firewall rules required
   </Tab>
 </Tabs>
 
 ### Architecture Diagram
 
 <Callout type="info">
-The following diagram shows network connections (not complete). Source available in [architecture-diagram.drawio](./img/architecture-diagram.drawio).
+  The following diagram shows network connections (not complete). Source
+  available in
+  [architecture-diagram.drawio](/docs/Infra/img/architecture-diagram.drawio).
 </Callout>
 
-<DrawioViewer src="./img/architecture-diagram.drawio" alt="Architecture diagram" height="600px" />
+![Architecture diagram](/docs/Infra/img/architecture-diagram.png)
 
 </Card>
 
@@ -467,17 +486,39 @@ Several areas need refactoring and improvement:
 2. **Cross-instance dependencies:** Make data access more configurable
 3. **Configuration automation:** Automate `/etc/pve` file synchronization
 4. **Complete git migration:** Finish git-based configuration for all servers
-</Callout>
+   </Callout>
 
 ## Related Documentation
 
 <Cards>
-  <Card title="Proxmox Setup" description="Virtualization platform configuration" href="./proxmox.md" />
-  <Card title="NGINX Proxy" description="Reverse proxy configuration and management" href="./nginx-reverse-proxy.md" />
-  <Card title="Free Datacenter" description="Primary hosting infrastructure details" href="./free-datacenter.md" />
-  <Card title="Sanoid/Syncoid" description="ZFS snapshot and replication management" href="./sanoid.md" />
-  <Card title="Server Config Git" description="Version control for server configurations" href="./explain-server-config-in-git.md" />
-  <Card title="Fail2ban Setup" description="Bot protection and traffic filtering" href="./how-to-fail2ban-ban-bots.md" />
+  <Card
+    title="Proxmox Setup"
+    description="Virtualization platform configuration"
+    href="./proxmox.md"
+  />
+  <Card
+    title="NGINX Proxy"
+    description="Reverse proxy configuration and management"
+    href="./nginx-reverse-proxy.md"
+  />
+  <Card
+    title="Free Datacenter"
+    description="Primary hosting infrastructure details"
+    href="./free-datacenter.md"
+  />
+  <Card
+    title="Sanoid/Syncoid"
+    description="ZFS snapshot and replication management"
+    href="./sanoid.md"
+  />
+  <Card
+    title="Server Config Git"
+    description="Version control for server configurations"
+    href="./explain-server-config-in-git.md"
+  />
+  <Card
+    title="Fail2ban Setup"
+    description="Bot protection and traffic filtering"
+    href="./how-to-fail2ban-ban-bots.md"
+  />
 </Cards>
-
-
