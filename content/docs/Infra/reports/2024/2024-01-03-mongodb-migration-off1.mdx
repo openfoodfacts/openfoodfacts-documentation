@@ -12,11 +12,11 @@ To [upgrade off2](/docs/Infra/reports/2023/2023-02-17-off2-upgrade), we moved Mo
 
 We Then moved all the stuff from off1 to off2. We then [upgrade off1](/docs/Infra/reports/2023/2023-12-08-off1-upgrade).
 
-It's now time to move back MongoDB instance to the upgraded off1 server. It will be installed in a container as we now use [proxmox](../proxmox.md)
+It's now time to move back MongoDB instance to the upgraded off1 server. It will be installed in a container as we now use [proxmox](/docs/Infra/virtualization/proxmox)
 
 ## Creating a container
 
-We followed usual procedure to [create a proxmox container](../proxmox.md#how-to-create-a-new-container):
+We followed usual procedure to [create a proxmox container](/docs/Infra/virtualization/proxmox#how-to-create-a-new-container):
 * of id 102
 * choosed a debian 10 (**important**: org version of mongodb 4.4 is not available in newly debian versions)
 * default storage on zfs-hdd (for system) 30Gb, noatime
@@ -26,7 +26,7 @@ We followed usual procedure to [create a proxmox container](../proxmox.md#how-to
 
 Before running the ctpostinstall script, I had to change buster in sources list to oldoldstable.
 
-I also [configured email](../mail.md#postfix-configuration) in the container.
+I also [configured email](/docs/Infra/services/mail#postfix-configuration) in the container.
 
 I also immediately created a off user for it to have id 1000.
 
