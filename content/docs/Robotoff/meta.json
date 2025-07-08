@@ -6,11 +6,7 @@
   "pages": [
     "index",
     "---Project Guide---",
-    "(docs)/Introduction",
-    "(docs)/How-to-guides",
-    "(docs)/Explanations",
-    "(docs)/Research",
-    "(docs)/References",
+    "...(docs)",
     "---API References---",
     "...(api)"
   ]
