@@ -198,29 +198,26 @@ We now have a convenient API to automatically extract nutrition from an image
 
 ## Add Nutri-Score disclaimers
 
-<Steps>
-  <Step title="A message if fibers are missing">
-    ```json title="Fiber Warning Message" msgctxt
-    "nutrition_grade_fr_fiber_warning" msgid "Warning: the amount of fiber is
-    not specified, their possible positive contribution to the grade could not
-    be taken into account." ```
-  </Step>
-  <Step title="A message if fruit/nuts are missing">
-    ```json title="Fruits/Vegetables/Nuts Warning" msgctxt
-    "nutrition_grade_fr_no_fruits_vegetables_nuts_warning" msgid "Warning: the
-    amount of fruits, vegetables and nuts is not specified, their possible
-    positive contribution to the grade could not be taken into account." ```
-  </Step>
-  <Step title="A message if fruits/nuts is an estimate from ingredients">
-    ```json title="Ingredients Estimate Warning" msgctxt
-    "nutrition_grade_fr_fruits_vegetables_nuts_estimate_warning" msgid "Warning:
-    the amount of fruits, vegetables and nuts is not specified on the label, it
-    was estimated from the list of ingredients: %d%" ```
-  </Step>
-  <Step title="A message if fruits/nuts is an estimate from category">
-    ```json title="Category Estimate Warning" msgctxt
-    "nutrition_grade_fr_fruits_vegetables_nuts_from_category_warning" msgid
-    "Warning: the amount of fruits, vegetables and nuts is not specified on the
-    label, it was estimated from the category (%s) of the product: %d%" ```
-  </Step>
-</Steps>
+```json title="Fiber Warning Message" msgctxt
+"nutrition_grade_fr_fiber_warning" msgid "Warning: the amount of fiber is
+not specified, their possible positive contribution to the grade could not
+be taken into account."
+```
+
+```json title="Fruits/Vegetables/Nuts Warning" msgctxt
+"nutrition_grade_fr_no_fruits_vegetables_nuts_warning" msgid "Warning: the
+amount of fruits, vegetables and nuts is not specified, their possible
+positive contribution to the grade could not be taken into account."
+```
+
+```json title="Ingredients Estimate Warning" msgctxt
+"nutrition_grade_fr_fruits_vegetables_nuts_estimate_warning" msgid "Warning:
+the amount of fruits, vegetables and nuts is not specified on the label, it
+was estimated from the list of ingredients: %d%"
+```
+
+```json title="Category Estimate Warning" msgctxt
+"nutrition_grade_fr_fruits_vegetables_nuts_from_category_warning" msgid
+"Warning: the amount of fruits, vegetables and nuts is not specified on the
+label, it was estimated from the category (%s) of the product: %d%"
+```
