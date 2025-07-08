@@ -3,14 +3,14 @@ title: "Search-a-licious Tutorial"
 description: "This tutorial guides you through using Search-a-licious to make your data searchable. Learn to set up your project, create a configuration file, import data, and build a search interface using the API and web components."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# Tutorial - Using Search-a-licious in Your Project
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 <Callout>
-So you have a dataset, or a project, with a collection of data you want to make searchable. Search-a-licious can help you have it done in a matter of few hours, while retaining your choices.
+  So you have a dataset, or a project, with a collection of data you want to
+  make searchable. Search-a-licious can help you have it done in a matter of few
+  hours, while retaining your choices.
 </Callout>
 
 In this tutorial, we will see how we can use search-a-licious to search Open Food Facts data.
@@ -40,33 +40,30 @@ At the top we have:
 
 ```yaml title="Basic Index Configuration"
 default_index: "off" # see 2
-indices:  # see 1
-  off:    # see 2
+indices: # see 1
+  off: # see 2
 ```
 
-<Callout type="info">
 **Multi-Dataset Support**
 
 1. Search-a-licious supports serving more than one dataset at once, each dataset has its own indice with its own definition. So we start with the "indices" keyword.
-
 2. We must give a name to our unique index. Let's call it `off` as Open Food Facts. We also indicate that this is the default index for the API.
-</Callout>
 
 ### Index Configuration
 
 Now comes important indications for the index:
 
 ```yaml title="Index Settings"
-...
+
+---
 indices:
   off:
-    index:  # see 1
-      id_field_name: code  # see 2
-      last_modified_field_name: last_modified_t  # see 2
-      name: openfoodfacts  # see 3
+    index: # see 1
+      id_field_name: code # see 2
+      last_modified_field_name: last_modified_t # see 2
+      name: openfoodfacts # see 3
 ```
 
-<Callout type="info">
 **Index Configuration Details**
 
 1. The index section marks settings that are specific to the index.
@@ -74,7 +71,6 @@ indices:
    - A field that contains a unique id for each item in the collection (the identifier). In Open Food Facts dataset, it's simply the barcode, stored in `code`
    - A field that contains the item modification date to enable incremental updates. In Open Food Facts dataset, it's `last_modified_t`
 3. We have to give a sensible name to the index, which should be unique for our ElasticSearch instance. So we simply put "openfoodfacts".
-</Callout>
 
 </Step>
 <Step title="Configure Searchable Fields">
@@ -133,9 +129,18 @@ indices:
 Taxonomies will be used in multiple ways by Search-a-licious:
 
 <Cards>
-<Card title="Synonyms Support" description="Add synonyms for taxonomized values on full text search (e.g., search for 'European Organic' to find 'EU Organic' label)" />
-<Card title="Autocomplete" description="Suggest values to search for in autocomplete (can also be used in edit forms)" />
-<Card title="Translation" description="Translate values from the results, for example as we display facets" />
+  <Card
+    title="Synonyms Support"
+    description="Add synonyms for taxonomized values on full text search (e.g., search for 'European Organic' to find 'EU Organic' label)"
+  />
+  <Card
+    title="Autocomplete"
+    description="Suggest values to search for in autocomplete (can also be used in edit forms)"
+  />
+  <Card
+    title="Translation"
+    description="Translate values from the results, for example as we display facets"
+  />
 </Cards>
 
 ```yaml title="Taxonomy Configuration"
@@ -154,13 +159,11 @@ indices:
         name: off_taxonomy
 ```
 
-<Callout type="info">
 **Taxonomy Configuration Details**
 
 1. We cited one taxonomy above: `label`, here we define how to get it
 2. We must also define which languages we want to use for this taxonomy. There is some trade-off between having a manageable size for the index and supporting more languages
 3. Finally we have to give a name to the Elasticsearch index that will contain the taxonomies
-</Callout>
 
 ### Supported Languages
 
@@ -173,19 +176,18 @@ indices:
     lang_separator: "_"
 ```
 
-<Callout type="info">
 **Language Configuration**
 
 1. The list of supported languages tells which languages will be retained in our index
 2. The "lang separator" helps us tell that the fields are suffixed by the language using this separator. In our case it means, for example, that `product_name_fr` contains the French version of `product_name`
-</Callout>
 
 <Callout type="success">
-We have our configuration ready. That was a bit tough, but this was the hardest part!
+  We have our configuration ready. That was a bit tough, but this was the
+  hardest part!
 </Callout>
 
 <Card title="Configuration Reference" href="./ref-config.md">
-Don't hesitate to read the Reference for Configuration file to learn more
+  Don't hesitate to read the Reference for Configuration file to learn more
 </Card>
 
 </Step>
@@ -203,7 +205,7 @@ CONFIG_PATH=`data/config/openfoodfacts.yml`
 ```
 
 <Card title="Settings Reference" href="./ref-settings.md">
-See the Reference for Settings to learn about other settings
+  See the Reference for Settings to learn about other settings
 </Card>
 
 </Step>
@@ -212,7 +214,7 @@ See the Reference for Settings to learn about other settings
 ### Getting the Data
 
 <Callout>
-Now that it's all done, we are ready to start to import the data.
+  Now that it's all done, we are ready to start to import the data.
 </Callout>
 
 First we start the Elasticsearch index, we will also start the ElasticVue service to be able to look at what happens:
@@ -222,7 +224,9 @@ docker compose up -d es01 es02 elasticvue
 ```
 
 <Callout type="info">
-There is an export of all the openfoodfacts data in JSONL available at https://static.openfoodfacts.org/data. But it's a very big file! For this tutorial we will prefer to use a sample of products.
+  There is an export of all the openfoodfacts data in JSONL available at
+  https://static.openfoodfacts.org/data. But it's a very big file! For this
+  tutorial we will prefer to use a sample of products.
 </Callout>
 
 Put this file in the data/ directory which is bind mounted in the container:
@@ -248,7 +252,7 @@ docker compose run --rm api python3 -m app import /opt/search/data/products.rand
 - The first part is simply to run a command using our docker container
 - The `python3 -m app import` part is to run the `import` command provided by our `app` module
 - We use the `--skip-updates` flag because we don't have a redis stream to connect to, to look for updates
-</Callout>
+  </Callout>
 
 </Step>
 <Step title="Import Taxonomies">
@@ -262,10 +266,12 @@ docker compose run --rm api python3 -m app import-taxonomies
 </Step>
 </Steps>
 
-<Card title="Detailed Import Guide" href="./how-to-update-index.md#first-import">
-You can read more about this process in the How to update index documentation
+<Card
+  title="Detailed Import Guide"
+  href="./how-to-update-index.md#first-import"
+>
+  You can read more about this process in the How to update index documentation
 </Card>
-
 
 ### Inspecting Elasticsearch
 
@@ -280,8 +286,9 @@ Open http://127.0.0.1:8080 in your browser.
 <Step title="Connect to Cluster">
 
 If it's the first time, click "ADD ELASTICSEARCH CLUSTER" and use:
+
 - **Authorization**: No authorization
-- **Cluster name**: docker-cluster  
+- **Cluster name**: docker-cluster
 - **URI**: http://localhost:9200
 
 </Step>
@@ -290,6 +297,7 @@ If it's the first time, click "ADD ELASTICSEARCH CLUSTER" and use:
 Click on the button which says there are 3 indices.
 
 You shall see two indices:
+
 - One named `openfoodfacts-<date of initial import>` with alias `openfoodfacts`
 - One named `off_taxonomy-<date of initial import>` with alias `off_taxonomy`
 
@@ -301,7 +309,9 @@ As you already guessed, the first contains our food products, and the second our
 ![Our two indices in ElasticVue](../assets/tutorial-elasticvue-indices-after-import.png "Our two indices in ElasticVue")
 
 <Callout type="info">
-The "Lucene docs" column gives you an idea of the number of entries you have in each index. You can click on an index to view its content and have a feeling of what we just imported.
+  The "Lucene docs" column gives you an idea of the number of entries you have
+  in each index. You can click on an index to view its content and have a
+  feeling of what we just imported.
 </Callout>
 
 </Step>
@@ -310,11 +320,13 @@ The "Lucene docs" column gives you an idea of the number of entries you have in 
 ### Starting the Service
 
 <Callout>
-We don't have an interface to search at the moment, but we can use the API.
+  We don't have an interface to search at the moment, but we can use the API.
 </Callout>
 
 <Callout type="info">
-It would be perfectly ok to only deploy the interface, maybe because you will call it from your own application either to provide search to your users, or to implement a very specific feature which is based upon a search request.
+  It would be perfectly ok to only deploy the interface, maybe because you will
+  call it from your own application either to provide search to your users, or
+  to implement a very specific feature which is based upon a search request.
 </Callout>
 
 Let's start our search-a-licious service:
@@ -331,6 +343,7 @@ We start the `api` container, which is the search-a-licious backend, and the fro
 Now let's open http://127.0.0.1:8000/docs
 
 You can see the documentation of the various API offered by search-a-licious service.
+
 </Callout>
 
 Let's concentrate on the **GET** `/search` service. We can test it using the **Try it out** button.
@@ -342,9 +355,18 @@ We can try a simple search of **fair trade** in the q parameter, we get 17 resul
 Interesting fields in the JSON we receive include:
 
 <Cards>
-<Card title="hits" description="The detail of each result. In each result we retrieve full information about an item, that's a lot of data. We might optimize this using the fields query parameter." />
-<Card title="page" description="The current returned page, page_count the number of pages, and page_size the number of results per page." />
-<Card title="count" description="The total number of items returned. is_count_exact, when false indicates that for performance reasons, we did not compute the total number of results, but there are at least count results." />
+  <Card
+    title="hits"
+    description="The detail of each result. In each result we retrieve full information about an item, that's a lot of data. We might optimize this using the fields query parameter."
+  />
+  <Card
+    title="page"
+    description="The current returned page, page_count the number of pages, and page_size the number of results per page."
+  />
+  <Card
+    title="count"
+    description="The total number of items returned. is_count_exact, when false indicates that for performance reasons, we did not compute the total number of results, but there are at least count results."
+  />
 </Cards>
 
 ### API Features
@@ -355,7 +377,8 @@ Interesting fields in the JSON we receive include:
 As you get the results you might want them according to a particular order. Say we search for **fair trade** and we want the results to be sorted by the nutriscore grade.
 
 We simply repeat the above query with:
-- `q` = `fair trade` 
+
+- `q` = `fair trade`
 - `sort_by` = `nutriscore_grade`
 
 </Step>
@@ -375,7 +398,8 @@ For this we will use our query field in a more advanced way.
 We can use this value for the "q" field: `labels_tags:"en:fair-trade"`
 
 <Callout type="info">
-Using this we specify that we search for the key "en:fair-trade" in the value.^[using-quotes]
+  Using this we specify that we search for the key "en:fair-trade" in the
+  value.^[using-quotes]
 </Callout>
 
 #### Advanced Filter Examples
@@ -393,7 +417,7 @@ cocoa labels_tags:"en:fair-trade"
 ```
 
 <Card title="Query Language Guide" href="./explain-query-language.md">
-You can find more about the search query syntax in Explain Query Language
+  You can find more about the search query syntax in Explain Query Language
 </Card>
 
 </Step>
@@ -402,7 +426,8 @@ You can find more about the search query syntax in Explain Query Language
 ### Working with Facets
 
 <Callout type="info">
-Remember in our configuration we added a `bucket_agg: true` on some fields. This will enable us to get facets on those fields.
+  Remember in our configuration we added a `bucket_agg: true` on some fields.
+  This will enable us to get facets on those fields.
 </Callout>
 
 Let's go back to our API, and use `cocoa labels_tags:"en:fair-trade"` in the request, and ask for facet `nutriscore_grade`. We get a result with same fields as for previous searches, but we have a new `facets` field.
@@ -416,7 +441,7 @@ It returns something like:
     "items": [
       {
         "key": "e",
-        "name": "e", 
+        "name": "e",
         "count": 3,
         "selected": false
       },
@@ -433,15 +458,20 @@ It returns something like:
 ```
 
 <Callout type="info">
-As you can see we have the "nutriscore_grade" facet with two values: "e" and "d", and we got the document count for each value.
+  As you can see we have the "nutriscore_grade" facet with two values: "e" and
+  "d", and we got the document count for each value.
 </Callout>
 
 <Callout>
-The `selected` field was deduced from an analysis of the request. If we were to ask for the `labels_tags` facets with the same request, the `en:fair-trade` label would be selected, as it is an active filter (note that it only works if you write the query in a specific way).
+  The `selected` field was deduced from an analysis of the request. If we were
+  to ask for the `labels_tags` facets with the same request, the `en:fair-trade`
+  label would be selected, as it is an active filter (note that it only works if
+  you write the query in a specific way).
 </Callout>
 
 <Callout type="info">
-You can try and ask both facets by using `nutriscore_grade,labels_tags` as the facets parameter.
+  You can try and ask both facets by using `nutriscore_grade,labels_tags` as the
+  facets parameter.
 </Callout>
 
 </Step>
@@ -453,11 +483,13 @@ You can try and ask both facets by using `nutriscore_grade,labels_tags` as the f
 <Step title="Creating a Search Page using Web Components">
 
 <Callout>
-Now that we have played around with the API, we might want to create a search page to let users do their own search in a visual way.
+  Now that we have played around with the API, we might want to create a search
+  page to let users do their own search in a visual way.
 </Callout>
 
 <Callout type="success">
-That's where Search-a-licious also got you covered. Search-a-licious provides web components that let you build your search page easily.
+  That's where Search-a-licious also got you covered. Search-a-licious provides
+  web components that let you build your search page easily.
 </Callout>
 
 ### Building a Search Interface
@@ -465,7 +497,8 @@ That's where Search-a-licious also got you covered. Search-a-licious provides we
 Let's try it and create a static HTML page. We won't care much about the "look and feel" for now, for sake of simplicity.
 
 <Callout type="info">
-A simple way to serve the page is to add a file in the `frontend/public` folder^[devmode]
+  A simple way to serve the page is to add a file in the `frontend/public`
+  folder^[devmode]
 </Callout>
 
 Let's create a `tutorial.html` file with a very basic initial content:
@@ -473,45 +506,51 @@ Let's create a `tutorial.html` file with a very basic initial content:
 ```html title="tutorial.html - Complete Search Interface"
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Search-a-licious tutorial</title>
     <!-- this makes the various searchalicious components available -->
     <script type="module" src="./search-a-licious.bundled.js"></script>
-</head>
-<body>
-  <div id="search-bar">
-  <!-- the search bar where you can add text -->
-  <searchalicious-bar></searchalicious-bar>
-  <!-- the button to launch the search -->
-  <searchalicious-button></searchalicious-button>
-  <!-- sorting -->
-  <searchalicious-sort auto-refresh>
-    <searchalicious-sort-field field="nutriscore_grade">Best nutriscore</searchalicious-sort-field>
-    <searchalicious-sort-field field="-nutriscore_grade">Worst nutriscore</searchalicious-sort-field>
-  </searchalicious-sort>
-  </div>
-  <div id="results">
-  <!-- display of results -->
-  <searchalicious-results>
-    <!-- this define a template for results. We can use ${} expression with a result object containing result fields -->
-    <template slot="result">
-      <li>
-        <a href="https://world.openfoodfacts.org/${result.code}">${result.product_name}</a>
-        − Nutri-Score: ${result.nutriscore_grade}
-      </li>
-    </template>
-  </searchalicious-results>
-  <!-- a small display of the number of results -->
-  <searchalicious-count></searchalicious-count>
-  <!-- pagination -->
-  <searchalicious-pages></searchalicious-pages>
-  </div>
-</body>
+  </head>
+  <body>
+    <div id="search-bar">
+      <!-- the search bar where you can add text -->
+      <searchalicious-bar></searchalicious-bar>
+      <!-- the button to launch the search -->
+      <searchalicious-button></searchalicious-button>
+      <!-- sorting -->
+      <searchalicious-sort auto-refresh>
+        <searchalicious-sort-field field="nutriscore_grade"
+          >Best nutriscore</searchalicious-sort-field
+        >
+        <searchalicious-sort-field field="-nutriscore_grade"
+          >Worst nutriscore</searchalicious-sort-field
+        >
+      </searchalicious-sort>
+    </div>
+    <div id="results">
+      <!-- display of results -->
+      <searchalicious-results>
+        <!-- this define a template for results. We can use ${} expression with a result object containing result fields -->
+        <template slot="result">
+          <li>
+            <a href="https://world.openfoodfacts.org/${result.code}"
+              >${result.product_name}</a
+            >
+            − Nutri-Score: ${result.nutriscore_grade}
+          </li>
+        </template>
+      </searchalicious-results>
+      <!-- a small display of the number of results -->
+      <searchalicious-count></searchalicious-count>
+      <!-- pagination -->
+      <searchalicious-pages></searchalicious-pages>
+    </div>
+  </body>
 </html>
 ```
 
 <Callout>
-As you can see this is a big file but not so big for a search page.
+  As you can see this is a big file but not so big for a search page.
 </Callout>
 
 ### Understanding the Components
@@ -562,7 +601,7 @@ Let's try to use it!
 We can go to `http://localhost:8000/static/tutorial.html` and see our interface.
 
 <Callout type="info">
-**Screen Capture Placeholder** - Interface will be displayed here
+  **Screen Capture Placeholder** - Interface will be displayed here
 </Callout>
 
 </Step>
@@ -571,23 +610,34 @@ We can go to `http://localhost:8000/static/tutorial.html` and see our interface.
 We can type `fair trade` in the search bar, hit the search button and see results displayed.
 
 <Callout type="info">
-**Screen Capture Placeholder** - Search results will be displayed here
+  **Screen Capture Placeholder** - Search results will be displayed here
 </Callout>
 
 </Step>
 <Step title="Advanced Features">
 
 <Cards>
-<Card title="Navigation" description="Use the pages navigation to browse all results" />
-<Card title="Advanced Search" description="Try a more advanced search like cocoa labels_tags:&quot;en:fair-trade&quot;" />
-<Card title="Sorting" description="Test that sorting by best or worst nutriscore is working just fine!" />
+  <Card
+    title="Navigation"
+    description="Use the pages navigation to browse all results"
+  />
+  <Card
+    title="Advanced Search"
+    description='Try a more advanced search like cocoa labels_tags:"en:fair-trade"'
+  />
+  <Card
+    title="Sorting"
+    description="Test that sorting by best or worst nutriscore is working just fine!"
+  />
 </Cards>
 
 </Step>
 <Step title="Developer Tools">
 
 <Callout type="info">
-If you are curious, you can open the dev toolbar (F12), go in the network tab, select to only view XHR requests (requests sent by JavaScript), and see how each search is using the search API.
+  If you are curious, you can open the dev toolbar (F12), go in the network tab,
+  select to only view XHR requests (requests sent by JavaScript), and see how
+  each search is using the search API.
 </Callout>
 
 </Step>
