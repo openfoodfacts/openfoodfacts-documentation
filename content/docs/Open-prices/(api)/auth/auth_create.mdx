@@ -36,14 +36,8 @@ A **token** is returned. If the **set_cookie** parameter is set to 1,
 the token is also set as a cookie named "session" in the response.
 
 To authenticate, you can either:
-
 - use the **Authorization** header with the **Bearer** scheme,
-  e.g.: "Authorization: bearer token"
+e.g.: "Authorization: bearer token"
 - use the **session** cookie, e.g.: "Cookie: session=token"
 
-<APIPage
-  document={"specfiles-json/open-prices-openapi.json"}
-  operations={[{ path: "/api/v1/auth", method: "post" }]}
-  webhooks={[]}
-  hasHead={false}
-/>
+<APIPage document={"specfiles-json/open-prices-openapi.json"} operations={[{"path":"/api/v1/auth","method":"post"}]} webhooks={[]} hasHead={false} />
