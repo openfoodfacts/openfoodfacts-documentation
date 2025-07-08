@@ -3,22 +3,24 @@ title: "Stunnel Secure Connections"
 description: "This document explains Stunnel, a tool for securing TCP connections between distant servers using OpenSSL encryption. It covers its installation, client-server configurations, PSK security, and systemd service setup, including important considerations for public exposure and PID file handling."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Stunnel Secure Connections
 
 Stunnel enables secure TCP connections between distant servers using OpenSSL encryption.
 
 <Callout type="info">
-Stunnel is installed on the reverse proxy of off2 and on a specific VM (113) on ovh1. For installation details, see [the install report](./reports/2024-01-04-setting-up-stunnel.md).
+  Stunnel is installed on the reverse proxy of off2 and on a specific VM (113)
+  on ovh1. For installation details, see [the install
+  report](/docs/Infra/reports/2024/2024-01-04-setting-up-stunnel).
 </Callout>
 
 ## Architecture Overview
 
-``` mermaid title="Architecture"
+```mermaid title="Architecture"
 sequenceDiagram
     box Private Network 1
       Participant Cli as Client
@@ -40,26 +42,23 @@ sequenceDiagram
 ## Client vs Server Configuration
 
 <Callout type="warning">
-Understanding the client/server distinction is critical for proper security configuration.
+  Understanding the client/server distinction is critical for proper security
+  configuration.
 </Callout>
 
 <Tabs>
   <Tab value="client" label="Client Side">
-    ### Stunnel Client
-    
-    - **Role**: Where connections are initiated (*Stunnel Server 1* in diagram)
-    - **Configuration**: `client=yes`
-    - **Security**: Must **never** be exposed on public IP
-    - **Location**: Internal container with private IP only
+    ### Stunnel Client - **Role**: Where connections are initiated (*Stunnel
+    Server 1* in diagram) - **Configuration**: `client=yes` - **Security**: Must
+    **never** be exposed on public IP - **Location**: Internal container with
+    private IP only
   </Tab>
-  
+
   <Tab value="server" label="Server Side">
-    ### Stunnel Server
-    
-    - **Role**: Accepts connections and forwards to target service
-    - **Configuration**: `client=no` (server side)
-    - **Security**: May be exposed publicly through reverse proxy
-    - **Location**: Reverse proxy configuration
+    ### Stunnel Server - **Role**: Accepts connections and forwards to target
+    service - **Configuration**: `client=no` (server side) - **Security**: May
+    be exposed publicly through reverse proxy - **Location**: Reverse proxy
+    configuration
   </Tab>
 </Tabs>
 
@@ -78,7 +77,8 @@ Understanding the client/server distinction is critical for proper security conf
 </Cards>
 
 <Callout type="error">
-**CRITICAL**: Always double-check to only use `client=yes` on the internal container (private network), never on the proxy exposed to public internet.
+  **CRITICAL**: Always double-check to only use `client=yes` on the internal
+  container (private network), never on the proxy exposed to public internet.
 </Callout>
 
 ## Configuration
@@ -87,143 +87,111 @@ Understanding the client/server distinction is critical for proper security conf
 
 <Steps>
   <Step>
-    **Configuration File**
-    
-    Configuration is in `/etc/stunnel/off.conf` for the `off` instance.
+    **Configuration File** Configuration is in `/etc/stunnel/off.conf` for the
+    `off` instance.
   </Step>
-  
+
   <Step>
-    **Service Entries**
-    
-    Multiple service entries can be added to serve different services.
+    **Service Entries** Multiple service entries can be added to serve different
+    services.
   </Step>
-  
+
   <Step>
-    **Client/Server Setting**
-    
-    - Client side: `client=yes`
-    - Server side: `client=no`
+    **Client/Server Setting** - Client side: `client=yes` - Server side:
+    `client=no`
   </Step>
 </Steps>
 
 ### PSK Security
 
 <Callout type="info">
-We use PSK (Private Shared Key) for security - easier and more performant than certificate-based authentication.
+  We use PSK (Private Shared Key) for security - easier and more performant than
+  certificate-based authentication.
 </Callout>
 
 <Steps>
   <Step>
-    **PSK File Location**
-    
-    PSK files must be in `/etc/stunnel/psk/` directory.
+    **PSK File Location** PSK files must be in `/etc/stunnel/psk/` directory.
   </Step>
-  
+
   <Step>
-    **Security Requirements**
-    
-    ```bash title="Secure PSK Files"
-    chmod -R go-rwx /etc/stunnel/psk/
-    ```
-    
+    **Security Requirements** ```bash title="Secure PSK Files" chmod -R go-rwx
+    /etc/stunnel/psk/ ```
     <Callout type="warning">
-    PSK files must **never** be committed to Git repository. Keep them on servers only.
+      PSK files must **never** be committed to Git repository. Keep them on
+      servers only.
     </Callout>
   </Step>
-  
+
+  <Step>**Generate PSK** ```bash title="Generate PSK" pwgen 32 ```</Step>
+
   <Step>
-    **Generate PSK**
-    
-    ```bash title="Generate PSK"
-    pwgen 32
-    ```
-  </Step>
-  
-  <Step>
-    **Unique Usernames**
-    
-    Keep each username unique for each server **and** each service to avoid conflicts.
+    **Unique Usernames** Keep each username unique for each server **and** each
+    service to avoid conflicts.
   </Step>
 </Steps>
 
 ## Configuration Testing
 
 <Callout type="error">
-**BEWARE**: Stunnel is used for other services! Don't restart the service without testing configuration first.
+  **BEWARE**: Stunnel is used for other services! Don't restart the service
+  without testing configuration first.
 </Callout>
 
 <Steps>
   <Step>
-    **Test Configuration**
-    
-    Test by starting another stunnel instance:
-    
-    ```bash title="Test Configuration"
-    stunnel /etc/stunnel/off.conf
-    ```
-    
+    **Test Configuration** Test by starting another stunnel instance: ```bash
+    title="Test Configuration" stunnel /etc/stunnel/off.conf ```
     <Callout type="info">
-    This will fail due to port conflicts, but you can verify if configuration parses correctly.
+      This will fail due to port conflicts, but you can verify if configuration
+      parses correctly.
     </Callout>
   </Step>
-  
+
   <Step>
-    **Restart Service**
-    
-    When configuration is verified:
-    
-    ```bash title="Restart Stunnel Service"
-    systemctl restart stunnel@off
-    ```
+    **Restart Service** When configuration is verified: ```bash title="Restart
+    Stunnel Service" systemctl restart stunnel@off ```
   </Step>
 </Steps>
 
 ## Systemd Service
 
 <Callout type="info">
-The `stunnel@off` service corresponds to `/etc/stunnel/off.conf` configuration.
+  The `stunnel@off` service corresponds to `/etc/stunnel/off.conf`
+  configuration.
 </Callout>
 
 ### Service Customizations
 
 <Tabs>
   <Tab value="permissions" label="Permissions">
-    ### PID File Handling
-    
-    We had to override the systemd service for PID file management:
-    
+    ### PID File Handling We had to override the systemd service for PID file
+    management:
     <Steps>
       <Step>
-        **Root Launch**
-        
-        Stunnel launches as `root` to get privileges, then changes user.
+        **Root Launch** Stunnel launches as `root` to get privileges, then
+        changes user.
       </Step>
-      
+
       <Step>
-        **PID File Creation**
-        
-        PID file is created with the running user.
+        **PID File Creation** PID file is created with the running user.
       </Step>
-      
+
       <Step>
-        **Group Permissions**
-        
-        Use group `stunnel4` in service definition and add group write permission to runtime directory.
+        **Group Permissions** Use group `stunnel4` in service definition and add
+        group write permission to runtime directory.
       </Step>
     </Steps>
   </Tab>
-  
+
   <Tab value="process" label="Process Management">
     ### Foreground Execution
-    
     <Callout type="info">
-    Stunnel is launched in foreground mode to let systemd handle process management properly.
+      Stunnel is launched in foreground mode to let systemd handle process
+      management properly.
     </Callout>
-    
-    Benefits:
-    - Better process supervision
-    - Proper logging integration
-    - Cleaner service lifecycle management
+    Benefits: - Better process supervision - Proper logging integration -
+    Cleaner service lifecycle management
   </Tab>
 </Tabs>
 
@@ -245,26 +213,18 @@ The `stunnel@off` service corresponds to `/etc/stunnel/off.conf` configuration.
 
 <Steps>
   <Step>
-    **Network Isolation**
-    
-    - Client side: Private networks only
-    - Server side: Controlled public exposure through reverse proxy
+    **Network Isolation** - Client side: Private networks only - Server side:
+    Controlled public exposure through reverse proxy
   </Step>
-  
+
   <Step>
-    **PSK Management**
-    
-    - Generate strong PSKs (32 characters)
-    - Unique usernames per server and service
-    - Secure file permissions (go-rwx)
-    - Never commit PSKs to version control
+    **PSK Management** - Generate strong PSKs (32 characters) - Unique usernames
+    per server and service - Secure file permissions (go-rwx) - Never commit
+    PSKs to version control
   </Step>
-  
+
   <Step>
-    **Configuration Verification**
-    
-    - Test configurations before deployment
-    - Verify client/server settings
-    - Check port bindings and conflicts
+    **Configuration Verification** - Test configurations before deployment -
+    Verify client/server settings - Check port bindings and conflicts
   </Step>
 </Steps>

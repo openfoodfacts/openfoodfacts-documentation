@@ -25,7 +25,7 @@ This document outlines the complete production architecture of Open Food Facts, 
       <Card
         title="off1 & off2"
         description="Main web servers hosted at Free Datacenter"
-        href="./free-datacenter.md"
+        href="/docs/Infra/hosting/free-datacenter"
       />
       <Card
         title="OVH Servers"
@@ -47,7 +47,7 @@ This document outlines the complete production architecture of Open Food Facts, 
       title="Virtualization Strategy"
       description="Open-source virtualization for container management"
     >
-      We use the [Proxmox open-source virtualization platform](./proxmox.md) for
+      We use the [Proxmox open-source virtualization platform](/docs/Infra/virtualization/proxmox) for
       managing LXC containers and virtual machines.
     </Card>
   </Tab>
@@ -103,8 +103,8 @@ We maintain server configurations in the [infrastructure git repository](https:/
 
 **Related Documentation:**
 
-- [Explanation on server configuration with git](./explain-server-config-in-git.md)
-- [How to have server config in git](./how-to-have-server-config-in-git.md)
+- [Explanation on server configuration with git](/docs/Infra/configuration/explain-server-config-in-git)
+- [How to have server config in git](/docs/Infra/how/how-to-have-server-config-in-git)
 
 </Card>
 
@@ -114,7 +114,7 @@ We maintain server configurations in the [infrastructure git repository](https:/
 
 ### Proxy Structure
 
-We implement a [NGINX reverse proxy](./nginx-reverse-proxy.md) container that may cascade to installation-specific NGINX instances, which then cascade to Apache for some requests.
+We implement a [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy) container that may cascade to installation-specific NGINX instances, which then cascade to Apache for some requests.
 
 ### Security Features
 
@@ -137,7 +137,7 @@ We implement a [NGINX reverse proxy](./nginx-reverse-proxy.md) container that ma
   directly on the host (off2 or ovh3).
 </Callout>
 
-**Related:** [How to use fail2ban to ban bots](./how-to-fail2ban-ban-bots.md)
+**Related:** [How to use fail2ban to ban bots](/docs/Infra/how/how-to-fail2ban-ban-bots)
 
 </Card>
 
@@ -305,7 +305,7 @@ We implement a [NGINX reverse proxy](./nginx-reverse-proxy.md) container that ma
 
 Datasets are mounted using Proxmox Mount Point (`mp<number>`) entries in container configuration.
 
-**Reference:** [Bind mounting ZFS Datasets in Proxmox](./proxmox.md#bind-mounting-zfs-datasets)
+**Reference:** [Bind mounting ZFS Datasets in Proxmox](/docs/Infra/virtualization/proxmox#bind-mounting-zfs-datasets)
 
 </Card>
 
@@ -403,12 +403,12 @@ flowchart TD
   <Card
     title="Sanoid"
     description="Snapshot management and retention policies"
-    href="./sanoid.md"
+    href="/docs/Infra/storage/sanoid"
   />
   <Card
     title="Syncoid"
     description="Snapshot synchronization between servers"
-    href="./sanoid.md#syncoid-service-and-configuration"
+    href="/docs/Infra/storage/sanoid#syncoid-service-and-configuration"
   />
   <Card
     title="Staging Clones"
@@ -494,31 +494,31 @@ Several areas need refactoring and improvement:
   <Card
     title="Proxmox Setup"
     description="Virtualization platform configuration"
-    href="./proxmox.md"
+    href="/docs/Infra/virtualization/proxmox"
   />
   <Card
     title="NGINX Proxy"
     description="Reverse proxy configuration and management"
-    href="./nginx-reverse-proxy.md"
+    href="/docs/Infra/networking/nginx-reverse-proxy"
   />
   <Card
     title="Free Datacenter"
     description="Primary hosting infrastructure details"
-    href="./free-datacenter.md"
+    href="/docs/Infra/hosting/free-datacenter"
   />
   <Card
     title="Sanoid/Syncoid"
     description="ZFS snapshot and replication management"
-    href="./sanoid.md"
+    href="/docs/Infra/storage/sanoid"
   />
   <Card
     title="Server Config Git"
     description="Version control for server configurations"
-    href="./explain-server-config-in-git.md"
+    href="/docs/Infra/configuration/explain-server-config-in-git"
   />
   <Card
     title="Fail2ban Setup"
     description="Bot protection and traffic filtering"
-    href="./how-to-fail2ban-ban-bots.md"
+    href="/docs/Infra/how/how-to-fail2ban-ban-bots"
   />
 </Cards>

@@ -3,31 +3,33 @@ title: "Off2 Server Logs"
 description: "Timeline of incidents and interventions on off2 server including SSL certificate issues, network connectivity problems, and reverse proxy configurations with detailed troubleshooting steps."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Off2 Server Logs
 
 <Callout title="Incident Tracking">
-Report here the timeline of incidents and interventions on off2 server. Keep things short or write a report.
+  Report here the timeline of incidents and interventions on off2 server. Keep
+  things short or write a report.
 </Callout>
 
 ## 2023-01-19
 
 <Card
   title="Certbot Failure"
-  href="./reports/2024-01-19-certbot-failure-off2-proxy.md"
+  href="/docs/Infra/reports/2024/2024-01-19-certbot-failure-off2-proxy"
   description="See detailed report: 2024-01-19 Certbot failure on off2 reverse proxy"
 />
 
 ## 2023-01-02
 
 <Callout type="warn" title="Gateway Error">
-openpetfoodfacts.org answers with a 502 bad gateway.
+  openpetfoodfacts.org answers with a 502 bad gateway.
 </Callout>
 
 **Troubleshooting:**
+
 - `curl --header "Host: world.openpetfoodfacts.org" http://10.1.0.110:80/` does not work from proxy
 - Same command works from off2
 - **Solution**: The problem solved when launching `ping 10.1.0.101` from opff (110)
@@ -36,14 +38,17 @@ openpetfoodfacts.org answers with a 502 bad gateway.
 ## 2023-10-23 (VM 101) openpetfoodfacts SSL certificate expired
 
 <Callout type="warn" title="SSL Certificate Issue">
-The website https://fr.openpetfoodfacts.org uses a certificate expired on 2023-10-20 and issued on July 22nd.
+  The website https://fr.openpetfoodfacts.org uses a certificate expired on
+  2023-10-20 and issued on July 22nd.
 </Callout>
 
 **Investigation:**
+
 - `certbot renew` says nothing is to be renewed
 - Checked `/etc/letsencrypt/live/openpetfoodfacts.org/` and `/etc/letsencrypt/archive/openpetfoodfacts.org/` and configuration - all seems ok
 
 **Resolution:**
+
 ```bash title="SSL Certificate Fix"
 systemctl reload nginx
 ```
@@ -52,7 +57,7 @@ systemctl reload nginx
 
 <Card
   title="Network Connectivity Issue"
-  href="./reports/2023-05-off2-110-unreachable.md"
+  href="/docs/Infra/reports/2023/2023-05-off2-110-unreachable"
   description="See report: 2023-05-off2-110-unreachable.md"
 />
 
@@ -60,7 +65,7 @@ systemctl reload nginx
 
 <Card
   title="Network Connectivity Issue"
-  href="./reports/2023-05-off2-110-unreachable.md"
+  href="/docs/Infra/reports/2023/2023-05-off2-110-unreachable"
   description="See report: 2023-05-off2-110-unreachable.md"
 />
 
@@ -68,6 +73,6 @@ systemctl reload nginx
 
 <Card
   title="Network Connectivity Issue"
-  href="./reports/2023-05-off2-110-unreachable.md"
+  href="/docs/Infra/reports/2023/2023-05-off2-110-unreachable"
   description="See report: 2023-05-off2-110-unreachable.md"
 />

@@ -6,9 +6,8 @@ mail: ""
 date: "2023-06-07"
 ---
 
-We will follow closely what we did for [opff reinstall on off2](./2023-03-14-off2-opff-reinstall.md).
+We will follow closely what we did for [opff reinstall on off2](/docs/Infra/reports/2023/2023-03-14-off2-opff-reinstall).
 Refer to it if you need more explanation on a step.
-
 
 ## Putting data in zfs datasets
 
@@ -39,7 +38,6 @@ We edit sanoid.conf to put our new datasets with `use_template=prod_data`.
 
 We can launch the service immediately if we want: `systemctl start sanoid.service`
 
-
 ### migrating root datasets on ovh3
 
 If we want to synchronize opf and obf root dataset, they have to be created by syncing from off2.
@@ -61,12 +59,14 @@ rpool/opf/products  4.20G  23.9T     1.12G  /rpool/opf/products
 as expected, only products have to be moved.
 
 #### create new target datasets
+
 On off2:
 
 ```bash
 sudo syncoid --no-sync-snap zfs-hdd/opf  root@ovh3.openfoodfacts.org:rpool/opf-new
 sudo syncoid --no-sync-snap zfs-hdd/obf  root@ovh3.openfoodfacts.org:rpool/obf-new
 ```
+
 it's very fast.
 
 #### move products to new dataset and swap datasets
@@ -94,15 +94,13 @@ We can now sync them regularly by editing `/etc/sanoid/syncoid-args.conf`:
 
 I also added it to `sanoid.conf` ovh3, but using synced template.
 
-
 ### Products
 
-They already are synced (cf. [opff reinstall on off2](./2023-03-14-off2-opff-reinstall.md#products-for-all-flavors))
+They already are synced (cf. [opff reinstall on off2](/docs/Infra/reports/2023/2023-03-14-off2-opff-reinstall#products-for-all-flavors))
 
 ### Users
 
 We have nfs mount of the users folder of off1, and will use it
-
 
 ### Products images
 
@@ -114,8 +112,8 @@ On off2 (in a screen), as root:
 time rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/html/images/products  /zfs-hdd/obf/images && \
 time rsync --info=progress2 -a -x 10.0.0.1:/srv/opf/html/images/products  /zfs-hdd/opf/images
 ```
-this took 80 and 30 minutes.
 
+this took 80 and 30 minutes.
 
 Then sync to ovh3:
 
@@ -127,13 +125,13 @@ time syncoid --no-sync-snap zfs-hdd/opf/images root@ovh3.openfoodfacts.org:rpool
 After first sync (which took took 31 and 38 min),
 
 I added it to /etc/syncoid-args.conf
+
 ```bash
 --no-sync-snap zfs-hdd/obf/images root@ovh3.openfoodfacts.org:rpool/obf/images
 --no-sync-snap zfs-hdd/opf/images root@ovh3.openfoodfacts.org:rpool/opf/images
 ```
 
 I also added it to `sanoid.conf` ovh3, but using synced template.
-
 
 ### Other data
 
@@ -150,9 +148,11 @@ time rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/{deleted.images,data} /zfs-h
 time rsync --info=progress2 -a -x 10.0.0.1:/srv/opf/html/data/ /zfs-hdd/opf/html_data
 time rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/html/data/ /zfs-hdd/obf/html_data
 ```
+
 It took less than 3 min.
 
 Then start the sync for cache and html_data:
+
 ```bash
 for target in {opf,obf}/{cache,html_data}; do time syncoid --no-sync-snap zfs-hdd/$target root@ovh3.openfoodfacts.org:rpool/$target; done
 ```
@@ -160,7 +160,6 @@ for target in {opf,obf}/{cache,html_data}; do time syncoid --no-sync-snap zfs-hd
 Add them to `/etc/sanoid/syncoid-args.conf`
 
 And on ovh3 add them to `sanoid.conf` with `synced_data` template
-
 
 ## Creating Containers
 
@@ -182,6 +181,7 @@ sudo apt install -y apache2 apt-utils g++ gcc less make gettext wget vim
 ### Geoip with updates
 
 Installed geoip with updates, and copied `/etc/GeoIP.conf` from opff:
+
 ```bash
 sudo apt install geoipupdate
 vim /etc/GeoIP.conf
@@ -190,6 +190,7 @@ sudo chmod o-rwx /etc/GeoIP.conf
 ```
 
 Test it:
+
 ```bash
 sudo systemctl start geoipupdate.service
 sudo systemctl status geoipupdate.service
@@ -227,7 +228,8 @@ But as opff is already in prod, we don't change it now
 On off2, editing /etc/pve/lxc/11`{1,2}`.conf
 
 So for obf:
-```ini 
+
+```ini
 mp0: /zfs-hdd/obf,mp=/mnt/obf
 mp1: /zfs-hdd/obf/products/,mp=/mnt/obf/products
 mp2: /mnt/off1/off-users,mp=/mnt/obf/users
@@ -253,8 +255,8 @@ lxc.idmap: g 1011 101011 64525
 pct reboot 111
 ```
 
-
 So for opf:
+
 ```ini
 mp0: /zfs-hdd/opf,mp=/mnt/opf
 mp1: /zfs-hdd/opf/products/,mp=/mnt/opf/products
@@ -281,15 +283,18 @@ lxc.idmap: g 1011 101011 64525
 pct reboot 112
 ```
 
-**Warning**: after changing lxc idmap, the alex user which I already created, now as an id which is not mapped correctly. More over it was a mistake to create it immediatly as it have id 1000, which should be reserved to *off* user. This makes it impossible to log with ssh as .ssh/authorized_keys is not readable !
+**Warning**: after changing lxc idmap, the alex user which I already created, now as an id which is not mapped correctly. More over it was a mistake to create it immediatly as it have id 1000, which should be reserved to _off_ user. This makes it impossible to log with ssh as .ssh/authorized_keys is not readable !
 
 To remedy that, on obf and opf, using pct enter 111/2, we will also create off user:
+
 ```bash
 usermod -u 1001 alex
 groupmod -g 1001 alex
 adduser --uid 1000 off
 ```
+
 And then from off2, we will change ownership on the mounted ZFS dataset.
+
 ```bash
 sudo chown 1001:1001 -R /zfs-hdd/pve/subvol-11{1,2}-disk-0/home/alex
 ```
@@ -298,10 +303,12 @@ sudo chown 1001:1001 -R /zfs-hdd/pve/subvol-11{1,2}-disk-0/home/alex
 
 I add a problem with ssh connection being very long.
 Looking at /var/log/syslog why logging in, I saw:
+
 ```log
 systemd-logind.service: Failed to set up mount namespacing: /run/systemd/unit-root/proc: Permission denied
 Jun 13 13:35:19 obf systemd[734]: systemd-logind.service: Failed at step NAMESPACE spawning /lib/systemd/systemd-logind: Permission denied
 ```
+
 It seems to be related to recent versions of systemd needs nesting (see [here](https://forum.proxmox.com/threads/question-on-nested-option-lxc-container.86497/post-381450)) and so I enabled it by editing `/etc/pve/lxc/11{1,2}.conf`, adding `features: nesting=1`. It fixes the problem. (and indeed 110 was created with this setting on)
 
 ## Getting the code
@@ -311,6 +318,7 @@ It seems to be related to recent versions of systemd needs nesting (see [here](h
 I started by copying current code from off1 to each container, while avoiding data. I put code in `/srv/opf-old/` and `/srv/obf-old/` so that I can easily compare to git code later on.
 
 On off2 as root:
+
 ```bash
 mkdir /zfs-hdd/pve/subvol-111-disk-0/srv/obf-old/
 rsync -x -a --info=progress2 --exclude "logs/" --exclude "html/images/products/" --exclude "html/data" --exclude "deleted.images" --exclude "tmp/" --exclude "new_images/" --exclude="build-cache" off1.openfoodfacts.org:/srv/obf/ /zfs-hdd/pve/subvol-111-disk-0/srv/obf-old/
@@ -322,9 +330,11 @@ rsync -x -a --info=progress2 --exclude "logs/" --exclude "html/images/products/"
 # there are some permissions problems
 sudo chown 1000:1000 -R /zfs-hdd/pve/subvol-112-disk-0/srv/opf-old/
 ```
+
 ### Cloning off-server repository
 
 First I create a key for off to access off-server repo:
+
 ```bash
 sudo -u off ssh-keygen -f /home/off/.ssh/github_off-server -t ed25519 -C "off+off-server@obf.openfoodfacts.org"
 sudo -u off vim /home/off/.ssh/config
@@ -336,6 +346,7 @@ Host github.com-off-server
 …
 cat /home/off/.ssh/github_off-server.pub
 ```
+
 Go to github add the obf pub key for off to [productopener repository](https://github.com/openfoodfacts/openfoodfacts-server/settings/keys) with write access:
 
 Then clone repository, on obf:
@@ -347,6 +358,7 @@ sudo -u off git clone git@github.com-off-server:openfoodfacts/openfoodfacts-serv
 ```
 
 Make it shared:
+
 ```bash
 cd /srv/obf
 sudo -u off git config core.sharedRepository true
@@ -355,6 +367,7 @@ sudo chmod g+rwX -R .
 
 I will generaly work to modify / commit to the repository using my user alex, while using off only to push.
 So as alex on obf:
+
 ```
 git config --global --add safe.directory /srv/obf
 git config --global --add author.name "Alex Garel"
@@ -385,7 +398,6 @@ Also I copied Config2.pm: `cp /srv/obf-old/lib/ProductOpener/Config2.pm lib/Prod
 
 Also copied `Users.pm` as it has some protection to spam.
 
-
 ### Finding git commit for opf
 
 `ls -ltr /srv/opf-old/{lib/ProductOpener/,cgi/}` seems to indicate to search commits around 2020-05-30
@@ -403,16 +415,16 @@ It's a hard work…
 
 See [Annex files difference for opf in git vs server](#annex-files-difference-for-opf-in-git-vs-server)
 
-
 ## Installing
 
 We have git cloned our repository in `/srv/o{b,p}f`.
 
-
 ### symlinks to mimic old structure
+
 Now we create symlinks to mimic old structure:
 
 On obf, as root:
+
 ```bash
 for site in o{f,p,pf}f;do \
   mkdir -p /srv/$site/html/images/ && \
@@ -422,8 +434,8 @@ for site in o{f,p,pf}f;do \
 done
 ls -l /srv/o{f,p,pf}f/ /srv/$site/html/images
 ```
-on opf, same with `o{f,b,pf}f`
 
+on opf, same with `o{f,b,pf}f`
 
 ### linking data
 
@@ -432,6 +444,7 @@ Unless stated otherwise operation are done with user off.
 Create links for users and products
 
 for obf
+
 ```bash
 ln -s /mnt/obf/products /srv/obf/products
 ln -s /mnt/obf/users /srv/obf/users
@@ -442,6 +455,7 @@ ls -l /srv/obf/html/data /srv/obf/users_emails.sto /srv/obf/products /srv/obf/us
 ```
 
 for opf
+
 ```bash
 ln -s /mnt/opf/products /srv/opf/products
 ln -s /mnt/opf/users /srv/opf/users
@@ -452,6 +466,7 @@ ls -l /srv/opf/html/data /srv/opf/users_emails.sto /srv/opf/products /srv/opf/us
 ```
 
 We have some permissions problems on some data, to fix this on off2:
+
 ```
 sudo chown 1000:1000 -R /zfs-hdd/opf/html_data/ /zfs-hdd/obf/html_data/
 ```
@@ -459,6 +474,7 @@ sudo chown 1000:1000 -R /zfs-hdd/opf/html_data/ /zfs-hdd/obf/html_data/
 Create links for data folders, also moving data to zfs datasets:
 
 for obf:
+
 ```bash
 # html data
 mv /srv/obf/html/data/data-fields.txt /mnt/obf/html_data/
@@ -470,8 +486,8 @@ rmdir /srv/obf/html/images/products/
 ln -s /mnt/obf/images/products  /srv/obf/html/images/products
 ```
 
-
 for opf:
+
 ```bash
 # html data
 mv /srv/opf/html/data/data-fields.txt /mnt/opf/html_data/
@@ -486,6 +502,7 @@ ln -s /mnt/opf/images/products  /srv/opf/html/images/products
 We also want to move Lang file and deleted.images in data folder but keep compatibility (it's an old version)
 
 for obf:
+
 ```bash
 # deleted.images
 mv /srv/obf/deleted.images /mnt/obf/
@@ -497,6 +514,7 @@ ln -s /mnt/obf/data/Lang.openbeautyfacts.org.sto /srv/obf/
 ```
 
 for opf:
+
 ```bash
 # deleted.images
 mv /srv/opf/deleted.images /mnt/opf/
@@ -507,10 +525,10 @@ cp /srv/opf-old/Lang.openproductsfacts.org.sto /mnt/opf/data/
 ln -s /mnt/opf/data/Lang.openproductsfacts.org.sto /srv/opf/
 ```
 
-
 Create and link cache folders
 
 for obf:
+
 ```bash
 # build-cache (was non existent)
 mkdir /mnt/obf/cache/build-cache
@@ -523,6 +541,7 @@ ls -l /srv/obf/tmp /srv/obf/debug /srv/obf/new_images /srv/obf/build-cache
 ```
 
 for opf:
+
 ```bash
 # build-cache (was non existent)
 mkdir /mnt/opf/cache/build-cache
@@ -535,15 +554,16 @@ ls -l /srv/opf/tmp /srv/opf/debug /srv/opf/new_images /srv/opf/build-cache
 ```
 
 We also want to move html/data/data-field.txt outside the data volume and link it, as user off.
+
 ```bash
 cd srv/obf
 mv html/data/data-field.txt html/data-field.txt
 ln -s ../data-fields.txt html/data/data-fields.txt
 ```
+
 And add the `html/data-field.txt` file to git.
 
 Opf does not have it on prod, still we had to commit the removal of `html/data/data-fields.txt` to the repository
-
 
 ### linking logs
 
@@ -552,6 +572,7 @@ We want logs to go in /var/logs.
 We will create a directory for instance (obf/opf) and also add links to nginx and apache2 logs.
 
 for obf:
+
 ```bash
 sudo mkdir /var/log/obf
 sudo chown off:off -R /var/log/obf
@@ -562,6 +583,7 @@ sudo -u off ln -s ../nginx /var/log/obf
 ```
 
 for opf:
+
 ```bash
 sudo mkdir /var/log/opf
 sudo chown off:off -R /var/log/opf
@@ -571,10 +593,10 @@ sudo  -u off ln -s ../apache2 /var/log/opf
 sudo -u off ln -s ../nginx /var/log/opf
 ```
 
-
 Copy original `log.conf` and make it a symlink.
 
 For obf:
+
 ```bash
 cp /srv/obf-old/log.conf /srv/obf/conf/obf-log.conf
 rm /srv/obf/log.conf
@@ -584,6 +606,7 @@ ls -l /srv/obf/log.conf
 ```
 
 For opf:
+
 ```bash
 cp /srv/opf-old/log.conf /srv/opf/conf/opf-log.conf
 rm /srv/opf/log.conf
@@ -603,7 +626,9 @@ ln -s Config_obf.pm /srv/obf/lib/ProductOpener/Config.pm
 # verify
 ls -l /srv/obf/lib/ProductOpener/{SiteLang,Config,Config2}.pm
 ```
+
 and for opf, SiteLang does not seems to exist !
+
 ```bash
 cp /srv/opf-old/lib/ProductOpener/Config2.pm /srv/opf/lib/ProductOpener/Config2.pm
 ln -s Config_opf.pm /srv/opf/lib/ProductOpener/Config.pm
@@ -621,18 +646,19 @@ opf:
 `sudo find /srv/opf-old -xtype l | xargs ls -l`,
 see [Annex: opf broken links](#annex-opf-broken-links)
 
-
 ### Adding dists
 
 For obf:
 
 Create a folder for dist:
+
 ```bash
 sudo mkdir /srv/obf-dist
-sudo chown off:off -R /srv/obf-dist 
+sudo chown off:off -R /srv/obf-dist
 ```
 
 As off, transfer dists in it (as user off):
+
 ```bash
 cp -r  /srv/obf-old/html/images/icons/dist /srv/obf-dist/icons
 cp -r /srv/obf-old/html/css/dist  /srv/obf-dist/css
@@ -655,12 +681,14 @@ ls -l  /srv/obf/dist /srv/obf/html/{images/icons,css,js}/dist
 Same for opf:
 
 Create a folder for dist:
+
 ```bash
 sudo mkdir /srv/opf-dist
 sudo chown off:off -R /srv/opf-dist
 ```
 
 As off, transfer dists in it (as user off):
+
 ```bash
 cp -r  /srv/opf-old/html/images/icons/dist /srv/opf-dist/icons
 cp -r /srv/opf-old/html/css/dist  /srv/opf-dist/css
@@ -688,12 +716,14 @@ We have some content that we want to take from openfoodfacts-web (also because s
 Note that I add to make two deploys keys as explained in [github documentation](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#using-multiple-repositories-on-one-server) and use a specific ssh_config hostname for openfoodfacts-web:
 
 Create new key, as off:
+
 ```bash
 # deploy key for openfoodfacts-web
 ssh-keygen -t ed25519 -C "off+off-web@obf.openfoodfacts.org" -f /home/off/.ssh/github_off-web
 ```
 
 Add a specific host in ssh config
+
 ```ini
 # /home/off/.ssh/config
 Host github.com-off-web
@@ -704,6 +734,7 @@ Host github.com-off-web
 In github add the `/home/off/.ssh/github_off-web.pub` to deploy keys for openfoodfacts-web.
 
 Cloning:
+
 ```bash
 sudo mkdir /srv/openfoodfacts-web
 sudo chown off:off /srv/openfoodfacts-web
@@ -717,18 +748,21 @@ Do the same for opf
 We clearly want obf lang folder to come from off-web:
 
 for obf (as off):
+
 ```bash
 rm -rf /srv/obf/lang/obf/
 ln -s /srv/openfoodfacts-web/lang/obf/ /srv/obf/lang/obf
 ```
 
 for opf (as off):
+
 ```bash
 rm -rf /srv/opf/lang/opf/
 ln -s /srv/openfoodfacts-web/lang/opf/ /srv/opf/lang/opf
 ```
 
 We then will link press, contacts, term of use (as user off)
+
 ```bash
 # USE WITH CARE !
 cd /srv/obf/lang
@@ -744,6 +778,7 @@ done;
 ```
 
 We can verify with:
+
 ```bash
 ls -l */texts/{contacts,press,terms-of-use}.html
 ```
@@ -751,7 +786,6 @@ ls -l */texts/{contacts,press,terms-of-use}.html
 Same for opf.
 
 We keep the rest as is for now.
-
 
 ### Linking logo images
 
@@ -764,6 +798,7 @@ No need of it for opf neither, logo names are handled by `po/openbeautyfacts/??.
 On OBF:
 
 We want to use the new logo. We uploaded a new version as:
+
 - openbeautyfacts-logo.svg
 - openbeautyfacts-logo-178x150.png
 - openbeautyfacts-logo-356x300.png
@@ -781,10 +816,10 @@ for f in openbeautyfacts-logo-??.png;do rm $f && ln -s openbeautyfacts-logo-178x
 rm openbeautyfacts-logo-zh-CN-712x600.png && ln -s openbeautyfacts-logo-712x600.png openbeautyfacts-logo-zh-CN-712x600.png
 ```
 
-
 On OPF:
 
 We want to use the new logo. We uploaded a new version as:
+
 - openproductsfacts-logo.svg
 - openproductsfacts-logo-178x150.png
 - openproductsfacts-logo-356x300.png
@@ -802,7 +837,6 @@ for f in openproductsfacts-logo-??.png;do rm $f && ln -s openproductsfacts-logo-
 rm openproductsfacts-logo-zh-CN-712x600.png && ln -s openproductsfacts-logo-712x600.png openproductsfacts-logo-zh-CN-712x600.png
 ```
 
-
 ### Installing CPAN
 
 First add `Apache2::Connection::XForwardedFor` and `Apache::Bootstrap` to cpanfile
@@ -813,9 +847,7 @@ sudo apt install libapache2-mod-perl2-dev
 sudo cpanm --notest --quiet --skip-satisfied --installdeps .
 ```
 
-
 ## Setting up services
-
 
 ### NGINX for OBF and OPF (inside container)
 
@@ -824,6 +856,7 @@ Installed nginx `sudo apt install nginx`.
 Removed default site `sudo unlink /etc/nginx/sites-enabled/default`
 
 On off2, Copied production nginx configuration of off1:
+
 ```
 # base configs
 sudo scp 10.0.0.1:/etc/nginx/sites-enabled/obf /zfs-hdd/pve/subvol-111-disk-0/srv/obf/conf/nginx/sites-available/
@@ -840,7 +873,8 @@ sudo chown 1000:1000 -R  /zfs-hdd/pve/subvol-112-disk-0/srv/opf/conf
 I added /srv/obf/conf/nginx/conf.d/log_format_realip.conf (on obf), same for opf, with same content as the one on opff (it's now in git).
 
 Then made symlinks:
-* For obf:
+
+- For obf:
   ```bash
   sudo ln -s /srv/obf/conf/nginx/sites-available /etc/nginx/sites-enabled/obf
   sudo ln -s /srv/obf/conf/nginx/snippets/expires-no-json-xml.conf /etc/nginx/snippets
@@ -849,7 +883,7 @@ Then made symlinks:
   sudo rm /etc/nginx/mime.types
   sudo ln -s /srv/obf/conf/nginx/mime.types /etc/nginx/
   ```
-* For opf:
+- For opf:
   ```bash
   sudo ln -s /srv/opf/conf/nginx/sites-available /etc/nginx/sites-enabled/opf
   sudo ln -s /srv/opf/conf/nginx/snippets/expires-no-json-xml.conf /etc/nginx/snippets
@@ -862,21 +896,24 @@ Then made symlinks:
 On obf and opf Modified their configuration to remove ssl section, change log path and access log format, and to set real_ip_resursive options (it's all in git)
 
 test it:
+
 ```bash
 sudo nginx -t
 ```
 
-
 ### Apache
 
 On obf and opf we start by removing default config and disabling mpm_event in favor of mpm_prefork, and change logs permissions
+
 ```bash
 sudo unlink /etc/apache2/sites-enabled/000-default.conf
 sudo a2dismod mpm_event
 sudo a2enmod mpm_prefork
 sudo chown off:off -R /var/log/apache2 /var/run/apache2
 ```
+
 and edit `/etc/apache2/envvars` to use off user:
+
 ```
 #export APACHE_RUN_USER=www-data
 export APACHE_RUN_USER=off
@@ -884,45 +921,48 @@ export APACHE_RUN_USER=off
 export APACHE_RUN_GROUP=off
 ```
 
-
 On obf:
-* Add configuration for obf in sites enabled
+
+- Add configuration for obf in sites enabled
   ```bash
   sudo ln -s /srv/obf/conf/apache-2.4/sites-available/obf.conf /etc/apache2/sites-enabled/
   ```
-* link `mpm_prefork.conf` to a file in git, identical as the one in production
+- link `mpm_prefork.conf` to a file in git, identical as the one in production
   ```bash
   sudo rm /etc/apache2/mods-available/mpm_prefork.conf
   sudo ln -s /srv/obf/conf/apache-2.4/obf-mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
   ```
-* use customized ports.conf for obf (8002)
+- use customized ports.conf for obf (8002)
   ```bash
   sudo rm /etc/apache2/ports.conf
   sudo ln -s /srv/obf/conf/apache-2.4/obf-ports.conf /etc/apache2/ports.conf
   ```
 
 On opf:
-* Add configuration for opf in sites enabled
+
+- Add configuration for opf in sites enabled
   ```bash
   sudo ln -s /srv/opf/conf/apache-2.4/sites-available/opf.conf /etc/apache2/sites-enabled/
   ```
-* link `mpm_prefork.conf` to a file in git, identical as the one in production
+- link `mpm_prefork.conf` to a file in git, identical as the one in production
   ```bash
   sudo rm /etc/apache2/mods-available/mpm_prefork.conf
   sudo ln -s /srv/opf/conf/apache-2.4/opf-mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
   ```
-* use customized ports.conf for opf (8003)
+- use customized ports.conf for opf (8003)
   ```bash
   sudo rm /etc/apache2/ports.conf
   sudo ln -s /srv/opf/conf/apache-2.4/opf-ports.conf /etc/apache2/ports.conf
   ```
 
 test it in both container:
+
 ```bash
 sudo apache2ctl configtest
 ```
 
 We can restart apache2 then nginx:
+
 ```bash
 sudo systemctl restart apache2
 sudo systemctl restart nginx
@@ -931,10 +971,13 @@ sudo systemctl restart nginx
 #### Problem when restarting apache2 on obf
 
 In `/var/log/apache2/error.log`
+
 ```
 Could not load taxonomy: /srv/obf/taxonomies/inci_functions.result.sto
 ```
+
 repairing:
+
 ```bash
 cp /srv/obf-old/taxonomies/inci_functions* /srv/obf/taxonomies/
 ```
@@ -954,7 +997,9 @@ git checkout origin/opff-main conf/systemd/
 git add conf/systemd/
 git commit -a -m "build: added systemd units"
 ```
+
 and link them at system level
+
 ```bash
 declare -x PROJ_NAME=opf
 sudo ln -s /srv/$PROJ_NAME/conf/systemd/gen_feeds\@.timer /etc/systemd/system
@@ -987,7 +1032,6 @@ sudo systemctl enable gen_feeds_daily@$PROJ_NAME.timer
 sudo systemctl daemon-reload
 ```
 
-
 ### Adding failure notification for apache and nginx in systemd
 
 We can add the on failure notification we created for timers to apache2.service and nginx.service.
@@ -1002,13 +1046,11 @@ sudo ln -s /srv/opff/conf/systemd/apache2.service.d /etc/systemd/system/
 sudo systemctl daemon-reload
 ```
 
-
 ### log rotate perl logs
 
 ```bash
 declare -x PROJ_NAME=obf
 ```
-
 
 We get `conf/logrotate/apache` from opff and install it:
 
@@ -1022,6 +1064,7 @@ sudo chown root:root /srv/$PROJ_NAME/conf/logrotate/apache2
 ```
 
 We can test with:
+
 ```bash
 sudo logrotate /etc/logrotate.conf --debug
 ```
@@ -1046,23 +1089,25 @@ sudo apt install  mongodb-database-tools
 ### Test with curl
 
 for obf:
+
 ```bash
 declare -x DOMAIN_NAME=openbeautyfacts
 declare -x PORT_NUM=8002
 ```
 
 for opf:
+
 ```bash
 declare -x DOMAIN_NAME=openproductsfacts
 declare -x PORT_NUM=8003
 ```
-
 
 ```bash
 curl localhost:$PORT_NUM/cgi/display.pl --header "Host: fr.$DOMAIN_NAME.org"
 ```
 
 Nginx call
+
 ```bash
 curl localhost --header "Host: fr.$DOMAIN_NAME.org"
 ```
@@ -1070,8 +1115,6 @@ curl localhost --header "Host: fr.$DOMAIN_NAME.org"
 ### Using Matomo instead of google analytics
 
 Copied configuration from OPFF and adapted with site id after creation of sites in Matomo.
-
-
 
 ## Reverse proxy configuration
 
@@ -1086,14 +1129,16 @@ $ declare -x DOMAIN_NAME=openbeautyfacts
 Generate credential, following https://eu.api.ovh.com/createToken/
 
 Using (for obf):
-* name: `off proxy openbeautyfacts.org`
-* description: `nginx proxy on off2 for openbeautyfacts.org`
-* validity: `unlimited`
-* GET `/domain/zone/`
+
+- name: `off proxy openbeautyfacts.org`
+- description: `nginx proxy on off2 for openbeautyfacts.org`
+- validity: `unlimited`
+- GET `/domain/zone/`
   (note: the last `/` is important !)
-* GET/PUT/POST/DELETE `/domain/zone/openbeautyfacts.org/*`
+- GET/PUT/POST/DELETE `/domain/zone/openbeautyfacts.org/*`
 
 and we put config file in `/root/.ovhapi/openbeautyfacts.org` and `/root/.ovhapi/openproductsfacts.org`
+
 ```bash
 $ mkdir /root/.ovhapi
 $ vim /root/.ovhapi/$DOMAIN_NAME.org
@@ -1110,6 +1155,7 @@ $ chmod og-rwx -R /root/.ovhapi
 ```
 
 Try to get a wildcard using certbot, we will choose to obtain certificates using a DNS TXT record, and use tech -at- off.org for notifications. We first try with `--test-cert`
+
 ```bash
 $ certbot certonly --test-cert --dns-ovh --dns-ovh-credentials /root/.ovhapi/$DOMAIN_NAME.org -d $DOMAIN_NAME.org -d "*.$DOMAIN_NAME.org"
 ...
@@ -1117,7 +1163,9 @@ $ certbot certonly --test-cert --dns-ovh --dns-ovh-credentials /root/.ovhapi/$DO
  - Congratulations! Your certificate and chain have been saved at:
    /etc/letsencrypt/live/xxxxx.org/fullchain.pem
 ```
+
 and then without `--test-cert`
+
 ```bash
 $ certbot certonly --dns-ovh --dns-ovh-credentials /root/.ovhapi/$DOMAIN_NAME.org -d $DOMAIN_NAME.org -d "*.$DOMAIN_NAME.org"
 ...
@@ -1132,6 +1180,7 @@ $ certbot certonly --dns-ovh --dns-ovh-credentials /root/.ovhapi/$DOMAIN_NAME.or
 In the git repository, we copied the openpetfoodfacts config and changed names to the right domain.
 
 Then we linked them:
+
 ```bash
 sudo ln -s /opt/openfoodfacts-infrastructure/confs/proxy-off/nginx/openbeautyfacts.org /etc/nginx/sites-enabled/
 sudo ln -s /opt/openfoodfacts-infrastructure/confs/proxy-off/nginx/openproductsfacts.org /etc/nginx/sites-enabled/
@@ -1142,8 +1191,8 @@ systemctl restart nginx
 
 ## Testing
 
-
 To test my installation I added this to `/etc/hosts` on my computer:
+
 ```ini
 213.36.253.214 fr.openbeautyfacts.org world-fr.openbeautyfacts.org static.openbeautyfacts.org images.openbeautyfacts.org world.openbeautyfacts.org
 213.36.253.214 fr.openproductsfacts.org world-fr.openproductsfacts.org static.openproductsfacts.org images.openproductsfacts.org world.openproductsfacts.org
@@ -1152,7 +1201,6 @@ To test my installation I added this to `/etc/hosts` on my computer:
 And it works at first try :tada: !
 
 ## Production switch
-
 
 ### Procedure for switch of obf off1 to off2
 
@@ -1169,31 +1217,34 @@ And it works at first try :tada: !
    `sudo systemctl stop apache2 nginx`
 
 1. Rync all data (on off2):
-  ```bash
-  date && \
-  sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/html/images/products/  /zfs-hdd/obf/images/products/ && \
-  sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/html/data/  /zfs-hdd/obf/html_data/ && \
-  sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/deleted.images/ /zfs-hdd/obf/deleted.images/  && \
-  date
-  ```
-  obf/cache is skipped, nothing of interest.
 
-  it took 17min
+```bash
+date && \
+sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/html/images/products/  /zfs-hdd/obf/images/products/ && \
+sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/html/data/  /zfs-hdd/obf/html_data/ && \
+sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/obf/deleted.images/ /zfs-hdd/obf/deleted.images/  && \
+date
+```
+
+obf/cache is skipped, nothing of interest.
+
+it took 17min
 
 4. products sync:
    - remove obf from sync products script
    - do a zfs send of only obf products with a modified version of the script
 
-2. shutdown obf on both side
+5. shutdown obf on both side
    on off1: `sudo systemctl stop apache2@obf` and `unlink /etc/nginx/sites-enabled/obf && systemctl reload nginx`
 
-3. change DNS to point to new machine
+6. change DNS to point to new machine
 
-3. Rsync and zfs sync again
+7. Rsync and zfs sync again
 
    rsync took 8 minutes
 
-4. ensure migrations works using NFS for off1 apps:
+8. ensure migrations works using NFS for off1 apps:
+
    ```bash
    # move old prod
    mv /srv/obf /srv/obf.old
@@ -1201,40 +1252,43 @@ And it works at first try :tada: !
    mkdir -p /srv/obf/products /srv/obf/html/images/products
    chown off:off -R /srv/obf
    ```
+
    then change /etc/fstab to mount off1 there:
+
    ```ini
    # mount of opff zfs datasets via NFS to enable products migrations
    10.0.0.2:/zfs-hdd/obf/products	/srv/obf/products	nfs	rw,nolock	0	0
    10.0.0.2:/zfs-hdd/obf/images/products	/srv/obf/html/images/products	nfs	rw,nolock	0	0
    ```
+
    and mount:
+
    ```bash
    mount /srv/obf/products
    mount /srv/obf/html/images/products
    ```
 
-4. ensure migrations works using mounts for off2 apps:
-   * edit 110 and 112 mount points to mount obf volumes instead of NFS shares, by editing `/etc/pve/lxc/11{0,2}.conf`
-   * save your new settings to git folder: `cp /etc/pve/lxc/110.conf /opt/openfoodfacts-infrastructure/confs/off2/pve/lxc_110.conf` and `cp /etc/pve/lxc/112.conf /opt/openfoodfacts-infrastructure/confs/off2/pve/lxc_112.conf`
-   * restart 110 and 112: `sudo pct reboot 110; sudo pct reboot 112`
+9. ensure migrations works using mounts for off2 apps:
+   - edit 110 and 112 mount points to mount obf volumes instead of NFS shares, by editing `/etc/pve/lxc/11{0,2}.conf`
+   - save your new settings to git folder: `cp /etc/pve/lxc/110.conf /opt/openfoodfacts-infrastructure/confs/off2/pve/lxc_110.conf` and `cp /etc/pve/lxc/112.conf /opt/openfoodfacts-infrastructure/confs/off2/pve/lxc_112.conf`
+   - restart 110 and 112: `sudo pct reboot 110; sudo pct reboot 112`
 
-5. start obf on container off2/111 (obf): `sudo systemctl start apache2 nginx`
-6. check it works (remember to also clean your /etc/hosts if you modified it for tests)
-6. disable obf service on off1:
-   - `systemctl disable apache2@obf`
-   - `unlink /etc/nginx/sites-enabled/obf && sytemctl reload nginx` (if not already done)
+10. start obf on container off2/111 (obf): `sudo systemctl start apache2 nginx`
+11. check it works (remember to also clean your /etc/hosts if you modified it for tests)
+12. disable obf service on off1:
+    - `systemctl disable apache2@obf`
+    - `unlink /etc/nginx/sites-enabled/obf && sytemctl reload nginx` (if not already done)
 
-7. remove obf from snapshot-purge.sh on ovh3 (now handled by sanoid)
-8. on off2 and ovh3 modify sanoid configuration to have obf/products handled by sanoid and synced to ovh3
-9. don't forget to test that it still works after that
+13. remove obf from snapshot-purge.sh on ovh3 (now handled by sanoid)
+14. on off2 and ovh3 modify sanoid configuration to have obf/products handled by sanoid and synced to ovh3
+15. don't forget to test that it still works after that
 
-10. off1 cleanup:
+16. off1 cleanup:
     - remove obf gen feeds from `/srv/off/scripts/gen_all_feeds.sh` and `/srv/off/scripts/gen_all_feeds_daily.sh`
     - remove or comment `/etc/logrotate.d/apache2-obf`
 
-11. off2 cleanup:
+17. off2 cleanup:
     - remove the NFS mounts of off1 obf data
-
 
 ### Procedure for switch of opf off1 to off2
 
@@ -1251,14 +1305,16 @@ And it works at first try :tada: !
    `sudo systemctl stop apache2 nginx`
 
 1. Rync all data (on off2):
-  ```bash
-  date && \
-  sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/opf/html/images/products/  /zfs-hdd/opf/images/products/ && \
-  sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/opf/html/data/  /zfs-hdd/opf/html_data/ && \
-  sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/opf/deleted.images/ /zfs-hdd/opf/deleted.images/  && \
-  date
-  ```
-  opf/cache is skipped, nothing of interest.
+
+```bash
+date && \
+sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/opf/html/images/products/  /zfs-hdd/opf/images/products/ && \
+sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/opf/html/data/  /zfs-hdd/opf/html_data/ && \
+sudo rsync --info=progress2 -a -x 10.0.0.1:/srv/opf/deleted.images/ /zfs-hdd/opf/deleted.images/  && \
+date
+```
+
+opf/cache is skipped, nothing of interest.
 
 4. products sync:
    - remove opf from sync products script
@@ -1266,17 +1322,17 @@ And it works at first try :tada: !
 
    rsync took 7 min.
 
-2. shutdown opf on both side
+5. shutdown opf on both side
    on off1: `sudo systemctl stop apache2@opf` and `unlink /etc/nginx/sites-enabled/opf && systemctl reload nginx`
 
+6. change DNS to point to new machine
 
-3. change DNS to point to new machine
-
-3. Rsync and zfs sync again
+7. Rsync and zfs sync again
 
    rsync took 2 min
 
-4. ensure migrations works using NFS for off1 apps:
+8. ensure migrations works using NFS for off1 apps:
+
    ```bash
    # move old prod
    mv /srv/opf /srv/opf.old
@@ -1284,41 +1340,43 @@ And it works at first try :tada: !
    mkdir -p /srv/opf/products /srv/opf/html/images/products
    chown off:off -R /srv/opf
    ```
+
    then change /etc/fstab to mount off1 there:
+
    ```ini
    # mount of opff zfs datasets via NFS to enable products migrations
    10.0.0.2:/zfs-hdd/opf/products	/srv/opf/products	nfs	rw,nolock	0	0
    10.0.0.2:/zfs-hdd/opf/images/products	/srv/opf/html/images/products	nfs	rw,nolock	0	0
    ```
+
    and mount:
+
    ```bash
    mount /srv/opf/products
    mount /srv/opf/html/images/products
    ```
 
-4. ensure migrations works using mounts for off2 apps:
-   * edit 110 and 111 mount points to mount opf volumes instead of NFS shares, by editing `/etc/pve/lxc/11{0,1}.conf`
-   * save your new settings to git folder: `cp /etc/pve/lxc/110.conf /opt/openfoodfacts-infrastructure/confs/off2/pve/lxc_110.conf` and `cp /etc/pve/lxc/111.conf /opt/openfoodfacts-infrastructure/confs/off2/pve/lxc_111.conf`
-   * restart 110 and 111: `sudo pct reboot 110;sudo pct reboot 111`
+9. ensure migrations works using mounts for off2 apps:
+   - edit 110 and 111 mount points to mount opf volumes instead of NFS shares, by editing `/etc/pve/lxc/11{0,1}.conf`
+   - save your new settings to git folder: `cp /etc/pve/lxc/110.conf /opt/openfoodfacts-infrastructure/confs/off2/pve/lxc_110.conf` and `cp /etc/pve/lxc/111.conf /opt/openfoodfacts-infrastructure/confs/off2/pve/lxc_111.conf`
+   - restart 110 and 111: `sudo pct reboot 110;sudo pct reboot 111`
 
-5. start opf on container off2/112 (opf): `sudo systemctl start apache2 nginx`
-6. check it works (remember to also clean your /etc/hosts if you modified it for tests)
-6. disable opf service on off1:
-   - `systemctl disable apache2@opf`
-   - `unlink /etc/nginx/sites-enabled/opf && sytemctl reload nginx` (if not already done)
+10. start opf on container off2/112 (opf): `sudo systemctl start apache2 nginx`
+11. check it works (remember to also clean your /etc/hosts if you modified it for tests)
+12. disable opf service on off1:
+    - `systemctl disable apache2@opf`
+    - `unlink /etc/nginx/sites-enabled/opf && sytemctl reload nginx` (if not already done)
 
-7. remove opf from snapshot-purge.sh on ovh3 (now handled by sanoid)
-8. on off2 and ovh3 modify sanoid configuration to have opf/products handled by sanoid and synced to ovh3
-9. don't forget to test that it still works after that
+13. remove opf from snapshot-purge.sh on ovh3 (now handled by sanoid)
+14. on off2 and ovh3 modify sanoid configuration to have opf/products handled by sanoid and synced to ovh3
+15. don't forget to test that it still works after that
 
-10. off1 cleanup:
+16. off1 cleanup:
     - remove opf gen feeds from `/srv/off/scripts/gen_all_feeds.sh` and `/srv/off/scripts/gen_all_feeds_daily.sh`
     - remove or comment `/etc/logrotate.d/apache2-opf`
 
-11. off2 cleanup:
+17. off2 cleanup:
     - remove the NFS mounts of off1 opf data
-
-
 
 ## Annex: obf broken links
 
@@ -1342,7 +1400,6 @@ users_emails.sto -> /srv/off/users_emails.sto
 html/robots.txt -> /srv/off/html/robots.txt
 ```
 
-
 ### WONTFIX
 
 ```
@@ -1365,7 +1422,6 @@ ingredients/additifs/extract_additives.pl -> /home/off-fr/cgi/extract_additives.
 
 ```
 
-
 ## Annex: opf broken links
 
 ### TODO
@@ -1384,8 +1440,6 @@ users -> /srv/off/users
 users_emails.sto -> /srv/off/users_emails.sto
 ```
 
-
-
 ### WONTFIX
 
 ```
@@ -1397,19 +1451,21 @@ html/robots.txt -> /srv/off/html/robots.txt
 ## Annex: files difference for obf in git vs server
 
 **TO DECIDE**
+
 ```
 cgi/
   madenearme.pl
   madenearyou.pl
 ```
 
-
 **DONE different**
+
 ```
 templates/donate_banner.tt.html
 ```
 
 **DONE missing**
+
 ```
 html/
   robots-disallow.txt
@@ -1460,6 +1516,7 @@ po/tags
 ```
 
 **TODO**
+
 ```
 lang/**/texts/
   open-beauty-hunt.html
@@ -1476,6 +1533,7 @@ index/ # put in cache
 ```
 
 **TODO differently**
+
 ```
 log
 log.conf
@@ -1490,8 +1548,8 @@ lib/ProductOpener
   SiteLang.pm
 ```
 
-
 **WONTFIX missing**
+
 ```
 css
 js
@@ -1604,8 +1662,8 @@ scss:
 
 ## Annex files difference for opf in git vs server
 
-
 **TO DECIDE**
+
 ```
 html/images/banners/donate/
   donate-banner.independent.fr.1600x300.png
@@ -1621,15 +1679,14 @@ translate/
   ingredients.ru.txt
 ```
 
-
 **TODO**
+
 ```
 lang/
 ```
 
-
-
 **DONE missing**
+
 ```
 .well-known/assetlinks.json
 /home/alex/docker/tmp/opf-old/html/images/misc/microsoft/
@@ -1655,6 +1712,7 @@ cgi/
 ```
 
 **DONE modified**
+
 ```
 html/products_countries.js # contains "Open Products Facts"
 madenearme/
@@ -1662,8 +1720,8 @@ madenearme/
   madenearme-uk.html
 ```
 
-
 **TODO differently**
+
 ```
 html/css/dist/
 htm/icons/dist
@@ -1679,6 +1737,7 @@ Lang.openproductsfacts.org.sto
 ```
 
 **WONTFIX modified**
+
 ```
 emb_codes/villes-geo-france-galichon-20130208.csv
 dump/*
@@ -1688,6 +1747,7 @@ po/ # small changes
 ```
 
 **WONTFIX missing**
+
 ```
 fonts/icons/*
 html/lang/de/labels/*.png  # renamed or moved to en
@@ -1772,4 +1832,3 @@ scripts/
   upload_photos_scanparty_rotterdam_ekoplaza.sh
 t/sitequality.t # renamed
 ```
-

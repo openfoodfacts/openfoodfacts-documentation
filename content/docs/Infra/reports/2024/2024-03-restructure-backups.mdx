@@ -47,19 +47,22 @@ systemctl start gen_feeds@$HOSTNAME.timer gen_feeds_daily@$HOSTNAME.timer apache
 ## Pull off2 from ovh3
 
 We already started having better backups,
-see [Configuring snapshots and syncoid in 2023-12-08 off1 upgrade](./2023-12-08-off1-upgrade.md#configuring-snapshots-and-syncoid).
+see [Configuring snapshots and syncoid in 2023-12-08 off1 upgrade](/docs/Infra/reports/2023/2023-12-08-off1-upgrade#configuring-snapshots-and-syncoid).
 
 But we are still pushing synchronizations from off2 to ovh3 as root, which is bad in term of permissions.
 
 We already have the ovh3operator created on off2.
 
 On ovh3, test connecting with ssh:
+
 ```bash
 ssh ovh3operator@off2.openfoodfacts.org
 ```
+
 it works.
 
 Verify delegation to ovh3operator
+
 ```bash
 $ zfs allow zfs-hdd
 ---- Permissions on zfs-hdd ------------------------------------------
@@ -78,11 +81,12 @@ $ zfs allow rpool
 It's all we need.
 
 I then in /etc/sanoid/syncoid-args.conf,
-* I comment some lines on off2
-* Wait for syncoid service to finish
-* test the command manually from ovh3
-* I create the lines on ovh3 syncoid-args.conf
-* I wait for the sync to verify it's working
+
+- I comment some lines on off2
+- Wait for syncoid service to finish
+- test the command manually from ovh3
+- I create the lines on ovh3 syncoid-args.conf
+- I wait for the sync to verify it's working
 
 off dataset was not synced, so we have a problem, we have to sync it in a new location,
 move sub datasets to it, and rename it.
@@ -106,6 +110,7 @@ I will destroy the old products dataset on off2, and resync it completely on ovh
 Before destroy I will move it temporarily to be sure !
 
 On off2
+
 ```bash
 zfs rename zfs-hdd/off/products zfs-hdd/off-products-old
 ```
@@ -119,17 +124,18 @@ I think the problem might be because `/zfs-hdd/off` was mounted in off container
 and `zfs rename` touched a subdirectory that was mounted over in off container…
 
 On ovh3
+
 ```bash
 zfs rename rpool/off/products rpool/off-products-old
 ```
 
 I then did the sync on ovh3:
+
 ```bash
 syncoid --no-sync-snap --no-privilege-elevation --recursive ovh3operator@off2.openfoodfacts.org:zfs-nvme/off/products rpool/off/products
 ```
 
 As for off-pro we have to move off-pro root:
-
 
 ```bash
 syncoid --no-sync-snap --no-privilege-elevation ovh3operator@off2.openfoodfacts.org:zfs-hdd/off-pro rpool/off-pro-new
@@ -144,16 +150,14 @@ syncoid --no-sync-snap --no-privilege-elevation --recursive ovh3operator@off2.op
 
 And for the rest I just continued adding pull configs and testing them manually.
 
-
 ## Instable NFS
-
 
 After this NFS server seems instable, and staging gets stuck while reading at files.
 
 ### Moving off backups to their own folder
 
 It might be because a lot of datasets are exposed,
-as they are under *backups* and inherit its *sharenfs* property (which is needed on backups for proxmox to push files).
+as they are under _backups_ and inherit its _sharenfs_ property (which is needed on backups for proxmox to push files).
 
 So I decided to create a new dataset (acting as a parent only) off-backups and move our datasets there. I will do this on every server off1/off2/ovh3 to be consistent.
 (another option was to create a backups/pve dataset, but I prefer to keep proxmox as vanilla as possible).
@@ -165,6 +169,7 @@ Wait for current running syncoid services to finish on all server.
 Move around things on all servers:
 
 off1:
+
 ```bash
 # see what to move
 zfs list -r -t filesystem -d 1 zfs-hdd/backups
@@ -177,6 +182,7 @@ zfs list -r -t filesystem zfs-hdd/off-backups
 ```
 
 off2:
+
 ```bash
 # see what to move
 zfs list -r -t filesystem -d 1 zfs-hdd/backups
@@ -189,6 +195,7 @@ zfs list -r -t filesystem zfs-hdd/off-backups
 ```
 
 ovh3:
+
 ```bash
 # see what to move
 zfs list -r -t filesystem -d 1 rpool/backups
@@ -204,6 +211,7 @@ zfs list -r -t filesystem rpool/off-backups
 On off1, off2 and ovh3 add off-backups to sanoid.conf.
 
 Then wait for off-backups to have snapshots:
+
 ```bash
 zfs list -t snap zfs-hdd/off-backups
 ```
@@ -212,6 +220,7 @@ And change syncoid config to use off-backups on all servers.
 See commits [`a8210a6303bf70ea3debe8a1f4d80e3638cc6711` , `1ea7e6a2b19f53f2d7cdc56dd983faa86ed2cb8c` and `b1232edfc861b91ae39ed33461a4a298ab5c8a95`](https://github.com/openfoodfacts/openfoodfacts-infrastructure/compare/1b38ff513f8c85aa6e8e3250b0f5e1929ce5ebf7..a8210a6303bf70ea3debe8a1f4d80e3638cc6711)
 
 Finally on ovh3 update nfs shares:
+
 ```bash
 zfs unshare -a
 zfs share -a
@@ -230,13 +239,15 @@ So I decided to move those folders outside of off/rpool,
 this way they are out of sanoid recursive directives.
 
 I have to:
-* rename `rpool/off/clone` to `rpool/staging-clones`
+
+- rename `rpool/off/clone` to `rpool/staging-clones`
   also this is an occasion to add off/ prefix to clones,
   to prepare having more clones for opf/obf/opff etc. staging.
   (not for orgs and users as they are shared)
-* change volumes on staging to point to those
+- change volumes on staging to point to those
 
 On ovh3 renaming:
+
 ```bash
 zfs rename rpool/off/clones rpool/staging-clones
 zfs rename rpool/staging-clones/images rpool/staging-clones/off-images

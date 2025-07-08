@@ -21,15 +21,19 @@ Latter I did have to [add the no_lock option](https://github.com/openfoodfacts/o
 
 After deploy happens, I removed old volumes. I also checked that local volumes (`html_data` and `podata`, renamed to `po_html_data` and `po_podata`) didn't have anything to copy back (by looking at `/var/lib/docker/volumes`).
 Later, when I checked everything was fine, I then removed old volume.
+
 ```bash
 $ docker volume rm users orgs products product_images html_data podata
 ```
 
 I unmount all the previous NFS mount at system level:
+
 ```bash
 $ sudo umount /mnt/{products,users,orgs,product_images}
 ```
+
 and commented corresponding line in `/etc/fstab`:
+
 ```ini
 # volumes are now directly mounting nfs
 # 10.0.0.3:/rpool/off/clones/products           /mnt/products   nfs     rw      0 0
@@ -41,6 +45,7 @@ and commented corresponding line in `/etc/fstab`:
 ## Refreshing clones
 
 To refresh clones, we have to first stop docker containers on docker staging (if needed):
+
 ```bash
 cd /home/off/off-net
 docker-compose stop
@@ -49,10 +54,10 @@ docker-compose stop
 On ovh3, as root, we can refresh clones, thanks to the script present there (see `scripts/ovh3/maj-clones-nfs-VM-dockers.sh`).
 
 For each clone dataset, this:
+
 - zfs destroy the dataset clone
 - create a snapshot of the original dataset with a fixed tag depending on date
 - use zfs clone to create the clone dataset again using the tag
-
 
 In my case, the `sudo zfs destroy rpool/off/clones/images` failed because the system was unable to umount the dataset, which is the first step of the destroy process.
 It says "volume busy" which is a classical error when you have a process still using a resource you want to umount.
@@ -75,4 +80,4 @@ I though this issue had been resolved by [moving VM 200 to ovh1](), to shorten l
 
 By pinging ovh3 form ovh1 and from the container I saw there was not the same latency. In fact thanks to `ip route list` I realised staging docker VM was still configured to use ovh2 as the gateway instead of ovh1…
 
-I fixed it, see [2023-04-27 moving docker staging to OVH1 / Changing route](./2023-04-27-moving-docker-stagging-to-ovh1.md#changing-route)
+I fixed it, see [2023-04-27 moving docker staging to OVH1 / Changing route](/docs/Infra/reports/2023/2023-04-27-moving-docker-stagging-to-ovh1#changing-route)

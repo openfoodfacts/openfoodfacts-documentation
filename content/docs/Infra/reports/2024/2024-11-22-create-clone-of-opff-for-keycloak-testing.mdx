@@ -10,7 +10,7 @@ We need a container with a test instance of Product Opener to test the new Keycl
 
 ## Approach 1: clone current opff container
 
-Instead of reinstalling a Product Opener instance from scratch (as we did for [New install of OBF on OFF2 with new generic code](./2024-04-26-off2-obf-new-install.md) ), I will clone the current opff-new clone into opff-test.
+Instead of reinstalling a Product Opener instance from scratch (as we did for [New install of OBF on OFF2 with new generic code](/docs/Infra/reports/2024/2024-04-26-off2-obf-new-install) ), I will clone the current opff-new clone into opff-test.
 
 In the Proxmox web interface, I clone ct 118 opff-new into 119 opff-test.
 I get the message: "unable to clone mountpoint 'mp0' (type bind) (500)"
@@ -32,6 +32,7 @@ I'm going to try another way, by a doing a backup of 118 and restoring it in a n
 In the Proxmox web interface, the last backup was on 2024-10-28, so I create a new backup.
 
 After talking with Alex:
+
 - We have decided to stop using backups as everything is on ZFS.
 - So instead of using the backup / restore approach, I will try creating a new container and use ZFS to clone the opff-new container.
 
@@ -44,7 +45,7 @@ In proxmox web interface, I create container 119, opff-test.
 Resulting config:
 
 ```bash
-cat /etc/pve/lxc/119.conf 
+cat /etc/pve/lxc/119.conf
 arch: amd64
 cores: 4
 features: nesting=1
@@ -83,19 +84,24 @@ zfs snapshot zfs-hdd/pve/subvol-118-disk-0@cloned-for-opff-test-119_2024-11-22
 zfs list -t snapshot | grep subvol-118 | grep cloned
 zfs-hdd/pve/subvol-118-disk-0@cloned-for-opff-test-119_2024-11-22                         1.51M      -     7.25G  -
 
-zfs clone zfs-hdd/pve/subvol-118-disk-0@cloned-for-opff-test-119_2024-11-22 zfs-hdd/pve/subvol-119-disk-0-clone-from-118 
+zfs clone zfs-hdd/pve/subvol-118-disk-0@cloned-for-opff-test-119_2024-11-22 zfs-hdd/pve/subvol-119-disk-0-clone-from-118
 ```
 
 I can now destroy original volume:
+
 ```bash
 zfs destroy -r zfs-hdd/pve/subvol-119-disk-0
 
 ```
+
 cp /etc/pve/lxc/118.conf /etc/pve/lxc/119.conf
+
 ```
 
 ```
+
 vi /etc/pve/lxc/119.conf
+
 ```
 
 changing:
@@ -114,7 +120,7 @@ We will use the new.openpetfoodfacts.org site to point to the new container:
 
 in the 101 proxy container, change the IP:
 
-vi /etc/nginx/sites-enabled/new.openpetfoodfacts.org 
+vi /etc/nginx/sites-enabled/new.openpetfoodfacts.org
 
 3 lines:
 
@@ -129,14 +135,18 @@ in container 119, we change the log files names to have opff-test:
 nginx:
 
 ```
+
         access_log /var/log/nginx/static-opff-access.log proxied_requests buffer=256K
- flush=1s;
-        error_log /var/log/nginx/static-opff-error.log;
+
+flush=1s;
+error_log /var/log/nginx/static-opff-error.log;
 
                 access_log /var/log/nginx/proxy-opff-test-access.log proxied_requests
- buffer=256K flush=1s;
-                error_log /var/log/nginx/proxy-opff-test-error.log;
-```
+
+buffer=256K flush=1s;
+error_log /var/log/nginx/proxy-opff-test-error.log;
+
+````
 
 apache:
 
@@ -160,7 +170,7 @@ You have new mail in /var/mail/root
 root@opff-test:/var/log# mkdir /mnt/opff/logs/apache2-test
 root@opff-test:/var/log# rm apache2
 root@opff-test:/var/log# ln -s /mnt/opff/logs/apache2-test apache2
-```
+````
 
 ## Starting Apache
 
@@ -172,7 +182,7 @@ See "systemctl status apache2.service" and "journalctl -xe" for details.
 
 ```bash
 journalctl -xe
-░░ 
+░░
 ░░ The job identifier is 1883.
 Nov 22 10:52:50 opff-test bash[1008]: Unit apache2-opff-test.service could not be fo>
 
@@ -185,8 +195,11 @@ This is because I named the host opff-test, and we use the host name in the envi
 /etc/systemd/system/apache2.service.d/override.conf
 
 [Service]
+
 # Apache needs some environment variables like PRODUCT_OPENER_FLAVOR_SHORT
+
 # %l is the short host name (e.g. off, obf, off-pro)
+
 EnvironmentFile=/srv/%l/env/env.%l
 
 Hack to fix it (already used for opff-new):
@@ -200,7 +213,7 @@ ln -s /srv/opff/env/env.obf /srv/opff-test/env/env.opff-test
 
 systemctl restart apache2
 
-https://world.new.openpetfoodfacts.org works.  (I changed the top bar color to green to make it more obvious that the site is different)
+https://world.new.openpetfoodfacts.org works. (I changed the top bar color to green to make it more obvious that the site is different)
 
 ## Configuring for Keycloak
 
@@ -289,23 +302,28 @@ source env/setenv.sh opff
 perl scripts/migrate_users_to_keycloak.pl
 ```
 
-Got error 
+Got error
 
 ```
 There was an error importing users to Keycloak. Please ensure that the client has permission to manage the realm. This is not enabled by default and should only be a temporary permission. {client_id => "ProductOpener",keycloak_realm_name => "open-products-facts",response => "Can't connect to auth.openfoodfacts.org:443 (Connection refused)\n\nConnection refused at /usr/share/perl5/LWP/Protocol/http.pm line 50.\n"}
 ```
+
 Fixed by changing backchannel URL to http://10.1.0.104:5600
 
 Next error:
+
 ```
 There was an error importing users to Keycloak. Please ensure that the client has permission to manage the realm. This is not enabled by default and should only be a temporary permission. {client_id => "ProductOpener",keycloak_realm_name => "open-products-facts",response => "{\"error\":\"HTTP 403 Forbidden\"}"}
 ```
+
 Need to add permissions to the user - need to check what these are.
 
 Was able to migrate a single user with
+
 ```
 perl scripts/migrate_users_to_keycloak.pl api-single users/johngom.sto
 ```
+
 Added manage-realm permission to the ProductOpener user and seemed to fix it.
 
 Stared import at Sat Nov 23 13:08:56 2024
@@ -317,10 +335,14 @@ Keycloak process got killed after a few users. Try api-multi.
 Multiple messages about invalid field length for username:
 
 ```json
-{"field":"username","errorMessage":"error-invalid-length","params":["username",2,20]}
+{
+  "field": "username",
+  "errorMessage": "error-invalid-length",
+  "params": ["username", 2, 20]
+}
 ```
 
-Also 
+Also
 
 ```json
 {"errorMessage":"User exists with same email"}
@@ -329,7 +351,6 @@ Also
 
 [Sat Nov 23 14:11 2024] 60,000 users imported
 [Sat Nov 23 16:04 2024] 200,000 users imported
-
 
 ### Update Keycloak configuration
 
@@ -373,6 +394,7 @@ No Minion backend configured in lib/ProductOpener/Config2.pm
 #### User Deletion
 
 As expected:
+
 ```
 User deleted {user_id => "johngomtest"}
 No Minion backend configured in lib/ProductOpener/Config2.pm
@@ -427,7 +449,7 @@ source env/setenv.sh opff
 perl scripts/listen_to_redis_stream.pl
 ```
 
-Shows: 
+Shows:
 
 ```
 Starting listen_to_redis_stream.pl
@@ -436,7 +458,9 @@ init_redis {redis_url => "10.1.0.122:6379"}
 Reading from Redis {streams => ["BLOCK",0,"STREAMS","user-deleted","user-registered","$","$"]}
 Connected to Redis
 ```
+
 It looks like the service is working though
 
 ```
+
 ```

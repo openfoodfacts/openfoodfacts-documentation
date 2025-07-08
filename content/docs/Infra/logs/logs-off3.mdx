@@ -3,17 +3,18 @@ title: "Off3 Server Logs"
 description: "Timeline of incidents and interventions on off3 server including MongoDB connection issues, network routing problems, and system overload situations with resolution approaches."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Off3 Server Logs
 
 Timeline of incidents and interventions on the off3 server. This document tracks major issues and their resolutions.
 
 <Callout type="info">
-Keep entries short or write detailed reports. Link to full incident reports when available.
+  Keep entries short or write detailed reports. Link to full incident reports
+  when available.
 </Callout>
 
 ## Incident Timeline
@@ -35,10 +36,10 @@ Keep entries short or write detailed reports. Link to full incident reports when
 ### 2023-10-14 and 15: MongoDB Not Responding
 
 <Callout type="warning">
-MongoDB became unresponsive, affecting production services.
+  MongoDB became unresponsive, affecting production services.
 </Callout>
 
-**Resolution**: See detailed [2023-10-14: mongodb-down](./reports/2023-10-14-mongodb-down.md) report.
+**Resolution**: See detailed [2023-10-14: mongodb-down](/docs/Infra/reports/2023/2023-10-14-mongodb-down) report.
 
 ### 2023-12-17: MongoDB Down - Connection Limit Exceeded
 
@@ -77,10 +78,11 @@ MongoDB became unresponsive, affecting production services.
 ### 2023-05-23: Unable to Connect from OPFF on Off2 After Reboot
 
 <Callout type="info">
-Network routing issue after server reboot affecting OPFF connectivity.
+  Network routing issue after server reboot affecting OPFF connectivity.
 </Callout>
 
 **Resolution**:
+
 ```bash title="Route Addition"
 sudo ip route add 10.1.0.0/16 dev ens19 proto kernel scope link src 10.0.0.3
 ```
@@ -89,44 +91,38 @@ sudo ip route add 10.1.0.0/16 dev ens19 proto kernel scope link src 10.0.0.3
 
 **Issue**: MongoDB connectivity problems from off2 server.
 
-**Resolution**: See [*MongoDB access* in 2023-03 OFF2 reinstall - OPFF migration](./reports/2023-03-14-off2-opff-reinstall.md#mongodb-access) report.
+**Resolution**: See [_MongoDB access_ in 2023-03 OFF2 reinstall - OPFF migration](/docs/Infra/reports/2023/2023-03-14-off2-opff-reinstall#mongodb-access) report.
 
 ## System Incidents
 
 ### 2023-05-19: MongoDB Down - System Overload
 
 <Callout type="warning">
-MongoDB service failure due to system resource exhaustion.
+  MongoDB service failure due to system resource exhaustion.
 </Callout>
 
-**Resolution**: See detailed [2023-05-18 MongoDB down](./reports/2023-05-19-overload-of-osm-machine.md) report.
+**Resolution**: See detailed [2023-05-18 MongoDB down](/docs/Infra/reports/2023/2023-05-19-overload-of-osm-machine) report.
 
 ## Incident Categories
 
 <Tabs>
   <Tab value="mongodb" label="MongoDB Issues">
-    ### Common MongoDB Problems
-    
-    - **Connection Limits**: Exceeded maximum connections (301 limit)
-    - **Service Unresponsiveness**: Complete service failures
-    - **Resource Exhaustion**: System overload affecting database performance
-    - **Network Connectivity**: Inter-server communication issues
+    ### Common MongoDB Problems - **Connection Limits**: Exceeded maximum
+    connections (301 limit) - **Service Unresponsiveness**: Complete service
+    failures - **Resource Exhaustion**: System overload affecting database
+    performance - **Network Connectivity**: Inter-server communication issues
   </Tab>
-  
+
   <Tab value="network" label="Network Issues">
-    ### Network Connectivity Problems
-    
-    - **Routing Issues**: Missing routes after reboots
-    - **Inter-server Communication**: OPFF to MongoDB connectivity
-    - **Configuration Persistence**: Routes not surviving reboots
+    ### Network Connectivity Problems - **Routing Issues**: Missing routes after
+    reboots - **Inter-server Communication**: OPFF to MongoDB connectivity -
+    **Configuration Persistence**: Routes not surviving reboots
   </Tab>
-  
+
   <Tab value="system" label="System Issues">
-    ### System-Level Problems
-    
-    - **Resource Overload**: CPU, memory, or I/O exhaustion
-    - **Service Dependencies**: Cascading failures
-    - **Configuration Loss**: Settings not persisting after restarts
+    ### System-Level Problems - **Resource Overload**: CPU, memory, or I/O
+    exhaustion - **Service Dependencies**: Cascading failures - **Configuration
+    Loss**: Settings not persisting after restarts
   </Tab>
 </Tabs>
 
@@ -145,5 +141,6 @@ MongoDB service failure due to system resource exhaustion.
 </Cards>
 
 <Callout type="info">
-For detailed incident reports and resolution procedures, check the `/reports/` directory for comprehensive documentation.
+  For detailed incident reports and resolution procedures, check the `/reports/`
+  directory for comprehensive documentation.
 </Callout>

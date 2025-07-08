@@ -3,15 +3,16 @@ title: "Ovh2 Server Logs"
 description: "Timeline of incidents and interventions on ovh2 server including Docker container management, storage optimization, and system monitoring infrastructure changes with detailed space calculations."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Ovh2 Server Logs
 
 <Callout type="info">
-Report here the timeline of incidents and interventions on ovh2 server. Keep things short or write a report.
+  Report here the timeline of incidents and interventions on ovh2 server. Keep
+  things short or write a report.
 </Callout>
 
 ## 2023-09-04 Cleaning Docker Monitoring VM
@@ -19,24 +20,29 @@ Report here the timeline of incidents and interventions on ovh2 server. Keep thi
 <Card title="Storage Optimization" description="Reclaimed disk space by removing monitoring containers moved to dedicated machine">
 
 ### Background
+
 In order to enable using off-query on staging (which will consume around 35G of data):
 
 <Steps>
   <Step title="Remove Monitoring Containers">
-    Removed the `monitoring/` docker containers and volumes using `docker-compose down -v` and deleted the folder
+    Removed the `monitoring/` docker containers and volumes using
+    `docker-compose down -v` and deleted the folder
   </Step>
-  
+
   <Step title="Clean Docker Volumes">
     Executed `docker volume prune` to reclaim additional space
   </Step>
-  
+
   <Step title="Space Reclaimed">
     From 76G (out of 294G) of free space, system recovered to 118G available
   </Step>
 </Steps>
 
 <Callout type="info">
-The monitoring containers were previously moved to their own machine. See [2022-11 moving monitoring to its own machine](./reports/2022-11-09-monitoring-move-to-own-vm.md) for details.
+  The monitoring containers were previously moved to their own machine. See
+  [2022-11 moving monitoring to its own
+  machine](/docs/Infra/reports/2022/2022-11-09-monitoring-move-to-own-vm) for
+  details.
 </Callout>
 
 </Card>
