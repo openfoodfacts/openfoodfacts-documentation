@@ -2,6 +2,7 @@
   "title": "Tutorials",
   "description": "Step-by-step tutorials for implementing Open Food Facts API features",
   "pages": [
+    "index",
     "getting-started",
     "product-management",
     "data-analytics",

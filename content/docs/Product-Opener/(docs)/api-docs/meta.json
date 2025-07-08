@@ -2,6 +2,7 @@
   "title": "API Documentation",
   "description": "Complete guide to Open Food Facts API including authentication, rate limits, and features",
   "pages": [
+    "index",
     "getting-started",
     "advanced-features",
     "data-access",

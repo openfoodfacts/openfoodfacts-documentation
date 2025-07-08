@@ -2,6 +2,7 @@
   "title": "Developer Guide",
   "description": "Technical documentation for Product Opener developers",
   "pages": [
+    "index",
     "getting-started",
     "development-environment",
     "development-guides",
