@@ -3,39 +3,50 @@ title: "Proxmox Management"
 description: "This document provides an overview of Proxmox, covering its use for VM management, backup strategies, storage synchronization, network configuration, user management, and troubleshooting common issues. It also includes details on creating and managing containers."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Proxmox
 
 <Callout title="Virtualization Platform">
-On ovh1 and ovh2 we use Proxmox to manage VMs.
+  On ovh1 and ovh2 we use Proxmox to manage VMs.
 </Callout>
 
 <Callout type="warn" title="Documentation Status">
-**TODO** this page is really incomplete!
+  **TODO** this page is really incomplete!
 </Callout>
 
 ## Proxmox Knowledge & Resources
 
 <Cards>
-  <Card title="Proxmox Wiki" href="https://pve.proxmox.com/wiki" description="Official documentation and comprehensive guides" />
-  <Card title="Community Scripts" href="https://community-scripts.github.io/ProxmoxVE/" description="Community scripts to ease Proxmox utilization" />
+  <Card
+    title="Proxmox Wiki"
+    href="https://pve.proxmox.com/wiki"
+    description="Official documentation and comprehensive guides"
+  />
+  <Card
+    title="Community Scripts"
+    href="https://community-scripts.github.io/ProxmoxVE/"
+    description="Community scripts to ease Proxmox utilization"
+  />
 </Cards>
 
 ### Community Scripts Usage
 
 <Callout type="info" title="Production Consideration">
-Those scripts might not be suited for production environment; they're better suited for home servers.
+  Those scripts might not be suited for production environment; they're better
+  suited for home servers.
 </Callout>
 
 **Useful Applications:**
+
 - **Testing**: Install test services very quickly
 - **Learning**: Study good practices when installing software
 
 **Script Categories:**
+
 - Proxmox management: post-install, automate CT updates, etc.
 - Docker and Kubernetes tools
 - Web apps: Nextcloud, Keycloak, Nginx proxy manager, Grafana, Prometheus
@@ -45,45 +56,50 @@ Those scripts might not be suited for production environment; they're better sui
 ## Backup Strategy
 
 <Callout type="warn" title="Important Backup Policy">
-**IMPORTANT:** We don't use standard Proxmox backup[^previous_backups] (see Datacenter -> backup).
+  **IMPORTANT:** We don't use standard Proxmox backup[^previous_backups] (see
+  Datacenter -> backup).
 </Callout>
 
-Instead we use [syncoid / sanoid](./sanoid) to snapshot and synchronize data to other servers.
+Instead we use [syncoid / sanoid](/docs/Infra/storage/sanoid) to snapshot and synchronize data to other servers.
 
 [^previous_backups]: Previously every VM / CT is backed up twice a week using general Proxmox backup, in a specific ZFS dataset
 
 ## Storage Synchronization
 
 <Callout title="Replication Alternative">
-We don't use standard Proxmox replication of storages, because it is incompatible with using [syncoid / sanoid](./sanoid), as it removes snapshots on destination and does not allow choosing destination location.
+  We don't use standard Proxmox replication of storages, because it is
+  incompatible with using [syncoid / sanoid](/docs/Infra/storage/sanoid), as it
+  removes snapshots on destination and does not allow choosing destination
+  location.
 </Callout>
 
 <Callout type="warn" title="Manual Intervention Required">
-It means that restoring a container / VM won't be automatic and will need manual intervention.
+  It means that restoring a container / VM won't be automatic and will need
+  manual intervention.
 </Callout>
 
 ### Replication (Deprecated)
 
 <Callout type="info" title="Previous Setup">
-Previously, VM and container storage were regularly synchronized to ovh3 (and eventually to ovh1/2).
+  Previously, VM and container storage were regularly synchronized to ovh3 (and
+  eventually to ovh1/2).
 </Callout>
 
 **Management:**
+
 - Replication can be seen in the web interface, clicking on "replication" section on a particular container / VM
 - Managed with command line `pvesr` (PVE Storage replication)
 - See [official documentation](https://pve.proxmox.com/wiki/Storage_Replication)
 
 **Adding Replication:**
+
 <Steps>
 <Step>
 ### Access Replication Menu
 In the Replication menu of the container, click "Add"
 </Step>
 
-<Step>
-### Configure Target
-Target: the server you want to replicate to
-</Step>
+<Step>### Configure Target Target: the server you want to replicate to</Step>
 
 <Step>
 ### Set Schedule
@@ -98,10 +114,12 @@ We configure network through virtual bridges (`vmbr<n>`) that are themselves lin
 </Callout>
 
 <Callout type="info" title="NGINX Proxy">
-Also note that [NGINX proxy](#nginx-proxy) has its own IP address on a separate bridge, so that it can get network traffic directly.
+  Also note that [NGINX proxy](#nginx-proxy) has its own IP address on a
+  separate bridge, so that it can get network traffic directly.
 </Callout>
 
 **Container Network Setup:**
+
 - Local containers normally set their network to be `10.1.0.<ct number>/24`
 - They route through `10.0.0.1` (or 2) and define the route to `10.0.0.1`
 - All managed by Proxmox
@@ -119,6 +137,7 @@ Also note that [NGINX proxy](#nginx-proxy) has its own IP address on a separate 
     | enp5s0f1 | Network Device | Yes | No | No | | | | | |
     | vmbr0 | Linux Bridge | Yes | Yes | No | enp5s0f1 | | 10.0.0.1/8 2001:41d0:0203:948c:1::1/80 | | |
     | vmbr1 | Linux Bridge | Yes | Yes | No | enp5s0f0 | | 146.59.148.140/24 2001:41d0:0203:948c:0::1/80 | 146.59.148.254 2001:41d0:0203:94ff:ffff:ffff:ffff | |
+
   </Tab>
   
   <Tab value="off2">
@@ -165,13 +184,14 @@ Also note that [NGINX proxy](#nginx-proxy) has its own IP address on a separate 
     <Callout type="warn" title="Manual Configuration">
     **FIXME**: I added the last lines (post-up/down) myself, not sure if PVE would normally add them by itself?
     </Callout>
+
   </Tab>
 </Tabs>
 
 ### Firewall
 
 <Callout title="Host Firewall">
-We use Proxmox firewall on host. **FIXME** to be completed.
+  We use Proxmox firewall on host. **FIXME** to be completed.
 </Callout>
 
 We have a masquerading rule for 10.1.0.1/24.
@@ -179,14 +199,16 @@ We have a masquerading rule for 10.1.0.1/24.
 ## Users and Groups
 
 <Callout title="Minimal Access Control">
-We have a minimal set of users and groups.
+  We have a minimal set of users and groups.
 </Callout>
 
 **User Groups:**
-- **admin group**: For Proxmox admins (*Administrator Role*)
-- **ro_users**: Gives read-only access to the interface (*PVEAuditor Role*)
+
+- **admin group**: For Proxmox admins (_Administrator Role_)
+- **ro_users**: Gives read-only access to the interface (_PVEAuditor Role_)
 
 **Access Management:**
+
 <Steps>
 <Step>
 ### Create Users
@@ -223,17 +245,23 @@ apt update
 ### Additional Setup
 
 <Cards>
-  <Card title="SmartCTL" description="Verify smartctl is activated for disk monitoring" />
-  <Card title="Fail2ban" description="Install and configure fail2ban for security" />
+  <Card
+    title="SmartCTL"
+    description="Verify smartctl is activated for disk monitoring"
+  />
+  <Card
+    title="Fail2ban"
+    description="Install and configure fail2ban for security"
+  />
   <Card title="Backups" description="Don't forget to schedule backups" />
 </Cards>
 
 **Useful Resources:**
+
 - [Techno Tim Guide](https://techno-tim.github.io/posts/first-11-things-proxmox/)
 
 <Callout type="info" title="Additional Considerations">
-- IOMMU configuration (if needed)
-- Schedule [backups](#proxmox-backups)
+  - IOMMU configuration (if needed) - Schedule [backups](#proxmox-backups)
 </Callout>
 
 ## Troubleshooting
@@ -241,7 +269,7 @@ apt update
 ### Container Issues
 
 <Callout type="warn" title="Common Container Problems">
-Some logs that may appear during container troubleshooting:
+  Some logs that may appear during container troubleshooting:
 </Callout>
 
 ```log title="Mount Namespacing Error"

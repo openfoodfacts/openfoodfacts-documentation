@@ -3,23 +3,26 @@ title: "Observability Stack"
 description: "This document describes the observability stack at Open Food Facts, covering tools like Munin, Prometheus, Grafana, and Elasticsearch for monitoring applications. It details log collection, metric scraping, alerting, and debugging techniques for ensuring system health and performance."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Observability
 
 This document describes the observability stack used at Open Food Facts to monitor applications.
 
 <Callout type="info">
-Having a good observability stack is critical to spend less time when debugging failures, to have a comprehension of how applications behave over time, and to have the ability to compare a software version with the previously deployed one.
+  Having a good observability stack is critical to spend less time when
+  debugging failures, to have a comprehension of how applications behave over
+  time, and to have the ability to compare a software version with the
+  previously deployed one.
 </Callout>
 
 ## Monitoring Tools Overview
 
 <Cards>
-  <Card title="Munin" href="./munin.md">
+  <Card title="Munin" href="/docs/Infra/monitoring/munin">
     Server and service monitoring with historical graphs
   </Card>
   <Card title="Prometheus/Grafana" href="#influx--prometheus--grafana">
@@ -35,7 +38,7 @@ Having a good observability stack is critical to spend less time when debugging 
 
 ## Munin
 
-See [Munin](./munin.md) - a tool to monitor servers and services.
+See [Munin](/docs/Infra/monitoring/munin) - a tool to monitor servers and services.
 
 ## Influx / Prometheus / Grafana
 
@@ -45,33 +48,38 @@ The observability stack used in the OFF infrastructure comprises the following a
 
 <Tabs>
   <Tab value="logs" label="Log Collection">
-    ### Log Management
-    
-    - **Filebeat**: Logs collection agent deployed on each QEMU VM with Docker containers
-    - **[ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)**: Centralized storage and indexing of logs collected from Docker
-    - **[Kibana](https://kibana.openfoodfacts.org/)**: UI to visualize and use logs collected by ElasticSearch [(official doc)](https://www.elastic.co/guide/en/kibana/current/index.html)
+    ### Log Management - **Filebeat**: Logs collection agent deployed on each
+    QEMU VM with Docker containers -
+    **[ElasticSearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html)**:
+    Centralized storage and indexing of logs collected from Docker -
+    **[Kibana](https://kibana.openfoodfacts.org/)**: UI to visualize and use
+    logs collected by ElasticSearch [(official
+    doc)](https://www.elastic.co/guide/en/kibana/current/index.html)
   </Tab>
-  
+
   <Tab value="metrics" label="Metrics & Alerts">
-    ### Metrics and Monitoring
-    
-    - **[Prometheus](https://prometheus.io/docs)**: Scrapes metrics from Prometheus exporters' `/metrics` endpoint
-    - **AlertManager**: Sends alerts based on Prometheus metrics, integrated with dedicated Slack channels
-    - **[InfluxDB](https://docs.influxdata.com/influxdb/v2.0/)**: Storage backend for data harvested by Prometheus
-    - **[Grafana](https://grafana.openfoodfacts.org/)**: Visualizing Prometheus metrics, InfluxDB and other metrics; creating dashboards [(official doc)](https://grafana.com/docs/grafana/latest)
+    ### Metrics and Monitoring - **[Prometheus](https://prometheus.io/docs)**:
+    Scrapes metrics from Prometheus exporters' `/metrics` endpoint -
+    **AlertManager**: Sends alerts based on Prometheus metrics, integrated with
+    dedicated Slack channels -
+    **[InfluxDB](https://docs.influxdata.com/influxdb/v2.0/)**: Storage backend
+    for data harvested by Prometheus -
+    **[Grafana](https://grafana.openfoodfacts.org/)**: Visualizing Prometheus
+    metrics, InfluxDB and other metrics; creating dashboards [(official
+    doc)](https://grafana.com/docs/grafana/latest)
   </Tab>
-  
+
   <Tab value="exporters" label="Exporters">
-    ### Prometheus Exporters
-    
-    - **Prometheus exporters**: Such as the [Apache Prometheus Exporter](https://github.com/Lusitaniae/apache_exporter)
-    - Collect metrics from applications and expose them on a port in the Prometheus metric format
-    - Some applications natively export Prometheus metrics and do not need additional exporters
+    ### Prometheus Exporters - **Prometheus exporters**: Such as the [Apache
+    Prometheus Exporter](https://github.com/Lusitaniae/apache_exporter) -
+    Collect metrics from applications and expose them on a port in the
+    Prometheus metric format - Some applications natively export Prometheus
+    metrics and do not need additional exporters
   </Tab>
 </Tabs>
 
 <Callout type="info">
-**Observability Stack Diagram**: ![Observability stack](../img/obs_stack.png)
+  **Observability Stack Diagram**: ![Observability stack](../img/obs_stack.png)
 </Callout>
 
 ## Prometheus
@@ -93,33 +101,34 @@ The observability stack used in the OFF infrastructure comprises the following a
 We use the [multi-target exporter pattern](https://prometheus.io/docs/guides/multi-target-exporter/#querying-multi-target-exporters-with-prometheus) on some configurations.
 
 <Callout type="info">
-This pattern helps writing a lot of targets that follow same rules in the same way.
+  This pattern helps writing a lot of targets that follow same rules in the same
+  way.
 </Callout>
 
 <Steps>
   <Step>
-    **Initial Processing**
-    
-    Targets will be in `__address__` at the beginning of the process.
+    **Initial Processing** Targets will be in `__address__` at the beginning of
+    the process.
   </Step>
-  
+
   <Step>
-    **Address Overwrite**
-    
-    The last rule overwrites `__address__` to put some static value, but previous rules were already processed.
+    **Address Overwrite** The last rule overwrites `__address__` to put some
+    static value, but previous rules were already processed.
   </Step>
-  
+
   <Step>
-    **Parameter Handling**
-    
-    - Simple params like `instance`, `app` are parameters for the job configuration, not for the target URL
-    - To add params to target URL we use `__param_xxxx` (for example `__param_target` to add a `target` parameter to URL)
-    - `instance` is very important, as each job must have their separate instance name
+    **Parameter Handling** - Simple params like `instance`, `app` are parameters
+    for the job configuration, not for the target URL - To add params to target
+    URL we use `__param_xxxx` (for example `__param_target` to add a `target`
+    parameter to URL) - `instance` is very important, as each job must have
+    their separate instance name
   </Step>
 </Steps>
 
 <Callout type="info">
-You can look at https://prometheus.openfoodfacts.org/targets to see if your targets are processed correctly. A mouse over in the "labels" column shows you parameter before processing.
+  You can look at https://prometheus.openfoodfacts.org/targets to see if your
+  targets are processed correctly. A mouse over in the "labels" column shows you
+  parameter before processing.
 </Callout>
 
 ## Blackbox Exporter
@@ -127,7 +136,10 @@ You can look at https://prometheus.openfoodfacts.org/targets to see if your targ
 Is a service that can be used by Prometheus to probe for websites.
 
 <Callout type="info">
-Prometheus will call the service as if it was a metric exporter with the appropriate target (that you set through `target` on `__param_target` in the configuration if you use [multi-target exporter pattern](https://prometheus.io/docs/guides/multi-target-exporter/#querying-multi-target-exporters-with-prometheus)).
+  Prometheus will call the service as if it was a metric exporter with the
+  appropriate target (that you set through `target` on `__param_target` in the
+  configuration if you use [multi-target exporter
+  pattern](https://prometheus.io/docs/guides/multi-target-exporter/#querying-multi-target-exporters-with-prometheus)).
 </Callout>
 
 ### Testing on Monitoring Container
@@ -197,7 +209,8 @@ curl "http://localhost:9115/probe?module=icmp&app=ovh1&target=ov1.openfoodfacts.
 ## Exposing Metrics Behind a Proxy
 
 <Callout type="info">
-Prometheus server is in OVH datacenter. To expose metrics from Free datacenter through the internet, we use the nginx reverse proxy.
+  Prometheus server is in OVH datacenter. To expose metrics from Free datacenter
+  through the internet, we use the nginx reverse proxy.
 </Callout>
 
 See free-exporters site configuration, and scraper configuration.

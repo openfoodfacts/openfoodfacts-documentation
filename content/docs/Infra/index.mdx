@@ -24,17 +24,17 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 <Cards>
   <Card
     title="Free Datacenter"
-    href="/docs/Infra/free-datacenter"
+    href="/docs/Infra/hosting/free-datacenter"
     description="Primary hosting sponsored by free.org - electricity, network and dedicated server hosting in France"
   />
   <Card
     title="OVH Foundation"
-    href="/docs/Infra/ovh-servers"
+    href="/docs/Infra/hosting/ovh-servers"
     description="Three high-performance bare metal servers sponsored by OVH Foundation for scalable services"
   />
   <Card
     title="Moji Datacenter"
-    href="/docs/Infra/moji-datacenter"
+    href="/docs/Infra/hosting/moji-datacenter"
     description="High-performance specialized server sponsored by Moji for compute-intensive workloads"
   />
 </Cards>
@@ -55,12 +55,12 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 <Cards>
   <Card
     title="Kimsufi"
-    href="/docs/Infra/kimsufi-servers"
+    href="/docs/Infra/hosting/kimsufi-servers"
     description="ks1.openfoodfacts.org - Cost-effective server at Kimsufi for development and testing"
   />
   <Card
     title="Hetzner Cloud"
-    href="/docs/Infra/hetzner-servers"
+    href="/docs/Infra/hosting/hetzner-servers"
     description="Flexible cloud servers at Hetzner for temporary workloads and scaling"
   />
 </Cards>
@@ -160,15 +160,15 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 
 **Setup:**
 
-- Uses [Proxmox](./proxmox) virtualization
+- Uses [Proxmox](/docs/Infra/virtualization/proxmox) virtualization
 - Part of Proxmox cluster
 
 **Services (Proxmox containers):**
 
-- [HTTP reverse proxy](./proxmox#http-reverse-proxy)
-- [Proxmox mail gateway](./mail)
+- [HTTP reverse proxy](/docs/Infra/networking/nginx-reverse-proxy#http-reverse-proxy)
+- [Proxmox mail gateway](/docs/Infra/services/mail)
 - Blog
-- [Odoo (connect)](./odoo)
+- [Odoo (connect)](/docs/Infra/services/odoo)
 
 </Card>
 
@@ -178,7 +178,7 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 
 **Setup:**
 
-- Part of [Proxmox](./proxmox) cluster
+- Part of [Proxmox](/docs/Infra/virtualization/proxmox) cluster
 - Two big QEMU VMs hosting Docker services
 
 **Environments:**
@@ -186,7 +186,7 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 - **Staging VM**: Development and testing services
 - **Production VM**: Live production services
 
-See [Docker architecture](./docker_architecture) for details.
+See [Docker architecture](/docs/Infra/containerization/docker-architecture) for details.
 
 </Card>
 
@@ -215,7 +215,7 @@ See [Docker architecture](./docker_architecture) for details.
 
 - IPv6 only (+ IPv4 internal network)
 
-See [Moji Datacenter](./moji-datacenter) for complete details.
+See [Moji Datacenter](/docs/Infra/hosting/moji-datacenter) for complete details.
 
 </Card>
 

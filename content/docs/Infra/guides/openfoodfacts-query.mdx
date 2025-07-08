@@ -3,10 +3,10 @@ title: "Open Food Facts Query"
 description: "This document describes the Open Food Facts Query project, which computes aggregations for product exploration. It covers its production and staging deployments, testing methods, and how it enhances performance by avoiding direct MongoDB queries."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Open Food Facts Query
 
@@ -30,7 +30,7 @@ The Open Food Facts Query project computes aggregation requests visible on the w
     **Method:** Docker Compose deployment
     
     <Callout type="info">
-    Specific container options are applied to support Docker hosting. See the [2024-02-12 installation report](./reports/2024-02-12-install-off-query-off1.md) for detailed setup information.
+    Specific container options are applied to support Docker hosting. See the [2024-02-12 installation report](/docs/Infra/reports/2024/2024-02-12-install-off-query-off1) for detailed setup information.
     </Callout>
     
     </Card>
@@ -77,10 +77,22 @@ The Open Food Facts Query project computes aggregation requests visible on the w
 ## Key Features
 
 <Cards>
-  <Card title="Aggregation Replacement" description="Replaces MongoDB aggregation queries for better performance" />
-  <Card title="Product Exploration" description="Powers the 'Explore products by' website functionality" />
-  <Card title="Performance Optimization" description="Provides faster query results than direct database access" />
-  <Card title="API Compatibility" description="Accepts standard MongoDB aggregation syntax" />
+  <Card
+    title="Aggregation Replacement"
+    description="Replaces MongoDB aggregation queries for better performance"
+  />
+  <Card
+    title="Product Exploration"
+    description="Powers the 'Explore products by' website functionality"
+  />
+  <Card
+    title="Performance Optimization"
+    description="Provides faster query results than direct database access"
+  />
+  <Card
+    title="API Compatibility"
+    description="Accepts standard MongoDB aggregation syntax"
+  />
 </Cards>
 
 ## Architecture
@@ -91,11 +103,11 @@ The Open Food Facts Query project computes aggregation requests visible on the w
   <Step title="Query Reception">
     Receives aggregation requests from the website frontend
   </Step>
-  
+
   <Step title="Processing">
     Processes queries without direct MongoDB interaction
   </Step>
-  
+
   <Step title="Result Delivery">
     Returns optimized results for product exploration features
   </Step>
@@ -107,35 +119,32 @@ The Open Food Facts Query project computes aggregation requests visible on the w
 
 <Tabs items={["Production Specs", "Staging Specs", "Performance"]}>
   <Tab value="Production Specs">
-    - **Server:** off1 Proxmox host
-    - **Container:** CT 115 (dedicated)
-    - **Deployment:** Docker Compose
-    - **URL:** https://query.openfoodfacts.org/
+    - **Server:** off1 Proxmox host - **Container:** CT 115 (dedicated) -
+    **Deployment:** Docker Compose - **URL:** https://query.openfoodfacts.org/
   </Tab>
-  
+
   <Tab value="Staging Specs">
-    - **Server:** Staging dockers VM
-    - **Storage:** ZFS dataset on NVME pool
-    - **URL:** https://query.openfoodfacts.net/
+    - **Server:** Staging dockers VM - **Storage:** ZFS dataset on NVME pool -
+    **URL:** https://query.openfoodfacts.net/
   </Tab>
-  
+
   <Tab value="Performance">
-    - **Database:** Bypasses MongoDB for aggregations
-    - **Speed:** Faster than direct database queries
-    - **Scalability:** Optimized for high-volume product exploration
+    - **Database:** Bypasses MongoDB for aggregations - **Speed:** Faster than
+    direct database queries - **Scalability:** Optimized for high-volume product
+    exploration
   </Tab>
 </Tabs>
 
 ## Related Documentation
 
 <Cards>
-  <Card 
-    title="Installation Report" 
+  <Card
+    title="Installation Report"
     description="Detailed setup documentation for production deployment"
-    href="./reports/2024-02-12-install-off-query-off1.md"
+    href="/docs/Infra/reports/2024/2024-02-12-install-off-query-off1"
   />
-  <Card 
-    title="GitHub Repository" 
+  <Card
+    title="GitHub Repository"
     description="Source code and development documentation"
     href="https://github.com/openfoodfacts/openfoodfacts-query/"
   />

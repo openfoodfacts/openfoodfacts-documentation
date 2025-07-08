@@ -3,44 +3,50 @@ title: "Folksonomy API"
 description: "This document describes the Folksonomy API, a service enabling contributors to add labels and values to products. It covers deployment on LXC containers, systemd management, useful commands, upgrade procedures, and installation steps."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Folksonomy API
 
 Folksonomy is a service to allow contributors to freely add labels and values to products.
 
-<Card title="Source Code" href="https://github.com/openfoodfacts/folksonomy_api/">
-View the Folksonomy API repository on GitHub
+<Card
+  title="Source Code"
+  href="https://github.com/openfoodfacts/folksonomy_api/"
+>
+  View the Folksonomy API repository on GitHub
 </Card>
 
 ## Deployment
 
 <Callout type="info">
-Folksonomy is deployed on a LXC container (108 at the time of writing).
+  Folksonomy is deployed on a LXC container (108 at the time of writing).
 </Callout>
 
 ### Deployment Details
 
 <Cards>
-<Card title="Code Location">
-Code is in `/home/folksonomy/folksonomy_api`
-</Card>
-<Card title="Service Management">
-Started thanks to a systemd unit: `folksonomy.service` (config at `/etc/systemd/system/folksonomy.service`)
-</Card>
-<Card title="Server Configuration">
-Server is running uvicorn on port 8000 with user folksonomy
-</Card>
-<Card title="Reverse Proxy" href="./nginx-reverse-proxy.md">
-It is served behind the NGINX reverse proxy
-</Card>
+  <Card title="Code Location">
+    Code is in `/home/folksonomy/folksonomy_api`
+  </Card>
+  <Card title="Service Management">
+    Started thanks to a systemd unit: `folksonomy.service` (config at
+    `/etc/systemd/system/folksonomy.service`)
+  </Card>
+  <Card title="Server Configuration">
+    Server is running uvicorn on port 8000 with user folksonomy
+  </Card>
+  <Card title="Reverse Proxy" href="/docs/Infra/networking/nginx-reverse-proxy">
+    It is served behind the NGINX reverse proxy
+  </Card>
 </Cards>
 
 <Callout type="info">
-The python environment has been setup using uv, to get python3.10 and poetry on top of that. So poetry executable is in `/home/folksonomy/.local/bin/poetry`
+  The python environment has been setup using uv, to get python3.10 and poetry
+  on top of that. So poetry executable is in
+  `/home/folksonomy/.local/bin/poetry`
 </Callout>
 
 ## Useful Commands
@@ -66,7 +72,7 @@ sudo journalctl -u folksonomy
 ## Upgrade Process
 
 <Callout type="warning">
-Before every upgrade, make a snapshot of the Proxmox container.
+  Before every upgrade, make a snapshot of the Proxmox container.
 </Callout>
 
 <Steps>
@@ -79,25 +85,18 @@ cd ~/folksonomy_api
 </Step>
 
 <Step>
-**Upgrade from Git Repository**
-```bash title="Upgrade Code"
-git fetch
-git checkout vX.y.z
-```
+  **Upgrade from Git Repository** ```bash title="Upgrade Code" git fetch git
+  checkout vX.y.z ```
 </Step>
 
 <Step>
-**Install Dependencies**
-```bash title="Install Dependencies"
-poetry install
-```
+  **Install Dependencies** ```bash title="Install Dependencies" poetry install
+  ```
 </Step>
 
 <Step>
-**Database Migration**
-```bash title="Run Database Migration"
-poetry run yoyo apply --database postgresql:///folksonomy
-```
+  **Database Migration** ```bash title="Run Database Migration" poetry run yoyo
+  apply --database postgresql:///folksonomy ```
 </Step>
 
 <Step>
@@ -137,6 +136,7 @@ uv tool install poetry --python=3.10
 which poetry
 # /home/folksonomy/.local/bin/poetry
 ```
+
 </Step>
 
 <Step>
@@ -147,5 +147,6 @@ The systemd unit is linked from the repository:
 ln -s /home/folksonomy/folksonomy_api/confs/systemd/folksonomy.service /etc/systemd/system/folksonomy.service
 systemctl daemon-reload
 ```
+
 </Step>
 </Steps>

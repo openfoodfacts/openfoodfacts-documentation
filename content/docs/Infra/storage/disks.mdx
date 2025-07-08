@@ -3,40 +3,47 @@ title: "Disk Management"
 description: "This document outlines best practices for disk management, emphasizing data separation for primary, cache, configuration, and system data. It covers ZFS usage, adding disk space to QEMU VMs, and using smartctl for monitoring disk health."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Disk Management
 
 ## Best Practices
 
 <Callout type="info">
-Always try to separate: primary data, cache data (data generated from primary data), configuration data, and system. This makes data management (backup, recovery, day to day maintenance) easier.
+  Always try to separate: primary data, cache data (data generated from primary
+  data), configuration data, and system. This makes data management (backup,
+  recovery, day to day maintenance) easier.
 </Callout>
 
 <Cards>
-<Card title="Data Separation">
-Separate primary data, cache data, configuration data, and system data for easier management
-</Card>
-<Card title="ZFS Datasets">
-In ZFS use different datasets for different types of data
-</Card>
-<Card title="NFS for Large Data">
-For backup data or large data with few I/O operations eventually use NFS mount from a separate server
-</Card>
+  <Card title="Data Separation">
+    Separate primary data, cache data, configuration data, and system data for
+    easier management
+  </Card>
+  <Card title="ZFS Datasets">
+    In ZFS use different datasets for different types of data
+  </Card>
+  <Card title="NFS for Large Data">
+    For backup data or large data with few I/O operations eventually use NFS
+    mount from a separate server
+  </Card>
 </Cards>
 
 ## Storage Technologies
 
 <Cards>
-<Card title="ZFS Overview" href="./zfs-overview.md">
-We extensively use ZFS for advanced storage management and data protection
-</Card>
-<Card title="Disk Space Management" href="./how-to-add-disk-space-on-qemu.md">
-Learn how to add disk space on a QEMU VM
-</Card>
+  <Card title="ZFS Overview" href="/docs/Infra/storage/zfs-overview">
+    We extensively use ZFS for advanced storage management and data protection
+  </Card>
+  <Card
+    title="Disk Space Management"
+    href="/docs/Infra/how/how-to-add-disk-space-on-qemu"
+  >
+    Learn how to add disk space on a QEMU VM
+  </Card>
 </Cards>
 
 ## Health Monitoring with Smartctl
@@ -44,10 +51,8 @@ Learn how to add disk space on a QEMU VM
 Some useful commands for disk health monitoring:
 
 <Callout type="info">
-```bash title="Complete Disk Information"
-smartctl -x
-```
-This gives you every information about a system.
+  ```bash title="Complete Disk Information" smartctl -x ``` This gives you every
+  information about a system.
 </Callout>
 
 ### Key Health Indicators
@@ -59,13 +64,13 @@ Be attentive to `SMART overall-health self-assessment test result`.
 </Step>
 
 <Step>
-**Error Count Verification**
-Also verify `Device Error Count`. (you can see errors with `smartctl -l error`)
+  **Error Count Verification** Also verify `Device Error Count`. (you can see
+  errors with `smartctl -l error`)
 </Step>
 
 <Step>
-**Self-Test Results**
-Verify that tests under `SMART Extended Self-test` finished. (you can see tests with `smartctl -l selftest`)
+  **Self-Test Results** Verify that tests under `SMART Extended Self-test`
+  finished. (you can see tests with `smartctl -l selftest`)
 </Step>
 
 <Step>
@@ -77,11 +82,16 @@ Use `smartctl -t short /dev/sdX` to test a single device. (or `-t long`)
 ### Useful Resources
 
 <Cards>
-<Card title="Smartctl Guide (French)" href="https://www.malekal.com/smartctl-verifier-son-disque-en-ligne-de-commandes-linux/">
-Comprehensive guide on using smartctl for disk verification
-</Card>
-<Card title="Unreadable Sectors" href="https://www.truenas.com/community/threads/is-this-a-bad-sign-smartd-1-currently-unreadable-pending-sectors.9824/#post-42966">
-Information about unreadable sectors and what they mean
-</Card>
+  <Card
+    title="Smartctl Guide (French)"
+    href="https://www.malekal.com/smartctl-verifier-son-disque-en-ligne-de-commandes-linux/"
+  >
+    Comprehensive guide on using smartctl for disk verification
+  </Card>
+  <Card
+    title="Unreadable Sectors"
+    href="https://www.truenas.com/community/threads/is-this-a-bad-sign-smartd-1-currently-unreadable-pending-sectors.9824/#post-42966"
+  >
+    Information about unreadable sectors and what they mean
+  </Card>
 </Cards>
-
