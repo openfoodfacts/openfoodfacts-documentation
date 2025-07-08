@@ -23,76 +23,49 @@ Most endpoints are publicly accessible. For operations that require authenticati
 
 The Robotoff API is organized into several functional categories:
 
-<Cards>
-  <Card
-    href="/docs/Robotoff/api/prediction-management"
-    title="Prediction Management"
-  >
-    Manage AI predictions, retrieve prediction results, and handle prediction
-    workflows
-  </Card>
-  <Card href="/docs/Robotoff/api/image-predictions" title="Image Predictions">
-    Process product images and extract structured data using computer vision
-  </Card>
-  <Card href="/docs/Robotoff/api/predict" title="Predict Services">
-    Direct prediction endpoints for text analysis, language detection, and
-    category prediction
-  </Card>
-  <Card href="/docs/Robotoff/api/logo-management" title="Logo Management">
-    Detect, annotate, and manage product logos and brand marks
-  </Card>
-  <Card
-    href="/docs/Robotoff/api/annotation-management"
-    title="Annotation Management"
-  >
-    Handle human annotations and crowdsourced data validation
-  </Card>
-  <Card
-    href="/docs/Robotoff/api/question-management"
-    title="Question Management"
-  >
-    Manage validation questions and community feedback workflows
-  </Card>
-  <Card href="/docs/Robotoff/api/image-management" title="Image Management">
-    Upload, process, and manage product images for analysis
-  </Card>
-  <Card href="/docs/Robotoff/api/image-processing" title="Image Processing">
-    Advanced image processing operations and OCR capabilities
-  </Card>
-  <Card href="/docs/Robotoff/api/insight-management" title="Insight Management">
-    Manage AI-generated insights and data extraction results
-  </Card>
-  <Card href="/docs/Robotoff/api/batch-job" title="Batch Processing">
-    Execute and monitor large-scale batch processing operations
-  </Card>
-  <Card href="/docs/Robotoff/api/dataset" title="Dataset Management">
-    Manage training datasets and model data
-  </Card>
-  <Card href="/docs/Robotoff/api/user-management" title="User Management">
-    User statistics and contribution tracking
-  </Card>
-  <Card href="/docs/Robotoff/api/ann-search" title="ANN Search">
-    Approximate nearest neighbor search for similar products
-  </Card>
-  <Card href="/docs/Robotoff/api/system" title="System Status">
-    Health checks, API status, and system monitoring
-  </Card>
-</Cards>
+### Core Prediction Services
+
+- **Prediction Management**: Manage AI predictions, retrieve prediction results, and handle prediction workflows
+- **Image Predictions**: Process product images and extract structured data using computer vision
+- **Predict Services**: Direct prediction endpoints for text analysis, language detection, and category prediction
+
+### Content Management
+
+- **Logo Management**: Detect, annotate, and manage product logos and brand marks
+- **Annotation Management**: Handle human annotations and crowdsourced data validation
+- **Question Management**: Manage validation questions and community feedback workflows
+
+### Image Processing
+
+- **Image Management**: Upload, process, and manage product images for analysis
+- **Image Processing**: Advanced image processing operations and OCR capabilities
+
+### Data & Insights
+
+- **Insight Management**: Manage AI-generated insights and data extraction results
+- **Dataset Management**: Manage training datasets and model data
+
+### Operations & Monitoring
+
+- **Batch Processing**: Execute and monitor large-scale batch processing operations
+- **User Management**: User statistics and contribution tracking
+- **ANN Search**: Approximate nearest neighbor search for similar products
+- **System Status**: Health checks, API status, and system monitoring
 
 ## Getting Started
 
 <Steps>
   <Step title="Explore System Status">
-    Start by checking the [API status](/docs/Robotoff/api/system/getApiStatus)
-    to ensure the service is running
+    Start by checking the [API status](/docs/Robotoff/system/getApiStatus) to
+    ensure the service is running
   </Step>
   <Step title="Test Basic Predictions">
     Try simple predictions like [language
-    detection](/docs/Robotoff/api/predict/predictLanguagePost) to understand the
-    API structure
+    detection](/docs/Robotoff/predict/predictLanguagePost) to understand the API
+    structure
   </Step>
   <Step title="Process Product Images">
-    Use [image prediction endpoints](/docs/Robotoff/api/image-predictions) to
+    Use [image prediction endpoints](/docs/Robotoff/image-predictions) to
     extract data from product images
   </Step>
   <Step title="Integrate Advanced Features">
