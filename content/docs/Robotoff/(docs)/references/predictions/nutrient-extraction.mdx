@@ -8,8 +8,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
-# Nutrition extraction
-
 <Cards>
   <Card
     title="Dataset"
@@ -130,9 +128,9 @@ LayoutLMv3 architecture can perform several tasks, we frame the problem as a **t
 - I-TRANS_FAT_SERVING
 - B-POTASSIUM_SERVING
 - I-POTASSIUM_SERVING
+```
 
 Nutrients that are not in this list are detected as `O` [^other_nutrient_detection].
-</Callout>
 
 ## Dataset
 
@@ -151,9 +149,8 @@ Random images selected as nutrition images were picked for annotation. Using the
 The model was exported to **ONNX** and is served by **Triton server**. The model integration in Robotoff can be found in `robotoff.prediction.nutrition_extraction` module.
 
 <Callout title="Core Function">
-The `predict` function [^predict_function] takes as input:
-- The image (as a Pillow Image)
-- The Google Cloud Vision OCR result (as a `OCRResult` object)
+  The `predict` function [^predict_function] takes as input: - The image (as a
+  Pillow Image) - The Google Cloud Vision OCR result (as a `OCRResult` object)
 </Callout>
 
 <Steps>
@@ -163,13 +160,14 @@ Extract the words and their coordinates from the OCR result.
 </Step>
 
 <Step>
-### Preprocess Data
-Preprocess the image, the words and their coordinates using the LayoutLMv3 preprocessor, that takes care of preprocessing the data in the right format for the LayoutLMv3 model.
+  ### Preprocess Data Preprocess the image, the words and their coordinates
+  using the LayoutLMv3 preprocessor, that takes care of preprocessing the data
+  in the right format for the LayoutLMv3 model.
 </Step>
 
 <Step>
-### Perform Inference
-The request is sent to Triton server through gRPC to get model predictions.
+  ### Perform Inference The request is sent to Triton server through gRPC to get
+  model predictions.
 </Step>
 
 <Step>
@@ -187,8 +185,8 @@ Gather pre-entities from individual labels. There is one pre-entity for each inp
 </Step>
 
 <Step>
-### Aggregate Entities
-The 'O' (OTHER) entity is ignored, and pre-entities with the same entity class are merged together.
+  ### Aggregate Entities The 'O' (OTHER) entity is ignored, and pre-entities
+  with the same entity class are merged together.
 </Step>
 
 <Step>
@@ -215,7 +213,7 @@ The `predict` function returns a `NutritionExtractionPrediction` dataclass with 
 #### Postprocessed Entity Fields
 
 <Callout title="Entity Structure">
-Postprocessed entities contain the following fields:
+  Postprocessed entities contain the following fields:
 </Callout>
 
 - **`entity`**: the nutrient name, in Product Opener format (ex: `energy-kcal_100g` or `salt_serving`)
@@ -230,11 +228,16 @@ Postprocessed entities contain the following fields:
 - **`valid`**: whether the extracted entity is valid
 
 <Callout type="warn" title="Unit Handling">
-Sometimes the nutrient unit is not present after the value, or the OCR didn't detect the corresponding word. You can either infer a plausible unit given the entity (ex: `g` for proteins, carbohydrates,...) or ignore this entity.
+  Sometimes the nutrient unit is not present after the value, or the OCR didn't
+  detect the corresponding word. You can either infer a plausible unit given the
+  entity (ex: `g` for proteins, carbohydrates,...) or ignore this entity.
 </Callout>
 
 <Callout title="Entity Validation">
-We consider an entity invalid if we couldn't extract nutrient value from the `text` field, or if there are more than one entity for a single nutrient. For example, two `proteins_100g` and one `proteins_serving` are considered valid, but two `proteins_100g` are not.
+  We consider an entity invalid if we couldn't extract nutrient value from the
+  `text` field, or if there are more than one entity for a single nutrient. For
+  example, two `proteins_100g` and one `proteins_serving` are considered valid,
+  but two `proteins_100g` are not.
 </Callout>
 
 ### Integration Workflow
@@ -246,8 +249,9 @@ For every new uploaded image, the model is run on this image [^extract_nutrition
 </Step>
 
 <Step>
-### Prediction Creation
-If some entities were detected, we create a `Prediction` in DB using the usual import mechanism [^import_mechanism], under the type `nutrient_extraction`.
+  ### Prediction Creation If some entities were detected, we create a
+  `Prediction` in DB using the usual import mechanism [^import_mechanism], under
+  the type `nutrient_extraction`.
 </Step>
 
 <Step>
@@ -267,4 +271,7 @@ We only create an insight if we detected at least one nutrient value that is not
 [^import_mechanism]: See [this page](/docs/Robotoff/explanations/predictions) for more details
 
 [^nutrient_extraction_import]: See `NutrientExtractionImporter.generate_candidates` for implementation
+
+```
+
 ```

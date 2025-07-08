@@ -3,15 +3,14 @@ title: "Predictions and insights"
 description: "Explore how Robotoff generates predictions from product data and images, then converts them into actionable insights for Open Food Facts product improvement."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
-
-# Predictions and Insights
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 <Callout title="Purpose">
-Robotoff purpose is to generate predictions about Open Food Facts products from various sources: images, image OCRs, product meta data,...
+  Robotoff purpose is to generate predictions about Open Food Facts products
+  from various sources: images, image OCRs, product meta data,...
 </Callout>
 
 ## Prediction Types
@@ -19,10 +18,19 @@ Robotoff purpose is to generate predictions about Open Food Facts products from 
 A complete list of _predictions_ types can be found in [robotoff.prediction.types](https://github.com/openfoodfacts/robotoff/blob/main/robotoff/prediction/types.py).
 
 <Cards>
-  <Card title="brand" description="Brand identification from product images and text" />
-  <Card title="label" description="Label detection (organic, gluten-free, etc.)" />
+  <Card
+    title="brand"
+    description="Brand identification from product images and text"
+  />
+  <Card
+    title="label"
+    description="Label detection (organic, gluten-free, etc.)"
+  />
   <Card title="category" description="Product category classification" />
-  <Card title="ingredient" description="Ingredient list extraction and parsing" />
+  <Card
+    title="ingredient"
+    description="Ingredient list extraction and parsing"
+  />
 </Cards>
 
 All _predictions_ are stored in the PostgreSQL database in the `prediction` table.
@@ -30,7 +38,7 @@ All _predictions_ are stored in the PostgreSQL database in the `prediction` tabl
 ## Prediction Fields
 
 <Callout title="Key Fields">
-Predictions most interesting fields are the following:
+  Predictions most interesting fields are the following:
 </Callout>
 
 - **`barcode`**: barcode of the product (string)
@@ -50,7 +58,9 @@ Predictions most interesting fields are the following:
 - **`predictor_version`**: this is a version ID that is used to know when to replace predictions in database by new ones during import, and when to keep them
 
 <Callout type="info" title="Automatic Processing">
-This does not mean predictions will indeed be applied automatically, please refer to the import mechanism description below to know how automatic processing works.
+  This does not mean predictions will indeed be applied automatically, please
+  refer to the import mechanism description below to know how automatic
+  processing works.
 </Callout>
 
 ## From Predictions to Insights
@@ -67,7 +77,7 @@ For example, we may have the following predictions on a (french) organic product
 
 - **prediction 1**: _type_: `label`, _value_tag_: `en:organic`
 - **prediction 2**: _type_: `label`, _value_tag_: `fr:ab-agriculture-biologique`
-</Step>
+  </Step>
 
 <Step>
 ### Insight Generation
@@ -76,9 +86,9 @@ As `fr:ab-agriculture-biologique` is a children of `en:organic` in the label tax
 </Steps>
 
 <Callout title="Key Difference">
-This is the different between _insights_ and _predictions_: 
-- **_predictions_** can be viewed as raw data
-- **_insights_** as actionable data
+  This is the different between _insights_ and _predictions_: -
+  **_predictions_** can be viewed as raw data - **_insights_** as actionable
+  data
 </Callout>
 
 Most insight types are generated directly from their corresponding prediction types (ex: `brand`, `label`,...). However, an insight type can require prediction of several types: this allow the generation of complex insight types.
@@ -104,7 +114,8 @@ Insights are saved in DB in the `product_insight` table. Insight fields are a su
 - **`reserved_barcode`**: if `True`, the product has a reserved barcode, it's probably a variable weight product
 
 <Callout type="warn" title="Reserved Barcodes">
-We don't show any question about reserved barcode products by default in all `/questions/*` API routes.
+  We don't show any question about reserved barcode products by default in all
+  `/questions/*` API routes.
 </Callout>
 
 ## Import Mechanism
@@ -124,8 +135,9 @@ This check is disabled if `ENABLE_MONGODB_ACCESS=0` (=default settings only for 
 </Step>
 
 <Step>
-### Grouping and Cleanup
-We then group predictions by product barcode, and delete all predictions that have the same `barcode`, `server_type`, `type`, `source_image` **and** that have a different `predictor_version`.
+  ### Grouping and Cleanup We then group predictions by product barcode, and
+  delete all predictions that have the same `barcode`, `server_type`, `type`,
+  `source_image` **and** that have a different `predictor_version`.
 </Step>
 
 <Step>
@@ -135,7 +147,8 @@ We import predictions, only if no other predictions with the same `(type, server
 </Steps>
 
 <Callout title="Version Control">
-`predictor_version` is therefore used to control when to keep the previous predictions and when to delete them.
+  `predictor_version` is therefore used to control when to keep the previous
+  predictions and when to delete them.
 </Callout>
 
 ### Insight Generation Process
@@ -147,13 +160,16 @@ From predictions, we then generate and import insights. Insights objects are cre
 </Step>
 
 <Step>
-### Importer Assignment
-Every insight type has a single `InsightImporter` that is in charge of creating/updating/deleting insights from a list of predictions.
+  ### Importer Assignment Every insight type has a single `InsightImporter` that
+  is in charge of creating/updating/deleting insights from a list of
+  predictions.
 </Step>
 
 <Step>
-### Candidate Generation
-The importer must have a `generate_candidates` method that returns a list of candidate insights — `ProductInsight`s should be created from predictions in this method. This is also where all the selection logic is (what prediction data to keep, what to ignore).
+  ### Candidate Generation The importer must have a `generate_candidates` method
+  that returns a list of candidate insights — `ProductInsight`s should be
+  created from predictions in this method. This is also where all the selection
+  logic is (what prediction data to keep, what to ignore).
 </Step>
 
 <Step>
@@ -165,5 +181,7 @@ From the list of candidate insight, we update the `product_insight` table, by de
 ### Final Processing
 
 <Callout type="success" title="Availability">
-Once insights are refreshed/imported, they become available as questions in `/questions/*` API routes. Automatically processable insights are applied by the scheduler, once `current_timestamp >= ${process_after}`.
+  Once insights are refreshed/imported, they become available as questions in
+  `/questions/*` API routes. Automatically processable insights are applied by
+  the scheduler, once `current_timestamp >= ${process_after}`.
 </Callout>

@@ -3,13 +3,12 @@ title: "Test and Debug Robotoff"
 description: "This document guides you through testing and debugging Robotoff. It covers generating data, running test cases (including single tests), when to write new tests, and debugging techniques using PDB and local checks."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# Test and Debug
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 This documentation intends to:
+
 1. Familiarize you with running our test cases
 2. Give you some tips to avoid getting stuck if you are working only on Robotoff and don't need complete installation of Open Food Facts server
 
@@ -21,6 +20,7 @@ Robotoff is an API that pulls prediction data, annotation data, product data, nu
 If your development instance is not connected to a product-opener instance (which happens automatically if you have a running product-opener instance), you won't have a MongoDB instance. This means you won't have any product data on your local setup.
 
 Though you may populate your postgres database with some predictions, insights, images references, etc.
+
 </Callout>
 
 We recommend [Factory](https://factoryboy.readthedocs.io/en/stable/) to create some data in your local database.
@@ -37,7 +37,8 @@ PredictionFactory()
 ```
 
 <Callout type="warn">
-**Windows Users:** We recommend using [Git bash](https://git-scm.com/downloads) to run commands.
+  **Windows Users:** We recommend using [Git
+  bash](https://git-scm.com/downloads) to run commands.
 </Callout>
 
 ## Running Test Cases
@@ -54,7 +55,7 @@ make tests
 
 ### Run a Single Test Case
 
-The simplest is to use the *pytest* make target for that:
+The simplest is to use the _pytest_ make target for that:
 
 ```bash title="Run single test"
 make pytest args='path/to/test_file.py::the_function_name'
@@ -68,24 +69,39 @@ make pytest args="tests/unit/insights/test_importer.py::TestLabelInsightImporter
 ```
 
 <Callout type="info">
-Remember to put quotes especially if you have multiple arguments.
+  Remember to put quotes especially if you have multiple arguments.
 </Callout>
 
 <Callout type="warn">
-Be sure to run `make create_external_networks` before if needed (especially if you get `Network po_test declared as external, but could not be found`)
+  Be sure to run `make create_external_networks` before if needed (especially if
+  you get `Network po_test declared as external, but could not be found`)
 </Callout>
 
 ## When to Write Test Cases
 
 <Cards>
-  <Card title="New Features" description="Write test cases every time you write a new feature" />
-  <Card title="Feature Testing" description="Test existing features to ensure they work correctly" />
-  <Card title="Code Understanding" description="Write tests to understand the working of existing functions" />
-  <Card title="Bug Prevention" description="Automated testing helps prevent future bugs as we introduce new features or refactor" />
+  <Card
+    title="New Features"
+    description="Write test cases every time you write a new feature"
+  />
+  <Card
+    title="Feature Testing"
+    description="Test existing features to ensure they work correctly"
+  />
+  <Card
+    title="Code Understanding"
+    description="Write tests to understand the working of existing functions"
+  />
+  <Card
+    title="Bug Prevention"
+    description="Automated testing helps prevent future bugs as we introduce new features or refactor"
+  />
 </Cards>
 
 <Callout type="info">
-There are instances when Robotoff tries to connect to MongoDB via Open Food Facts server. To disable this feature (this is disabled by default on local environments), set `ENABLE_MONGODB_ACCESS=0` in your `.env`.
+  There are instances when Robotoff tries to connect to MongoDB via Open Food
+  Facts server. To disable this feature (this is disabled by default on local
+  environments), set `ENABLE_MONGODB_ACCESS=0` in your `.env`.
 </Callout>
 
 ## Debugging Guide
@@ -101,7 +117,8 @@ make pytest args="path/to/test.py --pdb"
 ```
 
 <Callout type="info">
-If it's a `mock.assert_called_with`, you can look at the real data passed to a test case by calling `mock.call_args` in the pdb console.
+  If it's a `mock.assert_called_with`, you can look at the real data passed to a
+  test case by calling `mock.call_args` in the pdb console.
 </Callout>
 
 ### Manual Debugging
@@ -115,7 +132,8 @@ import pdb; pdb.set_trace()
 and then run the `pytest`, with the `--pdb` option (as above).
 
 <Callout type="info">
-We need the `--pdb` option, to view the inputs and outputs captured by pytest and access the pdb console.
+  We need the `--pdb` option, to view the inputs and outputs captured by pytest
+  and access the pdb console.
 </Callout>
 
 ## Local Checks

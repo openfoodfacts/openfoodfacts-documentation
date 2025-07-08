@@ -3,15 +3,14 @@ title: "Nutrition Table Annotation Guidelines"
 description: "These guidelines detail how to annotate nutrition tables in images for research purposes. They cover what to label, how to mark bounding boxes, and specific categorization rules for different types of nutrition information displays, including text and small energy symbols."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-
-# Nutrition Table Annotation Guidelines
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
 
 Guidelines on what and how to label.
 
 <Callout type="info">
-  Adapted from [PASCAL VOC 2011 Guidelines](http://host.robots.ox.ac.uk/pascal/VOC/voc2011/guidelines.html)
+  Adapted from [PASCAL VOC 2011
+  Guidelines](http://host.robots.ox.ac.uk/pascal/VOC/voc2011/guidelines.html)
 </Callout>
 
 ## What to Label
@@ -19,18 +18,26 @@ Guidelines on what and how to label.
 All objects of the defined categories, unless:
 
 <Callout type="warn">
-  **Exceptions:**
-  - You are unsure what the object is
-  - The object is very small (at your discretion)
-  - Less than 10-20% of the object is visible, such that you cannot be sure what class it is
+  **Exceptions:** - You are unsure what the object is - The object is very small
+  (at your discretion) - Less than 10-20% of the object is visible, such that
+  you cannot be sure what class it is
 </Callout>
 
 ### Bounding Box Rules
 
 <Cards>
-  <Card title="Visible Area" description="Mark the bounding box of the visible area of the object (not the estimated total extent)" />
-  <Card title="Complete Coverage" description="Bounding box should contain all visible pixels" />
-  <Card title="Tight Fit" description="The bounding box should enclose the object as tight as possible" />
+  <Card
+    title="Visible Area"
+    description="Mark the bounding box of the visible area of the object (not the estimated total extent)"
+  />
+  <Card
+    title="Complete Coverage"
+    description="Bounding box should contain all visible pixels"
+  />
+  <Card
+    title="Tight Fit"
+    description="The bounding box should enclose the object as tight as possible"
+  />
 </Cards>
 
 ### Special Cases
@@ -39,41 +46,48 @@ All objects of the defined categories, unless:
 If an object is 'occluded' by a close-fitting occluder (e.g., clothing, mud, snow), then the occluder should be treated as part of the object.
 
 **Transparency**
+
 - ✅ **Do label** objects visible through glass
 - ❌ **Treat reflections** on the glass as occlusion
 
 **Mirrors**
+
 - ✅ **Do label** objects in mirrors
 
 **Pictures**
+
 - ✅ **Label objects** in pictures/posters/signs only if they are photorealistic
 - ❌ **Do not label** cartoons, symbols, etc.
 
 ## Guidelines on Categorization
 
 <Cards>
-  <Card 
-    title="nutrition-table" 
+  <Card
+    title="nutrition-table"
     description="A table containing nutrition facts"
   />
-  <Card 
-    title="nutrition-table-text" 
+  <Card
+    title="nutrition-table-text"
     description="Variant where nutrition facts are not displayed in a table. Ex: 'Nutritional facts for 100g: Energy - 252 kJ, fat: 12g,...'"
   />
-  <Card 
-    title="nutrition-table-small-energy" 
+  <Card
+    title="nutrition-table-small-energy"
     description="Symbol often found on the front image indicating kJ/kcal of a portion/100g. Bounding box should only enclose the symbol, not additional texts around it"
   />
-  <Card 
-    title="nutrition-table-small" 
+  <Card
+    title="nutrition-table-small"
     description="Pack of symbols often found on front image indicating nutrition facts. Use this if other nutritional information are laid out next to the object"
   />
 </Cards>
 
 <Callout type="info">
-  **Multiple Tables**: If there are several nutrition-table or nutrition-table-text on the image (often found on multilingual products), label each object separately.
+  **Multiple Tables**: If there are several nutrition-table or
+  nutrition-table-text on the image (often found on multilingual products),
+  label each object separately.
 </Callout>
 
 <Callout type="warn">
-  **Important**: For nutrition-table-small-energy, do not use this label if other nutritional information are laid out next to the object - use nutrition-table-small instead.
+  **Important**: For nutrition-table-small-energy, do not use this label if
+  other nutritional information are laid out next to the object - use
+  nutrition-table-small instead.
 </Callout>

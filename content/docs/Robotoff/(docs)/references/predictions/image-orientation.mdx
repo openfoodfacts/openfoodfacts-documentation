@@ -3,11 +3,9 @@ title: "Image Orientation Detection"
 description: "This document explains Robotoff's image orientation detection feature, which automatically corrects product image orientations using Google Cloud Vision OCR. It details the detection algorithm, technical implementation, bounding box transformation, and current limitations."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# Image Orientation Detection
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 The image orientation feature automatically detects and corrects incorrectly oriented selected product images (front, ingredients, nutrition, and packaging) using text orientation analysis.
 
@@ -20,11 +18,11 @@ The image orientation feature automatically detects and corrects incorrectly ori
     Google Cloud Vision OCR analyzes text orientation in uploaded product images.
   </Step>
 
-  <Step>
-    ### Insight Generation
-    
-    When text is detected with non-upright orientation (≥95% confidence) in a selected image, an `image_orientation` insight is generated.
-  </Step>
+<Step>
+  ### Insight Generation When text is detected with non-upright orientation
+  (≥95% confidence) in a selected image, an `image_orientation` insight is
+  generated.
+</Step>
 
   <Step>
     ### Rotation Application
@@ -44,18 +42,29 @@ The detection uses OCR orientation metadata to identify incorrectly oriented ima
 3. **Determines rotation angle** (0, 90, 180, or 270 degrees)
 
 <Callout type="info">
-  Only images with ≥95% confidence in a consistent non-upright orientation generate insights. If more than 10 words are detected on the image, **we mark the insight as automatically processable**, which means the rotation will be automatically applied without user confirmation.
+  Only images with ≥95% confidence in a consistent non-upright orientation
+  generate insights. If more than 10 words are detected on the image, **we mark
+  the insight as automatically processable**, which means the rotation will be
+  automatically applied without user confirmation.
 </Callout>
 
 <Callout type="info">
-  The 10-word threshold is a heuristic based on manual inspection of the generated insights: almost all false positives were generated from images with less than 10 words.
+  The 10-word threshold is a heuristic based on manual inspection of the
+  generated insights: almost all false positives were generated from images with
+  less than 10 words.
 </Callout>
 
 ### Component Architecture
 
 <Cards>
-  <Card title="ImageOrientationImporter" description="Validates images, checks confidence thresholds, and creates insights with rotation information" />
-  <Card title="ImageOrientationAnnotator" description="Processes rotation annotation, transforms bounding boxes, and calls Product Opener API" />
+  <Card
+    title="ImageOrientationImporter"
+    description="Validates images, checks confidence thresholds, and creates insights with rotation information"
+  />
+  <Card
+    title="ImageOrientationAnnotator"
+    description="Processes rotation annotation, transforms bounding boxes, and calls Product Opener API"
+  />
 </Cards>
 
 #### Importer Validation
@@ -86,11 +95,10 @@ When rotating images with existing crop bounding boxes, the coordinates are tran
     The original coordinates are converted to a standard format.
   </Step>
 
-  <Step>
-    ### Rotation Transformation
-    
-    A rotation transformation is applied based on the rotation angle.
-  </Step>
+<Step>
+  ### Rotation Transformation A rotation transformation is applied based on the
+  rotation angle.
+</Step>
 
   <Step>
     ### Boundary Adjustment
@@ -110,17 +118,13 @@ For a sideways nutrition image:
     OCR analysis detects text oriented to the right.
   </Step>
 
-  <Step>
-    ### Insight Generation
-    
-    An insight with `rotation: 270` is generated.
-  </Step>
+<Step>
+  ### Insight Generation An insight with `rotation: 270` is generated.
+</Step>
 
-  <Step>
-    ### Application
-    
-    When applied, the image is rotated 270° counter-clockwise.
-  </Step>
+<Step>
+  ### Application When applied, the image is rotated 270° counter-clockwise.
+</Step>
 
   <Step>
     ### Bounding Box Update
@@ -132,8 +136,8 @@ For a sideways nutrition image:
 ## Limitations
 
 <Callout type="warn">
-  **Current Limitations:**
-  - Requires clear, readable text for reliable orientation detection
-  - Images with mixed text orientations may not reach the confidence threshold
-  - Rotation applies to the entire selected image, affecting all cropping areas
+  **Current Limitations:** - Requires clear, readable text for reliable
+  orientation detection - Images with mixed text orientations may not reach the
+  confidence threshold - Rotation applies to the entire selected image,
+  affecting all cropping areas
 </Callout>

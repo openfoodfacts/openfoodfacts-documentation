@@ -3,27 +3,29 @@ title: "Question format"
 description: "Learn about Robotoff question formats for client applications, including binary choice questions, metadata requirements, and annotation workflow for product insights validation."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
-
-# Question Format
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 <Callout title="Client-Server Communication">
-After loading a product, the client (web, iOS, Android) will request the Robotoff server a _question_ (on `/api/v1/questions/{barcode}`). [^question_api]
+  After loading a product, the client (web, iOS, Android) will request the
+  Robotoff server a _question_ (on `/api/v1/questions/{barcode}`).
+  [^question_api]
 </Callout>
 
 A question includes an insight and metadata such that the client knows how to display the question and what kind of input is expected from the user.
 
 <Callout type="info" title="Localization">
-All data returned by Robotoff is localized with respect to the `lang` parameter provided by the client.
+  All data returned by Robotoff is localized with respect to the `lang`
+  parameter provided by the client.
 </Callout>
 
 ## Question Formats
 
 <Callout title="Universal Option">
-For all formats, a _I don't know_ button will offer the user the possibility to leave without answering the question.
+  For all formats, a _I don't know_ button will offer the user the possibility
+  to leave without answering the question.
 </Callout>
 
 ### Addition: Binary Choice (`add-binary`)
@@ -32,25 +34,31 @@ Add a fact about a product, by accepting (1) or rejecting (0) the insight.
 
 <Cards>
   <Card title="Label Addition" description="Add a new label (en:organic)" />
-  <Card title="Packager Code" description="Add a new packager code (EMB 52052B)" />
-  <Card title="Category Addition" description="Add a new category (en:pastas)" />
+  <Card
+    title="Packager Code"
+    description="Add a new packager code (EMB 52052B)"
+  />
+  <Card
+    title="Category Addition"
+    description="Add a new category (en:pastas)"
+  />
 </Cards>
 
 #### Format Requirements
 
 <Callout title="Required Fields">
-+ **type** (str, required) - The question type (`add-binary`)
-+ **question** (str, required) - The question, in the user locale
-+ **insight_id** (str, required) - ID of the insight
+  + **type** (str, required) - The question type (`add-binary`) + **question**
+  (str, required) - The question, in the user locale + **insight_id** (str,
+  required) - ID of the insight
 </Callout>
 
 <Callout title="Optional Fields">
-+ **value** (str, optional) - The suggested value for the field
-+ **image_url** (str, optional) - An image to display
+  + **value** (str, optional) - The suggested value for the field +
+  **image_url** (str, optional) - An image to display
 </Callout>
 
 <Callout type="warn" title="Field Constraint">
-`value` or `image_url` cannot be both missing.
+  `value` or `image_url` cannot be both missing.
 </Callout>
 
 #### Examples
@@ -87,26 +95,32 @@ Add a fact about a product, by accepting (1) or rejecting (0) the insight.
 #### Image References
 
 <Cards>
-  <Card title="ref_image_url" description="Can be used to display an image in the question interface, such as labels (IGP, organic,...)" />
-  <Card title="source_image_url" description="The URL of the image from which the insight was extracted, if any" />
+  <Card
+    title="ref_image_url"
+    description="Can be used to display an image in the question interface, such as labels (IGP, organic,...)"
+  />
+  <Card
+    title="source_image_url"
+    description="The URL of the image from which the insight was extracted, if any"
+  />
 </Cards>
 
 #### Response Format
 
 <Steps>
-<Step>
-### Client Response
-The client returns the insight ID and the annotation (0, -1 or 1). [^annotate]
-</Step>
+  <Step>
+    ### Client Response The client returns the insight ID and the annotation (0,
+    -1 or 1). [^annotate]
+  </Step>
 </Steps>
 
 <Callout type="info" title="Annotation Values">
-- **1**: Accept the insight (correct)
-- **0**: Reject the insight (incorrect) 
-- **-1**: Invalid insight
+  - **1**: Accept the insight (correct) - **0**: Reject the insight (incorrect)
+  - **-1**: Invalid insight
 </Callout>
 
 ---
 
 [^question_api]: see `robotoff.app.api.ProductQuestionsResource`
+
 [^annotate]: see `robotoff.app.api.AnnotateInsightResource`

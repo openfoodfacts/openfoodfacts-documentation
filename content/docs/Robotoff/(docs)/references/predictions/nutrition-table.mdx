@@ -3,14 +3,16 @@ title: "Nutrition Photo Selection"
 description: "This document explains the process of selecting nutrition photos for products, focusing on detecting nutrition tables using string matching and machine learning. It details the criteria for candidate images, the role of nutrient mentions, and the integration with object detection for cropping."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# Nutrition Photo Selection
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 <Callout title="Objective">
-Every product should have a nutrition photo selected if nutrition facts are visible on the packaging. For multilingual products, we only want a nutrition table to be selected for the main language of the product to avoid unnecessary image duplication, except in the rare cases where we have distinct table for different languages.
+  Every product should have a nutrition photo selected if nutrition facts are
+  visible on the packaging. For multilingual products, we only want a nutrition
+  table to be selected for the main language of the product to avoid unnecessary
+  image duplication, except in the rare cases where we have distinct table for
+  different languages.
 </Callout>
 
 ## Detection Methods
@@ -39,7 +41,7 @@ We use `nutrient_mention` insights [^nutrient_mention_insight] to fetch all nutr
 
 - **Nutrient names**: "sugar", "carbohydrates", "nutritional information", "energy", etc.
 - **Nutrient values**: Numeric values with units
-</Step>
+  </Step>
 
 <Step>
 ### Nutrient Insights
@@ -52,7 +54,7 @@ We also use `nutrient` insights [^nutrient_insight], that detect nutrient name a
 The detected nutrient names are associated with one or more language (ex: if we detect 'energie', it may be in French, German or Dutch). We check for each image and each detected language if the following rules apply, in which case the image is a candidate for selection as a nutrition table photo [^nutrition_image_importer]:
 
 <Callout title="Candidate Requirements">
-All of the following conditions must be met:
+  All of the following conditions must be met:
 </Callout>
 
 - **Nutrient names**: At least 4 nutrient name mentions ("sugar", "energy",...) in the target language
@@ -75,10 +77,7 @@ All of the following conditions must be met:
 If all the selection criteria apply, we generate an insight.
 </Step>
 
-<Step>
-### Uniqueness
-There is maximum one insight generated per product.
-</Step>
+<Step>### Uniqueness There is maximum one insight generated per product.</Step>
 
 <Step>
 ### Prioritization
@@ -87,11 +86,16 @@ We generate candidates using the most recent images first (images are sorted by 
 </Steps>
 
 <Callout type="info" title="Image Prioritization">
-Note that we generate candidates using the most recent images first (images are sorted by decreasing image IDs), so that the most recent images are considered first: we want the most up-to-date photo possible for nutrition table.
+  Note that we generate candidates using the most recent images first (images
+  are sorted by decreasing image IDs), so that the most recent images are
+  considered first: we want the most up-to-date photo possible for nutrition
+  table.
 </Callout>
 
 ---
 
 [^nutrient_mention_insight]: see `find_nutrient_mentions` in `robotoff.prediction.ocr.nutrient`
+
 [^nutrient_insight]: see `find_nutrient_values` in `robotoff.prediction.ocr.nutrient`
+
 [^nutrition_image_importer]: see `NutritionImageImporter.generate_candidates_for_image` in `robotoff.insights.importer`

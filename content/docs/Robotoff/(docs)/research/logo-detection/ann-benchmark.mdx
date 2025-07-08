@@ -3,20 +3,30 @@ title: "ANN Benchmark"
 description: "This document details a benchmark comparing HNSW indexes from Faiss, Redis, and Elasticsearch for nearest neighbor search in logo detection. It evaluates performance based on recall, search time, and memory usage, concluding with the selection of Elasticsearch."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# ANN Benchmark
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 All logos are embedded through a computer vision model. In order to help logos annotation, the nearest neighbors of each logo must be easily accessible.
 
 A benchmark has been performed to determine the best way to perform a nearest neighbors search among the following HNSW indexes:
 
 <Cards>
-  <Card title="Faiss" href="https://github.com/facebookresearch/faiss" description="Facebook AI Similarity Search library" />
-  <Card title="Redis" href="https://redis.io/docs/stack/search/reference/vectors/" description="Redis vector search capabilities" />
-  <Card title="Elasticsearch" href="https://www.elastic.co/fr/blog/introducing-approximate-nearest-neighbor-search-in-elasticsearch-8-0" description="Elasticsearch ANN search implementation" />
+  <Card
+    title="Faiss"
+    href="https://github.com/facebookresearch/faiss"
+    description="Facebook AI Similarity Search library"
+  />
+  <Card
+    title="Redis"
+    href="https://redis.io/docs/stack/search/reference/vectors/"
+    description="Redis vector search capabilities"
+  />
+  <Card
+    title="Elasticsearch"
+    href="https://www.elastic.co/fr/blog/introducing-approximate-nearest-neighbor-search-in-elasticsearch-8-0"
+    description="Elasticsearch ANN search implementation"
+  />
 </Cards>
 
 For each framework, multiple parameters were used to find the best index in our use case.
@@ -24,30 +34,49 @@ For each framework, multiple parameters were used to find the best index in our 
 ## Use Case Requirements
 
 <Callout type="info">
-  The data used to test the performance of the indexes was made of **4,371,343 vectors** (each one issued from the CLIP vision model with a logo as input) of dimension 768 and type float32.
+  The data used to test the performance of the indexes was made of **4,371,343
+  vectors** (each one issued from the CLIP vision model with a logo as input) of
+  dimension 768 and type float32.
 </Callout>
 
 **Technical Details:**
+
 - **Vector Dimension**: 768 (CLIP embeddings before projection layer)
 - **Production Dimension**: 512 (after projection layer)
 - **Data Type**: float32
 
 <Callout type="info">
-  The dimension of each vector used in the benchmark is 768, the size of embeddings CLIP outputs before processing through the projection layer. However, in production, as this last layer of the CLIP model is used, the dimension of the embeddings that are indexed is actually 512. The process to go from 768 to 512 being only a projection, the change of dimensionality should not impact the results.
+  The dimension of each vector used in the benchmark is 768, the size of
+  embeddings CLIP outputs before processing through the projection layer.
+  However, in production, as this last layer of the CLIP model is used, the
+  dimension of the embeddings that are indexed is actually 512. The process to
+  go from 768 to 512 being only a projection, the change of dimensionality
+  should not impact the results.
 </Callout>
 
 ### Performance Requirements
 
 <Cards>
-  <Card title="Real-time Search" description="Search for nearest neighbors in real time with short search time" />
-  <Card title="High Precision" description="Important to get logos as close as possible from the query logo for efficient annotation" />
-  <Card title="Low Memory Usage" description="Must work in production on machines running other parallel tasks" />
+  <Card
+    title="Real-time Search"
+    description="Search for nearest neighbors in real time with short search time"
+  />
+  <Card
+    title="High Precision"
+    description="Important to get logos as close as possible from the query logo for efficient annotation"
+  />
+  <Card
+    title="Low Memory Usage"
+    description="Must work in production on machines running other parallel tasks"
+  />
 </Cards>
 
 ## Test Conditions
 
 <Callout type="info">
-  All HNSW results were compared to FLAT faiss index search (an exact search) results to compute the precision of the index. Only **cosine similarity** was used in this benchmark.
+  All HNSW results were compared to FLAT faiss index search (an exact search)
+  results to compute the precision of the index. Only **cosine similarity** was
+  used in this benchmark.
 </Callout>
 
 ### HNSW Parameters
@@ -61,26 +90,28 @@ HNSW indexes are adjustable through three parameters:
 ## Benchmark Results
 
 <Callout type="info">
-  You can find the code of the various benchmarks [here](https://github.com/openfoodfacts/openfoodfacts-ai/tree/d74dba0/logo-ann/benchmarks/ANN_benchmark).
+  You can find the code of the various benchmarks
+  [here](https://github.com/openfoodfacts/openfoodfacts-ai/tree/d74dba0/logo-ann/benchmarks/ANN_benchmark).
 </Callout>
 
 ### Faiss Results
 
 <Callout type="warn">
-  The recall never outreaches 0.76. A better recall was wanted, so Redis HNSW indexes were explored.
+  The recall never outreaches 0.76. A better recall was wanted, so Redis HNSW
+  indexes were explored.
 </Callout>
 
-| m  | efConstruction | efSearch | micro-recall@1 | micro-recall@4 | micro-recall@10 | micro-recall@50 | micro-recall@100 |
-|----|----------------|----------|----------------|----------------|-----------------|-----------------|------------------|
-| -  | -              | -        | -              | -              | -               | -               | -                |
-| 8  | 128            | 64       | 0.582          | 0.69475        | 0.706           | 0.70754         | 0.6829           |
-| 8  | 128            | 128      | 0.591          | 0.70925        | 0.7238          | 0.72874         | 0.72166          |
-| 8  | 256            | 64       | 0.598          | 0.714          | 0.7265          | 0.72542         | 0.70022          |
-| 8  | 256            | 128      | 0.603          | 0.72225        | 0.7356          | 0.74082         | 0.7346           |
-| 16 | 128            | 64       | 0.605          | 0.72875        | 0.7393          | 0.74212         | 0.72658          |
-| 16 | 128            | 128      | 0.615          | 0.737          | 0.7476          | 0.75206         | 0.74833          |
-| 16 | 256            | 64       | 0.623          | 0.74175        | 0.7501          | 0.75244         | 0.73805          |
-| 16 | 256            | 128      | 0.624          | 0.745          | 0.7546          | 0.7581          | 0.75509          |
+| m   | efConstruction | efSearch | micro-recall@1 | micro-recall@4 | micro-recall@10 | micro-recall@50 | micro-recall@100 |
+| --- | -------------- | -------- | -------------- | -------------- | --------------- | --------------- | ---------------- |
+| -   | -              | -        | -              | -              | -               | -               | -                |
+| 8   | 128            | 64       | 0.582          | 0.69475        | 0.706           | 0.70754         | 0.6829           |
+| 8   | 128            | 128      | 0.591          | 0.70925        | 0.7238          | 0.72874         | 0.72166          |
+| 8   | 256            | 64       | 0.598          | 0.714          | 0.7265          | 0.72542         | 0.70022          |
+| 8   | 256            | 128      | 0.603          | 0.72225        | 0.7356          | 0.74082         | 0.7346           |
+| 16  | 128            | 64       | 0.605          | 0.72875        | 0.7393          | 0.74212         | 0.72658          |
+| 16  | 128            | 128      | 0.615          | 0.737          | 0.7476          | 0.75206         | 0.74833          |
+| 16  | 256            | 64       | 0.623          | 0.74175        | 0.7501          | 0.75244         | 0.73805          |
+| 16  | 256            | 128      | 0.624          | 0.745          | 0.7546          | 0.7581          | 0.75509          |
 
 ### Redis Results
 
@@ -89,31 +120,34 @@ HNSW indexes are adjustable through three parameters:
 </Callout>
 
 <Callout type="warn">
-  **Memory Issue**: Redis loads all the embeddings in RAM when loading the index, which accounts for more than **20 GB of RAM** used by it. This is too much for our use case.
+  **Memory Issue**: Redis loads all the embeddings in RAM when loading the
+  index, which accounts for more than **20 GB of RAM** used by it. This is too
+  much for our use case.
 </Callout>
 
-| m | efConstruction | efRuntime | micro-recall@1 | micro-recall@4 | micro-recall@10 | micro-recall@50 | micro-recall@100 |
-|---|----------------|-----------|----------------|----------------|-----------------|-----------------|------------------|
-| - | -              | -         | -              | -              | -               | -               | -                |
-| 4 | 128            | 64        | 0.799          | 0.795          | 0.7968          | 0.76916         | 0.72839          |
-| 4 | 128            | 128       | 0.822          | 0.81875        | 0.8215          | 0.79918         | 0.76812          |
-| 4 | 256            | 64        | 0.83           | 0.8305         | 0.8254          | 0.79126         | 0.74795          |
-| 4 | 256            | 128       | 0.855          | 0.8565         | 0.8511          | 0.82204         | 0.78854          |
-| 8 | 128            | 64        | 0.955          | 0.94075        | 0.9318          | 0.90614         | 0.88248          |
-| 8 | 128            | 128       | 0.964          | 0.95           | 0.9403          | 0.91784         | 0.90007          |
-| 8 | 256            | 64        | 0.964          | 0.9515         | 0.9424          | 0.91672         | 0.89339          |
-| 8 | 256            | 128       | 0.969          | 0.95725        | 0.9477          | 0.92514         | 0.90855          |
+| m   | efConstruction | efRuntime | micro-recall@1 | micro-recall@4 | micro-recall@10 | micro-recall@50 | micro-recall@100 |
+| --- | -------------- | --------- | -------------- | -------------- | --------------- | --------------- | ---------------- |
+| -   | -              | -         | -              | -              | -               | -               | -                |
+| 4   | 128            | 64        | 0.799          | 0.795          | 0.7968          | 0.76916         | 0.72839          |
+| 4   | 128            | 128       | 0.822          | 0.81875        | 0.8215          | 0.79918         | 0.76812          |
+| 4   | 256            | 64        | 0.83           | 0.8305         | 0.8254          | 0.79126         | 0.74795          |
+| 4   | 256            | 128       | 0.855          | 0.8565         | 0.8511          | 0.82204         | 0.78854          |
+| 8   | 128            | 64        | 0.955          | 0.94075        | 0.9318          | 0.90614         | 0.88248          |
+| 8   | 128            | 128       | 0.964          | 0.95           | 0.9403          | 0.91784         | 0.90007          |
+| 8   | 256            | 64        | 0.964          | 0.9515         | 0.9424          | 0.91672         | 0.89339          |
+| 8   | 256            | 128       | 0.969          | 0.95725        | 0.9477          | 0.92514         | 0.90855          |
 
 ### Elasticsearch Results
 
 <Callout type="success">
-  **Winner!** With the default parameters, Elasticsearch provided excellent results with optimal resource usage.
+  **Winner!** With the default parameters, Elasticsearch provided excellent
+  results with optimal resource usage.
 </Callout>
 
-| m  | efConstruction | num_candidates | micro-recall@1 | micro-recall@4 | micro-recall@10 | micro-recall@50 | micro-recall@100 |
-|----|----------------|----------------|----------------|----------------|-----------------|-----------------|------------------|
-| -  | -              | -              | -              | -              | -               | -               | -                |
-| 16 | 200            | 50             | 0.977          | 0.9635         | 0.9533          | 0.93832         | 0.93512          |
+| m   | efConstruction | num_candidates | micro-recall@1 | micro-recall@4 | micro-recall@10 | micro-recall@50 | micro-recall@100 |
+| --- | -------------- | -------------- | -------------- | -------------- | --------------- | --------------- | ---------------- |
+| -   | -              | -              | -              | -              | -               | -               | -                |
+| 16  | 200            | 50             | 0.977          | 0.9635         | 0.9533          | 0.93832         | 0.93512          |
 
 ## Final Decision
 
@@ -124,11 +158,10 @@ HNSW indexes are adjustable through three parameters:
     The results are excellent with very high recall rates.
   </Step>
 
-  <Step>
-    ### Low Memory Usage
-    
-    The RAM used is below **5 GB**, which meets our resource constraints.
-  </Step>
+<Step>
+  ### Low Memory Usage The RAM used is below **5 GB**, which meets our resource
+  constraints.
+</Step>
 
   <Step>
     ### Acceptable Search Time
@@ -138,5 +171,6 @@ HNSW indexes are adjustable through three parameters:
 </Steps>
 
 <Callout type="success">
-  **ElasticSearch was chosen** for computing the ANN search based on its superior performance, low memory usage, and acceptable search times.
+  **ElasticSearch was chosen** for computing the ANN search based on its
+  superior performance, low memory usage, and acceptable search times.
 </Callout>

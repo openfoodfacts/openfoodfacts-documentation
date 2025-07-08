@@ -3,14 +3,15 @@ title: "Category prediction"
 description: "Learn how Robotoff uses neural networks to predict product categories from metadata, ingredients, nutrients, and images for Open Food Facts classification system."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# Category Prediction
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 <Callout title="Critical Importance">
-Knowing the category of each product is critically important at Open Food Facts, as category is used to compute Nutriscore, to assess the environmental impact of the product (thanks to Agribalyse database), to compare the product to similar ones,...
+  Knowing the category of each product is critically important at Open Food
+  Facts, as category is used to compute Nutriscore, to assess the environmental
+  impact of the product (thanks to Agribalyse database), to compare the product
+  to similar ones,...
 </Callout>
 
 ## Overview
@@ -28,11 +29,26 @@ In Open Food Facts, more **12,500 categories** exist in the [category taxonomy](
 The neural network model [^neural] takes multiple optional inputs:
 
 <Cards>
-  <Card title="Product Name" description="The product_name field for text-based classification" />
-  <Card title="Ingredient List" description="The ingredients field - only depth one ingredients (sub-ingredients ignored)" />
-  <Card title="OCR Ingredients" description="Ingredients extracted from OCR texts using flashtext library" />
-  <Card title="Nutriments" description="Common nutrients: salt, proteins, fats, saturated fats, carbohydrates, energy" />
-  <Card title="Images" description="Up to 10 most recent images processed with CLIP embeddings" />
+  <Card
+    title="Product Name"
+    description="The product_name field for text-based classification"
+  />
+  <Card
+    title="Ingredient List"
+    description="The ingredients field - only depth one ingredients (sub-ingredients ignored)"
+  />
+  <Card
+    title="OCR Ingredients"
+    description="Ingredients extracted from OCR texts using flashtext library"
+  />
+  <Card
+    title="Nutriments"
+    description="Common nutrients: salt, proteins, fats, saturated fats, carbohydrates, energy"
+  />
+  <Card
+    title="Images"
+    description="Up to 10 most recent images processed with CLIP embeddings"
+  />
 </Cards>
 
 ### Image Processing
@@ -52,16 +68,19 @@ Generate a single vector using a multi-head attention layer + GlobalAveragePooli
 ### Ingredient Extraction
 
 <Callout type="info" title="OCR Processing">
-The ingredients extracted from OCR texts: all OCR results are fetched and ingredients present in the taxonomy are detected using [flashtext library](https://flashtext.readthedocs.io/en/latest/).
+  The ingredients extracted from OCR texts: all OCR results are fetched and
+  ingredients present in the taxonomy are detected using [flashtext
+  library](https://flashtext.readthedocs.io/en/latest/).
 </Callout>
 
 ## Model Scope
 
 <Callout title="Category Selection">
-The model was trained to predict a subset of all categories:
-- Broad categories (such as plant based foods and beverages) were discarded to keep only the most informative categories
-- Categories with less than 10 products were ignored
-- The model can predict categories for about **3,500 categories** of the taxonomy
+  The model was trained to predict a subset of all categories: - Broad
+  categories (such as plant based foods and beverages) were discarded to keep
+  only the most informative categories - Categories with less than 10 products
+  were ignored - The model can predict categories for about **3,500 categories**
+  of the taxonomy
 </Callout>
 
 ## Prediction Enhancement
@@ -69,7 +88,8 @@ The model was trained to predict a subset of all categories:
 For each predicted category, we also fetch the prediction score of parents, children and siblings (node with the same parents) categories in the taxonomy.
 
 <Callout type="info" title="Future Use">
-This will be used soon to display predictions about neighbor categories and select a more (or less) specific category on Hunger Games if needed.
+  This will be used soon to display predictions about neighbor categories and
+  select a more (or less) specific category on Hunger Games if needed.
 </Callout>
 
 ## High-Confidence Predictions
@@ -83,8 +103,10 @@ For these predictions, we have a very high confidence that the predicted categor
 </Step>
 
 <Step>
-### Insight Generation
-We always generate insights from these *above-threshold predictions* (except if the category is already filled in for the product), and the `v3_categorizer_automatic_processing` campaign is added to the insight.
+  ### Insight Generation We always generate insights from these *above-threshold
+  predictions* (except if the category is already filled in for the product),
+  and the `v3_categorizer_automatic_processing` campaign is added to the
+  insight.
 </Step>
 
 <Step>
@@ -94,13 +116,14 @@ The Hunger Game annotation campaign can be [accessed here](https://hunger.openfo
 </Steps>
 
 <Callout type="success" title="Automatic Processing Goal">
-If the experiment is successful (precision >= 0.99 on Hunger Games questions), we will turn on automatic categorization on *above-threshold predictions*.
+  If the experiment is successful (precision >= 0.99 on Hunger Games questions),
+  we will turn on automatic categorization on *above-threshold predictions*.
 </Callout>
 
 ## Changelog
 
 <Callout title="Evolution Timeline">
-Here is a summary on the milestones in category detection:
+  Here is a summary on the milestones in category detection:
 </Callout>
 
 - **2018-12** | Deployment of the first "matching" categorizer based on Elasticsearch

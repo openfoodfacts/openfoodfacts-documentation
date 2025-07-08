@@ -3,18 +3,16 @@ title: "Database migrations"
 description: "Manage SQL database schema changes in Robotoff using peewee_migrate for creating, applying, and handling database migrations during development and deployment."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
-# Database Migrations
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 We use [peewee_migrate](https://github.com/klen/peewee_migrate) to handle our SQL database migrations.
 
 ## Create a Migration
 
 <Callout title="When to Create">
-You should create a migration if you update the SQL database schema.
+  You should create a migration if you update the SQL database schema.
 </Callout>
 
 To create a new migration, use:
@@ -24,14 +22,21 @@ make robotoff-cli args='create-migration MIGRATION_NAME --auto'
 ```
 
 <Callout type="info" title="Naming Convention">
-You should use an identifiable name (such as "add_bounding_box") to the migration.
+  You should use an identifiable name (such as "add_bounding_box") to the
+  migration.
 </Callout>
 
 ### Migration Options
 
 <Cards>
-  <Card title="Automatic Generation" description="The --auto flag scans all table definitions in source code and creates the migration file automatically" />
-  <Card title="Blank Migration" description="Skip the --auto flag if you want peewee_migrate to create a blank migration file for manual editing" />
+  <Card
+    title="Automatic Generation"
+    description="The --auto flag scans all table definitions in source code and creates the migration file automatically"
+  />
+  <Card
+    title="Blank Migration"
+    description="Skip the --auto flag if you want peewee_migrate to create a blank migration file for manual editing"
+  />
 </Cards>
 
 ## Apply Migrations
@@ -45,7 +50,7 @@ make migrate-db
 ## Existing Installation Setup
 
 <Callout type="warn" title="Previous Installation">
-What if I had a previous installation of Robotoff with an initialized DB?
+  What if I had a previous installation of Robotoff with an initialized DB?
 </Callout>
 
 <Steps>
@@ -61,6 +66,7 @@ CREATE TABLE IF NOT EXISTS "migratehistory"
     "migrated_at" TIMESTAMP NOT NULL
 )
 ```
+
 </Step>
 
 <Step>
@@ -70,6 +76,7 @@ Then add manually the initial migration file in database:
 ```sql title="Insert Initial Migration"
 INSERT INTO "migratehistory" VALUES (1, '001_initial', CURRENT_TIMESTAMP);
 ```
+
 </Step>
 
 <Step>
@@ -79,9 +86,11 @@ Then you can apply remaining migrations with:
 ```bash title="Apply Remaining Migrations"
 make migrate-db
 ```
+
 </Step>
 </Steps>
 
 <Callout type="success" title="Ready to Go">
-After these steps, your database will be properly set up to handle future migrations.
+  After these steps, your database will be properly set up to handle future
+  migrations.
 </Callout>
