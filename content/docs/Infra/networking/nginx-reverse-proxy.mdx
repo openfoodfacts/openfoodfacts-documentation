@@ -3,17 +3,18 @@ title: "NGINX Reverse Proxy"
 description: "This document explains the configuration and management of NGINX reverse proxies at OVH and Free datacenters. It covers network setup, banning bots, configuring new services, adding HTTPS with Certbot, and performance tips."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # NGINX Reverse Proxy
 
 At OVH and at Free we have a LXC container dedicated to reverse proxy http/https applications.
 
 <Callout type="info">
-It serves applications that are located in servers at the same provider (and same Proxmox cluster).
+  It serves applications that are located in servers at the same provider (and
+  same Proxmox cluster).
 </Callout>
 
 ## Network Configuration
@@ -21,16 +22,19 @@ It serves applications that are located in servers at the same provider (and sam
 It has a specific network configuration with two ethernet addresses:
 
 <Cards>
-<Card title="Internal Interface">
-One internal, to communicate with other VMs
-</Card>
-<Card title="Public Interface">
-One which is bridged on host network card, with IP fail over mechanism
-</Card>
+  <Card title="Internal Interface">
+    One internal, to communicate with other VMs
+  </Card>
+  <Card title="Public Interface">
+    One which is bridged on host network card, with IP fail over mechanism
+  </Card>
 </Cards>
 
 <Callout type="warning">
-**Important**: Only the public IP should have a gateway. The default proxmox interface does not offer options to indicate which gateway should be the default gateway, and the public IP needs to have its gateway as the default one.
+  **Important**: Only the public IP should have a gateway. The default proxmox
+  interface does not offer options to indicate which gateway should be the
+  default gateway, and the public IP needs to have its gateway as the default
+  one.
 </Callout>
 
 ### Important Routing Limitation
@@ -39,12 +43,14 @@ One which is bridged on host network card, with IP fail over mechanism
 **Never call an internal service using reverse proxy**
 
 Because of the gateway limitation, if a service uses another service which is on the same proxmox cluster, it should use its internal address and not the public / reverse proxy address, otherwise packets routing will be broken, and request will never land.
+
 </Callout>
 
 ## Bot Management
 
-<Card title="Ban Bots" href="./how-to-fail2ban-ban-bots.md">
-We ban bots from the reverse proxy (more efficient and centralized). Most of the time this is a manual ban.
+<Card title="Ban Bots" href="/docs/Infra/how/how-to-fail2ban-ban-bots">
+  We ban bots from the reverse proxy (more efficient and centralized). Most of
+  the time this is a manual ban.
 </Card>
 
 ## Configuring a New Service
@@ -58,15 +64,13 @@ Have this service available on proxmox internal network
 </Step>
 
 <Step>
-**DNS Configuration**
-In the DNS, CNAME your service name to:
-- `proxy1.openfoodfacts.org` for OVH (ovh1..3)
-- `off-proxy.openfoodfacts.org` for Free (off1..2)
+  **DNS Configuration** In the DNS, CNAME your service name to: -
+  `proxy1.openfoodfacts.org` for OVH (ovh1..3) - `off-proxy.openfoodfacts.org`
+  for Free (off1..2)
 </Step>
 
 <Step>
-**NGINX Configuration**
-Write a configuration on nginx for this service
+  **NGINX Configuration** Write a configuration on nginx for this service
 </Step>
 
 <Step>
@@ -79,9 +83,7 @@ Eventually add https
 
 Imagine we have to configure **my-service.openfoodfacts.net**, to route request to container `222`, port `8888`.
 
-<Callout type="warning">
-You will have to be root to do that.
-</Callout>
+<Callout type="warning">You will have to be root to do that.</Callout>
 
 <Steps>
 <Step>
@@ -97,6 +99,7 @@ It's a good idea to first test it exists, using nc and curl:
 nc -vz 10.1.0.222 8888
 curl  http://10.1.0.222:8888
 ```
+
 </Step>
 
 <Step>
@@ -104,7 +107,7 @@ curl  http://10.1.0.222:8888
 Create the basic configuration file for your service in `/etc/nginx/conf.d` directory, named after your service, eg. `my-service.openfoodfacts.net.conf`.
 
 <Callout type="warning">
-**Important**: Your file has to end with `.conf` to be taken into account.
+  **Important**: Your file has to end with `.conf` to be taken into account.
 </Callout>
 
 ```nginx title="Basic NGINX Configuration"
@@ -158,6 +161,7 @@ If it's ok, we reload:
 ```bash title="Reload NGINX"
 systemctl reload nginx
 ```
+
 </Step>
 </Steps>
 
@@ -167,9 +171,7 @@ Next step is probably to setup HTTPS (putting something in HTTP should be an exc
 
 Most of the time HTTPS certificates are managed on the nginx reverse proxy VM. Here is how to configure them to enable HTTPS.
 
-<Callout type="info">
-We use certbot to manage certificates.
-</Callout>
+<Callout type="info">We use certbot to manage certificates.</Callout>
 
 <Steps>
 <Step>
@@ -187,6 +189,7 @@ server{
   server_name  my-service.openfoodfacts.net;
 }
 ```
+
 </Tab>
 
 <Tab value="http" label="HTTP Redirect">
@@ -199,6 +202,7 @@ server {
   server_name  my-service.openfoodfacts.net;
 }
 ```
+
 </Tab>
 </Tabs>
 </Step>
@@ -214,6 +218,7 @@ certbot --test-cert -d my-service.openfoodfacts.net
 ```
 
 Follow the prompts:
+
 - Enter email address: `root@openfoodfacts.org`
 - Agree to terms of service: `A`
 - Share email: ""`n`
@@ -234,10 +239,12 @@ certbot -d my-service.openfoodfacts.net
 ```
 
 When prompted:
+
 1. Select: `2: Renew & replace the cert (limit ~5 per 7 days)`
 2. Follow the same prompts as the test certificate
 
 Test again if it's working.
+
 </Step>
 </Steps>
 
@@ -250,7 +257,8 @@ certbot -d ui.my-site.openfoodfacts.net -d api.my-site.openfoodfacts.net -d my-s
 ```
 
 <Callout type="info">
-If a certificate already exists for a domain, certbot will propose to extend it with the other domains.
+  If a certificate already exists for a domain, certbot will propose to extend
+  it with the other domains.
 </Callout>
 
 ### Wildcard Certificates
@@ -261,6 +269,7 @@ Certbot can deliver wildcard certificates for domains based on DNS challenges. S
 In our case, this is the plugin for OVH. Installing `python3-certbot-dns-ovh` works in our case.
 
 Access tokens are stored in `/root/.ovhapi/<domain-name>` and are only readable by root (0600).
+
 </Callout>
 
 #### How to Add Wildcard Certificates
@@ -285,6 +294,7 @@ Generate credential, following https://eu.api.ovh.com/createToken/
 You can manage the existing keys at [ovh.com/manager/#/iam/dashboard/applications](https://www.ovh.com/manager/#/iam/dashboard/applications).
 
 Using:
+
 - GET `/domain/zone/` (Note: the trailing slash is important!)
 - GET/PUT/POST/DELETE `/domain/zone/openpetfoodfacts.org/*`
 
@@ -307,13 +317,14 @@ dns_ovh_consumer_key = ***********
 # ensure no reading by others
 chmod og-rwx -R /root/.ovhapi
 ```
+
 </Step>
 
 <Step>
-**Test Wildcard Certificate**
-```bash title="Test Wildcard Certificate"
-certbot certonly --test-cert --dns-ovh --dns-ovh-credentials /root/.ovhapi/openpetfoodfacts.org -d openpetfoodfacts.org -d "*.openpetfoodfacts.org"
-```
+  **Test Wildcard Certificate** ```bash title="Test Wildcard Certificate"
+  certbot certonly --test-cert --dns-ovh --dns-ovh-credentials
+  /root/.ovhapi/openpetfoodfacts.org -d openpetfoodfacts.org -d
+  "*.openpetfoodfacts.org" ```
 </Step>
 
 <Step>
@@ -323,6 +334,7 @@ certbot certonly --dns-ovh --dns-ovh-credentials /root/.ovhapi/openpetfoodfacts.
 ```
 
 When asked, choose to replace existing certificate.
+
 </Step>
 
 <Step>
@@ -351,13 +363,14 @@ server {
     # ... rest of configuration
 }
 ```
+
 </Step>
 </Steps>
 
 ### EtcKeeper
 
 <Callout type="info">
-We use [etckeeper](./linux-server.md#etckeeper)
+  We use [etckeeper](/docs/Infra/guides/linux-server#etckeeper)
 </Callout>
 
 Do not forget to commit your changes:
@@ -383,11 +396,11 @@ access_log /var/log/nginx/off-access.log proxied_requests buffer=256K flush=1s;
 Install was quite simple: we simply install nginx package, as well as stunnel4.
 
 <Cards>
-<Card title="Analysis Tools">
-Along with nginx, some other tools can be installed:
-- **apachetop**: to analyze realtime web traffic
-- **[lnav](https://lnav.org/)**: to analyze logs
-</Card>
+  <Card title="Analysis Tools">
+    Along with nginx, some other tools can be installed: - **apachetop**: to
+    analyze realtime web traffic - **[lnav](https://lnav.org/)**: to analyze
+    logs
+  </Card>
 </Cards>
 
 ## IPv6 Configuration
@@ -395,5 +408,6 @@ Along with nginx, some other tools can be installed:
 <Callout type="info">
 An IPv6 address was added to the reverse proxy CT, so that the reverse proxy can reach `docker-prod-2` VM on Moji, where Robotoff services are running. Moji server is currently only accessible through IPv6 as it does not have a public IPv4 address.
 
-See [Moji Datacenter](moji-datacenter.md) and [moji server installation report](reports/2024-08-13-moji-server-installation.md) for more information.
+See [Moji Datacenter](/docs/Infra/hosting/moji-datacenter) and [moji server installation report](/docs/Infra/reports/2024/2024-08-13-moji-server-installation) for more information.
+
 </Callout>

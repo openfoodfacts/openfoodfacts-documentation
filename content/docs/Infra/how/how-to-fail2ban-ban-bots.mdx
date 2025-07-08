@@ -3,35 +3,34 @@ title: "How to Ban Bots with Fail2ban"
 description: "Learn how to configure and use Fail2ban to ban malicious bots from your servers. This guide covers installing Fail2ban, setting up various filters, creating a manual ban jail, and managing banned IP addresses."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # How to Ban Bots with Fail2ban
 
 Learn how to configure and use Fail2ban to protect your servers from malicious bots and automated attacks.
 
 <Callout type="info">
-Fail2ban monitors log files and automatically bans IP addresses that show malicious behavior, such as too many authentication failures or bot-like activity.
+  Fail2ban monitors log files and automatically bans IP addresses that show
+  malicious behavior, such as too many authentication failures or bot-like
+  activity.
 </Callout>
 
 ## Installation and Setup
 
 <Steps>
   <Step>
-    **Install Fail2ban**
-    
-    ```bash title="Install Fail2ban"
-    sudo apt install fail2ban
-    ```
+    **Install Fail2ban** ```bash title="Install Fail2ban" sudo apt install
+    fail2ban ```
   </Step>
-  
+
   <Step>
     **Debian 11+ Configuration**
-    
     <Callout type="info">
-    On Debian 11, additional configuration is required. Follow [How to install fail2ban on debian 11+](./how-to-fail2ban-debian-11+.md)
+      On Debian 11, additional configuration is required. Follow [How to install
+      fail2ban on debian 11+](/docs/Infra/how/how-to-fail2ban-debian-11+)
     </Callout>
   </Step>
 </Steps>
@@ -39,7 +38,8 @@ Fail2ban monitors log files and automatically bans IP addresses that show malici
 ## Standard Filter Configuration
 
 <Callout type="info">
-We install these filters with standard configurations across our infrastructure.
+  We install these filters with standard configurations across our
+  infrastructure.
 </Callout>
 
 <Cards>
@@ -63,25 +63,21 @@ Create a jail for manually banning problematic IP addresses that automated filte
 
 <Steps>
   <Step>
-    **Enable Manual Ban Jail**
-    
-    ```bash title="Enable nginx-manual-ban Jail"
-    ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/jail.d/nginx-manual-ban.local /etc/fail2ban/jail.d/
-    systemctl restart fail2ban
-    ```
+    **Enable Manual Ban Jail** ```bash title="Enable nginx-manual-ban Jail" ln
+    -s
+    /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/jail.d/nginx-manual-ban.local
+    /etc/fail2ban/jail.d/ systemctl restart fail2ban ```
   </Step>
-  
+
   <Step>
-    **How It Works**
-    
-    - Uses `nginx-botsearch` filter on a fake log file
-    - Allows manual IP addition to the jail
-    - Permanent ban time for manually added IPs
+    **How It Works** - Uses `nginx-botsearch` filter on a fake log file - Allows
+    manual IP addition to the jail - Permanent ban time for manually added IPs
   </Step>
 </Steps>
 
 <Callout type="info">
-**Persistence**: Fail2ban (recent versions) is naturally persistent across reboots using a SQLite database in `/var/lib/fail2ban/`.
+  **Persistence**: Fail2ban (recent versions) is naturally persistent across
+  reboots using a SQLite database in `/var/lib/fail2ban/`.
 </Callout>
 
 ## Managing Fail2ban
@@ -146,30 +142,27 @@ Create a jail for manually banning problematic IP addresses that automated filte
 
 <Steps>
   <Step>
-    **Regular Monitoring**
-    
-    Check fail2ban status regularly to ensure it's working correctly.
+    **Regular Monitoring** Check fail2ban status regularly to ensure it's
+    working correctly.
   </Step>
-  
+
   <Step>
-    **Log Review**
-    
-    Monitor `/var/log/fail2ban.log` for patterns and false positives.
+    **Log Review** Monitor `/var/log/fail2ban.log` for patterns and false
+    positives.
   </Step>
-  
+
   <Step>
-    **Whitelist Management**
-    
-    Ensure legitimate IP ranges are whitelisted to prevent accidental bans.
+    **Whitelist Management** Ensure legitimate IP ranges are whitelisted to
+    prevent accidental bans.
   </Step>
-  
+
   <Step>
-    **Filter Tuning**
-    
-    Adjust filter sensitivity based on actual attack patterns observed.
+    **Filter Tuning** Adjust filter sensitivity based on actual attack patterns
+    observed.
   </Step>
 </Steps>
 
 <Callout type="warning">
-Be careful when manually banning IP ranges. Always verify you're not blocking legitimate traffic or your own access paths.
+  Be careful when manually banning IP ranges. Always verify you're not blocking
+  legitimate traffic or your own access paths.
 </Callout>

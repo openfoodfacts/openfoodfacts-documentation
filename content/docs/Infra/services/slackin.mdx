@@ -18,7 +18,7 @@ import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 ## Current Solution
 
-We replaced the Slackin service with a simple static page on the [nginx reverse proxy](nginx-reverse-proxy.md).
+We replaced the Slackin service with a simple static page on the [nginx reverse proxy](/docs/Infra/networking/nginx-reverse-proxy).
 
 <Cards>
   <Card title="Static Page" href="#current-implementation">
@@ -48,12 +48,12 @@ We replaced the Slackin service with a simple static page on the [nginx reverse 
     link parameters" 5. Set expire parameter to "never expire"
   </Step>
 
-  <Step>
-    **Update Static Page** On OVH reverse proxy (server hosting
-    slack.openfoodfacts.org): ```bash title="Update Invitation Link" # Edit the
-    HTML file vim /var/www/slack/index.html # Change the href for the "Join our
-    slack" link with your new link # Save the file ```
-  </Step>
+<Step>
+  **Update Static Page** On OVH reverse proxy (server hosting
+  slack.openfoodfacts.org): ```bash title="Update Invitation Link" # Edit the
+  HTML file vim /var/www/slack/index.html # Change the href for the "Join our
+  slack" link with your new link # Save the file ```
+</Step>
 
   <Step>
     **Commit Changes** ```bash title="Save Configuration" cd
@@ -89,11 +89,11 @@ The original system at https://slack.openfoodfacts.org enabled users to join our
     systemd service named `pm2-nodejs`
   </Tab>
 
-  <Tab value="network" label="Network Configuration">
-    ### Network Setup - **Port**: Listened on port 3000 - **Access**: Through
-    [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy) -
-    **Domain**: slack.openfoodfacts.org
-  </Tab>
+<Tab value="network" label="Network Configuration">
+  ### Network Setup - **Port**: Listened on port 3000 - **Access**: Through
+  [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy) -
+  **Domain**: slack.openfoodfacts.org
+</Tab>
 
   <Tab value="issues" label="Deprecation Reasons">
     ### Why It Stopped Working

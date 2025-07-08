@@ -3,15 +3,16 @@ title: "Mitigate Crawlers on Prod"
 description: "Learn how to mitigate excessive crawler traffic on production servers. This guide covers identifying problematic IPs, warning users, blacklisting IPs using fail2ban and iptables, and suggests implementing NGINX traffic rate limiting for better performance."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # How to Mitigate Crawlers with Excessive Traffic
 
 <Callout type="warn">
-Some programs may hammer Open Food Facts servers, causing serious latency and 504 errors for all users. This guide helps identify and mitigate such issues.
+  Some programs may hammer Open Food Facts servers, causing serious latency and
+  504 errors for all users. This guide helps identify and mitigate such issues.
 </Callout>
 
 ## Background
@@ -28,15 +29,13 @@ Most excessive crawler traffic comes from users who are unaware that bulk data s
   <Step title="Identify Problematic IPs">
     Use access logs to find IPs making excessive requests
   </Step>
-  
+
   <Step title="Analyze Traffic Patterns">
     Examine specific IP activity to understand the behavior
   </Step>
-  
-  <Step title="Attempt Contact">
-    Try to reach out to users when possible
-  </Step>
-  
+
+  <Step title="Attempt Contact">Try to reach out to users when possible</Step>
+
   <Step title="Implement Blocking">
     Use appropriate blocking mechanisms based on server configuration
   </Step>
@@ -65,7 +64,8 @@ tail -n 100000 access_log | grep <ip_address>
 Use this to examine the activity pattern of a specific IP address.
 
 <Callout type="info">
-Search and facets requests are typically the most resource-consuming operations. Product read requests are usually just file reads.
+  Search and facets requests are typically the most resource-consuming
+  operations. Product read requests are usually just file reads.
 </Callout>
 
 </Card>
@@ -78,13 +78,14 @@ If the User-Agent string provides contact information or identifies the organiza
 
 <Steps>
   <Step title="Identify Contact">
-    Look for email addresses, organization names, or project identifiers in User-Agent strings
+    Look for email addresses, organization names, or project identifiers in
+    User-Agent strings
   </Step>
-  
+
   <Step title="Educational Approach">
     Inform them about the proper data download endpoints at `/data`
   </Step>
-  
+
   <Step title="Provide Alternatives">
     Direct them to appropriate API documentation and bulk data sources
   </Step>
@@ -105,7 +106,7 @@ If the User-Agent string provides contact information or identifies the organiza
     ```
     
     <Callout type="info">
-    See the [How to use fail2ban to ban bots](./how-to-fail2ban-ban-bots.md) guide for more details.
+    See the [How to use fail2ban to ban bots](/docs/Infra/how/how-to-fail2ban-ban-bots) guide for more details.
     </Callout>
   </Tab>
   
@@ -142,10 +143,22 @@ If the User-Agent string provides contact information or identifies the organiza
 ## Traffic Analysis Tips
 
 <Cards>
-  <Card title="High-Impact Requests" description="Search and facet operations consume most resources" />
-  <Card title="Low-Impact Requests" description="Product page views are typically just file reads" />
-  <Card title="Pattern Recognition" description="Look for repeated patterns in request URLs" />
-  <Card title="User-Agent Analysis" description="Check for bot identification or contact information" />
+  <Card
+    title="High-Impact Requests"
+    description="Search and facet operations consume most resources"
+  />
+  <Card
+    title="Low-Impact Requests"
+    description="Product page views are typically just file reads"
+  />
+  <Card
+    title="Pattern Recognition"
+    description="Look for repeated patterns in request URLs"
+  />
+  <Card
+    title="User-Agent Analysis"
+    description="Check for bot identification or contact information"
+  />
 </Cards>
 
 ## Prevention Strategies
@@ -158,18 +171,16 @@ If the User-Agent string provides contact information or identifies the organiza
   <Step title="Rate Limiting">
     Implement NGINX rate limiting to automatically throttle excessive requests
   </Step>
-  
+
   <Step title="Documentation">
     Improve visibility of bulk data download options
   </Step>
-  
+
   <Step title="API Guidelines">
     Provide clear API usage guidelines and rate limits
   </Step>
-  
-  <Step title="Monitoring">
-    Set up alerts for unusual traffic patterns
-  </Step>
+
+  <Step title="Monitoring">Set up alerts for unusual traffic patterns</Step>
 </Steps>
 
 </Card>
@@ -177,13 +188,13 @@ If the User-Agent string provides contact information or identifies the organiza
 ## Related Documentation
 
 <Cards>
-  <Card 
-    title="Fail2ban Bot Blocking" 
+  <Card
+    title="Fail2ban Bot Blocking"
     description="Detailed guide on using fail2ban to manage bot traffic"
-    href="./how-to-fail2ban-ban-bots.md"
+    href="/docs/Infra/how/how-to-fail2ban-ban-bots"
   />
-  <Card 
-    title="Data Downloads" 
+  <Card
+    title="Data Downloads"
     description="Official bulk data download location"
     href="https://world.openfoodfacts.org/data"
   />

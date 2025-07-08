@@ -3,44 +3,41 @@ title: "Deploying New Service"
 description: "This guide outlines the process for deploying new services within the Open Food Facts infrastructure. It covers choosing deployment methods like Docker Compose or Proxmox containers, separating data from the system, and monitoring performance after deployment."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # How to Deploy a New Service
 
 Open Food Facts is made of several components and tools for the community and infrastructure management.
 
 <Callout type="info">
-Each service will cost resources and have certain requirements to run. It's important to keep those things in mind when deploying a new service.
+  Each service will cost resources and have certain requirements to run. It's
+  important to keep those things in mind when deploying a new service.
 </Callout>
 
 ## Deployment Process Overview
 
 <Steps>
   <Step>
-    **Decide Deployment Method**
-    
-    Choose between Docker Compose or Proxmox containers based on service requirements.
+    **Decide Deployment Method** Choose between Docker Compose or Proxmox
+    containers based on service requirements.
   </Step>
-  
+
   <Step>
-    **Select Target Server**
-    
-    Choose the best server considering resources, latency, and criticality.
+    **Select Target Server** Choose the best server considering resources,
+    latency, and criticality.
   </Step>
-  
+
   <Step>
-    **Separate Data from System**
-    
-    Implement proper data separation for reliability and maintenance.
+    **Separate Data from System** Implement proper data separation for
+    reliability and maintenance.
   </Step>
-  
+
   <Step>
-    **Monitor Performance**
-    
-    Track system performance before and after deployment.
+    **Monitor Performance** Track system performance before and after
+    deployment.
   </Step>
 </Steps>
 
@@ -49,42 +46,35 @@ Each service will cost resources and have certain requirements to run. It's impo
 <Tabs>
   <Tab value="docker" label="Docker Compose">
     ### Docker Compose Deployment
-    
     <Callout type="info">
-    Using [Docker Compose](./docker_architecture.md) is the **preferred way** to deploy services that have active development.
+      Using [Docker Compose](/docs/Infra/containerization/docker-architecture)
+      is the **preferred way** to deploy services that have active development.
     </Callout>
-    
-    **Benefits:**
-    - Easy upgrade of main components
-    - Good reproducibility of the environment
-    - Excellent integration with [CI/CD tools](./cicd.md)
-    
-    **Deployment target:**
-    - Deploy in a VM (recommended)
-    - Container deployment is experimental (no official support yet)
+    **Benefits:** - Easy upgrade of main components - Good reproducibility of
+    the environment - Excellent integration with [CI/CD
+    tools](/docs/Infra/configuration/cicd) **Deployment target:** - Deploy in a
+    VM (recommended) - Container deployment is experimental (no official support
+    yet)
   </Tab>
-  
+
   <Tab value="proxmox" label="Proxmox Container">
     ### Proxmox Container Deployment
-    
     <Callout type="info">
-    Using a [Proxmox container](./proxmox.md#how-to-create-a-new-container) is the second-best option.
+      Using a [Proxmox
+      container](/docs/Infra/virtualization/proxmox#how-to-create-a-new-container)
+      is the second-best option.
     </Callout>
-    
-    **Best for:**
-    - Services packaged in Debian
-    - Software that updates easily in container environments (e.g., PHP applications)
-    
-    **Use cases:**
-    - Static services with minimal development
-    - Well-established applications with stable requirements
+    **Best for:** - Services packaged in Debian - Software that updates easily
+    in container environments (e.g., PHP applications) **Use cases:** - Static
+    services with minimal development - Well-established applications with
+    stable requirements
   </Tab>
 </Tabs>
 
 ## Server Selection
 
 <Callout type="warning">
-Server selection should be done in coordination with the infrastructure team.
+  Server selection should be done in coordination with the infrastructure team.
 </Callout>
 
 <Cards>
@@ -108,7 +98,8 @@ Server selection should be done in coordination with the infrastructure team.
 ## Separating Data from System
 
 <Callout type="info">
-It's important to try to separate data from the system for reliability and maintainability.
+  It's important to try to separate data from the system for reliability and
+  maintainability.
 </Callout>
 
 ### Data Types
@@ -132,32 +123,31 @@ It's important to try to separate data from the system for reliability and maint
 
 <Steps>
   <Step>
-    **Safe System Updates**
-    
-    Update the system without putting data at risk and enable rollback without losing data.
+    **Safe System Updates** Update the system without putting data at risk and
+    enable rollback without losing data.
   </Step>
-  
+
   <Step>
-    **Performance Optimization**
-    
-    Put data on faster disks if needed for better performance.
+    **Performance Optimization** Put data on faster disks if needed for better
+    performance.
   </Step>
-  
+
   <Step>
-    **Backup Strategy**
-    
-    Implement targeted backup strategies for different data types.
+    **Backup Strategy** Implement targeted backup strategies for different data
+    types.
   </Step>
 </Steps>
 
 <Callout type="info">
-If your service is not very important, doesn't have much data, and you can afford losing some data, separation might not be worth the effort.
+  If your service is not very important, doesn't have much data, and you can
+  afford losing some data, separation might not be worth the effort.
 </Callout>
 
 ## Performance Monitoring
 
 <Callout type="warning">
-If your service is heavy duty, try to do some performance checks in staging before production deployment.
+  If your service is heavy duty, try to do some performance checks in staging
+  before production deployment.
 </Callout>
 
 ### Post-Deployment Monitoring
@@ -165,7 +155,8 @@ If your service is heavy duty, try to do some performance checks in staging befo
 After deployment, check how the new service impacts overall system performance.
 
 <Callout type="info">
-[Munin](./munin.md) offers a good way to check system performance, as you can compare before and after deployment metrics.
+  [Munin](/docs/Infra/monitoring/munin) offers a good way to check system
+  performance, as you can compare before and after deployment metrics.
 </Callout>
 
 ### Key Performance Indicators

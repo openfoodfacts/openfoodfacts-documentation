@@ -3,10 +3,10 @@ title: "Resync ZFS Replication"
 description: "Learn how to resync ZFS replication when Syncoid fails or datasets become out of sync. This guide covers checking the state of snapshots, finding common snapshots, and performing manual resynchronization steps to restore data consistency."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # How to Resync ZFS Replication
 
@@ -14,6 +14,7 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 It happens that some time, syncoid fails for too long to replicate a dataset, and it become out of sync.
 
 In this case, we normally get an error email thanks to `sanoid_check` script.
+
 </Callout>
 
 ## Checking State
@@ -31,6 +32,7 @@ Search if the oldest snapshot on backup side is still available on the source ho
 ```bash title="Check Snapshot Availability"
 zfs list <dataset-name-on-backup>@<snapshot-name-on-backup-side>
 ```
+
 </Step>
 
 <Step>
@@ -52,11 +54,12 @@ zfs list -t snap /path/to/dataset|grep "_monthly"|tail
 </Tabs>
 
 Check then availability on source side (same for `_monthly`).
+
 </Step>
 </Steps>
 
 <Callout type="info">
-When you have found the nearest common snapshot, you can resync.
+  When you have found the nearest common snapshot, you can resync.
 </Callout>
 
 ## Resyncing Process
@@ -69,6 +72,7 @@ On the backup host, rewind to the common snapshot:
 ```bash title="Rollback to Common Snapshot"
 zfs rollback <dataset-name-on-backup>@<common-snapshot-name>
 ```
+
 </Step>
 
 <Step>
@@ -77,6 +81,7 @@ zfs rollback <dataset-name-on-backup>@<common-snapshot-name>
 If you have an existing vzdump snapshot `zfs list -t snap <dataset-name-on-backup>|grep @vzdump`, this is some snapshot used by Proxmox during a backup, but it might not be the same as the one on source side (it's constantly recreated), and will get in your way.
 
 So you have to remove it on backup side:
+
 </Callout>
 
 ```bash title="Remove vzdump Snapshot"
@@ -84,7 +89,7 @@ zfs destroy <dataset-name-on-backup>@vzdump
 ```
 
 <Callout type="info">
-See also [Dealing with vzdump snapshots](./sanoid.md#dealing-with-vzdump-snapshots)
+See also [Dealing with vzdump snapshots](/docs/Infra/storage/sanoid#dealing-with-vzdump-snapshots)
 </Callout>
 </Step>
 
@@ -101,11 +106,12 @@ If launching manually, you have to craft the command by looking at syncoid-args.
 ## Alternative Resolutions
 
 <Card title="Removed Source Dataset">
-The source dataset might have been removed (because a container / VM was removed).
+  The source dataset might have been removed (because a container / VM was
+  removed).
 </Card>
 
 <Callout type="info">
-In this case decide if you want to keep the data:
-- **If not:** You can destroy it
-- **If yes:** You have to consider moving the dataset to another location, to avoid messing with current / future datasets on the host
+  In this case decide if you want to keep the data: - **If not:** You can
+  destroy it - **If yes:** You have to consider moving the dataset to another
+  location, to avoid messing with current / future datasets on the host
 </Callout>
