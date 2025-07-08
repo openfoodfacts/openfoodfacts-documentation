@@ -39,7 +39,7 @@ This happens because of bad email addresses that can't be delivered.
   <Step>
     **Access Mail Gateway**
     
-    [Connect to the Proxmox Mail Gateway interface](./mail.md#administration)
+    [Connect to the Proxmox Mail Gateway interface](/docs/Infra/services/mail#administration)
   </Step>
   
   <Step>
@@ -61,7 +61,7 @@ This happens because of bad email addresses that can't be delivered.
     
     - Remove invalid users (also from newsletter/Brevo)
     - Fix server relay configuration or install `bsd-mailx` package
-    - See [mail configuration for servers](./mail.md#servers)
+    - See [mail configuration for servers](/docs/Infra/services/mail#servers)
   </Step>
   
   <Step>
@@ -115,7 +115,7 @@ There are two possible alerts for each dataset, each requiring different diagnos
         Synchronization issues might be transient due to large data volumes. Sometimes the last snapshot has been removed on the source.
         </Callout>
         
-        See [How to resync ZFS replication](./how-to-resync-zfs-replication.md) if needed.
+        See [How to resync ZFS replication](/docs/Infra/how/how-to-resync-zfs-replication) if needed.
       </Step>
       
       <Step>
@@ -130,8 +130,8 @@ There are two possible alerts for each dataset, each requiring different diagnos
         ```
         
         Verify sanoid configuration:
-        - [Add snapshot specification](./sanoid.md#sanoid-snapshot-configuration)
-        - Check [`no_sanoid_checks` directives](./sanoid.md#sanoid-checks)
+        - [Add snapshot specification](/docs/Infra/storage/sanoid#sanoid-snapshot-configuration)
+        - Check [`no_sanoid_checks` directives](/docs/Infra/storage/sanoid#sanoid-checks)
       </Step>
     </Steps>
   </Tab>
