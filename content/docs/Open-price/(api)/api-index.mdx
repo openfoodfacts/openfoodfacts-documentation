@@ -7,8 +7,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 
-# Open Prices API
-
 The Open Prices API provides access to the Open Food Facts prices database, offering comprehensive price information for food products worldwide. Built with Django REST Framework, this API enables developers to access, contribute, and analyze global food pricing data.
 
 <Callout type="info">
@@ -43,36 +41,37 @@ The Open Prices API enables you to:
   <Card
     title="Price Management"
     description="Create, update, and retrieve price information with proof photos and validation"
-    href="/docs/Open-price/prices"
+    href="/docs/Open-price/prices/prices_create"
   />
   <Card
     title="Location Data"
     description="Access store locations verified through OpenStreetMap integration"
-    href="/docs/Open-price/locations"
+    href="/docs/Open-price/locations/locations_create"
   />
   <Card
     title="Product Integration"
     description="Link prices to Open Food Facts products using barcodes and identifiers"
-    href="/docs/Open-price/products"
+    href="/docs/Open-price/products/products_code_retrieve"
   />
   <Card
     title="Product Catalog"
     description="Browse and search products with associated price data"
-    href="/docs/open-prices/products"
+    href="/docs/open-prices/products/products_list"
   />
   <Card
     title="Receipt Processing"
     description="Upload and process receipts to extract price information"
-    href="/docs/open-prices/proofs"
+    href="/docs/open-prices/proofs/proof_destroy"
   />
   <Card
     title="User Management"
     description="Handle user accounts and authentication for contributors"
-    href="/docs/open-prices/users"
+    href="/docs/open-prices/users/users_list"
   />
   <Card
     title="Statistics"
     description="Access aggregated statistics and analytics about price data"
+    href="/docs/Open-price/(api)/stats/stats_retrieve"
   />
 </Cards>
 
