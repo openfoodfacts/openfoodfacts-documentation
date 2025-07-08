@@ -3,12 +3,12 @@ title: "Upload Photos Tutorial"
 description: "Step-by-step guide for uploading product images to Open Food Facts API with authentication and proper formatting"
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 This basic tutorial shows you how to upload an image of a product to the Open Food Facts API.
 
-Be sure to also read the [introduction to the API](./index.mdx)
+Be sure to also read the [introduction to the API](./index)
 
 ## Points to consider before uploading photos
 
@@ -27,7 +27,7 @@ That means you should either upload:
 - photos that are your own work
 - photos taken by your users, with their consent for this license (should be part of your service terms)
 - photos already under this license or a compatible license ([cc-by](https://creativecommons.org/licenses/by/4.0/), [cc-0](https://creativecommons.org/share-your-work/public-domain/cc0/) or public domain)
-</Step>
+  </Step>
 <Step title="Image Quality">
 Uploading quality photos of a product, its ingredients, and the nutrition table is essential because it enables the Open Food Facts OCR system to retrieve important data to analyze the product. The minimal allowed size for photos is 640 x 160 px.
 </Step>
@@ -46,7 +46,7 @@ Multilingual products have several photos based on the languages present on the 
 The WRITE operations in the Open Food Facts API require authentication. Therefore you need a valid `user_id`¹ and `password` to write the photo to 100% Real Orange Juice.
 
 > Sign up on the [Open Food Facts App](https://world.openfoodfacts.org/) to get your `user_id` and `password` if you dont have one.
-For more details, visit the : [Authentication paragraph in our introduction](../index.mdx#authentication).
+> For more details, visit the : [Authentication paragraph in our introduction](../index#authentication).
 
 ¹ user_id is the username of your account. You must not use your email address.
 
@@ -62,7 +62,7 @@ The barcode of the product.
 
 ### ImageUpload
 
-`imageupload` must contain the binary content of the image. This field name is dependent on the  `imagefield`.  It must be `imgupload_` suffixed by the value of the `imagefield` stated earlier. Here are some examples:
+`imageupload` must contain the binary content of the image. This field name is dependent on the `imagefield`. It must be `imgupload_` suffixed by the value of the `imagefield` stated earlier. Here are some examples:
 
 - imgupload_front (if imagefield=front)
 - imgupload_ingredients_fr (if imagefield=ingredients_fr)
@@ -81,15 +81,15 @@ https://world.openfoodfacts.net/cgi/product_image_upload.pl
 
 Add a `user_id` and `password` as body parameters to the request for authentication. The `code` (barcode of the product to be updated) is required to indicate the product for the uploaded photo. Then, include other product data to be added in the request body.
 
-To add a new image for ingredients in English  to *100% Real Orange Juice*, the request body should contain these fields :
+To add a new image for ingredients in English to _100% Real Orange Juice_, the request body should contain these fields :
 
-| Key        | Value           | Description  |
-| ------------- |:-------------:| -----:|
-| user_id     | *** | A valid user_id |
-| password      | ***     |   A valid password |
-| code | 0180411000803      |    The barcode of the product to be added/edited |
-| imagefield | ingredients_en      |    The type of image to be uploaded|
-| imgupload_ingredients_en | file     |   The binary content of the image of the product ingredients in English |
+| Key                      |     Value      |                                                           Description |
+| ------------------------ | :------------: | --------------------------------------------------------------------: |
+| user_id                  |     \*\*\*     |                                                       A valid user_id |
+| password                 |     \*\*\*     |                                                      A valid password |
+| code                     | 0180411000803  |                         The barcode of the product to be added/edited |
+| imagefield               | ingredients_en |                                      The type of image to be uploaded |
+| imgupload_ingredients_en |      file      | The binary content of the image of the product ingredients in English |
 
 If the image is in the `images/real-orange-juice-ingredients.jpg`, we can use curl (thanks to the special '@' attributes, which enables reading from a file):
 

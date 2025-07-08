@@ -3,13 +3,13 @@ title: "API Tutorial"
 description: "Complete tutorial on using Open Food Facts API to get Nutri-scores, complete product data, and search products."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 Welcome to this tutorial on basic usage of Open Food Facts API.
 
 <Callout type="info">
-First, be sure to see our [Introduction to the API](./index.mdx).
+  First, be sure to see our [Introduction to the API](./index).
 </Callout>
 
 ## Scan A Product To Get Nutri-score
@@ -20,7 +20,7 @@ To get a product nutriscore, send a request to the [Get A Product By Barcode](ht
 
 <Steps>
 <Step title="Authentication">
-Usually, no authentication is required to query Get A Product Nutri-score. However, there is a basic auth to avoid content indexation in the staging environment (which is used throughout this tutorial). For more details, visit the [Open Food Facts API Environment](index.mdx#api-deployments).
+Usually, no authentication is required to query Get A Product Nutri-score. However, there is a basic auth to avoid content indexation in the staging environment (which is used throughout this tutorial). For more details, visit the [Open Food Facts API Environment](index#api-deployments).
 </Step>
 <Step title="Describing the Get Request">
 Make a `GET` request to the `Get A Product By Barcode` endpoint.
@@ -36,6 +36,7 @@ https://world.openfoodfacts.net/api/v2/product/3017624010701
 ```
 
 The response returns every data about Nutella Ferrero on the database. To get the nutriscore, we need to limit the response by specifying the nutriscore field, which is the `nutrition_grades` and `product_name`.
+
 </Step>
 <Step title="Query Parameters">
 To limit the response of the Get A Product By Barcode response, use query parameters to specify the product fields to be returned. In this example, you need one query parameter called `field` with the value `product_name,nutrition_grades`.
@@ -45,21 +46,23 @@ The request path will now look like this:
 ```bash title="Request with Query Parameters"
 https://world.openfoodfacts.net/api/v2/product/3017624010701?fields=product_name,nutriscore_data
 ```
+
 </Step>
 <Step title="Nutri-Score Response">
 The response returned contains an object of the `code`, `product`, `status_verbose`, and `status`. The `product` object contains the fields specified in the query: the `product_name` and the `nutrition_grades`. The status also states if the product was found or not.
 
 ```json title="Response Example"
 {
-    "code": "3017624010701",
-    "product": {
-        "nutrition_grades": "e",
-        "product_name": "Nutella"
-    },
-    "status": 1,
-    "status_verbose": "product found"
+  "code": "3017624010701",
+  "product": {
+    "nutrition_grades": "e",
+    "product_name": "Nutella"
+  },
+  "status": 1,
+  "status_verbose": "product found"
 }
 ```
+
 </Step>
 <Step title="Nutri-Score Computation">
 If you would like to be able to show how the score is computed, add some extra fields like `nutriscore_data` and `nutriments`.
@@ -110,6 +113,7 @@ The `product` object in the response now contains the extra fields to show how t
 ```
 
 For more details, see the reference documentation for [Get A Product By Barcode](https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-/api/v2/product/-barcode-).
+
 </Step>
 </Steps>
 
@@ -128,25 +132,26 @@ The response shows the missing fields and category needed to compute the Nutri-S
 
 ```json title="Missing Tags Response"
 {
-    "code": "0180411000803",
-    "product": {
-        "misc_tags": [
-            "en:nutriscore-not-computed",
-            "en:nutriscore-missing-category",
-            "en:nutrition-not-enough-data-to-compute-nutrition-score",
-            "en:nutriscore-missing-nutrition-data",
-            "en:nutriscore-missing-nutrition-data-sodium",
-            "en:ecoscore-extended-data-not-computed",
-            "en:ecoscore-not-computed",
-            "en:main-countries-new-product"
-        ]
-    },
-    "status": 1,
-    "status_verbose": "product found"
+  "code": "0180411000803",
+  "product": {
+    "misc_tags": [
+      "en:nutriscore-not-computed",
+      "en:nutriscore-missing-category",
+      "en:nutrition-not-enough-data-to-compute-nutrition-score",
+      "en:nutriscore-missing-nutrition-data",
+      "en:nutriscore-missing-nutrition-data-sodium",
+      "en:ecoscore-extended-data-not-computed",
+      "en:ecoscore-not-computed",
+      "en:main-countries-new-product"
+    ]
+  },
+  "status": 1,
+  "status_verbose": "product found"
 }
 ```
 
 The sample response above for 100% Real Orange Juice `misc_tags` shows that the Nutri-Score is missing category (`en:nutriscore-missing-category`) and sodium (salt) (`en:nutriscore-missing-nutrition-data-sodium`). Now you can write to the OFF API to provide these nutriment data (if you have them) so that the Nutri-Score can be computed.
+
 </Step>
 <Step title="Write data to make Nutri-Score computation possible">
 The WRITE operations in the OFF API require authentication. Therefore you need a valid `user_id`^[user_id_not_email] and `password` to write the missing nutriment data to 100% Real Orange Juice.
@@ -163,14 +168,14 @@ Add your valid `user_id` and `password` as body parameters to your request for a
 
 To write `sodium` and `category` to 100% Real Orange Juice so that the Nutri-Score can be computed, the request body should contain these fields:
 
-| Key        | Value           | Description  |
-| ------------- |:-------------:| -----:|
-| user_id     | *** | A valid user_id |
-| password      | ***     |   A valid password |
-| code | 0180411000803      |    The barcode of the product to be added/edited |
-| nutriment_sodium | 0.015      |    Amount of sodium |
-| nutriment_sodium_unit | g      |   Unit of sodium relative to the amount |
-| categories | Orange Juice     |   Category of the Product |
+| Key                   |     Value     |                                   Description |
+| --------------------- | :-----------: | --------------------------------------------: |
+| user_id               |    \*\*\*     |                               A valid user_id |
+| password              |    \*\*\*     |                              A valid password |
+| code                  | 0180411000803 | The barcode of the product to be added/edited |
+| nutriment_sodium      |     0.015     |                              Amount of sodium |
+| nutriment_sodium_unit |       g       |         Unit of sodium relative to the amount |
+| categories            | Orange Juice  |                       Category of the Product |
 
 Using curl:
 
@@ -184,12 +189,13 @@ If the request is successful, it returns a response that indicates that the fiel
 
 ```json title="Fields Saved Response"
 {
-    "status_verbose": "fields saved",
-    "status": 1
+  "status_verbose": "fields saved",
+  "status": 1
 }
 ```
 
 ^[user_id_not_email]: user_id is the username of your account. You must not use your email address.
+
 </Step>
 <Step title="Read newly computed Nutri-Score">
 Now, let's check if the Nutri-Score for 100% Real Orange Juice has been computed now that we have provided the missing data. Make a GET request to `https://world.openfoodfacts.net/api/v2/product/0180411000803?fields=product_name,nutriscore_data,nutriments,nutrition_grades` for Nutri-Score of 100% Real Orange Juice. The response now contains the Nutri-Score computation:
@@ -226,6 +232,7 @@ Now, let's check if the Nutri-Score for 100% Real Orange Juice has been computed
 For more details, see the reference documentation for [Add or Edit A Product](https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#post-/cgi/product_jqm2.pl)
 
 You can also check the reference cheatsheet to know how to add/edit other types of product data.
+
 </Step>
 </Steps>
 
@@ -243,63 +250,63 @@ Make a `GET` request to the `Search for Products` endpoint.
 https://world.openfoodfacts.org/api/v2/search
 ```
 
-Add the search criteria used to filter the products as query parameters.  For Orange Juice with a nutrition_grade of `c`, add query parameters `categories_tags_en` to filter `Orange Juice` while `nutrition_grades_tags` to filter `c`.  The response will return all the products in the database with the category `Orange Juice` and nutrition_grade `c`.
+Add the search criteria used to filter the products as query parameters. For Orange Juice with a nutrition_grade of `c`, add query parameters `categories_tags_en` to filter `Orange Juice` while `nutrition_grades_tags` to filter `c`. The response will return all the products in the database with the category `Orange Juice` and nutrition_grade `c`.
 
 ```text
 https://world.openfoodfacts.net/api/v2/search?categories_tags_en=Orange Juice&nutrition_grades_tags=c
 ```
 
-To limit the response, add `fields` to the query parameters to specify the fields to be returned in each product object response.  For this tutorial, limit the response to `code`, `product_name`, `nutrition_grades`, and `categories_tags_en`.
+To limit the response, add `fields` to the query parameters to specify the fields to be returned in each product object response. For this tutorial, limit the response to `code`, `product_name`, `nutrition_grades`, and `categories_tags_en`.
 
 ```text
 https://world.openfoodfacts.net/api/v2/search?categories_tags_en=Orange Juice&nutrition_grades_tags=c&fields=code,nutrition_grades,categories_tags_en
 ```
 
-The response returns all products that belong to the Orange Juice category, with the nutrition_grade "c" and limits each product object response to only the specified fields.  It also returns the count(total number) of products that match the search criteria.
+The response returns all products that belong to the Orange Juice category, with the nutrition_grade "c" and limits each product object response to only the specified fields. It also returns the count(total number) of products that match the search criteria.
 
 ```json title="Product Search Response"
 {
-    "count": 1629,
-    "page": 1,
-    "page_count": 24,
-    "page_size": 24,
-    "products": [
-        {
-            "categories_tags_en": [
-                "Plant-based foods and beverages",
-                "Beverages",
-                "Plant-based beverages",
-                "Fruit-based beverages",
-                "Juices and nectars",
-                "Fruit juices",
-                "Concentrated fruit juices",
-                "Orange juices",
-                "Concentrated orange juices"
-            ],
-            "code": "3123340008288",
-            "nutrition_grades": "c"
-        },
-        "...",
-        "...",
-        "...",
-        {
-            "categories_tags_en": [
-                "Plant-based foods and beverages",
-                "Beverages",
-                "Plant-based beverages",
-                "Fruit-based beverages",
-                "Juices and nectars",
-                "Fruit juices",
-                "Non-Alcoholic beverages",
-                "Orange juices",
-                "Squeezed juices",
-                "Squeezed orange juices"
-            ],
-            "code": "3608580844136",
-            "nutrition_grades": "c"
-        }
-    ],
-    "skip": 0
+  "count": 1629,
+  "page": 1,
+  "page_count": 24,
+  "page_size": 24,
+  "products": [
+    {
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Fruit-based beverages",
+        "Juices and nectars",
+        "Fruit juices",
+        "Concentrated fruit juices",
+        "Orange juices",
+        "Concentrated orange juices"
+      ],
+      "code": "3123340008288",
+      "nutrition_grades": "c"
+    },
+    "...",
+    "...",
+    "...",
+    {
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Fruit-based beverages",
+        "Juices and nectars",
+        "Fruit juices",
+        "Non-Alcoholic beverages",
+        "Orange juices",
+        "Squeezed juices",
+        "Squeezed orange juices"
+      ],
+      "code": "3608580844136",
+      "nutrition_grades": "c"
+    }
+  ],
+  "skip": 0
 }
 ```
 
@@ -315,44 +322,44 @@ The date that each product was last modified is now used to order the product re
 
 ```json title="Sorted Product Search Response"
 {
-    "count": 1629,
-    "page": 1,
-    "page_count": 24,
-    "page_size": 24,
-    "products": [
-        {
-            "categories_tags_en": [
-                "Plant-based foods and beverages",
-                "Beverages",
-                "Plant-based beverages",
-                "Fruit-based beverages",
-                "Juices and nectars",
-                "Fruit juices",
-                "Orange juices"
-            ],
-            "code": "3800014268048",
-            "nutrition_grades": "c"
-        },
-        "...",
-        "...",
-        "...",
-        {
-            "categories_tags_en": [
-                "Plant-based foods and beverages",
-                "Beverages",
-                "Plant-based beverages",
-                "Fruit-based beverages",
-                "Juices and nectars",
-                "Fruit juices",
-                "Orange juices",
-                "Squeezed juices",
-                "Squeezed orange juices"
-            ],
-            "code": "4056489641018",
-            "nutrition_grades": "c"
-        }
-    ],
-    "skip": 0
+  "count": 1629,
+  "page": 1,
+  "page_count": 24,
+  "page_size": 24,
+  "products": [
+    {
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Fruit-based beverages",
+        "Juices and nectars",
+        "Fruit juices",
+        "Orange juices"
+      ],
+      "code": "3800014268048",
+      "nutrition_grades": "c"
+    },
+    "...",
+    "...",
+    "...",
+    {
+      "categories_tags_en": [
+        "Plant-based foods and beverages",
+        "Beverages",
+        "Plant-based beverages",
+        "Fruit-based beverages",
+        "Juices and nectars",
+        "Fruit juices",
+        "Orange juices",
+        "Squeezed juices",
+        "Squeezed orange juices"
+      ],
+      "code": "4056489641018",
+      "nutrition_grades": "c"
+    }
+  ],
+  "skip": 0
 }
 ```
 

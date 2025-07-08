@@ -3,18 +3,19 @@ title: "Ingredients Spellcheck"
 description: "This document details the Ingredients Spellcheck feature, which uses a fine-tuned Mistral-7B-Base model to correct ingredient list typos and OCR errors. It covers the training pipeline, evaluation algorithm, and integration with Robotoff's batch inference system."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Ingredients Spellcheck
 
 A key element of the Open Food Facts database is the parsing of the product ingredients. These lists of ingredients either come from contributors' annotations or from OCR-extracted text from packaging pictures.
 
-However, text typos or wrong OCR-extraction lead to ingredients not recognized by the Product Opener service. 
+However, text typos or wrong OCR-extraction lead to ingredients not recognized by the Product Opener service.
 
 <Callout type="info">
-  Check about this process in the [Open Food Facts wiki](https://wiki.openfoodfacts.org/Ingredients_Extraction_and_Analysis).
+  Check about this process in the [Open Food Facts
+  wiki](https://wiki.openfoodfacts.org/Ingredients_Extraction_and_Analysis).
 </Callout>
 
 For this reason, the Ingredients Spellcheck was developed to solve this issue and improve the ingredient parsing quality.
@@ -22,30 +23,50 @@ For this reason, the Ingredients Spellcheck was developed to solve this issue an
 ## Overview
 
 <Callout type="success">
-  **TL;DR**: Mistral-7B-Base was fine-tuned on lists of ingredients extracted from the Open Food Facts database. This dataset was synthetically generated using closed-source LLMs (GPT-3.5-Turbo) and manually reviewed with Argilla, an open-source annotation tool.
+  **TL;DR**: Mistral-7B-Base was fine-tuned on lists of ingredients extracted
+  from the Open Food Facts database. This dataset was synthetically generated
+  using closed-source LLMs (GPT-3.5-Turbo) and manually reviewed with Argilla,
+  an open-source annotation tool.
 </Callout>
 
 <Cards>
-  <Card title="Dataset" href="https://huggingface.co/datasets/openfoodfacts/spellcheck-dataset" description="Synthetically generated spellcheck training dataset" />
-  <Card title="Benchmark" href="https://huggingface.co/datasets/openfoodfacts/spellcheck-benchmark" description="Performance benchmark comparing different models" />
-  <Card title="Model" href="https://huggingface.co/openfoodfacts/spellcheck-mistral-7b" description="Fine-tuned Mistral-7B model for spellcheck" />
-  <Card title="Demo" href="https://huggingface.co/spaces/jeremyarancio/ingredients-spellcheck" description="Interactive demo of the spellcheck model" />
+  <Card
+    title="Dataset"
+    href="https://huggingface.co/datasets/openfoodfacts/spellcheck-dataset"
+    description="Synthetically generated spellcheck training dataset"
+  />
+  <Card
+    title="Benchmark"
+    href="https://huggingface.co/datasets/openfoodfacts/spellcheck-benchmark"
+    description="Performance benchmark comparing different models"
+  />
+  <Card
+    title="Model"
+    href="https://huggingface.co/openfoodfacts/spellcheck-mistral-7b"
+    description="Fine-tuned Mistral-7B model for spellcheck"
+  />
+  <Card
+    title="Demo"
+    href="https://huggingface.co/spaces/jeremyarancio/ingredients-spellcheck"
+    description="Interactive demo of the spellcheck model"
+  />
 </Cards>
 
 ### Performance Comparison
 
 The current model (v1) shows the best performances over the closed-source LLMs on our benchmark. A custom evaluation algorithm was created to correctly estimate the Spellcheck performances.
 
-| Model | Correction Precision | Correction Recall | Correction F1 |
-|----------|----------|----------|----------|
-| GPT-3.5-Turbo | 0.557 | 0.727 | 0.631 |
-| GPT-4o | 0.311 | 0.702 | 0.431 |
-| Gemini-1.5-flash | 0.544 | 0.596 | 0.569 |
-| Claude3-Sonnet-3.5 | 0.178 | **0.810** | 0.292 |
-| **Our model** | **0.664** | 0.630 | **0.647** |
+| Model              | Correction Precision | Correction Recall | Correction F1 |
+| ------------------ | -------------------- | ----------------- | ------------- |
+| GPT-3.5-Turbo      | 0.557                | 0.727             | 0.631         |
+| GPT-4o             | 0.311                | 0.702             | 0.431         |
+| Gemini-1.5-flash   | 0.544                | 0.596             | 0.569         |
+| Claude3-Sonnet-3.5 | 0.178                | **0.810**         | 0.292         |
+| **Our model**      | **0.664**            | 0.630             | **0.647**     |
 
 <Callout type="info">
-  The model is integrated into Robotoff in [Batch Inference](/docs/Robotoff/references/batch-job.mdx) using Google Batch Job.
+  The model is integrated into Robotoff in [Batch
+  Inference](/docs/Robotoff/references/batch-job) using Google Batch Job.
 </Callout>
 
 ## Evaluation Algorithm
@@ -53,7 +74,9 @@ The current model (v1) shows the best performances over the closed-source LLMs o
 Our solution is very specific: correct errors in list of ingredients to enable the [Ingredients Parser](https://wiki.openfoodfacts.org/Ingredients_Extraction_and_Analysis) to accurately identify the composition of each product.
 
 <Callout type="warn">
-  Since the corrections are later added to the database, we need to ensure the model doesn't correct an ingredient by mistake. In other words, we minimize the number of False Positives while maximizing the overall Recall.
+  Since the corrections are later added to the database, we need to ensure the
+  model doesn't correct an ingredient by mistake. In other words, we minimize
+  the number of False Positives while maximizing the overall Recall.
 </Callout>
 
 ### Why Custom Evaluation?
@@ -61,8 +84,14 @@ Our solution is very specific: correct errors in list of ingredients to enable t
 Traditional evaluation metrics fall short in assessing the quality of the spellcheck process:
 
 <Cards>
-  <Card title="ROUGE" description="Doesn't provide detailed analysis about correctly rectified words" />
-  <Card title="BLEU" description="Insufficient for spellcheck quality assessment" />
+  <Card
+    title="ROUGE"
+    description="Doesn't provide detailed analysis about correctly rectified words"
+  />
+  <Card
+    title="BLEU"
+    description="Insufficient for spellcheck quality assessment"
+  />
   <Card title="METEOR" description="Lacks word-level correction analysis" />
 </Cards>
 
@@ -71,6 +100,7 @@ Traditional evaluation metrics fall short in assessing the quality of the spellc
 We developed an algorithm that takes 3 inputs: the original, the reference, and the prediction of a list of ingredients.
 
 **Example:**
+
 ```text title="Evaluation Example"
 Original:       "Th cat si on the fridge,"
 Reference:      "The cat is on the fridge."
@@ -84,17 +114,14 @@ Prediction:     "Th big cat is in the fridge."
     Transform each text into a sequence of tokens.
   </Step>
 
-  <Step>
-    ### Sequence Alignment
-    
-    Perform [sequence alignment method](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm) to align identical tokens between original-reference and prediction-reference pairs.
-  </Step>
+<Step>
+  ### Sequence Alignment Perform [sequence alignment
+  method](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm) to
+  align identical tokens between original-reference and prediction-reference
+  pairs.
+</Step>
 
-  <Step>
-    ### Token Scoring
-    
-    Assign 1 or 0 whether the token is modified.
-  </Step>
+<Step>### Token Scoring Assign 1 or 0 whether the token is modified.</Step>
 
   <Step>
     ### Metric Calculation
@@ -104,6 +131,7 @@ Prediction:     "Th big cat is in the fridge."
 </Steps>
 
 **Evaluation Matrix:**
+
 ```text title="Token Evaluation"
 Orig-Ref:          1    0    0    1    0    1    1    1    1
 Orig-Pred:         0    1    0    1    1    1    1    1    1
@@ -111,7 +139,9 @@ Signification:     FN   FP   TN   TP   FP   TP   TP   TP   TP
 ```
 
 <Callout type="info">
-  You'll find more details about the evaluation algorithm (see `spellcheck/src/spellcheck/evaluation/evaluator`) in the project [README](https://github.com/openfoodfacts/openfoodfacts-ai/tree/develop/spellcheck).
+  You'll find more details about the evaluation algorithm (see
+  `spellcheck/src/spellcheck/evaluation/evaluator`) in the project
+  [README](https://github.com/openfoodfacts/openfoodfacts-ai/tree/develop/spellcheck).
 </Callout>
 
 ## Guidelines
@@ -119,16 +149,18 @@ Signification:     FN   FP   TN   TP   FP   TP   TP   TP   TP
 The [Guidelines](https://github.com/openfoodfacts/openfoodfacts-ai/tree/develop/spellcheck#-guidelines) is a set of rules defined to guide and restrict the correction made by the Spellcheck.
 
 **Usage:**
+
 - Create the benchmark dataset
 - Generate the training dataset using proprietary LLMs (GPT-3.5-Turbo) for synthetic data generation
 - Guide model corrections during inference
 
 ## Training Pipeline
 
-The model training consists of a succession of steps, each requiring different resource allocations, such as cloud GPUs, data validation and logging. 
+The model training consists of a succession of steps, each requiring different resource allocations, such as cloud GPUs, data validation and logging.
 
 <Callout type="info">
-  We use [Metaflow](https://metaflow.org/), an orchestrator designed for Data science and Machine Learning projects, to orchestrate the training pipeline.
+  We use [Metaflow](https://metaflow.org/), an orchestrator designed for Data
+  science and Machine Learning projects, to orchestrate the training pipeline.
 </Callout>
 
 ### Pipeline Components
@@ -144,27 +176,27 @@ The model training consists of a succession of steps, each requiring different r
     </Callout>
   </Step>
 
-  <Step>
-    ### Cloud Training
-    
-    The training job is launched in the cloud using [AWS Sagemaker](https://aws.amazon.com/sagemaker/). The `spellcheck/src/` package is imported along with the training script. Once complete, the model artifact is stored in AWS S3 bucket.
-    
-    <Callout type="info">
-      All training details are tracked in the [Experiment Tracker Comet ML](https://www.comet.com/jeremyarancio/spellcheck/view/WzBvzCs36VdE6MIbytKEI2ePH/experiments).
-      
-      See `spellcheck/scripts/training` for training scripts.
-    </Callout>
-  </Step>
+<Step>
+  ### Cloud Training The training job is launched in the cloud using [AWS
+  Sagemaker](https://aws.amazon.com/sagemaker/). The `spellcheck/src/` package
+  is imported along with the training script. Once complete, the model artifact
+  is stored in AWS S3 bucket.
+  <Callout type="info">
+    All training details are tracked in the [Experiment Tracker Comet
+    ML](https://www.comet.com/jeremyarancio/spellcheck/view/WzBvzCs36VdE6MIbytKEI2ePH/experiments).
+    See `spellcheck/scripts/training` for training scripts.
+  </Callout>
+</Step>
 
-  <Step>
-    ### Model Evaluation
-    
-    The fine-tuned model is evaluated on the benchmark using the custom evaluation algorithm. [vLLM](https://github.com/vllm-project/vllm) is used to accelerate the evaluation.
-    
-    <Callout type="warn">
-      Currently, this process is handled manually, but further work is needed to fully integrate it into the pipeline.
-    </Callout>
-  </Step>
+<Step>
+  ### Model Evaluation The fine-tuned model is evaluated on the benchmark using
+  the custom evaluation algorithm. [vLLM](https://github.com/vllm-project/vllm)
+  is used to accelerate the evaluation.
+  <Callout type="warn">
+    Currently, this process is handled manually, but further work is needed to
+    fully integrate it into the pipeline.
+  </Callout>
+</Step>
 
   <Step>
     ### Human Evaluation
@@ -182,7 +214,7 @@ The model training consists of a succession of steps, each requiring different r
 
 ### Version Management
 
-The model and dataset versions are handled by Hugging Face repository as branches (v1, v2) and commits (v1.1, v1.2). You can easily access any version using the *Dataset* library from Hugging Face.
+The model and dataset versions are handled by Hugging Face repository as branches (v1, v2) and commits (v1.1, v1.2). You can easily access any version using the _Dataset_ library from Hugging Face.
 
 ```python title="Load specific dataset version"
 from datasets import load_dataset
@@ -193,9 +225,7 @@ dataset = load_dataset(
 )
 ```
 
-<Callout type="info">
-  See `scripts/dags` for pipeline DAG definitions.
-</Callout>
+<Callout type="info">See `scripts/dags` for pipeline DAG definitions.</Callout>
 
 ## Integration with Batch Job
 
@@ -212,19 +242,16 @@ Once the model is selected, the inference script with its dependencies are conta
     </Callout>
   </Step>
 
-  <Step>
-    ### Image Registry
-    
-    The image is pushed to Google Artifact Registry.
-    
-    <Callout type="info">
-      See `robotoff/makefile` for deployment commands.
-    </Callout>
-  </Step>
+<Step>
+  ### Image Registry The image is pushed to Google Artifact Registry.
+  <Callout type="info">
+    See `robotoff/makefile` for deployment commands.
+  </Callout>
+</Step>
 
   <Step>
     ### Batch Job Integration
     
-    The image is used within the [batch job pipeline](/docs/Robotoff/references/batch-job.mdx), defined by the batch job type `ingredients-spellcheck`.
+    The image is used within the [batch job pipeline](/docs/Robotoff/references/batch-job), defined by the batch job type `ingredients-spellcheck`.
   </Step>
 </Steps>

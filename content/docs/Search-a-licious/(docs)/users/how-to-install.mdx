@@ -3,13 +3,13 @@ title: "Install Search-a-licious"
 description: "Learn how to install Search-a-licious with this comprehensive guide. It covers essential prerequisites like configuring mmap count and installing Docker, details on setting up your environment variables, and instructions for launching the application."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 <Callout type="info">
-This guide covers the complete installation process for Search-a-licious, from prerequisites to launching the application.
+  This guide covers the complete installation process for Search-a-licious, from
+  prerequisites to launching the application.
 </Callout>
 
 ## Prerequisites
@@ -21,6 +21,7 @@ This guide covers the complete installation process for Search-a-licious, from p
 **Linux Users Only**
 
 If you are on Linux, you need to make sure that your [system mmap count is high enough for Elasticsearch to run](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html).
+
 </Callout>
 
 Run the following command:
@@ -38,19 +39,29 @@ sudo sysctl -p
 ```
 
 <Callout type="info">
-This ensures that the modified value is retained even after a system reboot. Without this step, the value will reset to its default after reboot.
+  This ensures that the modified value is retained even after a system reboot.
+  Without this step, the value will reset to its default after reboot.
 </Callout>
 
 </Step>
 <Step title="Install Docker and Docker Compose">
 
 <Callout>
-Search-a-licious uses Docker and Docker Compose to manage the services it needs to run.
+  Search-a-licious uses Docker and Docker Compose to manage the services it
+  needs to run.
 </Callout>
 
 <Cards>
-<Card title="Docker" href="https://docs.docker.com/engine/install/" description="Container platform installation guide" />
-<Card title="Docker Compose" href="https://docs.docker.com/compose/install/" description="Container orchestration tool" />
+  <Card
+    title="Docker"
+    href="https://docs.docker.com/engine/install/"
+    description="Container platform installation guide"
+  />
+  <Card
+    title="Docker Compose"
+    href="https://docs.docker.com/compose/install/"
+    description="Container orchestration tool"
+  />
 </Cards>
 
 Once both are installed, clone the git repository locally.
@@ -61,7 +72,8 @@ Once both are installed, clone the git repository locally.
 ## Configuration
 
 <Callout type="info">
-All configuration is passed through environment variables to services using a `.env` file. A sample `.env` file is provided in the repository.
+  All configuration is passed through environment variables to services using a
+  `.env` file. A sample `.env` file is provided in the repository.
 </Callout>
 
 <Steps>
@@ -69,8 +81,11 @@ All configuration is passed through environment variables to services using a `.
 
 **Essential Change:** Set the `CONFIG_PATH` variable to the path of your YAML configuration file. This file configures the search-a-licious indexer and search services.
 
-<Card title="Configuration Tutorial" href="./tutorial.mdx#create-a-configuration-file">
-See the tutorial for creating your configuration file
+<Card
+  title="Configuration Tutorial"
+  href="./tutorial#create-a-configuration-file"
+>
+  See the tutorial for creating your configuration file
 </Card>
 
 </Step>
@@ -80,17 +95,24 @@ See the tutorial for creating your configuration file
 **Production Requirements**
 
 You must configure these settings for production deployment:
+
 </Callout>
 
 <Cards>
-<Card title="RESTART_POLICY" description="Change to 'always'" />
-<Card title="COMPOSE_FILE" description="Set to 'docker-compose.yml;docker/prod.yml;docker/monitor.yml'" />
-<Card title="MEM_LIMIT" description="Set Elasticsearch memory limit" />
-<Card title="NGINX_BASIC_AUTH_USER_PASSWD" description="Configure authentication" />
+  <Card title="RESTART_POLICY" description="Change to 'always'" />
+  <Card
+    title="COMPOSE_FILE"
+    description="Set to 'docker-compose.yml;docker/prod.yml;docker/monitor.yml'"
+  />
+  <Card title="MEM_LIMIT" description="Set Elasticsearch memory limit" />
+  <Card
+    title="NGINX_BASIC_AUTH_USER_PASSWD"
+    description="Configure authentication"
+  />
 </Cards>
 
 <Callout type="info">
-Monitor is optional but recommended for production deployments.
+  Monitor is optional but recommended for production deployments.
 </Callout>
 
 </Step>
@@ -111,18 +133,21 @@ Edit the `.env` file and set `TAG` to the commit SHA corresponding to the versio
 </Step>
 </Steps>
 
-<Card title="Reference Documentation" href="./ref-settings.mdx">
-For more detailed application settings, see the Settings Reference
+<Card title="Reference Documentation" href="./ref-settings">
+  For more detailed application settings, see the Settings Reference
 </Card>
 
-<Card title="CI/CD Inspiration" href="https://github.com/openfoodfacts/search-a-licious/blob/main/.github/workflows/container-deploy.yml">
-Our CI deployment file might provide useful deployment insights
+<Card
+  title="CI/CD Inspiration"
+  href="https://github.com/openfoodfacts/search-a-licious/blob/main/.github/workflows/container-deploy.yml"
+>
+  Our CI deployment file might provide useful deployment insights
 </Card>
 
 ## Launching the Application
 
 <Callout type="info">
-You should now be able to start the Docker services:
+  You should now be able to start the Docker services:
 </Callout>
 
 ```bash title="Start Docker Services"
@@ -135,14 +160,14 @@ docker compose up -d
 - **Permission Error**: If your user is not part of the `docker` group, you should either [add it](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) or modify the Makefile to prefix `sudo` to all docker and docker compose commands.
 
 - **Update Container Crashes**: If you are not connected to Redis, Search-a-licious will still run. You need to connect to Redis only if you want continuous updates.
-</Callout>
+  </Callout>
 
-<Card title="Continuous Updates" href="./how-to-update-index.mdx">
-See How to update the index for continuous data updates
+<Card title="Continuous Updates" href="./how-to-update-index">
+  See How to update the index for continuous data updates
 </Card>
 
 ## Next Steps
 
-<Card title="Tutorial" href="./tutorial.mdx">
-To understand what you can do next, continue with the comprehensive tutorial
+<Card title="Tutorial" href="./tutorial">
+  To understand what you can do next, continue with the comprehensive tutorial
 </Card>

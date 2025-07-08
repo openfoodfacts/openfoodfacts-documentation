@@ -3,9 +3,9 @@ title: "Contributing to Robotoff"
 description: "Learn how to contribute to Robotoff by reporting bugs, fixing issues, implementing features, or writing documentation. This guide covers setting up your local development environment, running tests, committing changes, and submitting pull requests."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Contributing
 
@@ -16,11 +16,27 @@ You can contribute in many ways:
 ## Types of Contributions
 
 <Cards>
-  <Card title="Report Bugs" href="https://github.com/openfoodfacts/robotoff/issues" description="Help us improve by reporting issues you encounter" />
-  <Card title="Fix Bugs" description="Look through GitHub issues tagged with 'bug' and 'help wanted'" />
-  <Card title="Implement Features" description="Take on enhancement requests tagged with 'help wanted'" />
-  <Card title="Write Documentation" description="Improve official docs or add docstrings to code" />
-  <Card title="Submit Feedback" description="Propose new features or improvements" />
+  <Card
+    title="Report Bugs"
+    href="https://github.com/openfoodfacts/robotoff/issues"
+    description="Help us improve by reporting issues you encounter"
+  />
+  <Card
+    title="Fix Bugs"
+    description="Look through GitHub issues tagged with 'bug' and 'help wanted'"
+  />
+  <Card
+    title="Implement Features"
+    description="Take on enhancement requests tagged with 'help wanted'"
+  />
+  <Card
+    title="Write Documentation"
+    description="Improve official docs or add docstrings to code"
+  />
+  <Card
+    title="Submit Feedback"
+    description="Propose new features or improvements"
+  />
 </Cards>
 
 ### Report Bugs
@@ -28,8 +44,7 @@ You can contribute in many ways:
 Report bugs at [https://github.com/openfoodfacts/robotoff/issues](https://github.com/openfoodfacts/robotoff/issues).
 
 <Callout type="info">
-  When reporting a bug, please include:
-  - Your operating system name and version
+  When reporting a bug, please include: - Your operating system name and version
   - Any details about your local setup that might be helpful in troubleshooting
   - Detailed steps to reproduce the bug
 </Callout>
@@ -51,10 +66,9 @@ Robotoff could always use more documentation, whether as part of the official [R
 The best way to send feedback is to file an issue at [https://github.com/openfoodfacts/robotoff/issues](https://github.com/openfoodfacts/robotoff/issues).
 
 <Callout type="info">
-  If you are proposing a feature:
-  - Explain in detail how it would work
-  - Keep the scope as narrow as possible, to make it easier to implement
-  - Remember that this is a volunteer-driven project, and that contributions are welcome
+  If you are proposing a feature: - Explain in detail how it would work - Keep
+  the scope as narrow as possible, to make it easier to implement - Remember
+  that this is a volunteer-driven project, and that contributions are welcome
 </Callout>
 
 ## Get Started!
@@ -70,6 +84,7 @@ Ready to contribute code? Here's how to set up Robotoff for local development.
     ```bash title="Clone your fork"
     git clone git@github.com:your_name_here/robotoff.git
     ```
+
   </Step>
 
   <Step>
@@ -80,19 +95,16 @@ Ready to contribute code? Here's how to set up Robotoff for local development.
     1. Install [git lfs](https://git-lfs.com/)
     2. Go to `robotoff` directory and setup git lfs with `git lfs install`. This only has to be done once.
     3. Fetch LFS files with `git lfs fetch && git lfs checkout`
+
   </Step>
 
-  <Step>
-    ### Choose Installation Method
-    
-    Choose between [docker install (recommended) or local install](/docs/Robotoff/how-to-guides/deployment/dev-install.mdx) and run it.
-  </Step>
+<Step>
+  ### Choose Installation Method Choose between [docker install (recommended) or
+  local install](/docs/Robotoff/how-to-guides/deployment/dev-install) and run
+  it.
+</Step>
 
-  <Step>
-    ### Start Coding!
-    
-    Make your changes to the codebase.
-  </Step>
+<Step>### Start Coding! Make your changes to the codebase.</Step>
 
   <Step>
     ### Run Tests and Checks
@@ -101,9 +113,9 @@ Ready to contribute code? Here's how to set up Robotoff for local development.
 
     <Callout type="warn">
       If you are on Windows, make sure you have [Make for Windows](http://gnuwin32.sourceforge.net/packages/make.htm) installed. Don't forget to add its path in your [system environment variables](https://stackoverflow.com/questions/44272416/how-to-add-a-folder-to-path-environment-variable-in-windows-10-with-screensho/44272417#44272417).
-      
+
       A sample path may look like this: `C:\Program Files (x86)\GnuWin32\bin`
-      
+
       It is recommended to use Window's default command prompt instead of Power shell for smooth installation.
     </Callout>
 
@@ -114,7 +126,7 @@ Ready to contribute code? Here's how to set up Robotoff for local development.
     make checks
     make tests
     ```
-    
+
     To test the APIs on your localhost:
 
     ```bash title="Start services"
@@ -123,7 +135,7 @@ Ready to contribute code? Here's how to set up Robotoff for local development.
 
     <Callout type="info">
       You can make a POST request through [Postman](https://www.postman.com/) or simply paste the URL in a web browser to make a GET request like this one: http://localhost:5500/api/v1/insights/
-      
+
       The mapping of functions and API path is at the end of `robotoff/app/api.py`
     </Callout>
 
@@ -139,9 +151,10 @@ Ready to contribute code? Here's how to set up Robotoff for local development.
 
     <Callout type="warn">
       Before running the test cases make sure you have a database created. Have a look at `.env` and `robotoff/settings.py` - the default database name, user, and password is: `postgres`
-      
-      Configure them through environment (you may use `.env` if you use docker) as you like. See [dev install](/docs/Robotoff/how-to-guides/deployment/dev-install.mdx) for more information about how to restore database dumps.
+
+      Configure them through environment (you may use `.env` if you use docker) as you like. See [dev install](/docs/Robotoff/how-to-guides/deployment/dev-install) for more information about how to restore database dumps.
     </Callout>
+
   </Step>
 
   <Step>
@@ -162,9 +175,10 @@ Ready to contribute code? Here's how to set up Robotoff for local development.
       - Always contain a subject line which briefly describes the changes made. For example "docs: update CONTRIBUTING.rst"
       - Subject lines should not exceed 50 characters
       - The commit body should contain context about the change - how the code worked before, how it works now and why you decided to solve the issue in the way you did
-      
+
       More tips at [https://chris.beams.io/posts/git-commit](https://chris.beams.io/posts/git-commit)
     </Callout>
+
   </Step>
 
   <Step>
@@ -179,12 +193,15 @@ Ready to contribute code? Here's how to set up Robotoff for local development.
 Before you submit a pull request, check that it meets these guidelines:
 
 <Callout type="warn">
-  **Requirements:**
-  1. The pull request should include tests
-  2. If the pull request adds functionality, the docs should be updated. Put your new functionality into a function with a docstring
-  3. The pull request should work for Python 3.11. Check [https://github.com/openfoodfacts/robotoff/actions](https://github.com/openfoodfacts/robotoff/actions) and make sure that the tests pass for all supported Python versions
+  **Requirements:** 1. The pull request should include tests 2. If the pull
+  request adds functionality, the docs should be updated. Put your new
+  functionality into a function with a docstring 3. The pull request should work
+  for Python 3.11. Check
+  [https://github.com/openfoodfacts/robotoff/actions](https://github.com/openfoodfacts/robotoff/actions)
+  and make sure that the tests pass for all supported Python versions
 </Callout>
 
 <Callout type="info">
-  This contributing page was adapted from [Pyswarms documentation](https://github.com/ljvmiranda921/pyswarms/blob/master/CONTRIBUTING.rst).
+  This contributing page was adapted from [Pyswarms
+  documentation](https://github.com/ljvmiranda921/pyswarms/blob/master/CONTRIBUTING.rst).
 </Callout>

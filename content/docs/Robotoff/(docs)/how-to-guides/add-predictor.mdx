@@ -3,9 +3,9 @@ title: "Add New Predictor"
 description: "This guide explains how to integrate a new model or predictor into Robotoff. It covers prediction generation, calling the predictor, importing predictions/insights, triggering actions after annotation, and testing your new predictor."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # How to Add a New Model/Predictor to Robotoff
 
@@ -31,11 +31,12 @@ Here is a step-by-step guide to help you.
       For gRPC implementation example, see `generate_clip_embedding` in `robotoff.triton`
     </Callout>
 
-    The result of the computation should be a list of `Prediction`s. If you want the insight to be automatically applied, set `automatic_processing=True` when creating the Prediction. 
+    The result of the computation should be a list of `Prediction`s. If you want the insight to be automatically applied, set `automatic_processing=True` when creating the Prediction.
 
     <Callout type="warn">
       You may need to create a new entry in `PredictionType` and `InsightType` in `robotoff.types` depending on your predictor.
     </Callout>
+
   </Step>
 
   <Step>
@@ -44,27 +45,29 @@ Here is a step-by-step guide to help you.
     If the prediction is not OCR-based, you will either want the predictor to be called:
 
     <Cards>
-      <Card 
-        title="New Image Upload" 
+      <Card
+        title="New Image Upload"
         description="Add a call to your predictor function in robotoff.workers.tasks.import_image"
       />
-      <Card 
-        title="Product Update" 
+      <Card
+        title="Product Update"
         description="Add a call to your predictor function in robotoff.workers.tasks.product_updated"
       />
     </Cards>
+
   </Step>
 
   <Step>
     ## Importing Predictions/Insights
 
-    The next step is to import the predictions in database and generate insights from these predictions. 
+    The next step is to import the predictions in database and generate insights from these predictions.
 
     <Callout type="info">
-      If you don't know the difference between insights and predictions, [check this page](/docs/Robotoff/explanations/predictions.mdx).
+      If you don't know the difference between insights and predictions, [check this page](/docs/Robotoff/explanations/predictions).
     </Callout>
 
     You should create a new importer class subclassing `InsightImporter` in `robotoff.insights.importer` and add it to the `IMPORTERS` list.
+
   </Step>
 
   <Step>
@@ -75,6 +78,7 @@ Here is a step-by-step guide to help you.
     <Callout type="info">
       If you need a call to Product Opener API that is not implemented yet, add it to `robotoff.off`.
     </Callout>
+
   </Step>
 
   <Step>
@@ -102,9 +106,8 @@ Here is a step-by-step guide to help you.
     <Callout type="info">
       If you add an OCR-only predictor, you should also add unit tests in `tests/unit`. We don't yet have the possibility to perform integration tests on ML models served by Triton though.
     </Callout>
+
   </Step>
 </Steps>
 
-<Callout type="success">
-  That's it, congratulations 🎉!
-</Callout>
+<Callout type="success">That's it, congratulations 🎉!</Callout>

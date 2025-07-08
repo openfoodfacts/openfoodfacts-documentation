@@ -3,8 +3,8 @@ title: "Robotoff Architecture"
 description: "This document details the architecture of Robotoff, an AI-powered system for Open Food Facts. It covers its various services, including API, scheduler, workers, Redis, PostgreSQL, Elasticsearch, and Triton, and explains how they interact to process product data and generate insights."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
 
 # Architecture
 
@@ -13,21 +13,44 @@ import { Card, Cards } from 'fumadocs-ui/components/card';
 Robotoff is made of several services:
 
 <Cards>
-  <Card title="Public API Service" description="Handles external API requests and provides data access" />
-  <Card title="Scheduler" description="Responsible for launching recurrent tasks (downloading new dataset, processing insights automatically,...)" />
-  <Card title="Workers" description="Handle all long-lasting tasks and job processing" />
-  <Card title="Redis Instance" description="Specific to Robotoff, used to handle locks and messaging queues" />
-  <Card title="Update Listener" description="Listens to Product Opener events and triggers actions accordingly" />
-  <Card title="PostgreSQL Database" description="Stores all Robotoff data (predictions, insights,...)" />
-  <Card title="Elasticsearch" description="Single node instance used to index all logos for ANN search" />
-  <Card title="Triton Instance" description="Serves object detection models (nutriscore, nutrition-table, universal-logo-detector)" />
+  <Card
+    title="Public API Service"
+    description="Handles external API requests and provides data access"
+  />
+  <Card
+    title="Scheduler"
+    description="Responsible for launching recurrent tasks (downloading new dataset, processing insights automatically,...)"
+  />
+  <Card
+    title="Workers"
+    description="Handle all long-lasting tasks and job processing"
+  />
+  <Card
+    title="Redis Instance"
+    description="Specific to Robotoff, used to handle locks and messaging queues"
+  />
+  <Card
+    title="Update Listener"
+    description="Listens to Product Opener events and triggers actions accordingly"
+  />
+  <Card
+    title="PostgreSQL Database"
+    description="Stores all Robotoff data (predictions, insights,...)"
+  />
+  <Card
+    title="Elasticsearch"
+    description="Single node instance used to index all logos for ANN search"
+  />
+  <Card
+    title="Triton Instance"
+    description="Serves object detection models (nutriscore, nutrition-table, universal-logo-detector)"
+  />
 </Cards>
 
 <Callout type="info">
-  For more details on specific components, see:
-  - Scheduler: `scheduler.run`
-  - Logos: `robotoff.models.ImageAnnotation` and `robotoff.logos`
-  - ML services: `docker/ml.yml`
+  For more details on specific components, see: - Scheduler: `scheduler.run` -
+  Logos: `robotoff.models.ImageAnnotation` and `robotoff.logos` - ML services:
+  `docker/ml.yml`
 </Callout>
 
 ## External Dependencies
@@ -44,19 +67,24 @@ Communication between API and workers happens through Robotoff Redis DB using [r
 Jobs are sent through rq messaging queues. We currently have two types of queues:
 
 ### High-Priority Queues
+
 Used when a product is updated/deleted, or when a new image is uploaded. All jobs associated with a product are always sent to the same queue, based on the product barcode. This way, we greatly reduce the risk of concurrent processing for the same product (DB deadlocks or integrity errors).
 
 ### Low Priority Queue
+
 The `robotoff-low` queue is used for all lower-priority jobs.
 
 <Callout type="info">
-  Each worker listens to a single high priority queue. It handles high-priority jobs first, then low-priority jobs if the high-priority queue it's listening to is empty. This ensures low priority jobs don't use excessive system resources.
+  Each worker listens to a single high priority queue. It handles high-priority
+  jobs first, then low-priority jobs if the high-priority queue it's listening
+  to is empty. This ensures low priority jobs don't use excessive system
+  resources.
 </Callout>
 
 <Callout type="info">
-  For implementation details, see:
-  - Worker jobs: `robotoff.workers.queues` and `robotoff.workers.tasks`
-  - Product-specific queues: `get_high_queue` function in `robotoff.workers.queues`
+  For implementation details, see: - Worker jobs: `robotoff.workers.queues` and
+  `robotoff.workers.tasks` - Product-specific queues: `get_high_queue` function
+  in `robotoff.workers.queues`
 </Callout>
 
 ## Prediction Generation
@@ -65,19 +93,21 @@ Robotoff allows to predict many information (also called _insights_), mostly fro
 
 Each time a contributor uploads a new image on Open Food Facts, the text on this image is extracted using Google Cloud Vision, an OCR (Optical Character Recognition) service. Robotoff receives a new event through a webhook each time this occurs, with the URLs of the image and the resulting OCR (as a JSON file).
 
-We use simple string matching algorithms to find patterns in the OCR text to generate new predictions. To have a more in-depth understanding of the difference between predictions and insights, see the [predictions](/docs/Robotoff/explanations/predictions.mdx) page.
+We use simple string matching algorithms to find patterns in the OCR text to generate new predictions. To have a more in-depth understanding of the difference between predictions and insights, see the [predictions](/docs/Robotoff/explanations/predictions) page.
 
 ### Machine Learning Models
 
 We also use ML models to extract objects from images:
 
 **Logo Detection Model**
+
 - Detects any logo in product images
 - Detected logos are embedded in a vector space using the openAI pre-trained model CLIP-vit-base-patch32
 - Uses k-nearest-neighbor approach to classify logos, predicting brands or labels
 - Ground truth collected through [Hunger Games logo annotation](https://hunger.openfoodfacts.org/logos)
 
 **Nutri-Score Detection Model**
+
 - Detects the grade of the Nutri-Score (A to E) using computer vision
 
 ## Insight Types
@@ -95,10 +125,10 @@ The above detections generate predictions which in turn generate many types of i
 </Cards>
 
 <Callout type="info">
-  For technical details, see:
-  - Predictions: `robotoff.models.Prediction`
-  - Image predictions: `robotoff.models.ImagePrediction` and `robotoff.workers.tasks.import_image.run_import_image_job`
-  - Insights: `robotoff.models.ProductInsight`
+  For technical details, see: - Predictions: `robotoff.models.Prediction` -
+  Image predictions: `robotoff.models.ImagePrediction` and
+  `robotoff.workers.tasks.import_image.run_import_image_job` - Insights:
+  `robotoff.models.ProductInsight`
 </Callout>
 
 ## Annotation and Validation
@@ -108,22 +138,28 @@ These new insights are then accessible to all annotation tools (Hunger Games, mo
 ### Validation Process
 
 **Authenticated Users**
+
 - If the insight is validated by an authenticated user, it's applied immediately
 - The product is updated through Product Opener API
 - If reported as invalid, no update is performed, but the insight is marked as annotated
 
 **Non-authenticated Users**
+
 - A system of votes is used (3 consistent votes trigger the insight application)
 
 **Automatic Application**
+
 - Some insights with high confidence are applied automatically, 10 minutes after import
 
 <Callout type="info">
-  Robotoff is also notified by Product Opener every time a product is updated or deleted. This is used to delete insights associated with deleted products, or to update them accordingly.
+  Robotoff is also notified by Product Opener every time a product is updated or
+  deleted. This is used to delete insights associated with deleted products, or
+  to update them accordingly.
 </Callout>
 
 <Callout type="info">
-  For implementation details, see:
-  - Product updates: `workers.tasks.product_updated` and `workers.tasks.delete_product_insights_job`
-  - Annotation process: `robotoff.insights.annotate`
+  For implementation details, see: - Product updates:
+  `workers.tasks.product_updated` and
+  `workers.tasks.delete_product_insights_job` - Annotation process:
+  `robotoff.insights.annotate`
 </Callout>

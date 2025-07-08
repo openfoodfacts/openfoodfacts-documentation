@@ -3,27 +3,36 @@ title: "Google Batch Job"
 description: "This document details Robotoff's Google Batch Job feature, which processes large product volumes using cloud resources. It covers the architecture, including job launching, configuration files, container registry, batch job stages, storage, and importing processed data, along with roles and additional notes."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import AnimatedSvg from '@/components/AnimatedSvg';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import AnimatedSvg from "@/components/AnimatedSvg";
 
 # Google Batch Job
 
-Robotoff primarily provides models to Open Food Facts with real-time inference using Nvidia Triton Inference on CPUs. 
+Robotoff primarily provides models to Open Food Facts with real-time inference using Nvidia Triton Inference on CPUs.
 
 However, this approach presents two major gaps:
 
 <Cards>
-  <Card title="Volume Processing" description="Challenges in processing large volumes of products during extended job runs" />
-  <Card title="Resource Limitations" description="Limited access to larger computing resources, such as GPUs or multi-CPU setups" />
+  <Card
+    title="Volume Processing"
+    description="Challenges in processing large volumes of products during extended job runs"
+  />
+  <Card
+    title="Resource Limitations"
+    description="Limited access to larger computing resources, such as GPUs or multi-CPU setups"
+  />
 </Cards>
 
 To fill these gaps, we integrated a batch job feature into Robotoff, leveraging the capabilities of Google Cloud Platform.
 
 ## Architecture
 
-<AnimatedSvg src="../assets/batch_job_robotoff.svg" alt="Robotoff Architecture" />
+<AnimatedSvg
+  src="../assets/batch_job_robotoff.svg"
+  alt="Robotoff Architecture"
+/>
 
 The batch job pipeline is structured as follows:
 
@@ -31,7 +40,7 @@ The batch job pipeline is structured as follows:
   <Step>
     ### Launch Job
 
-    The role of this command is to prepare and launch the job in the cloud. The launch depends on the type of job to perform, such as `ingredients-spellcheck`. Therefore, it takes as parameter `job_type`. 
+    The role of this command is to prepare and launch the job in the cloud. The launch depends on the type of job to perform, such as `ingredients-spellcheck`. Therefore, it takes as parameter `job_type`.
 
     Depending on the job type, the command will be responsible for:
 
@@ -43,6 +52,7 @@ The batch job pipeline is structured as follows:
     <Callout type="info">
       The command can be found as a Command `launch_batch_job` in the CLI directory (see `./robotoff/cli/main.py`)
     </Callout>
+
   </Step>
 
   <Step>
@@ -71,6 +81,7 @@ The batch job pipeline is structured as follows:
     <Callout type="info">
       For more information about Google Batch Job configuration, check the [official documentation](https://cloud.google.com/batch/docs/reference/rest/v1/projects.locations.jobs).
     </Callout>
+
   </Step>
 
   <Step>
@@ -92,6 +103,7 @@ The batch job pipeline is structured as follows:
     <Callout type="warn">
       The container needs to be accessible from the batch job once launched.
     </Callout>
+
   </Step>
 
   <Step>
@@ -111,9 +123,10 @@ The batch job pipeline is structured as follows:
 
     <Callout type="info">
       During the run, all logs are stored in the Batch Job logs file.
-      
+
       The list of batch jobs are located in the [Robotoff Google Batch Job](https://console.cloud.google.com/batch/jobs?referrer=search&project=robotoff).
     </Callout>
+
   </Step>
 
   <Step>
@@ -126,6 +139,7 @@ The batch job pipeline is structured as follows:
       - **Robotoff side**: Google credentials are necessary
       - **Batch Job side**: Uses the default [service account](https://cloud.google.com/iam/docs/service-account-overview) associated with the project `Robotoff`, no additional setup required
     </Callout>
+
   </Step>
 
   <Step>
@@ -133,10 +147,10 @@ The batch job pipeline is structured as follows:
 
     Once the job is successfully finished, the Robotoff API endpoint is queried from the job run through with an HTTP request.
 
-    The role of this endpoint is to load the data processed by the batch job and import the new *predictions* to the Robotoff database. 
+    The role of this endpoint is to load the data processed by the batch job and import the new *predictions* to the Robotoff database.
 
     <Callout type="info">
-      Check this [page](/docs/Robotoff/explanations/predictions.mdx) to understand the process Robotoff uses to transform raw *Predictions* into *Insights*.
+      Check this [page](/docs/Robotoff/explanations/predictions) to understand the process Robotoff uses to transform raw *Predictions* into *Insights*.
     </Callout>
 
     **Security:**
@@ -145,6 +159,7 @@ The batch job pipeline is structured as follows:
     <Callout type="info">
       Each batch job has its own method to import, or not, the results of the batch job.
     </Callout>
+
   </Step>
 </Steps>
 
@@ -153,14 +168,21 @@ The batch job pipeline is structured as follows:
 To launch a batch job and import its results, the following roles need to be set up:
 
 <Cards>
-  <Card title="Artifact Registry Editor" description="Push Docker Image to the project image registry" />
+  <Card
+    title="Artifact Registry Editor"
+    description="Push Docker Image to the project image registry"
+  />
   <Card title="Batch Job Editor" description="Manage batch job operations" />
-  <Card title="Service Account User" description="Use service accounts for job execution" />
+  <Card
+    title="Service Account User"
+    description="Use service accounts for job execution"
+  />
   <Card title="Storage Admin" description="Manage storage resources" />
 </Cards>
 
 <Callout type="warn">
-  For production, it is preferable to create a custom *Service account* with these roles.
+  For production, it is preferable to create a custom *Service account* with
+  these roles.
 </Callout>
 
 ## Additional Notes
@@ -170,28 +192,43 @@ To launch a batch job and import its results, the following roles need to be set
 Check the official Google Batch Job documentation:
 
 <Cards>
-  <Card title="Batch Job" href="https://cloud.google.com/batch/docs/get-started" description="Get started with Google Batch Job" />
-  <Card title="Python API" href="https://cloud.google.com/python/docs/reference/batch/latest" description="Google Batch Job Python API reference" />
-  <Card title="Python Examples" href="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/batch" description="Batch job with Python examples" />
+  <Card
+    title="Batch Job"
+    href="https://cloud.google.com/batch/docs/get-started"
+    description="Get started with Google Batch Job"
+  />
+  <Card
+    title="Python API"
+    href="https://cloud.google.com/python/docs/reference/batch/latest"
+    description="Google Batch Job Python API reference"
+  />
+  <Card
+    title="Python Examples"
+    href="https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/batch"
+    description="Batch job with Python examples"
+  />
 </Cards>
 
 ### Performance & Cost Notes
 
 <Callout type="info">
-  **Regional Considerations:**
-  - Netherlands (europe-west4) has GPUs (A100, L4)
-  - Add custom storage capacity to host heavy docker images (~24GB) by adding `BootDisk`
+  **Regional Considerations:** - Netherlands (europe-west4) has GPUs (A100, L4)
+  - Add custom storage capacity to host heavy docker images (~24GB) by adding
+  `BootDisk`
 </Callout>
 
 **Performance Benchmarks:**
+
 - 1000 products processed: 1:30min (g2-instance-with 8) (overall batch job: 3:25min)
 - L4: g2-instance-8 hourly cost: $0.896306 ≈ ~$0.05 to process batch of 1000
 - A100: a2-highgpu-1g: $3.748064
 
 **GPU Notes:**
+
 - A100/Cuda doesn't support FP8
 - A100 has less availability than L4: need to wait for batch job (can be long) or switch to us-east location
 
 <Callout type="warn">
-  Don't forget to enable **Batch & Storage API** if used without gcloud ([link](https://cloud.google.com/batch/docs/get-started#project-prerequisites))
+  Don't forget to enable **Batch & Storage API** if used without gcloud
+  ([link](https://cloud.google.com/batch/docs/get-started#project-prerequisites))
 </Callout>

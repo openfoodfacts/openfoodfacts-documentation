@@ -33,8 +33,6 @@ Looking at the OVH incidents panel,
 I saw that there was an [incident in progress on bare metal servers](https://bare-metal-servers.status-ovhcloud.com/) at RBX8 (same location as our server),
 but it was not on the rack containing OVH1.
 
-
-
 ## Resolution
 
 ### Asking support
@@ -67,17 +65,17 @@ So in the OVH admin interface, We did go to bare metal servers, choosed OVH1, an
 I asked to modify contacts. we were able to nominate the new technical contact.
 
 This sends two mails for verification:
-* one to the new technical contact account
-* one to the owner of the server
+
+- one to the new technical contact account
+- one to the owner of the server
 
 After validation, some minutes later, the contact was changed.
 
 In the contact modification form, there is a tab were you can see tasks in progress and their status.
 
-
 #### Purchasing an additional IP
 
-Now using the new technical contact account, we went to the IP section, in bare metal cloud 
+Now using the new technical contact account, we went to the IP section, in bare metal cloud
 and we were able to purchased an additional IP for ovh1 server.
 
 I then try to configure it on my proxmox container (see below), but it was not working.
@@ -96,11 +94,12 @@ I had no way of knowing the gateway, so I had to guess it (OVH considers you hav
 Trying 1 and 254, I was able to get it correctly (it was the same IP as the one we have, changing last part to 254).
 `ip neigh` helped me to check reachability.
 
-As said above, it did not work at first try because we had to associate the virtual MAC with the IP address in OVH interface 
+As said above, it did not work at first try because we had to associate the virtual MAC with the IP address in OVH interface
 (that's good news OVH does this kind of checks)
 
-[^proxmox_dhcp_gateway]: in practice this could be done by manually changing the network configuration in the container,
-  but I prefer to keep things simple and use proxmox admin (we are different admins).
+[^proxmox_dhcp_gateway]:
+    in practice this could be done by manually changing the network configuration in the container,
+    but I prefer to keep things simple and use proxmox admin (we are different admins).
 
 #### Updating DNS
 
@@ -118,7 +117,8 @@ Most of the services keeps running and could do their job, but were unreachable 
 We now have an IP address that is under the control of our team.
 
 Some possible actions in the future:
-* We could use this more:
-  * for example to setup a second reverse proxy on ovh2, and have a failover.
-  * We could also use additional IP for the [mail gateway](/docs/Infra/services/mail.mdx).
-* We should investigate using IPv6 on those containers
+
+- We could use this more:
+  - for example to setup a second reverse proxy on ovh2, and have a failover.
+  - We could also use additional IP for the [mail gateway](/docs/Infra/services/mail).
+- We should investigate using IPv6 on those containers

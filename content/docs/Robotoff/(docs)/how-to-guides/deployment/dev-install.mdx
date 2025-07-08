@@ -3,10 +3,10 @@ title: "Robotoff Dev Install"
 description: "This document provides instructions for installing Robotoff for development, offering both Docker and local installation methods. It covers environment setup, ML model downloads, and restoring database dumps for PostgreSQL and MongoDB."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Dev Install
 
@@ -19,7 +19,7 @@ You may choose Docker install (recommended, less chance to mess up with your sys
     <Steps>
       <Step>
         ### Clone and Setup Environment
-        
+
         After cloning the repository, customize parameters by editing the `.env` file.
         You should consider these changes:
 
@@ -38,13 +38,13 @@ You may choose Docker install (recommended, less chance to mess up with your sys
 
       <Step>
         ### Configure Elasticsearch
-        
+
         Because of Elasticsearch service, you may need to increase a system parameter (`vm.max_map_count=262144`), as described in the [Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html).
       </Step>
 
       <Step>
         ### Build and Run
-        
+
         Simply run:
 
         ```bash title="Start development environment"
@@ -56,20 +56,21 @@ You may choose Docker install (recommended, less chance to mess up with your sys
 
       <Step>
         ### Verify Installation
-        
+
         Verify whether robotoff is running as expected, by executing the following command in CLI:
-        
+
         ```bash title="Check Robotoff status"
         curl http://localhost:5500/api/v1/status
         ```
-        
+
         The expected response is `{"status":"running"}`.
 
         <Callout type="info">
-          Also take a look at [maintenance](/docs/Robotoff/how-to-guides/deployment/maintenance.mdx) for ongoing maintenance tasks.
+          Also take a look at [maintenance](/docs/Robotoff/how-to-guides/deployment/maintenance) for ongoing maintenance tasks.
         </Callout>
       </Step>
     </Steps>
+
   </Tab>
 
   <Tab value="Local Install">
@@ -80,7 +81,7 @@ You may choose Docker install (recommended, less chance to mess up with your sys
     <Steps>
       <Step>
         ### Setup Poetry
-        
+
         After cloning the repository:
         1. Make sure a [recent version of Poetry is installed](https://python-poetry.org/docs/#installation)
         2. Configure Poetry to use Python 3.11:
@@ -91,7 +92,7 @@ You may choose Docker install (recommended, less chance to mess up with your sys
 
       <Step>
         ### Install Dependencies
-        
+
         Install the dependencies:
 
         ```bash title="Install dependencies"
@@ -101,7 +102,7 @@ You may choose Docker install (recommended, less chance to mess up with your sys
 
       <Step>
         ### Configure Test Files
-        
+
         Configure files required for the tests to run locally:
 
         Compile the i18n files:
@@ -112,7 +113,7 @@ You may choose Docker install (recommended, less chance to mess up with your sys
 
       <Step>
         ### Database Configuration
-        
+
         Configure your settings to point to your dev postgresql database (that you should have installed the way you want)
 
         <Callout type="info">
@@ -122,16 +123,17 @@ You may choose Docker install (recommended, less chance to mess up with your sys
 
       <Step>
         ### Debugging in Container
-        
+
         To debug in a running container, you need to run poetry in the container. For example:
 
         ```bash title="Debug in container"
         docker compose run --rm api poetry run python
         ```
-        
+
         Here we run the `api` service. This opens a Python command prompt, you may debug with [pdb](https://docs.python.org/3/library/pdb.html) or play with the code.
       </Step>
     </Steps>
+
   </Tab>
 </Tabs>
 
@@ -157,6 +159,7 @@ Robotoff uses PostgreSQL as main database.
     ```bash title="Download PostgreSQL dump"
     wget https://openfoodfacts.org/data/dumps/robotoff_postgres_latest.dump
     ```
+
   </Step>
 
   <Step>
@@ -168,6 +171,7 @@ Robotoff uses PostgreSQL as main database.
     make up service=postgres
     docker cp -a robotoff_postgres_latest.dump robotoff_postgres_1:/tmp/
     ```
+
   </Step>
 
   <Step>
@@ -182,6 +186,7 @@ Robotoff uses PostgreSQL as main database.
     <Callout type="warn">
       This command drops all existing tables (`-c` command) and performs restore using 8 cores. The database is huge, it may take several hours to run depending on your hardware.
     </Callout>
+
   </Step>
 </Steps>
 
@@ -199,6 +204,7 @@ Robotoff also relies on MongoDB to fetch product data. On staging and production
     wget https://static.openfoodfacts.org/data/openfoodfacts-mongodbdump.tar.gz
     tar xvzf openfoodfacts-mongodbdump.tar.gz
     ```
+
   </Step>
 
   <Step>
@@ -210,6 +216,7 @@ Robotoff also relies on MongoDB to fetch product data. On staging and production
     make up service=mongodb
     docker cp -a dump robotoff_mongodb_1:/var/tmp/
     ```
+
   </Step>
 
   <Step>
@@ -220,5 +227,6 @@ Robotoff also relies on MongoDB to fetch product data. On staging and production
     ```bash title="Restore MongoDB database"
     docker exec -it robotoff_mongodb_1 mongorestore --drop /var/tmp/dump
     ```
+
   </Step>
 </Steps>

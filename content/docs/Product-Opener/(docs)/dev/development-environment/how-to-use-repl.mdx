@@ -3,11 +3,11 @@ title: "Perl REPL"
 description: "Guide to using Perl REPL (re.pl) for testing code, learning Perl syntax, and interacting with Open Food Facts modules in development."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 <Callout type="info" title="New to Perl?">
-  Check out our guide on [how to learn Perl](./how-to-learn-perl.mdx)!
+  Check out our guide on [how to learn Perl](./how-to-learn-perl)!
 </Callout>
 
 On your local dev instance, the "backend" container comes with [Devel::REPL](https://metacpan.org/pod/Devel::REPL) installed.
@@ -27,19 +27,18 @@ docker compose run --rm backend re.pl
 If you want to access external services (like mongodb), do not forget to start them.
 
 <Callout type="warning" title="`re.pl` not found?">
-  If you get "exec: re.pl: not found", it means you may not have dev tools installed.
+  If you get "exec: re.pl: not found", it means you may not have dev tools
+  installed.
 </Callout>
 
 <Steps>
-<Step title="Add CPANMOPTS to .env or .envrc">
-Try going in your .env (or [.envrc](./how-to-use-direnv.mdx)) file and add the line:
-```
-CPANMOPTS=--with-develop --with-feature=off_server_dev_tools
-```
-</Step>
-<Step title="Rebuild and Retry">
-then just make build and retry, you will then be able to run re.pl
-</Step>
+  <Step title="Add CPANMOPTS to .env or .envrc">
+    Try going in your .env (or [.envrc](./how-to-use-direnv)) file and add the
+    line: ``` CPANMOPTS=--with-develop --with-feature=off_server_dev_tools ```
+  </Step>
+  <Step title="Rebuild and Retry">
+    then just make build and retry, you will then be able to run re.pl
+  </Step>
 </Steps>
 
 ## Testing perl code

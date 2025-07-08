@@ -3,35 +3,39 @@ title: "Explain Architecture"
 description: "This document explains the architecture of Search-a-licious, detailing its main components, their interactions, and the underlying principles that enable powerful search capabilities, easy configuration, and flexible UI development."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import AnimatedSvg from '@/components/AnimatedSvg';
-import { DrawioViewer } from '@/components/DrawioViewer';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import AnimatedSvg from "@/components/AnimatedSvg";
+import { DrawioViewer } from "@/components/DrawioViewer";
 
 # Explain Architecture
 
-<Card title="Component Overview" href="./introduction.mdx">
-Refer to the introduction to get familiar with the main components
+<Card title="Component Overview" href="/introduction">
+  Refer to the introduction to get familiar with the main components
 </Card>
 
 ## Architecture Overview
 
 <Callout type="info">
-This image illustrates the main components and their interactions.
+  This image illustrates the main components and their interactions.
 </Callout>
 
-<AnimatedSvg 
-  src="../assets/architecture-diagram.drawio.svg" 
-  alt="Search-a-licious Architecture diagram" 
-  width="601px" 
+<AnimatedSvg
+  src="../assets/architecture-diagram.drawio.svg"
+  alt="Search-a-licious Architecture diagram"
+  width="601px"
   height="441px"
   viewBox="-0.5 -0.5 601 441"
 />
 
 ([source](../assets/architecture-diagram.drawio))
 
-<DrawioViewer src="../assets/architecture-diagram.drawio" alt="Search-a-licious Architecture diagram" height="600px" />
+<DrawioViewer
+  src="../assets/architecture-diagram.drawio"
+  alt="Search-a-licious Architecture diagram"
+  height="600px"
+/>
 
 ## Core Principles
 
@@ -44,6 +48,7 @@ A very good stack with best in class open source components (see docker compose 
 <Step title="Powerful API">
 
 A very powerful API that is capable and easy to use. This is achieved through:
+
 - Use of Lucene Query Language
 - Abstracting complex processing under the hood (synonyms, language support, aggregations, etc.)
 
@@ -63,17 +68,30 @@ Web components to quickly build UIs while still being able to customize them in 
 ## Architecture Benefits
 
 <Cards>
-<Card title="Scalability" description="Built on proven open source technologies" />
-<Card title="Flexibility" description="Easy customization and integration options" />
-<Card title="Simplicity" description="Single configuration file for complete setup" />
-<Card title="Power" description="Advanced search capabilities with simple interfaces" />
+  <Card
+    title="Scalability"
+    description="Built on proven open source technologies"
+  />
+  <Card
+    title="Flexibility"
+    description="Easy customization and integration options"
+  />
+  <Card
+    title="Simplicity"
+    description="Single configuration file for complete setup"
+  />
+  <Card
+    title="Power"
+    description="Advanced search capabilities with simple interfaces"
+  />
 </Cards>
 
 ## Historical Context
 
-<Card title="Original Architecture Notes" href="https://docs.google.com/document/d/1mibE8nACcmen6paSrqT9JQk5VbuvlFUXI1S93yHCK2I/edit">
-The initial Search-a-licious roadmap architecture notes might be interesting to grasp the general idea of the project architecture.
+<Card
+  title="Original Architecture Notes"
+  href="https://docs.google.com/document/d/1mibE8nACcmen6paSrqT9JQk5VbuvlFUXI1S93yHCK2I/edit"
+>
+  The initial Search-a-licious roadmap architecture notes might be interesting
+  to grasp the general idea of the project architecture.
 </Card>
-
-
-

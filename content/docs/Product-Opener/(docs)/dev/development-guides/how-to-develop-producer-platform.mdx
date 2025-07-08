@@ -3,29 +3,31 @@ title: "Producer Platform Development"
 description: "Complete guide to developing on the Open Food Facts producers platform using Docker with dual-shell setup and service management."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 Here is how to develop for the producers platform using docker.
 
 ## Prerequisites
 
-Docker should already be [set up for development](how-to-quick-start-guide.mdx).
+Docker should already be [set up for development](how-to-quick-start-guide).
 
 ## Shell Setup
 
 You will need two types of shells:
 
-<Tabs items={['Shell for OpenFoodFacts', 'Shell for OpenFoodFacts-Pro']}>
-<Tab value="Shell for OpenFoodFacts">
-Use this shell for general development on the OpenFoodFacts platform.
-</Tab>
-<Tab value="Shell for OpenFoodFacts-Pro">
-Use this shell when working on the OpenFoodFacts-Pro platform.
-To set up the shell, run the command: `. env/setenv.sh off-pro` (this simply sets some environment variables that will override the ones in `.env`).
-Once the shell is set up, your prompt will show `(pro)` to indicate that you are in the producers environment.
-</Tab>
+<Tabs items={["Shell for OpenFoodFacts", "Shell for OpenFoodFacts-Pro"]}>
+  <Tab value="Shell for OpenFoodFacts">
+    Use this shell for general development on the OpenFoodFacts platform.
+  </Tab>
+  <Tab value="Shell for OpenFoodFacts-Pro">
+    Use this shell when working on the OpenFoodFacts-Pro platform. To set up the
+    shell, run the command: `. env/setenv.sh off-pro` (this simply sets some
+    environment variables that will override the ones in `.env`). Once the shell
+    is set up, your prompt will show `(pro)` to indicate that you are in the
+    producers environment.
+  </Tab>
 </Tabs>
 
 ## Development Workflow
@@ -33,22 +35,25 @@ Once the shell is set up, your prompt will show `(pro)` to indicate that you are
 To develop on the producers platform, follow these steps:
 
 <Steps>
-<Step title="Open OpenFoodFacts-Pro Shell">
-Open a shell for OpenFoodFacts-Pro.
-</Step>
-<Step title="Start Development Environment">
-Run the command `make dev` to start the development environment. This command functions as usual.
-</Step>
-<Step title="Troubleshoot CSS (if needed)">
-If you encounter any issues with CSS not showing up, you can run `make build_lang` in the *pro* shell.
-</Step>
+  <Step title="Open OpenFoodFacts-Pro Shell">
+    Open a shell for OpenFoodFacts-Pro.
+  </Step>
+  <Step title="Start Development Environment">
+    Run the command `make dev` to start the development environment. This
+    command functions as usual.
+  </Step>
+  <Step title="Troubleshoot CSS (if needed)">
+    If you encounter any issues with CSS not showing up, you can run `make
+    build_lang` in the *pro* shell.
+  </Step>
 </Steps>
 
 ## Working with Product Import/Export and Interacting with the Public Platform
 
 If you need to work on product import/export or interact with the public platform, you must start the following services: `PostgreSQL`, `MongoDB`, and the `Minion`. Here's how:
 
-In a *non-pro* shell (OpenFoodFacts shell), run the command:
+In a _non-pro_ shell (OpenFoodFacts shell), run the command:
+
 ```bash title="Start Core Services"
 docker compose up postgres minion mongodb
 ```
@@ -58,35 +63,33 @@ This command starts the necessary services in the background.
 ### Platform Switching
 
 <Callout type="warning">
-  The setup does not currently support running the http server for both public and pro platform at the same time.
+  The setup does not currently support running the http server for both public
+  and pro platform at the same time.
 </Callout>
 
 To access the public platform, you need to follow these steps:
 
 <Steps>
-<Step title="Stop Frontend Service (Pro Shell)">
-In your *pro shell*, run:
-```bash title="Stop Frontend Service"
-docker compose stop frontend
-```
-</Step>
-<Step title="Start Frontend Service (Non-Pro Shell)">
-In your *non pro shell*, run:
-```bash title="Start Frontend Service"
-docker compose up frontend
-```
-</Step>
+  <Step title="Stop Frontend Service (Pro Shell)">
+    In your *pro shell*, run: ```bash title="Stop Frontend Service" docker
+    compose stop frontend ```
+  </Step>
+  <Step title="Start Frontend Service (Non-Pro Shell)">
+    In your *non pro shell*, run: ```bash title="Start Frontend Service" docker
+    compose up frontend ```
+  </Step>
 </Steps>
 
 Now, the public database can be accessed at `openfoodfacts.localhost`.
 
-If you need to access the *pro* HTTP server, reverse these steps.
+If you need to access the _pro_ HTTP server, reverse these steps.
 
 <Callout type="info">
-  Note that if you use direnv, the setup should work seamlessly without redefining the variables set by setenv.sh.
+  Note that if you use direnv, the setup should work seamlessly without
+  redefining the variables set by setenv.sh.
 </Callout>
 
-An explanation of the setup can be found at [explain-pro-dev-setup.mdx](explain-pro-dev-setup.mdx)
+An explanation of the setup can be found at [explain-pro-dev-setup](explain-pro-dev-setup)
 
 ## Task Management
 

@@ -3,9 +3,9 @@ title: "Package Reference"
 description: "This document provides a high-level overview of Robotoff's library features, including how to use the Open Food Facts dataset and interact with taxonomies (ingredient, label, category). It also covers installation and provides code examples."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Package Reference
 
@@ -13,8 +13,14 @@ Robotoff is deployed on a web server, but is also distributed as a library.
 This document presents a brief, high-level overview of Robotoff's library primary features. This guide will cover:
 
 <Cards>
-  <Card title="OFF Dataset Usage" description="Learn how to work with the Open Food Facts dataset" />
-  <Card title="Taxonomies" description="Interact with ingredient, label, and category taxonomies" />
+  <Card
+    title="OFF Dataset Usage"
+    description="Learn how to work with the Open Food Facts dataset"
+  />
+  <Card
+    title="Taxonomies"
+    description="Interact with ingredient, label, and category taxonomies"
+  />
 </Cards>
 
 ## Installation
@@ -23,7 +29,7 @@ This document presents a brief, high-level overview of Robotoff's library primar
   Robotoff is currently compatible with Python 3.11.
 </Callout>
 
-Robotoff can be installed [following dev install doc](/docs/Robotoff/how-to-guides/deployment/dev-install.mdx)
+Robotoff can be installed [following dev install doc](/docs/Robotoff/how-to-guides/deployment/dev-install)
 
 ## Working with the Open Food Facts Dataset
 
@@ -63,19 +69,41 @@ Robotoff can be installed [following dev install doc](/docs/Robotoff/how-to-guid
       We first lazily load the dataset using `ProductDataset.load()`.
       Then, we create a ProductStream using the `ProductDataset.stream()` method, and apply filters on the stream of products.
     </Callout>
+
   </Step>
 </Steps>
 
 ### Available Filters
 
 <Cards>
-  <Card title="filter_by_country_tag" description="Filter products by country" />
-  <Card title="filter_by_state_tag" description="Filter by product completion state" />
-  <Card title="filter_nonempty_text_field" description="Filter products with non-empty text fields" />
-  <Card title="filter_empty_text_field" description="Filter products with empty text fields" />
-  <Card title="filter_nonempty_tag_field" description="Filter products with non-empty tag fields" />
-  <Card title="filter_empty_tag_field" description="Filter products with empty tag fields" />
-  <Card title="filter_by_modified_datetime" description="Filter by modification date" />
+  <Card
+    title="filter_by_country_tag"
+    description="Filter products by country"
+  />
+  <Card
+    title="filter_by_state_tag"
+    description="Filter by product completion state"
+  />
+  <Card
+    title="filter_nonempty_text_field"
+    description="Filter products with non-empty text fields"
+  />
+  <Card
+    title="filter_empty_text_field"
+    description="Filter products with empty text fields"
+  />
+  <Card
+    title="filter_nonempty_tag_field"
+    description="Filter products with non-empty tag fields"
+  />
+  <Card
+    title="filter_empty_tag_field"
+    description="Filter products with empty tag fields"
+  />
+  <Card
+    title="filter_by_modified_datetime"
+    description="Filter by modification date"
+  />
 </Cards>
 
 ## Working with Taxonomies
@@ -123,10 +151,10 @@ print(brown_rice.get_synonyms('fr'))
 
 # Get parent hierarchy
 print(brown_rice.get_parents_hierarchy())
-# Output: [<TaxonomyNode en:rices>, <TaxonomyNode en:cereal-grains>, 
-#          <TaxonomyNode en:cereals-and-their-products>, 
-#          <TaxonomyNode en:cereals-and-potatoes>, 
-#          <TaxonomyNode en:plant-based-foods>, 
-#          <TaxonomyNode en:plant-based-foods-and-beverages>, 
+# Output: [<TaxonomyNode en:rices>, <TaxonomyNode en:cereal-grains>,
+#          <TaxonomyNode en:cereals-and-their-products>,
+#          <TaxonomyNode en:cereals-and-potatoes>,
+#          <TaxonomyNode en:plant-based-foods>,
+#          <TaxonomyNode en:plant-based-foods-and-beverages>,
 #          <TaxonomyNode en:seeds>]
 ```

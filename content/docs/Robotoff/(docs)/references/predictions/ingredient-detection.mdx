@@ -3,16 +3,28 @@ title: "Ingredient Detection"
 description: "This document describes the ingredient detection model, a sequence tagging model that extracts ingredient lists from product packaging photos. It covers the dataset, Robotoff integration, inference, post-processing, and how insights are generated."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
 
 # Ingredient Detection
 
 <Cards>
-  <Card title="Dataset" href="https://huggingface.co/datasets/openfoodfacts/ingredient-detection" description="View the training dataset on Hugging Face" />
-  <Card title="Model" href="https://huggingface.co/openfoodfacts/ingredient-detection" description="Access the trained model on Hugging Face" />
-  <Card title="Training Notes" href="https://docs.google.com/document/d/1du2iUqgNyEN1RckBIlWnczl9jVl_GeT0jPMx6Dz08_w/edit?usp=sharing" description="Detailed training documentation" />
+  <Card
+    title="Dataset"
+    href="https://huggingface.co/datasets/openfoodfacts/ingredient-detection"
+    description="View the training dataset on Hugging Face"
+  />
+  <Card
+    title="Model"
+    href="https://huggingface.co/openfoodfacts/ingredient-detection"
+    description="Access the trained model on Hugging Face"
+  />
+  <Card
+    title="Training Notes"
+    href="https://docs.google.com/document/d/1du2iUqgNyEN1RckBIlWnczl9jVl_GeT0jPMx6Dz08_w/edit?usp=sharing"
+    description="Detailed training documentation"
+  />
 </Cards>
 
 We developed a sequence tagging model to automatically extract ingredient lists from photos of product packaging.
@@ -20,20 +32,26 @@ We developed a sequence tagging model to automatically extract ingredient lists 
 ## Model Overview
 
 <Callout type="info">
-  This model solely relies on the text content of the image, and does not require any spatial information. It is trained to detect ingredient lists in a sequence tagging format, where each token (word) is classified as either part of an ingredient list or not.
+  This model solely relies on the text content of the image, and does not
+  require any spatial information. It is trained to detect ingredient lists in a
+  sequence tagging format, where each token (word) is classified as either part
+  of an ingredient list or not.
 </Callout>
 
 **Model Architecture:**
+
 - **Base Model**: Fine-tuned from [xlm-roberta-large model](https://huggingface.co/FacebookAI/xlm-roberta-large)
 - **Format**: Uses the IOB format for entity classes
 - **Entity Classes**: Single `ING` entity class for ingredient lists, and `O` class for non-ingredient tokens
 
 ## Dataset
 
-The model was trained on ~5000 texts extracted from product packaging, that were annotated semi-automatically. 
+The model was trained on ~5000 texts extracted from product packaging, that were annotated semi-automatically.
 
 <Callout type="info">
-  Look at [the dataset page](https://huggingface.co/datasets/openfoodfacts/ingredient-detection) on Hugging Face for more details.
+  Look at [the dataset
+  page](https://huggingface.co/datasets/openfoodfacts/ingredient-detection) on
+  Hugging Face for more details.
 </Callout>
 
 ## Robotoff Integration
@@ -47,11 +65,10 @@ The model was trained on ~5000 texts extracted from product packaging, that were
     The model was exported to ONNX and is served by Triton server. The model integration in Robotoff can be found in the `robotoff.prediction.ingredient_list` module.
   </Step>
 
-  <Step>
-    ### Entity Aggregation
-    
-    After the individual token prediction, we aggregate the entities by merging the tokens that have the same entity class.
-  </Step>
+<Step>
+  ### Entity Aggregation After the individual token prediction, we aggregate the
+  entities by merging the tokens that have the same entity class.
+</Step>
 
   <Step>
     ### Language Detection and Parsing
@@ -65,13 +82,34 @@ The model was trained on ~5000 texts extracted from product packaging, that were
 We add 7 fields in the image prediction data field:
 
 <Cards>
-  <Card title="lang" description="Language prediction with ISO 639-1 code and confidence score" />
-  <Card title="ingredients_n" description="Total number of ingredients in the ingredient list" />
-  <Card title="known_ingredients_n" description="Number of ingredients recognized by Open Food Facts" />
-  <Card title="unknown_ingredients_n" description="Number of ingredients not recognized by Open Food Facts" />
-  <Card title="fraction_known_ingredients" description="Fraction of recognized ingredients (between 0 and 1)" />
-  <Card title="ingredients" description="List of parsed ingredients with detailed metadata" />
-  <Card title="bounding_box" description="Relative coordinates of the ingredient list in the image" />
+  <Card
+    title="lang"
+    description="Language prediction with ISO 639-1 code and confidence score"
+  />
+  <Card
+    title="ingredients_n"
+    description="Total number of ingredients in the ingredient list"
+  />
+  <Card
+    title="known_ingredients_n"
+    description="Number of ingredients recognized by Open Food Facts"
+  />
+  <Card
+    title="unknown_ingredients_n"
+    description="Number of ingredients not recognized by Open Food Facts"
+  />
+  <Card
+    title="fraction_known_ingredients"
+    description="Fraction of recognized ingredients (between 0 and 1)"
+  />
+  <Card
+    title="ingredients"
+    description="List of parsed ingredients with detailed metadata"
+  />
+  <Card
+    title="bounding_box"
+    description="Relative coordinates of the ingredient list in the image"
+  />
 </Cards>
 
 ### Integration Process
@@ -79,13 +117,15 @@ We add 7 fields in the image prediction data field:
 For every new uploaded image, the model is run on this image. As for all computer vision models, we save the model prediction in the `image_prediction` table.
 
 <Callout type="info">
-  See function `robotoff.workers.tasks.import_image.extract_ingredients_job` for implementation details.
+  See function `robotoff.workers.tasks.import_image.extract_ingredients_job` for
+  implementation details.
 </Callout>
 
 If some entities (i.e. ingredient lists) are detected, we create a `Prediction` in DB using the usual import mechanism, under the type `ingredient_list`.
 
 <Callout type="info">
-  See [this page](/docs/Robotoff/explanations/predictions.mdx) for more details about the import mechanism.
+  See [this page](/docs/Robotoff/explanations/predictions) for more details
+  about the import mechanism.
 </Callout>
 
 ### Insight Generation Conditions
@@ -96,165 +136,161 @@ We only create an insight if the following conditions are met:
 2. 60% or more of the ingredients in the extracted ingredient list are recognized by Open Food Facts as ingredients (using the Product Opener parser)
 
 <Callout type="info">
-  The insight has a null `value` and the detected language as `value_tag`. See `IngredientDetectionImporter.generate_candidates` for implementation details.
+  The insight has a null `value` and the detected language as `value_tag`. See
+  `IngredientDetectionImporter.generate_candidates` for implementation details.
 </Callout>
 
 ### Example Data Structure
 
 ```json title="Example prediction data"
 {
-    "entities": [
+  "entities": [
+    {
+      "end": 455,
+      "lang": {
+        "lang": "fr",
+        "confidence": 0.69290453
+      },
+      "text": "entier partiellement concentré pasteurisé 81% (origine: France), eau, sucre 6,9%, miel 1,6%, Poids net biscuits poudre 0,66% (farine de blé, sucre, beurre, sel), amidon de maïs, jus de citron concentré, cannelle 0,16%, badiane 280a 0,16%, arôme naturel de cannelle 0,16%, ferments lactiques (dont lait). Peut contenir des traces d'oeuf",
+      "score": 0.9999919533729553,
+      "start": 120,
+      "raw_end": 423,
+      "ingredients": [
         {
-            "end": 455,
-            "lang": {
-                "lang": "fr",
-                "confidence": 0.69290453
-            },
-            "text": "entier partiellement concentré pasteurisé 81% (origine: France), eau, sucre 6,9%, miel 1,6%, Poids net biscuits poudre 0,66% (farine de blé, sucre, beurre, sel), amidon de maïs, jus de citron concentré, cannelle 0,16%, badiane 280a 0,16%, arôme naturel de cannelle 0,16%, ferments lactiques (dont lait). Peut contenir des traces d'oeuf",
-            "score": 0.9999919533729553,
-            "start": 120,
-            "raw_end": 423,
-            "ingredients": [
-                {
-                    "id": "fr:entier-partiellement-concentre-pasteurise",
-                    "text": "entier partiellement concentré pasteurisé",
-                    "origins": "en:france",
-                    "percent": 81,
-                    "in_taxonomy": false,
-                    "percent_max": 81,
-                    "percent_min": 81,
-                    "percent_estimate": 81
-                },
-                {
-                    "id": "en:water",
-                    "text": "eau",
-                    "vegan": "yes",
-                    "vegetarian": "yes",
-                    "in_taxonomy": true,
-                    "percent_max": 9.04,
-                    "percent_min": 7.88,
-                    "ciqual_food_code": "18066",
-                    "percent_estimate": 8.46
-                },
-                {
-                    "id": "en:sugar",
-                    "text": "sucre",
-                    "vegan": "yes",
-                    "percent": 6.9,
-                    "vegetarian": "yes",
-                    "in_taxonomy": true,
-                    "percent_max": 6.9,
-                    "percent_min": 6.9,
-                    "percent_estimate": 6.9
-                },
-                {
-                    "id": "en:honey",
-                    "text": "miel",
-                    "vegan": "no",
-                    "percent": 1.6,
-                    "vegetarian": "yes",
-                    "in_taxonomy": true,
-                    "percent_max": 1.6,
-                    "percent_min": 1.6,
-                    "ciqual_food_code": "31008",
-                    "percent_estimate": 1.6
-                },
-                {
-                    "id": "fr:poids-net-biscuits-poudre",
-                    "text": "Poids net biscuits poudre",
-                    "percent": 0.66,
-                    "in_taxonomy": false,
-                    "percent_max": 0.66,
-                    "percent_min": 0.66,
-                    "percent_estimate": 0.66
-                },
-                {
-                    "id": "en:corn-starch",
-                    "text": "amidon de maïs",
-                    "vegan": "yes",
-                    "vegetarian": "yes",
-                    "in_taxonomy": true,
-                    "percent_max": 0.66,
-                    "percent_min": 0.16,
-                    "ciqual_food_code": "9510",
-                    "percent_estimate": 0.41
-                },
-                {
-                    "id": "en:concentrated-lemon-juice",
-                    "text": "jus de citron concentré",
-                    "vegan": "yes",
-                    "vegetarian": "yes",
-                    "in_taxonomy": true,
-                    "percent_max": 0.66,
-                    "percent_min": 0.16,
-                    "ciqual_food_code": "2028",
-                    "percent_estimate": 0.41
-                },
-                {
-                    "id": "en:cinnamon",
-                    "text": "cannelle",
-                    "vegan": "yes",
-                    "percent": 0.16,
-                    "vegetarian": "yes",
-                    "in_taxonomy": true,
-                    "percent_max": 0.16,
-                    "percent_min": 0.16,
-                    "percent_estimate": 0.16
-                },
-                {
-                    "id": "fr:badiane-280a",
-                    "text": "badiane 280a",
-                    "percent": 0.16,
-                    "in_taxonomy": false,
-                    "percent_max": 0.16,
-                    "percent_min": 0.16,
-                    "percent_estimate": 0.16
-                },
-                {
-                    "id": "en:natural-cinammon-flavouring",
-                    "text": "arôme naturel de cannelle",
-                    "vegan": "maybe",
-                    "percent": 0.16,
-                    "vegetarian": "maybe",
-                    "in_taxonomy": true,
-                    "percent_max": 0.16,
-                    "percent_min": 0.16,
-                    "percent_estimate": 0.16
-                },
-                {
-                    "id": "en:lactic-ferments",
-                    "text": "ferments lactiques",
-                    "vegan": "maybe",
-                    "vegetarian": "yes",
-                    "in_taxonomy": true,
-                    "ingredients": [
-                        {
-                            "id": "en:milk",
-                            "text": "dont lait",
-                            "vegan": "no",
-                            "vegetarian": "yes",
-                            "in_taxonomy": true,
-                            "percent_max": 0.16,
-                            "percent_min": 0,
-                            "percent_estimate": 0.0800000000000267
-                        }
-                    ],
-                    "percent_max": 0.16,
-                    "percent_min": 0,
-                    "percent_estimate": 0.0800000000000267
-                }
-            ],
-            "bounding_box": [
-                1502,
-                237,
-                1839,
-                3831
-            ],
-            "ingredients_n": 16,
-            "known_ingredients_n": 13,
-            "unknown_ingredients_n": 3
+          "id": "fr:entier-partiellement-concentre-pasteurise",
+          "text": "entier partiellement concentré pasteurisé",
+          "origins": "en:france",
+          "percent": 81,
+          "in_taxonomy": false,
+          "percent_max": 81,
+          "percent_min": 81,
+          "percent_estimate": 81
+        },
+        {
+          "id": "en:water",
+          "text": "eau",
+          "vegan": "yes",
+          "vegetarian": "yes",
+          "in_taxonomy": true,
+          "percent_max": 9.04,
+          "percent_min": 7.88,
+          "ciqual_food_code": "18066",
+          "percent_estimate": 8.46
+        },
+        {
+          "id": "en:sugar",
+          "text": "sucre",
+          "vegan": "yes",
+          "percent": 6.9,
+          "vegetarian": "yes",
+          "in_taxonomy": true,
+          "percent_max": 6.9,
+          "percent_min": 6.9,
+          "percent_estimate": 6.9
+        },
+        {
+          "id": "en:honey",
+          "text": "miel",
+          "vegan": "no",
+          "percent": 1.6,
+          "vegetarian": "yes",
+          "in_taxonomy": true,
+          "percent_max": 1.6,
+          "percent_min": 1.6,
+          "ciqual_food_code": "31008",
+          "percent_estimate": 1.6
+        },
+        {
+          "id": "fr:poids-net-biscuits-poudre",
+          "text": "Poids net biscuits poudre",
+          "percent": 0.66,
+          "in_taxonomy": false,
+          "percent_max": 0.66,
+          "percent_min": 0.66,
+          "percent_estimate": 0.66
+        },
+        {
+          "id": "en:corn-starch",
+          "text": "amidon de maïs",
+          "vegan": "yes",
+          "vegetarian": "yes",
+          "in_taxonomy": true,
+          "percent_max": 0.66,
+          "percent_min": 0.16,
+          "ciqual_food_code": "9510",
+          "percent_estimate": 0.41
+        },
+        {
+          "id": "en:concentrated-lemon-juice",
+          "text": "jus de citron concentré",
+          "vegan": "yes",
+          "vegetarian": "yes",
+          "in_taxonomy": true,
+          "percent_max": 0.66,
+          "percent_min": 0.16,
+          "ciqual_food_code": "2028",
+          "percent_estimate": 0.41
+        },
+        {
+          "id": "en:cinnamon",
+          "text": "cannelle",
+          "vegan": "yes",
+          "percent": 0.16,
+          "vegetarian": "yes",
+          "in_taxonomy": true,
+          "percent_max": 0.16,
+          "percent_min": 0.16,
+          "percent_estimate": 0.16
+        },
+        {
+          "id": "fr:badiane-280a",
+          "text": "badiane 280a",
+          "percent": 0.16,
+          "in_taxonomy": false,
+          "percent_max": 0.16,
+          "percent_min": 0.16,
+          "percent_estimate": 0.16
+        },
+        {
+          "id": "en:natural-cinammon-flavouring",
+          "text": "arôme naturel de cannelle",
+          "vegan": "maybe",
+          "percent": 0.16,
+          "vegetarian": "maybe",
+          "in_taxonomy": true,
+          "percent_max": 0.16,
+          "percent_min": 0.16,
+          "percent_estimate": 0.16
+        },
+        {
+          "id": "en:lactic-ferments",
+          "text": "ferments lactiques",
+          "vegan": "maybe",
+          "vegetarian": "yes",
+          "in_taxonomy": true,
+          "ingredients": [
+            {
+              "id": "en:milk",
+              "text": "dont lait",
+              "vegan": "no",
+              "vegetarian": "yes",
+              "in_taxonomy": true,
+              "percent_max": 0.16,
+              "percent_min": 0,
+              "percent_estimate": 0.0800000000000267
+            }
+          ],
+          "percent_max": 0.16,
+          "percent_min": 0,
+          "percent_estimate": 0.0800000000000267
         }
-    ]
+      ],
+      "bounding_box": [1502, 237, 1839, 3831],
+      "ingredients_n": 16,
+      "known_ingredients_n": 13,
+      "unknown_ingredients_n": 3
+    }
+  ]
 }
 ```
 
@@ -269,22 +305,33 @@ POST https://robotoff.openfoodfacts.org/api/v1/insights/annotate
 ### Annotation Types
 
 <Cards>
-  <Card title="Validate As-Is" description="annotation=1 - User validates the ingredient list without changes" />
-  <Card title="Update Ingredient List" description="annotation=2 - User submits an updated ingredient list with corrections" />
-  <Card title="Reject Prediction" description="annotation=0 - User rejects the prediction" />
+  <Card
+    title="Validate As-Is"
+    description="annotation=1 - User validates the ingredient list without changes"
+  />
+  <Card
+    title="Update Ingredient List"
+    description="annotation=2 - User submits an updated ingredient list with corrections"
+  />
+  <Card
+    title="Reject Prediction"
+    description="annotation=0 - User rejects the prediction"
+  />
 </Cards>
 
 <Callout type="info">
-  **Request Body Guidelines:**
-  - **If updating**: Pass `annotation=2` and include `data` with the updated ingredient list
-  - **If validating as-is**: Pass `annotation=1` without the `data` field
-  - **If rejecting**: Pass `annotation=0` without the `data` field
+  **Request Body Guidelines:** - **If updating**: Pass `annotation=2` and
+  include `data` with the updated ingredient list - **If validating as-is**:
+  Pass `annotation=1` without the `data` field - **If rejecting**: Pass
+  `annotation=0` without the `data` field
 </Callout>
 
 ### Post-Annotation Processing
 
-If the insight is validated, we select the source image as an ingredient image for the detected language (if needed), with the right cropping and image orientation. 
+If the insight is validated, we select the source image as an ingredient image for the detected language (if needed), with the right cropping and image orientation.
 
 <Callout type="info">
-  If the user submitted an updated ingredient list, we select the image without cropping as we don't know the correct crop associated with the updated ingredient list.
+  If the user submitted an updated ingredient list, we select the image without
+  cropping as we don't know the correct crop associated with the updated
+  ingredient list.
 </Callout>

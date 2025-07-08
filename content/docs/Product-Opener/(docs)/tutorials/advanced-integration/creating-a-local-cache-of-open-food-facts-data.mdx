@@ -3,14 +3,15 @@ title: "Local Caching"
 description: "Comprehensive guide to creating local caches of Open Food Facts data for improved performance in heavy-duty applications with best practices."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Step, Steps } from 'fumadocs-ui/components/steps';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Step, Steps } from "fumadocs-ui/components/steps";
 
 <Callout>
 **Performance Enhancement**
 
 Open Food Facts (OFF) offers a rich dataset of food product information. Creating a local cache can enhance performance for your heavy-duty applications.
+
 </Callout>
 
 ## What is a Local Cache?
@@ -19,6 +20,7 @@ Open Food Facts (OFF) offers a rich dataset of food product information. Creatin
 **Definition**
 
 A local cache is a copy of OFF data stored directly on your system or server. This allows your application to retrieve information without constantly querying the main OFF API, improving speed and reliability.
+
 </Callout>
 
 ## Current Caching Options
@@ -26,15 +28,27 @@ A local cache is a copy of OFF data stored directly on your system or server. Th
 ### Available Solutions
 
 <Cards>
-<Card title="FoodVisor Python/MongoDB Backend" href="https://github.com/openfoodfacts/openfoodfacts-apirestpython" description="Python-based backend with MongoDB export contributed by FoodVisor startup" />
-<Card title="Project-Specific Caches" description="OFF projects like open-prices and robotoff have implemented local caches for reference" />
-<Card title="Official SDKs" href="../index.mdx#sdks" description="Number of official SDKs that can be leveraged as part of a caching backend" />
+  <Card
+    title="FoodVisor Python/MongoDB Backend"
+    href="https://github.com/openfoodfacts/openfoodfacts-apirestpython"
+    description="Python-based backend with MongoDB export contributed by FoodVisor startup"
+  />
+  <Card
+    title="Project-Specific Caches"
+    description="OFF projects like open-prices and robotoff have implemented local caches for reference"
+  />
+  <Card
+    title="Official SDKs"
+    href="../index#sdks"
+    description="Number of official SDKs that can be leveraged as part of a caching backend"
+  />
 </Cards>
 
 <Callout>
 **Contribute to SDKs**
 
 Please leverage and contribute to our official SDKs! 🙏
+
 </Callout>
 
 ### Contributing New Solutions
@@ -43,6 +57,7 @@ Please leverage and contribute to our official SDKs! 🙏
 **Join the Project**
 
 You can start a project within Open Food Facts to solve this
+
 </Callout>
 
 ## Need for Diverse Solutions
@@ -51,6 +66,7 @@ You can start a project within Open Food Facts to solve this
 **Intensive Operations Support**
 
 We encourage developers who feel the need for very intensive operations not driven by user scans to create local caching solutions in various programming languages. These can be integrated into your own projects, and if well-designed, have the potential to become official OFF backends.
+
 </Callout>
 
 ## When NOT to Cache
@@ -59,6 +75,7 @@ We encourage developers who feel the need for very intensive operations not driv
 **Consider Direct API Usage**
 
 For applications primarily focused on user-generated requests, a local cache may not be necessary. The OFF API can handle many such requests efficiently, and direct API usage contributes to valuable scan statistics for the project.
+
 </Callout>
 
 ## Licensing and Data Sharing
@@ -67,16 +84,18 @@ For applications primarily focused on user-generated requests, a local cache may
 **Legal Compliance Required**
 
 Even when using a local cache, you're still bound by the Open Database License (ODbL). **Do not mix OFF data with external product data**. All additions or modifications made to OFF data must be shared back to OFF, preferably through the WRITE API.
+
 </Callout>
 
-<Card title="Legal Guidelines" href="./license-be-on-the-legal-side.mdx">
-For more on legal issues, please read this comprehensive guide
+<Card title="Legal Guidelines" href="./license-be-on-the-legal-side">
+  For more on legal issues, please read this comprehensive guide
 </Card>
 
 <Callout>
 **Integration Recommendation**
 
 Consider incorporating data sharing functionality into your cache implementation.
+
 </Callout>
 
 ## Challenges of Cache Maintenance
@@ -85,6 +104,7 @@ Consider incorporating data sharing functionality into your cache implementation
 **Dynamic Data Complexity**
 
 Maintaining a cache can be complex due to the dynamic nature of OFF data.
+
 </Callout>
 
 ### Immediate Updates
@@ -93,6 +113,7 @@ Maintaining a cache can be complex due to the dynamic nature of OFF data.
 **Write Process**
 
 Any writes to OFF data should first go through automatic moderation on your end (see our tutorial about this). After successful submission to OFF, your local cache should be immediately refreshed.
+
 </Callout>
 
 ### Real-Time Notifications (Future)
@@ -101,10 +122,11 @@ Any writes to OFF data should first go through automatic moderation on your end 
 **Future Feature**
 
 Currently, there's no public API for real-time OFF updates stream. However, we have an internal system (REDIS) and are exploring options for a future 3rd party notification API.
+
 </Callout>
 
 <Card title="Express Interest" href="mailto:reuse@openfoodfacts.org">
-Contact us to express your interest in real-time notifications
+  Contact us to express your interest in real-time notifications
 </Card>
 
 ## Building Your Own Cache
@@ -114,30 +136,35 @@ Contact us to express your interest in real-time notifications
 **Choose Your Technology**
 
 Select a database or storage mechanism suitable for your language and project needs.
+
 </Step>
 
 <Step>
 **Data Structure**
 
 Design a structure to efficiently store product information, categories, ingredients, etc.
+
 </Step>
 
 <Step>
 **Synchronization**
 
 Develop processes to regularly fetch updates from the OFF API and refresh your cache.
+
 </Step>
 
 <Step>
 **Data Validation**
 
 Implement mechanisms to validate the accuracy and integrity of the cached data.
+
 </Step>
 
 <Step>
 **Sharing Back**
 
 Integrate the OFF WRITE API to automatically share any new or modified data.
+
 </Step>
 </Steps>
 
@@ -147,10 +174,12 @@ Integrate the OFF WRITE API to automatically share any new or modified data.
 **Community Contribution**
 
 If you're building a local cache, we'd love to hear about it! Your contribution can benefit the entire OFF community. By sharing your solution, you have the opportunity to make it an official OFF backend.
+
 </Callout>
 
 <Callout type="info">
 **Let's Collaborate**
 
 Let's work together to make Open Food Facts data even more accessible and useful!
+
 </Callout>

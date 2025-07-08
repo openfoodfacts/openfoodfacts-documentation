@@ -3,10 +3,10 @@ title: "Nutrition Extraction"
 description: "This document details the ML model for extracting nutrition information from product packaging images. It covers the LayoutLMv3 architecture, token classification, dataset, Robotoff integration including pre-processing, inference, post-processing, and the integration of predictions into Robotoff."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 # Nutrition extraction
 
@@ -31,7 +31,9 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 We developed a ML model to automatically extract nutrition information from photos of product packaging where nutrition facts are displayed.
 
 <Callout title="Key Features">
-This model detects the most common nutrition values (proteins, salt, energy-kj,...), either for 100g or per serving using the LayoutLMv3 architecture for Document AI tasks.
+  This model detects the most common nutrition values (proteins, salt,
+  energy-kj,...), either for 100g or per serving using the LayoutLMv3
+  architecture for Document AI tasks.
 </Callout>
 
 ## Architecture Overview
@@ -43,7 +45,9 @@ The model uses **LayoutLMv3**, an architecture used in Document AI to perform va
 - **Spatial positions**: The location of each token on the image
 
 <Callout type="info" title="OCR Requirement">
-As the model requires token text and position as input, an OCR must be performed beforehand. We use Google Cloud Vision to extract text content from the image.
+  As the model requires token text and position as input, an OCR must be
+  performed beforehand. We use Google Cloud Vision to extract text content from
+  the image.
 </Callout>
 
 ### Token Classification
@@ -51,7 +55,7 @@ As the model requires token text and position as input, an OCR must be performed
 LayoutLMv3 architecture can perform several tasks, we frame the problem as a **token classification task**. The model must predict the class of each token, among a predefined set of classes. We follow the IOB format for entity classes.
 
 <Callout title="Complete Token Classes">
-Here is a complete list of the token classes detected by the model:
+  Here is a complete list of the token classes detected by the model:
 </Callout>
 
 ```text title="Token Classes (IOB Format)"
@@ -260,6 +264,7 @@ We only create an insight if we detected at least one nutrient value that is not
 
 [^extract_nutrition_job]: See function `robotoff.workers.tasks.import_image.extract_nutrition_job`
 
-[^import_mechanism]: See [this page](/docs/Robotoff/explanations/predictions.mdx) for more details 
+[^import_mechanism]: See [this page](/docs/Robotoff/explanations/predictions) for more details
 
 [^nutrient_extraction_import]: See `NutrientExtractionImporter.generate_candidates` for implementation
+```

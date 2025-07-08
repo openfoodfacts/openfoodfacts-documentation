@@ -6,7 +6,7 @@ mail: ""
 date: "2022-03-14"
 ---
 
-This happens after [OFF2 upgrade](../2023/2023-02-17-off2-upgrade.mdx).
+This happens after [OFF2 upgrade](../2023/2023-02-17-off2-upgrade).
 
 At some point, on march 14, we had this problem: the server was no more reachable.
 
@@ -29,6 +29,7 @@ Of course we had a message from zpool, at startup, unable to start the pool that
 [Zpool error importing rpool](../../img/2023-03-16 zpool rpool error after disabling PCI.png "Zpool error importing rpool after disabling PCI")`{ width=50% }`
 
 This is resolved using:
+
 ```bash
 zpool import rpool -m
 ```
@@ -43,14 +44,14 @@ On 16th Alex tried to connect the PCI again:
 
 Connection to IDRAC: https://off2.ipmi.free.org/ as root.
 
-* Opened a console
-* In IDRAC --> reset system (warm reboot)
-* in console:
-  * F2 at init (to enter system setup)
-  * then system bios 
-  * integrated Devices 
-  * go down to "slot disablement"
-  * enable slot1 and slot2
+- Opened a console
+- In IDRAC --> reset system (warm reboot)
+- in console:
+  - F2 at init (to enter system setup)
+  - then system bios
+  - integrated Devices
+  - go down to "slot disablement"
+  - enable slot1 and slot2
 
 Got this message:
 
@@ -65,11 +66,12 @@ I go back in BIOS to disable PCI slot 2 only.
 It works, but of course we don't have the NVMe
 
 Stephane tried another approach:
-* in the BIOS:
-  * enabled PCI slot 2
-  * disabled bifurcation auto discovery
-  * put 4x4x8 instead of x16
-After reboot we see only one of the NVMe.
+
+- in the BIOS:
+  - enabled PCI slot 2
+  - disabled bifurcation auto discovery
+  - put 4x4x8 instead of x16
+    After reboot we see only one of the NVMe.
 
 But it's wrong settings, we should use x4.
 

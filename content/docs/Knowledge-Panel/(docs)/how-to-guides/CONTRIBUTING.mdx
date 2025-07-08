@@ -3,14 +3,14 @@ title: "Contributing Guide"
 description: "Learn how to contribute to Facets Knowledge Panels. This guide covers code of conduct, pull request processes, Git workflow steps for forking, branching, committing, and pushing, ensuring a smooth and collaborative development experience."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Card, Cards } from 'fumadocs-ui/components/card';
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Card, Cards } from "fumadocs-ui/components/card";
 
 # Contributing to Facets Knowledge Panels
 
 <Callout type="info">
-First off, thanks for taking the time to contribute! 🎉🎉
+  First off, thanks for taking the time to contribute! 🎉🎉
 </Callout>
 
 When contributing to this repository, please first discuss the change you wish to make via issue with the maintainers of this repository before making a change. These are mostly guidelines, not rules. Use your best judgment, and feel free to propose changes to this document in a pull request.
@@ -18,28 +18,35 @@ When contributing to this repository, please first discuss the change you wish t
 ## Code of Conduct
 
 <Callout type="warning">
-This project and everyone participating in it is governed by the [Open Food Facts Code of Conduct](https://world.openfoodfacts.org/code-of-conduct), please follow it in all your interaction with the project. By participating, you are expected to uphold this code. Please report unacceptable behavior/abuse to abuse@openfoodfacts.org
+  This project and everyone participating in it is governed by the [Open Food
+  Facts Code of Conduct](https://world.openfoodfacts.org/code-of-conduct),
+  please follow it in all your interaction with the project. By participating,
+  you are expected to uphold this code. Please report unacceptable
+  behavior/abuse to abuse@openfoodfacts.org
 </Callout>
 
 ## Pull Request Process
 
 <Steps>
-<Step title="Clean Dependencies">
-Ensure any install or build dependencies are removed before the end of the layer when doing a build. Add only relevant files to commit and ignore the rest to keep the repo clean.
-</Step>
-<Step title="Update Documentation">
-Update the README.md with details of changes to the interface, this includes new environment variables, exposed ports, useful file locations and container parameters.
-</Step>
-<Step title="Request Review">
-You should request review from the maintainers once you submit the Pull Request.
-</Step>
+  <Step title="Clean Dependencies">
+    Ensure any install or build dependencies are removed before the end of the
+    layer when doing a build. Add only relevant files to commit and ignore the
+    rest to keep the repo clean.
+  </Step>
+  <Step title="Update Documentation">
+    Update the README.md with details of changes to the interface, this includes
+    new environment variables, exposed ports, useful file locations and
+    container parameters.
+  </Step>
+  <Step title="Request Review">
+    You should request review from the maintainers once you submit the Pull
+    Request.
+  </Step>
 </Steps>
 
 ## Git Workflow Instructions
 
-<Callout type="info">
-All the commands below are to run in your console
-</Callout>
+<Callout type="info">All the commands below are to run in your console</Callout>
 
 <Steps>
 <Step title="Fork and Clone Repository">
@@ -77,24 +84,30 @@ git push origin <type>/<issue-issueNumber>/{<additional-fixes>}
 <Step title="Branch Types">
 
 <Cards>
-<Card title="wip" description="Work in Progress; long term work; mainstream changes" />
-<Card title="feat" description="New Feature; future planned; non-mainstream changes" />
-<Card title="bug" description="Bug Fixes" />
-<Card title="exp" description="Experimental; random experimental features" />
+  <Card
+    title="wip"
+    description="Work in Progress; long term work; mainstream changes"
+  />
+  <Card
+    title="feat"
+    description="New Feature; future planned; non-mainstream changes"
+  />
+  <Card title="bug" description="Bug Fixes" />
+  <Card title="exp" description="Experimental; random experimental features" />
 </Cards>
 
 </Step>
 <Step title="Project Setup">
 
-<Card title="Setup Project Locally" href="./Project-setup-locally.mdx">
-Follow the project setup guide to configure your development environment.
+<Card title="Setup Project Locally" href="./Project-setup-locally">
+  Follow the project setup guide to configure your development environment.
 </Card>
 
 </Step>
 <Step title="Testing">
 
-<Card title="Testing Guide" href="./Testing.mdx">
-Test your work before pushing to ensure everything works correctly.
+<Card title="Testing Guide" href="./Testing">
+  Test your work before pushing to ensure everything works correctly.
 </Card>
 
 </Step>
@@ -130,10 +143,11 @@ git push origin <type>/<issue-issueNumber>/{<additional-fixes>}
 Create Pull Request from `<type>/<issue-issueNumber>/{<additional-fixes>}` branch in your forked repository to the main branch in the upstream repository.
 
 After creating PR:
+
 - Add a Reviewer (Any Admin) and yourself as the assignee
 - Link Pull Request to appropriate Issue, or Project+Milestone (if no issue created)
 - **IMPORTANT**: Do Not Merge the PR unless specifically asked to by an admin
-</Callout>
+  </Callout>
 
 </Step>
 <Step title="After PR Merge">
@@ -157,11 +171,20 @@ git push origin main
 **Ready to Contribute?**
 
 You're now ready to start contributing to the Facets Knowledge Panels project! Remember to follow the code of conduct and feel free to ask questions in the issues if you need help.
+
 </Callout>
 
 ## Additional Resources
 
 <Cards>
-<Card title="Commit Message Standards" href="https://chris.beams.io/posts/git-commit/" description="Learn how to write good commit messages" />
-<Card title="Fork-and-Branch Workflow" href="https://blog.scottlowe.org/2015/01/27/using-fork-branch-git-workflow/" description="Understanding the Git workflow we use" />
+  <Card
+    title="Commit Message Standards"
+    href="https://chris.beams.io/posts/git-commit/"
+    description="Learn how to write good commit messages"
+  />
+  <Card
+    title="Fork-and-Branch Workflow"
+    href="https://blog.scottlowe.org/2015/01/27/using-fork-branch-git-workflow/"
+    description="Understanding the Git workflow we use"
+  />
 </Cards>
