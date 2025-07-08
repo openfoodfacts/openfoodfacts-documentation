@@ -117,40 +117,41 @@ Make sure you use v2 assets when showing v2 values.
 Here are the different messages to use according to the state:
 
 <Steps>
-<Step title="If category is present but no Nutri-Score">
-```javascript title="Condition Check"
-if ("en:categories-completed" in states_tags && nutrition_grade === null) {
-  // Category is complete but no Nutri-Score available
-}
-```
-<Callout type="info">
-  "We could not compute a Nutri-Score for this product. It might be that the category is an exception. If you believe this is an error, you can email contact@thenameofyourapp.org"
-</Callout>
-<Callout type="info">
-**Resources:**
-- List of exceptions: [Santé Publique France PDF](https://www.santepubliquefrance.fr/content/download/150262/file/QR_scientifique_technique_150421.pdf)
-- Get states with: `https://world.openfoodfacts.org/api/v0/product/3414280980209.json?fields=ecoscore_grade,states_tags`
-</Callout>
-</Step>
-<Step title="If category is present but no nutrition">
-```javascript title="Condition Check"
-if ("en:categories-completed" in states_tags && "en:nutrition-facts-to-be-completed" in states_tags) {
-  // Category complete but nutrition facts needed
-}
-```
-<Callout type="info">
-  **Prompt:** "Add nutrition facts to compute the Nutri-Score"
-</Callout>
-<Callout type="info">
-  **Add a one-click option** to indicate no nutrition facts on the packaging: "This product doesn't have nutrition facts"
-</Callout>
-<Callout type="info">
-  **Automated Nutrition Extraction**
+  <Step title="If category is present but no Nutri-Score">
+    ```javascript title="Condition Check"
+    if ("en:categories-completed" in states_tags && nutrition_grade === null) {
+      // Category is complete but no Nutri-Score available
+    }
+    ```
+    <Callout type="info">
+      "We could not compute a Nutri-Score for this product. It might be that the category is an exception. If you believe this is an error, you can email contact@thenameofyourapp.org"
+    </Callout>
+    <Callout type="info">
+      **Resources:**
+      - List of exceptions: [Santé Publique France PDF](https://www.santepubliquefrance.fr/content/download/150262/file/QR_scientifique_technique_150421.pdf)
+      - Get states with: `https://world.openfoodfacts.org/api/v0/product/3414280980209.json?fields=ecoscore_grade,states_tags`
+    </Callout>
+  </Step>
+  <Step title="If category is present but no nutrition">
+    ```javascript title="Condition Check"
+    if ("en:categories-completed" in states_tags && "en:nutrition-facts-to-be-completed" in states_tags) {
+      // Category complete but nutrition facts needed
+    }
+    ```
+    <Callout type="info">
+      **Prompt:** "Add nutrition facts to compute the Nutri-Score"
+    </Callout>
+    <Callout type="info">
+      **Add a one-click option** to indicate no nutrition facts on the packaging: "This product doesn't have nutrition facts"
+    </Callout>
+    <Callout type="info">
+      **Automated Nutrition Extraction**
 
-We now have a convenient API to automatically extract nutrition from an image
+    We now have a convenient API to automatically extract nutrition from an image
 
-</Callout>
-</Step>
+    </Callout>
+
+  </Step>
 <Step title="If nutrition is present but no category">
 ```javascript title="Condition Check"
 if "en:categories-to-be-completed" in states_tags AND "en:nutrition-facts-completed" in states_tags
