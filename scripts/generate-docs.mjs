@@ -6,7 +6,7 @@ const outV2 = './content/docs/Product-Opener/(api)/v2';
 const outV3 = './content/docs/Product-Opener/(api)/v3';
 const outkPanel = './content/docs/Knowledge-Panel/(api)';
 const outRobotoff = './content/docs/Robotoff/(api)';
-const outOpenPrices = './content/docs/Open-price/(api)';
+const outOpenPrices = './content/docs/Open-prices/(api)';
 const outFolksonomy = './content/docs/folksonomy/(api)';
 
 rimrafSync(outV2, {

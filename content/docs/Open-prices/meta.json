@@ -1,0 +1,13 @@
+{
+  "title": "Open Prices",
+  "description": "Price tracking and management",
+  "icon": "DollarSign",
+  "root": true,
+  "pages": [
+    "index",
+    "---Project Guide---",
+    "...(docs)/docs",
+    "---API References---",
+    "...(api)"
+  ]
+}

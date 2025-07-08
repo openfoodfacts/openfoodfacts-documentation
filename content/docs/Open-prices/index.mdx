@@ -1,0 +1,126 @@
+---
+title: "Open Prices"
+description: "Explore Open Prices, a project dedicated to collecting and sharing food product prices globally. Features REST API, web interface, and contributor tools."
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+A REST API designed to interact with the Open Food Facts _Open Prices_ database.
+
+<Callout type="info">
+  Open Prices is a project to collect and share prices of food products around
+  the world, enabling price transparency and helping consumers make informed
+  decisions. Learn more at
+  [prices.openfoodfacts.org](https://prices.openfoodfacts.org/).
+</Callout>
+
+## System Architecture
+
+The Open Prices ecosystem consists of complementary components:
+
+<Steps>
+  <Step title="REST API">
+    Backend API built with Django for data management and processing
+  </Step>
+  <Step title="Web Interface">
+    User-friendly frontend built with Vue.js for price contributions
+  </Step>
+  <Step title="Mobile Integration">
+    Integration with Open Food Facts mobile apps for seamless price addition
+  </Step>
+</Steps>
+
+## Getting Started
+
+<Callout type="info">
+**Ready to Contribute?**
+
+Join thousands of contributors helping build the world's largest open database of food prices.
+
+</Callout>
+
+<Cards>
+  <Card
+    title="Add a Single Price"
+    href="/docs/Open-prices/docs/add-a-price"
+    description="Step-by-step guide to add individual product prices with proof photos"
+  />
+  <Card
+    title="Add Multiple Prices"
+    href="/docs/Open-prices/docs/add-multiple-prices"
+    description="Efficient workflow for adding prices from shopping trips and store visits"
+  />
+  <Card
+    title="API Documentation"
+    href="/docs/Open-prices/api-index"
+    description="Complete API reference for developers building price-aware applications"
+  />
+  <Card
+    title="Maintenance Guide"
+    href="/docs/Open-prices/docs/maintenance"
+    description="Technical maintenance procedures, OCR operations, and data quality tools"
+  />
+</Cards>
+
+## How It Works
+
+<Steps>
+  <Step title="Data Collection">
+    Contributors photograph price tags and products as proof, ensuring data
+    authenticity and traceability
+  </Step>
+  <Step title="Location Verification">
+    All locations are verified through OpenStreetMap integration to ensure
+    accuracy and prevent fraud
+  </Step>
+  <Step title="Price Validation">
+    Each entry includes timestamp, location data, and proof photos for
+    comprehensive price tracking
+  </Step>
+  <Step title="Open Data">
+    All price data is made available under open licenses for research,
+    applications, and transparency
+  </Step>
+</Steps>
+
+## Key Features
+
+### Data Quality
+
+- **Photo Verification**: Every price requires proof photos
+- **Location Validation**: OpenStreetMap integration for store verification
+- **Temporal Tracking**: Historical price data with timestamps
+- **Community Moderation**: Collaborative quality assurance
+
+### Developer Tools
+
+- **RESTful API**: Modern API for accessing price data
+- **Real-time Updates**: Live price feeds and notifications
+- **Bulk Operations**: Efficient endpoints for large-scale data access
+- **Analytics**: Price trend analysis and statistical insights
+
+## Design & User Interface
+
+We strive to thoughtfully design every feature with respect to Open Food Facts' graphic charter and design system.
+
+- [![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?logo=figma&logoColor=white) Open Prices Mockups](https://www.figma.com/design/cIB7CInl2BfueMzWnz09t6/Open-Prices?node-id=0-1&p=f&t=LC7UvPjngw57NGSs-0)
+- [![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?logo=figma&logoColor=white) Mobile App Design](https://www.figma.com/design/nFMjewFAOa8cahtob7CAB/Mobile-App-Design--Quentin-?node-id=5816-22697&p=f&t=AkgTM9QzMK7tQeGC-0)
+- [Join the Design Team](https://github.com/openfoodfacts/openfoodfacts-design)
+
+## Weekly Meetings
+
+- **When**: Wednesdays at 14:00 Paris Time
+- **Video Call**: [Google Meet](https://meet.google.com/oin-hiqp-tmd)
+- **Phone**: https://tel.meet/oin-hiqp-tmd?pin=5784334159966
+- **Agenda**: [Weekly Agenda](https://docs.google.com/document/u/0/d/1-OfMAi-cB7mi9_q172EbBCWHkfKDM0zVg4wzULW3pFY/edit)
+
+## Contributors
+
+<a href="https://github.com/openfoodfacts/open-prices/graphs/contributors">
+  <img
+    alt="List of contributors to this repository"
+    src="https://contrib.rocks/image?repo=openfoodfacts/open-prices"
+  />
+</a>
