@@ -34,12 +34,12 @@ This document outlines the complete production architecture of Open Food Facts, 
     </Cards>
   </Tab>
 
-  <Tab value="Secondary Services">
-    ### Service Distribution - **Main web application:** off1 and off2 (Free
-    Datacenter) - **Supporting services:** OVH servers (ovh1, ovh2, ovh3) -
-    **Image serving:** Dedicated nginx instances - **Database services:**
-    Dedicated containers
-  </Tab>
+<Tab value="Secondary Services">
+  ### Service Distribution - **Main web application:** off1 and off2 (Free
+  Datacenter) - **Supporting services:** OVH servers (ovh1, ovh2, ovh3) -
+  **Image serving:** Dedicated nginx instances - **Database services:**
+  Dedicated containers
+</Tab>
 
   <Tab value="Virtualization">
     ### Proxmox Platform
@@ -67,9 +67,9 @@ We maintain server configurations in the [infrastructure git repository](https:/
     with `git pull`
   </Step>
 
-  <Step title="Service Management">
-    Updates may require service reloads, restarts, or `systemctl daemon-reload`
-  </Step>
+<Step title="Service Management">
+  Updates may require service reloads, restarts, or `systemctl daemon-reload`
+</Step>
 
   <Step title="Proxmox Exception">
     `/etc/pve` cannot use symlinks (virtual filesystem), so files are copied to
@@ -90,10 +90,10 @@ We maintain server configurations in the [infrastructure git repository](https:/
     using git
   </Tab>
 
-  <Tab value="In Progress">
-    - Configuration files: `confs/off2/` directory - Scripts: `scripts/off2/`
-    directory
-  </Tab>
+<Tab value="In Progress">
+  - Configuration files: `confs/off2/` directory - Scripts: `scripts/off2/`
+  directory
+</Tab>
 
   <Tab value="Planned">
     - **TODO:** Complete git configuration for ovh1 and ovh2 - **TODO:**
@@ -123,9 +123,9 @@ We implement a [NGINX reverse proxy](./nginx-reverse-proxy.md) container that ma
     Uses fail2ban to automatically ban malicious bots
   </Step>
 
-  <Step title="Rate Limiting">
-    Implements traffic control and request limiting
-  </Step>
+<Step title="Rate Limiting">
+  Implements traffic control and request limiting
+</Step>
 
   <Step title="SSL Termination">
     Handles SSL certificates and HTTPS termination
@@ -157,17 +157,17 @@ We implement a [NGINX reverse proxy](./nginx-reverse-proxy.md) container that ma
     processor
   </Tab>
 
-  <Tab value="Shared Services">
-    Databases are shared between instances:
-    <Cards>
-      <Card title="MongoDB" description="Primary document database" />
-      <Card
-        title="PostgreSQL"
-        description="Relational database for structured data"
-      />
-      <Card title="Memcached" description="Distributed memory caching system" />
-    </Cards>
-  </Tab>
+<Tab value="Shared Services">
+  Databases are shared between instances:
+  <Cards>
+    <Card title="MongoDB" description="Primary document database" />
+    <Card
+      title="PostgreSQL"
+      description="Relational database for structured data"
+    />
+    <Card title="Memcached" description="Distributed memory caching system" />
+  </Cards>
+</Tab>
 
   <Tab value="Request Flow">
     ### Request Processing Path
@@ -190,6 +190,7 @@ We implement a [NGINX reverse proxy](./nginx-reverse-proxy.md) container that ma
       The dual NGINX setup provides flexibility and easier management with
       project-specific rules.
     </Callout>
+
   </Tab>
 </Tabs>
 
@@ -260,7 +261,7 @@ We implement a [NGINX reverse proxy](./nginx-reverse-proxy.md) container that ma
     Maintain strict separation between data and software
   </Step>
 
-  <Step title="ZFS Datasets">All data stored on dedicated ZFS datasets</Step>
+<Step title="ZFS Datasets">All data stored on dedicated ZFS datasets</Step>
 
   <Step title="Bind Mounts">
     Datasets mounted in containers using Proxmox bind mounts
@@ -347,9 +348,7 @@ flowchart TD
     Creates snapshots and manages retention policies
   </Step>
 
-  <Step title="Syncoid Replication">
-    Synchronizes snapshots between servers
-  </Step>
+<Step title="Syncoid Replication">Synchronizes snapshots between servers</Step>
 
   <Step title="Clone Creation">
     Uses snapshots for staging environment data
@@ -434,9 +433,9 @@ flowchart TD
     All applications communicate using internal network addresses
   </Step>
 
-  <Step title="Inter-Server Security">
-    Communication between machines uses Stunnel or HTTPS
-  </Step>
+<Step title="Inter-Server Security">
+  Communication between machines uses Stunnel or HTTPS
+</Step>
 
   <Step title="Authentication">
     Stunnel with PSK (Pre-Shared Key) for fast, secure connections
@@ -452,11 +451,11 @@ flowchart TD
     specific authentication mechanism
   </Tab>
 
-  <Tab value="Configuration">
-    - **PSK Method:** Pre-Shared Key for speed and simplicity - **Unique Keys:**
-    Each server connection uses unique PSK - **TCP Only:** Limited to TCP
-    traffic (UDP not supported)
-  </Tab>
+<Tab value="Configuration">
+  - **PSK Method:** Pre-Shared Key for speed and simplicity - **Unique Keys:**
+  Each server connection uses unique PSK - **TCP Only:** Limited to TCP traffic
+  (UDP not supported)
+</Tab>
 
   <Tab value="Security">
     - **Encrypted Tunnels:** All inter-server communication encrypted -
@@ -486,7 +485,8 @@ Several areas need refactoring and improvement:
 2. **Cross-instance dependencies:** Make data access more configurable
 3. **Configuration automation:** Automate `/etc/pve` file synchronization
 4. **Complete git migration:** Finish git-based configuration for all servers
-   </Callout>
+
+</Callout>
 
 ## Related Documentation
 

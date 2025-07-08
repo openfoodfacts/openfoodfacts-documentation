@@ -129,25 +129,27 @@ So, adding the folder part, the final url for our example is:
 
 - `https://images.openfoodfacts.org/images/products/316/893/001/0883/1.jpg` for the full image
 - `https://images.openfoodfacts.org/images/products/316/893/001/0883/1.400.jpg` for the 400px version
+
   </Tab>
-<Tab value="Filename for a selected image">
-In the structure, selected images have additional fields:
+  <Tab value="Filename for a selected image">
+    In the structure, selected images have additional fields:
 
-* `rev` (as revision) indicates the revision number of the image to use.
-* `imgid`, the image ID of the raw image used to generate the selected image.
+      * `rev` (as revision) indicates the revision number of the image to use.
+      * `imgid`, the image ID of the raw image used to generate the selected image.
 
-For selected images, the filename is the image key followed by the revision number and the resolution: `<image_name>.<rev>.<resolution>.jpg`. Resolution must always be specified, but you can use `full` keyword to get the full resolution image. `image_name` is the image type + language code (eg: `front_fr`).
+      For selected images, the filename is the image key followed by the revision number and the resolution: `<image_name>.<rev>.<resolution>.jpg`. Resolution must always be specified, but you can use `full` keyword to get the full resolution image. `image_name` is the image type + language code (eg: `front_fr`).
 
-In our above example, the filename for the front image in french (`front_fr` key) is:
+      In our above example, the filename for the front image in french (`front_fr` key) is:
 
-- `front_fr.4.400.jpg` for 400 px version
-- `front_fr.4.full.jpg` for full resolution version
+      - `front_fr.4.400.jpg` for 400 px version
+      - `front_fr.4.full.jpg` for full resolution version
 
-So, adding the folder part, the final url for our example is:
+      So, adding the folder part, the final url for our example is:
 
-- `https://images.openfoodfacts.org/images/products/316/893/001/0883/front_fr.4.full.jpg` for the full image
-- `https://images.openfoodfacts.org/images/products/316/893/001/0883/front_fr.4.400.jpg` for the 400px version
-  </Tab>
+      - `https://images.openfoodfacts.org/images/products/316/893/001/0883/front_fr.4.full.jpg` for the full image
+      - `https://images.openfoodfacts.org/images/products/316/893/001/0883/front_fr.4.400.jpg` for the 400px version
+
+    </Tab>
 </Tabs>
 
 ### A python snippet

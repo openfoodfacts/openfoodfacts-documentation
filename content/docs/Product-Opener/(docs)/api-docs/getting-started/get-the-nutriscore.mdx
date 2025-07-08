@@ -66,7 +66,8 @@ Please use only the official assets to display the Nutri-Score. You can get v1 l
 - **New computation method** now requires the ingredient list, a category, and nutrition table
 - **Transition period logo** available to indicate you're using the new computation
 - **Language-dependent assets** - contact us if your language isn't supported
-  </Callout>
+
+</Callout>
 
 <Callout type="warn">
 **Asset Translation**
@@ -182,16 +183,16 @@ We now have a convenient API to automatically extract nutrition from an image
 "This product doesn't have nutrition facts"
 ```
 </Step>
-<Step title="If the nutrition image is missing">
-```javascript title="Condition Check"
-if "en:nutrition-photo-to-be-selected" in states_tags OR "en:photos-to-be-uploaded" in states_tags
-```
-</Step>
-<Step title="If the nutrition image is obsolete using the image refresh API">
-<Card title="Image Refresh API" href="https://github.com/openfoodfacts/api-documentation/issues/15">
-Learn more about refreshing obsolete nutrition images
-</Card>
-</Step>
+  <Step title="If the nutrition image is missing">
+  ```javascript title="Condition Check"
+  if "en:nutrition-photo-to-be-selected" in states_tags OR "en:photos-to-be-uploaded" in states_tags
+  ```
+  </Step>
+  <Step title="If the nutrition image is obsolete using the image refresh API">
+    <Card title="Image Refresh API" href="https://github.com/openfoodfacts/api-documentation/issues/15">
+    Learn more about refreshing obsolete nutrition images
+    </Card>
+  </Step>
 </Steps>
 
 ## Add Nutri-Score disclaimers
