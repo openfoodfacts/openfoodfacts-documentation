@@ -3,14 +3,12 @@ title: "Testing Guide"
 description: "This guide provides instructions on how to test the Facets Knowledge Panels project. It covers both Docker-based and virtual environment setups, including commands for building and running tests."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-
-# Testing
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 <Callout type="info">
-This guide covers testing for both Docker and virtual environment setups.
+  This guide covers testing for both Docker and virtual environment setups.
 </Callout>
 
 <Tabs items={['Docker Setup', 'Virtual Environment']}>
@@ -58,7 +56,7 @@ Checkout `tests` directory
 <Step title="Run Tests">
 
 ```bash title="Run Tests with Pytest"
-pytest 
+pytest
 ```
 
 </Step>
@@ -68,5 +66,5 @@ pytest
 </Tabs>
 
 <Callout type="info">
-Make sure all tests pass before submitting your pull request!
+  Make sure all tests pass before submitting your pull request!
 </Callout>

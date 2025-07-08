@@ -3,15 +3,14 @@ title: "Project Setup"
 description: "This guide explains how to set up the Facets Knowledge Panels project locally. It covers two methods: using Docker Compose (recommended) for quick setup and a virtual environment for more control, detailing prerequisites and commands for each."
 ---
 
-import { Callout } from 'fumadocs-ui/components/callout';
-import { Steps, Step } from 'fumadocs-ui/components/steps';
-import { Card, Cards } from 'fumadocs-ui/components/card';
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
-
-# Project Setup
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 <Callout type="info">
-You may choose Docker compose (recommended), or through virtual environment for more control.
+  You may choose Docker compose (recommended), or through virtual environment
+  for more control.
 </Callout>
 
 <Tabs items={['Docker (Recommended)', 'Virtual Environment']}>
@@ -21,6 +20,7 @@ You may choose Docker compose (recommended), or through virtual environment for 
 **Prerequisites**
 
 Make sure you have [Docker](https://docs.docker.com/get-docker/) installed on your system.
+
 </Callout>
 
 After forking the repository:
@@ -63,8 +63,16 @@ Visit `http://127.0.0.1/` with the endpoints or `/docs` for documentation
 <Tab value="Virtual Environment">
 
 <Cards>
-<Card title="Python" href="https://www.python.org/downloads/" description="Python programming language" />
-<Card title="Git Bash" href="https://gitforwindows.org/#bash" description="Use git bash console to run the commands below" />
+  <Card
+    title="Python"
+    href="https://www.python.org/downloads/"
+    description="Python programming language"
+  />
+  <Card
+    title="Git Bash"
+    href="https://gitforwindows.org/#bash"
+    description="Use git bash console to run the commands below"
+  />
 </Cards>
 
 After forking the repository:
