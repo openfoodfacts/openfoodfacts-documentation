@@ -66,6 +66,9 @@ jobs:
       - name: Download Robotoff specifications
         run: ./.github/scripts/download-robotoff-spec.sh
 
+      - name: Download Nutripatrol specifications
+        run: ./.github/scripts/download-nutripatrol-spec.sh
+
       - name: Process OpenAPI files of Product Opener to json
         run: node scripts/compile-openapi-specs.js
 

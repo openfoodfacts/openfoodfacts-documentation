@@ -8,6 +8,7 @@ const outkPanel = './content/docs/Knowledge-Panel/(api)';
 const outRobotoff = './content/docs/Robotoff/(api)';
 const outOpenPrices = './content/docs/Open-prices/(api)';
 const outFolksonomy = './content/docs/folksonomy/(api)';
+const outNutripatrol = './content/docs/nutripatrol/(api)';
 
 rimrafSync(outV2, {
   filter(v) {
@@ -40,6 +41,12 @@ rimrafSync(outOpenPrices, {
 });
 
 rimrafSync(outFolksonomy, {
+  filter(v) {
+    return !v.endsWith('index.mdx') && !v.endsWith('meta.json');
+  },
+});
+
+rimrafSync(outNutripatrol, {
   filter(v) {
     return !v.endsWith('index.mdx') && !v.endsWith('meta.json');
   },
@@ -119,4 +126,18 @@ if (existsSync('./specfiles-json/folksonomy-openapi.json')) {
   });
 } else {
   console.log('Folksonomy spec not found, skipping Folksonomy documentation generation');
+}
+
+if (existsSync('./specfiles-json/nutripatrol-openapi.json')) {
+  void OpenAPI.generateFiles({
+    input: ['./specfiles-json/nutripatrol-openapi.json'],
+    output: outNutripatrol,
+    groupBy: 'tag',
+    options: {
+      includeResponses: true,
+    },
+    includeDescription: true
+  });
+} else {
+  console.log('Nutripatrol spec not found, skipping Nutripatrol documentation generation');
 }
