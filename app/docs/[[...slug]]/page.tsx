@@ -73,20 +73,39 @@ export default async function Page(props: {
   let markdownContent = "";
 
   // Skip reading content for API documentation pages (auto-generated files)
+  // Only skip for actual API endpoints, not documentation about APIs
   const isApiPage =
     params.slug?.some(
       (segment) =>
-        segment === "api" ||
-        segment.includes("api") ||
-        segment.includes("(api)") ||
         segment.startsWith("get-") ||
         segment.startsWith("post-") ||
         segment.startsWith("patch-") ||
         segment.startsWith("delete-") ||
-        segment.startsWith("put-")
+        segment.startsWith("put-") ||
+        /_(get|post|patch|delete|put)$/.test(segment) ||
+        /^(predict|extract|generate|create|update|delete|retrieve|list|destroy|partial_update|stats)/.test(
+          segment
+        ) ||
+        /_auth_|authentication/.test(segment) ||
+        /knowledge_panel/.test(segment) ||
+        /_(create|update|delete|retrieve|list|destroy|partial_update|stats)$/.test(
+          segment
+        )
     ) ||
-    // Also check if the full path would be in an (api) directory
-    (params.slug && params.slug.join("/").includes("(api)"));
+    // Check for known API path patterns (actual API endpoints)
+    (params.slug &&
+      ((params.slug.includes("Product-Opener") &&
+        (params.slug.includes("v2") || params.slug.includes("v3"))) ||
+        (params.slug.includes("Open-prices") &&
+          (params.slug.includes("prices") ||
+            params.slug.includes("auth") ||
+            params.slug.includes("users") ||
+            params.slug.includes("locations") ||
+            params.slug.includes("proofs"))) ||
+        (params.slug.includes("Robotoff") &&
+          (params.slug.includes("predict") ||
+            params.slug.includes("annotation-management") ||
+            params.slug.includes("insight-management")))));
 
   if (!isApiPage) {
     const slugPath = params.slug?.join("/") || "index";

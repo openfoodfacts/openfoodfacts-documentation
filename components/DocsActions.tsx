@@ -17,42 +17,93 @@ interface DocsActionsProps {
 const isApiDocumentationPage = (slug?: string[]): boolean => {
   if (!slug) return false;
 
-  // Check individual segments for API patterns
-  const hasApiSegment = slug.some(
+  // Known API documentation directory structures
+  // These paths correspond to (api) route groups in the content structure
+  const apiPathPatterns = [
+    // Product-Opener API paths
+    ["Product-Opener", "v2"],
+    ["Product-Opener", "v3"],
+    ["Product-Opener", "images"],
+    ["Product-Opener", "knowledge-panels"],
+    ["Product-Opener", "taxonomy"],
+    ["Product-Opener", "products"],
+
+    // Open-prices API paths
+    ["Open-prices", "api"],
+    ["Open-prices", "auth"],
+    ["Open-prices", "challenges"],
+    ["Open-prices", "locations"],
+    ["Open-prices", "price-tags"],
+    ["Open-prices", "prices"],
+    ["Open-prices", "products"],
+    ["Open-prices", "proofs"],
+    ["Open-prices", "receipt-items"],
+    ["Open-prices", "stats"],
+    ["Open-prices", "status"],
+    ["Open-prices", "users"],
+
+    // Robotoff API paths
+    ["Robotoff", "ann-search"],
+    ["Robotoff", "annotation-management"],
+    ["Robotoff", "batch-job"],
+    ["Robotoff", "dataset"],
+    ["Robotoff", "image-management"],
+    ["Robotoff", "image-predictions"],
+    ["Robotoff", "image-processing"],
+    ["Robotoff", "insight-management"],
+    ["Robotoff", "logo-management"],
+    ["Robotoff", "predict"],
+    ["Robotoff", "prediction-management"],
+    ["Robotoff", "question-management"],
+    ["Robotoff", "system"],
+    ["Robotoff", "user-management"],
+  ];
+
+  // Check if the slug matches any known API path pattern
+  const matchesApiPath = apiPathPatterns.some((pattern) => {
+    if (slug.length < pattern.length) return false;
+    return pattern.every((segment, index) => slug[index] === segment);
+  });
+
+  // Also check for common API filename patterns, but exclude documentation about APIs
+  const lastSegment = slug[slug.length - 1];
+  const hasApiFilename = lastSegment
+    ? // HTTP method prefixes
+      /^(get|post|patch|delete|put)-/.test(lastSegment) ||
+      // HTTP method suffixes
+      /_(get|post|patch|delete|put)$/.test(lastSegment) ||
+      // API-specific naming patterns (but not documentation about APIs)
+      /^(predict|extract|generate|create|update|delete|retrieve|list|destroy|partial_update|stats)/.test(
+        lastSegment
+      ) ||
+      // Authentication patterns
+      /_auth_|authentication/.test(lastSegment) ||
+      // Knowledge panel patterns
+      /knowledge_panel/.test(lastSegment) ||
+      // Common API endpoint patterns
+      /_(create|update|delete|retrieve|list|destroy|partial_update|stats)$/.test(
+        lastSegment
+      )
+    : false;
+
+  // Exclude documentation pages that are ABOUT APIs but are not API endpoints themselves
+  const isDocumentationAboutApi = slug.some(
     (segment) =>
-      segment === "api" ||
-      segment.includes("api") ||
-      segment.includes("(api)") ||
-      segment.startsWith("get-") ||
-      segment.startsWith("post-") ||
-      segment.startsWith("patch-") ||
-      segment.startsWith("delete-") ||
-      segment.startsWith("put-") ||
-      segment.endsWith("_get") ||
-      segment.endsWith("_post") ||
-      segment.endsWith("_patch") ||
-      segment.endsWith("_delete") ||
-      segment.endsWith("_put") ||
-      segment.includes("_auth_") ||
-      segment.includes("authentication") ||
-      segment.includes("knowledge_panel") ||
-      /^[a-z_]+_(get|post|patch|delete|put)$/.test(segment)
+      segment === "api-docs" ||
+      segment === "tutorials" ||
+      segment === "getting-started" ||
+      segment === "reference" ||
+      segment === "advanced-features" ||
+      segment === "data-access" ||
+      segment === "meta-documentation"
   );
 
-  // Check if the full path contains (api)
-  const hasApiInPath = slug.join("/").includes("(api)");
+  // If it's documentation about APIs, it should show the copy/edit buttons
+  if (isDocumentationAboutApi) {
+    return false;
+  }
 
-  // Check current URL for API indicators (client-side only)
-  const hasApiInUrl =
-    typeof window !== "undefined" &&
-    (window.location.pathname.includes("/(api)/") ||
-      window.location.pathname.includes("/api/") ||
-      // Check for common API endpoint patterns in the URL
-      /\/(get|post|patch|delete|put)-/.test(window.location.pathname) ||
-      // Check for API endpoint patterns that end with HTTP methods
-      /_(?:get|post|patch|delete|put)(?:\/|$)/.test(window.location.pathname));
-
-  return hasApiSegment || hasApiInPath || hasApiInUrl;
+  return matchesApiPath || hasApiFilename;
 };
 
 /**
