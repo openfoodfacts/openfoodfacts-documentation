@@ -1,0 +1,813 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "nutripatrol",
+    "description": "\nThe nutripatrol API is used to report and manage issues with products and images on [Open Food Facts](https://world.openfoodfacts.org/), Open Prices, Open Pet Food Facts, Open Beauty Facts.\nWe call a report a \"**flag**\" and a report will be associated with a \"**ticket**\" if it does not exist for this product or image. Otherwise it will be associated with the existing ticket.\n\n## Flags\n\nA flag containes the following main fields:\n- `barcode`: Barcode of the product, if the flag is about a product or a product image. In case of a search issue, this field is null.\n\n- `type`: Type of the issue. It can be `product`, `image` or `search`.\n- `url`: URL of the product or of the flagged image.\n- `user_id`: Open Food Facts User ID of the flagger.\n- `source`: Source of the flag. It can be a user from the mobile app, the web or a flag generated automatically by robotoff.\n- `confidence`: Confidence score of the model that generated the flag, this field should only be provided by Robotoff.\n- `image_id`: ID of the flagged image, if the ticket type is `image`.\n- `flavor`: Flavor (project) associated with the ticket.\n- `reason`: Reason for flagging provided by the user. For images, it can be `inappropriate`, `human`, `beauty` or `other`\n\n`image_to_delete_spam` or `image_to_delete_face`. For products it can be `product_to_delete`. The field is optional.\n- `comment`: Comment provided by the user during flagging. This is a free text field.\n\n## Tickets\nAutomatically created when a flag is created and no ticket exists for the product or image.\n\nA ticket containes the following main fields:\n- `barcode`: Barcode of the product, if the ticket is about a product or a product image. In case of a search issue, this field is null.\n\n- `type`: Type of the issue. It can be `product`, `image` or `search`.\n- `url`: URL of the product or of the flagged image.\n- `status`: Status of the ticket. It can be `open` or `closed`.\n- `image_id`: ID of the flagged image, if the ticket type is `image`.\n- `flavor`: Flavor (project) associated with the ticket.\n\n\n",
+    "contact": {
+      "name": "The Open Food Facts team",
+      "url": "https://world.openfoodfacts.org/",
+      "email": "contact@openfoodfacts.org"
+    },
+    "license": {
+      "name": " AGPL-3.0",
+      "url": "https://www.gnu.org/licenses/agpl-3.0.en.html"
+    },
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Main Page",
+        "operationId": "main_page__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/robots.txt": {
+      "get": {
+        "summary": "Robots Txt",
+        "operationId": "robots_txt_robots_txt_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flags": {
+      "get": {
+        "summary": "Get Flags",
+        "description": "Get all flags.\n\nThis function is used to get all flags.",
+        "operationId": "get_flags_api_v1_flags_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Flag",
+        "description": "Create a flag for a product.\n\nThis function is used to create a flag for a product or an image.\nA flag is a request for a product or an image to be reviewed.\nA flag is associated with a ticket.\nA ticket is created if it does not exist for this product or image.\nA ticket can be associated with multiple flags.",
+        "operationId": "create_flag_api_v1_flags_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlagCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flags/{flag_id}": {
+      "get": {
+        "summary": "Get Flag",
+        "description": "Get a flag by ID.\n\nThis function is used to get a flag by its ID.",
+        "operationId": "get_flag_api_v1_flags__flag_id__get",
+        "parameters": [
+          {
+            "name": "flag_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Flag Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets": {
+      "post": {
+        "summary": "Create Ticket",
+        "description": "Create a ticket.\n\nThis function is used to create a ticket for a product or an image.\nA ticket is a request for a product or an image to be reviewed.",
+        "operationId": "create_ticket_api_v1_tickets_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TicketCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Ticket"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get Tickets",
+        "description": "Get all tickets.\n\nThis function is used to get all tickets with status open.",
+        "operationId": "get_tickets_api_v1_tickets_get",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/TicketStatus"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Status"
+            }
+          },
+          {
+            "name": "type_",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/IssueType"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Type "
+            }
+          },
+          {
+            "name": "reason",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ReasonType"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reason"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 1,
+              "title": "Page"
+            }
+          },
+          {
+            "name": "page_size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "title": "Page Size"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/{ticket_id}": {
+      "get": {
+        "summary": "Get Ticket",
+        "description": "Get a ticket by ID.\n\nThis function is used to get a ticket by its ID.",
+        "operationId": "get_ticket_api_v1_tickets__ticket_id__get",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Ticket Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/flags/batch": {
+      "post": {
+        "summary": "Get Flags By Ticket Batch",
+        "description": "Get all flags for tickets by IDs.\n\nThis function is used to get all flags for tickets by there IDs.",
+        "operationId": "get_flags_by_ticket_batch_api_v1_flags_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FlagsByTicketIdRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tickets/{ticket_id}/status": {
+      "put": {
+        "summary": "Update Ticket Status",
+        "description": "Update the status of a ticket by ID.\n\nThis function is used to update the status of a ticket by its ID.",
+        "operationId": "update_ticket_status_api_v1_tickets__ticket_id__status_put",
+        "parameters": [
+          {
+            "name": "ticket_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Ticket Id"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/TicketStatus"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/status": {
+      "get": {
+        "summary": "Status",
+        "description": "Health check endpoint.",
+        "operationId": "status_api_v1_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "FlagCreate": {
+        "properties": {
+          "barcode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Barcode",
+            "description": "Barcode of the product, if the flag is about a product or a product image. In case of a search issue, this field is null."
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IssueType"
+              }
+            ],
+            "description": "Type of the issue"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "URL of the product or of the flagged image"
+          },
+          "user_id": {
+            "type": "string",
+            "title": "User Id",
+            "description": "Open Food Facts User ID of the flagger"
+          },
+          "source": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SourceType"
+              }
+            ],
+            "description": "Source of the flag. It can be a user from the mobile app, the web or a flag generated automatically by robotoff."
+          },
+          "confidence": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1,
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Confidence",
+            "description": "Confidence score of the model that generated the flag, this field should only be provided by Robotoff."
+          },
+          "image_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Id",
+            "description": "ID of the flagged image",
+            "examples": [
+              "1",
+              "front_fr"
+            ]
+          },
+          "flavor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Flavor"
+              }
+            ],
+            "description": "Flavor (project) associated with the ticket"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason",
+            "description": "Reason for flagging provided by the user. The field is optional."
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment",
+            "description": "Comment provided by the user during flagging. This is a free text field."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime of the flag"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "url",
+          "user_id",
+          "source",
+          "flavor"
+        ],
+        "title": "FlagCreate"
+      },
+      "FlagsByTicketIdRequest": {
+        "properties": {
+          "ticket_ids": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Ticket Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ticket_ids"
+        ],
+        "title": "FlagsByTicketIdRequest"
+      },
+      "Flavor": {
+        "type": "string",
+        "enum": [
+          "off",
+          "obf",
+          "opff",
+          "opf",
+          "off-pro"
+        ],
+        "title": "Flavor",
+        "description": "Flavor is used to refer to a specific Open*Facts project:\n\n- Open Food Facts\n- Open Beauty Facts\n- Open Pet Food Facts\n- Open Product Facts\n- Open Food Facts (Pro plateform)"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "IssueType": {
+        "type": "string",
+        "enum": [
+          "product",
+          "image",
+          "search"
+        ],
+        "title": "IssueType",
+        "description": "Type of the flag/ticket."
+      },
+      "ReasonType": {
+        "type": "string",
+        "enum": [
+          "inappropriate",
+          "human",
+          "beauty",
+          "other"
+        ],
+        "title": "ReasonType",
+        "description": "Type of the reason for flagging."
+      },
+      "SourceType": {
+        "type": "string",
+        "enum": [
+          "mobile",
+          "web",
+          "robotoff"
+        ],
+        "title": "SourceType"
+      },
+      "Ticket": {
+        "properties": {
+          "barcode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Barcode",
+            "description": "Barcode of the product, if the ticket is about a product or a product image. In case of a search issue, this field is null."
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IssueType"
+              }
+            ],
+            "description": "Type of the issue"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "URL of the product or of the flagged image"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TicketStatus"
+              }
+            ],
+            "description": "Status of the ticket",
+            "default": "open"
+          },
+          "image_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Id",
+            "description": "ID of the flagged image, if the ticket type is `image`",
+            "examples": [
+              "1",
+              "front_fr"
+            ]
+          },
+          "flavor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Flavor"
+              }
+            ],
+            "description": "Flavor (project) associated with the ticket"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime of the ticket"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "ID of the ticket"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "url",
+          "flavor",
+          "id"
+        ],
+        "title": "Ticket"
+      },
+      "TicketCreate": {
+        "properties": {
+          "barcode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Barcode",
+            "description": "Barcode of the product, if the ticket is about a product or a product image. In case of a search issue, this field is null."
+          },
+          "type": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/IssueType"
+              }
+            ],
+            "description": "Type of the issue"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url",
+            "description": "URL of the product or of the flagged image"
+          },
+          "status": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TicketStatus"
+              }
+            ],
+            "description": "Status of the ticket",
+            "default": "open"
+          },
+          "image_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Image Id",
+            "description": "ID of the flagged image, if the ticket type is `image`",
+            "examples": [
+              "1",
+              "front_fr"
+            ]
+          },
+          "flavor": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Flavor"
+              }
+            ],
+            "description": "Flavor (project) associated with the ticket"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "Creation datetime of the ticket"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "url",
+          "flavor"
+        ],
+        "title": "TicketCreate"
+      },
+      "TicketStatus": {
+        "type": "string",
+        "enum": [
+          "open",
+          "closed"
+        ],
+        "title": "TicketStatus"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
