@@ -8,16 +8,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
   return {
     ...defaultMdxComponents,
     APIPage: (props) => <APIPage {...openapi.getAPIPageProps(props)} />,
+    Mermaid, // Make Mermaid component available for the remark plugin
     ...components,
-    code: ({ className, children, ...props }) => {
-      if (className === "mermaid") {
-        return <Mermaid chart={String(children)} />;
-      }
-      return (
-        <code className={className} {...props}>
-          {children}
-        </code>
-      );
-    },
   };
 }

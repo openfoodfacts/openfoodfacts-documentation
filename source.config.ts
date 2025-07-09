@@ -1,13 +1,18 @@
-import { defineDocs, defineConfig, frontmatterSchema } from 'fumadocs-mdx/config';
-import { z } from 'zod';
+import {
+  defineDocs,
+  defineConfig,
+  frontmatterSchema,
+} from "fumadocs-mdx/config";
+import { z } from "zod";
+import { remarkMermaid } from "./lib/remark-mermaid";
 
 export const docs = defineDocs({
-  dir: 'content/docs',
+  dir: "content/docs",
 });
 
 // Reports collection with additional fields for blog-style rendering
 export const reports = defineDocs({
-  dir: 'content/docs/Infra/reports',
+  dir: "content/docs/Infra/reports",
   docs: {
     schema: frontmatterSchema.extend({
       author: z.string().optional(),
@@ -20,12 +25,12 @@ export const reports = defineDocs({
 export default defineConfig({
   mdxOptions: {
     // MDX options
-    remarkPlugins: [],
+    remarkPlugins: [remarkMermaid],
     rehypePlugins: [],
     rehypeCodeOptions: {
       themes: {
-        light: 'github-light',
-        dark: 'vesper',
+        light: "github-light",
+        dark: "vesper",
       },
     },
   },
