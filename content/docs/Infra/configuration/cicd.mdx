@@ -150,12 +150,12 @@ The following diagram represents the same process, but seen from a persona persp
 
 ### Deployment Workflow
 
-<Tabs>
-<Tab value="pull-requests" label="Pull Requests">
+<Tabs items={["pull-requests", "main-branch", "releases", "deploy-branches"]}>
+<Tab value="pull-requests">
 Run the `pull_request.yml` GitHub Action workflow that builds and runs unit / integration / load tests locally.
 </Tab>
 
-<Tab value="main-branch" label="Main Branch Commits">
+<Tab value="main-branch">
   On commit to `master` / `main`: - Run the `release-please.yml` workflow that
   will **create a release branch** or **add the commit to an existing release
   branch** - Run the `container-build.yml` workflow that will **build the
@@ -164,14 +164,14 @@ Run the `pull_request.yml` GitHub Action workflow that builds and runs unit / in
   pre-production `.net` environment**
 </Tab>
 
-<Tab value="releases" label="Release Process">
+<Tab value="releases">
   - On **merge of branches matching `release-v*.*.*`**, run the
   `release-please.yml` workflow that will create the `v*.*.*` tag - On **push to
   tags matching `v*.*.*`**, run the `container-deploy.yml` workflow that will
   reload the container image to the off-org environment
 </Tab>
 
-<Tab value="deploy-branches" label="Deploy Branches">
+<Tab value="deploy-branches">
 On **push to branches matching `deploy-*`**, run the `container-deploy.yml` workflow that will push the image to the pre-production (`.net`) environment. This is useful to quickly test a pull request in the pre-prod environment.
 </Tab>
 </Tabs>
@@ -196,8 +196,8 @@ In the advent where pre-production or production environments are broken by a 'b
   to `docker swarm` should be envisioned), but manual rollbacks are easily done.
 </Callout>
 
-<Tabs>
-<Tab value="manual" label="Manual Rollback">
+<Tabs items={["manual", "automated"]}>
+<Tab value="manual">
 <Steps>
 <Step>
 SSH to the QEMU VM (either pre-production or production) and go to the deployment folder (usually named after the GitHub environment we are deploying to)
@@ -222,7 +222,7 @@ Move the `.env` file from previous step into the directory
 </Steps>
 </Tab>
 
-<Tab value="automated" label="Automated Rollback">
+<Tab value="automated">
 <Callout type="info">
 This alternative is safer, although it can be a bit longer considering the git process.
 </Callout>

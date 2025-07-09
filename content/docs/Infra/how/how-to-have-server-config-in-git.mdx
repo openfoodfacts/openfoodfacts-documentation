@@ -63,8 +63,8 @@ We use Git to store and track server/container/VM specific configurations for be
 
 ### SSH Key Management
 
-<Tabs>
-  <Tab value="single" label="Single Repository">
+<Tabs items={["single", "multiple"]}>
+  <Tab value="single">
     ### Create SSH Key If root doesn't have an SSH key yet: ```bash
     title="Generate SSH Key" ssh-keygen -t ed25519 -C
     "root@some-descriptive-host-name" ```
@@ -83,7 +83,7 @@ We use Git to store and track server/container/VM specific configurations for be
     </Steps>
   </Tab>
 
-  <Tab value="multiple" label="Multiple Repositories">
+  <Tab value="multiple">
     ### Multiple Repository Access
     <Callout type="info">
       GitHub only allows one repository per public key. For multiple
@@ -176,7 +176,7 @@ We use Git to store and track server/container/VM specific configurations for be
 
 ### Handling Sensitive Files
 
-<Tabs>
+<Tabs items={["Recreatable Files", "Important Files"]}>
   <Tab value="Recreatable Files">
     ### Easy to Recreate For files that are easy to recreate: - Let's Encrypt
     certificates - API keys that can be regenerated - Passwords that can be

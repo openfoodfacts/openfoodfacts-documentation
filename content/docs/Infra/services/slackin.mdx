@@ -86,8 +86,8 @@ We replaced the Slackin service with a simple static page on the [nginx reverse 
 
 The original system at https://slack.openfoodfacts.org enabled users to join our Slack without manual invitations.
 
-<Tabs>
-  <Tab value="tech" label="Technical Details">
+<Tabs items={["tech", "network", "issues"]}>
+  <Tab value="tech">
     ### Technical Stack
     
     - **Base**: [Slackin project](https://github.com/rauchg/slackin)
@@ -98,7 +98,7 @@ The original system at https://slack.openfoodfacts.org enabled users to join our
     - **Service**: systemd service named `pm2-nodejs`
   </Tab>
 
-<Tab value="network" label="Network Configuration">
+<Tab value="network">
   ### Network Setup
   
   - **Port**: Listened on port 3000
@@ -106,7 +106,7 @@ The original system at https://slack.openfoodfacts.org enabled users to join our
   - **Domain**: slack.openfoodfacts.org
 </Tab>
 
-  <Tab value="issues" label="Deprecation Reasons">
+  <Tab value="issues">
     ### Why It Stopped Working
     <Callout type="warning">
       Slackin became non-functional due to Slack API changes:
@@ -133,8 +133,8 @@ The original system at https://slack.openfoodfacts.org enabled users to join our
 
 ### Trade-offs
 
-<Tabs>
-  <Tab value="benefits" label="Benefits">
+<Tabs items={["benefits", "limitations"]}>
+  <Tab value="benefits">
     ### Advantages of Static Page
     
     - **Reliability**: No dependency on deprecated APIs
@@ -143,7 +143,7 @@ The original system at https://slack.openfoodfacts.org enabled users to join our
     - **Stability**: Less likely to break with Slack changes
   </Tab>
 
-  <Tab value="limitations" label="Limitations">
+  <Tab value="limitations">
     ### Disadvantages
     
     - **Manual Updates**: Requires manual link renewal every 400 invitations
