@@ -8,8 +8,6 @@ import { Card, Cards } from 'fumadocs-ui/components/card';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
-# Producers SFTP
-
 <Card title="Secure File Transfer for Producers" description="Automated product update system via SFTP">
 
 The Producers SFTP is part of the producer platform, enabling producers to send files for regular automated updates of their products.
@@ -43,8 +41,6 @@ The Producers SFTP is part of the producer platform, enabling producers to send 
 
 ## Storage Configuration
 
-<Card title="ZFS Dataset Mounting" description="Dual-mount strategy for access control">
-
 ### Mount Points
 
 The SFTP directory is mounted in two locations:
@@ -63,11 +59,7 @@ The SFTP directory is mounted in two locations:
 This dual-mount approach allows secure file upload while enabling platform processing.
 </Callout>
 
-</Card>
-
 ## SFTP Configuration
-
-<Card title="SSH Configuration" description="SFTP service configuration management">
 
 ### Configuration File
 
@@ -92,11 +84,7 @@ The SFTP service is configured in `/etc/ssh/sshd_config.d/sftp.conf`, which is a
   </Step>
 </Steps>
 
-</Card>
-
 ## Adding New SFTP Users
-
-<Card title="User Management Process" description="Step-by-step guide for adding SFTP users">
 
 ### User Creation Process
 
@@ -126,11 +114,7 @@ The SFTP service is configured in `/etc/ssh/sshd_config.d/sftp.conf`, which is a
 **CRITICAL SECURITY REQUIREMENT:** Every user **must be in `sftponly` group** and only in this group. This ensures proper access control and security isolation.
 </Callout>
 
-</Card>
-
 ## Testing and Verification
-
-<Card title="Access Testing" description="Verify SFTP setup before production use">
 
 ### Server Key Fingerprint
 
@@ -168,8 +152,6 @@ The SFTP service is configured in `/etc/ssh/sshd_config.d/sftp.conf`, which is a
   </Step>
 </Steps>
 
-</Card>
-
 ## Security Best Practices
 
 <Tabs items={["User Management", "Access Control", "Monitoring"]}>
@@ -202,8 +184,6 @@ The SFTP service is configured in `/etc/ssh/sshd_config.d/sftp.conf`, which is a
 
 ## Architecture Integration
 
-<Card title="Producer Platform Integration" description="How SFTP fits into the larger ecosystem">
-
 ### Data Flow
 
 <Steps>
@@ -223,8 +203,6 @@ The SFTP service is configured in `/etc/ssh/sshd_config.d/sftp.conf`, which is a
     Processed files are moved or archived according to retention policies
   </Step>
 </Steps>
-
-</Card>
 
 ## Related Components
 
