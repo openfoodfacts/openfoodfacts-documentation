@@ -7,13 +7,12 @@ import { Callout } from 'fumadocs-ui/components/callout';
 import { Card, Cards } from 'fumadocs-ui/components/card';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 
-# Off1 Server Logs
 
 <Callout title="Incident Tracking">
 Report here the timeline of incidents and interventions on off1 server. Keep things short or write a report.
 </Callout>
 
-## 2023-09-05 exim paniclog
+### 2023-09-05 exim paniclog
 
 <Callout type="warn" title="Memory Allocation Issue">
 We have an alert since 09-03 because `/var/log/exim4/paniclog` is not empty.
@@ -29,7 +28,7 @@ We have an alert since 09-03 because `/var/log/exim4/paniclog` is not empty.
 cd /var/log/exim4; mv paniclog paniclog.1; systemctl reload exim4
 ```
 
-## 2023-07-25 Disk full on /rpool/off/products
+### 2023-07-25 Disk full on /rpool/off/products
 
 <Card
   title="Disk Space Incident"
