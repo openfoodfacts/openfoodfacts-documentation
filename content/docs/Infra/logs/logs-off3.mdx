@@ -43,8 +43,8 @@ Timeline of incidents and interventions on the off3 server. This document tracks
 
 ### 2023-12-17: MongoDB Down - Connection Limit Exceeded
 
-<Tabs>
-  <Tab value="incident" label="Incident Details">
+<Tabs items={["incident", "resolution"]}>
+  <Tab value="incident">
     **Started**: 6:25 AM
     
     **Root Cause**: Too many open connections
@@ -62,7 +62,7 @@ Timeline of incidents and interventions on the off3 server. This document tracks
     ```
   </Tab>
   
-  <Tab value="resolution" label="Resolution">
+  <Tab value="resolution">
     **Action Taken**: Service restarted by Charles (on Sunday)
     
     **Status**: Resolved - MongoDB service restored
@@ -105,8 +105,8 @@ sudo ip route add 10.1.0.0/16 dev ens19 proto kernel scope link src 10.0.0.3
 
 ## Incident Categories
 
-<Tabs>
-  <Tab value="mongodb" label="MongoDB Issues">
+<Tabs items={["mongodb", "network", "system"]}>
+  <Tab value="mongodb">
     ### Common MongoDB Problems
     
     - **Connection Limits**: Exceeded maximum connections (301 limit)
@@ -115,7 +115,7 @@ sudo ip route add 10.1.0.0/16 dev ens19 proto kernel scope link src 10.0.0.3
     - **Network Connectivity**: Inter-server communication issues
   </Tab>
 
-  <Tab value="network" label="Network Issues">
+  <Tab value="network">
     ### Network Connectivity Problems
     
     - **Routing Issues**: Missing routes after reboots
@@ -123,7 +123,7 @@ sudo ip route add 10.1.0.0/16 dev ens19 proto kernel scope link src 10.0.0.3
     - **Configuration Persistence**: Routes not surviving reboots
   </Tab>
 
-  <Tab value="system" label="System Issues">
+  <Tab value="system">
     ### System-Level Problems
     
     - **Resource Overload**: CPU, memory, or I/O exhaustion

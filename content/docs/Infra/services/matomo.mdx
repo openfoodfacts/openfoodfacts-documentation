@@ -66,8 +66,8 @@ until enough mobile app are deployed, I manually patched these files:
 
 </Callout>
 
-<Tabs>
-<Tab value="manager" label="Queue Manager Patch">
+<Tabs items={["manager", "processor"]}>
+<Tab value="manager">
 In `plugins/QueuedTracking/Queue/Manager.php`:
 
 ```php title="Manager.php Patch"
@@ -83,7 +83,7 @@ protected function getQueueIdForVisitor($visitorId)
 
 </Tab>
 
-<Tab value="processor" label="Queue Processor Patch">
+<Tab value="processor">
 In `plugins/QueuedTracking/Queue/Processor.php`:
 
 ```php title="Processor.php Patch"
@@ -262,8 +262,8 @@ See [How to monitor archive jobs](#how-to-monitor-archive-jobs).
 
 When a request arrive, it is logged into redis. We then have matomo-tracking systemd services to process the redis queue.
 
-<Tabs>
-<Tab value="status" label="Service Status">
+<Tabs items={["status", "matomo-commands", "logs"]}>
+<Tab value="status">
 ```bash title="Check Service Status"
 # see jobs status
 systemctl status matomo-tracking@{1..3}.service
@@ -272,7 +272,7 @@ systemctl status matomo-tracking@{1..3}.timer
 ```
 </Tab>
 
-<Tab value="matomo-commands" label="Matomo Commands">
+<Tab value="matomo-commands">
 Matomo also offers some commands to follow the status of the tracking jobs:
 
 ```bash title="Monitor Tracking"
@@ -288,15 +288,15 @@ Use `--help` for more options.
 </Callout>
 </Tab>
 
-<Tab value="logs" label="Logs">
+<Tab value="logs">
 Logs are in `/var/log/matomo`
 </Tab>
 </Tabs>
 
 ### How to Monitor Archive Jobs
 
-<Tabs>
-  <Tab value="status" label="Service Status">
+<Tabs items={["status", "logs"]}>
+  <Tab value="status">
     ```bash title="Check Archive Status"
     # see jobs status
     systemctl status matomo-archive@{main,2,5}.service
@@ -304,15 +304,15 @@ Logs are in `/var/log/matomo`
     systemctl status matomo-archive@{main,2,5}.timer
     ```
   </Tab>
-  <Tab value="logs" label="Logs">
+  <Tab value="logs">
     Logs are in `/var/log/matomo`
   </Tab>
 </Tabs>
 
 ### How to Monitor Database
 
-<Tabs>
-  <Tab value="analyze" label="Analyze Tables">
+<Tabs items={["analyze", "optimize"]}>
+  <Tab value="analyze">
     `diagnostics:analyze-archive-table` can help see informations about tables.
 
     Use it with `YYYY_MM` argument.
@@ -322,7 +322,7 @@ Logs are in `/var/log/matomo`
     ./console diagnostics:analyze-archive-table 2023_12
     ```
   </Tab>
-  <Tab value="optimize" label="Optimize Tables">
+  <Tab value="optimize">
     `database:optimize-archive-table` can optimize tables if needed. Do it on old tables that are not moving any more. Use with a `YYYY-MM-DD` argument.
 
     ```bash title="Optimize Archive Table"
