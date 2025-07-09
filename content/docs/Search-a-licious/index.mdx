@@ -6,6 +6,7 @@ description: "Ready-to-use search component built on Elasticsearch. Transform la
 import { Callout } from "fumadocs-ui/components/callout";
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 import Image from "next/image";
 
 ![Search-a-licious](<./(docs)/assets/RVB_HORIZONTAL_WHITE_BG_SEARCH-A-LICIOUS-50.png> "Search-a-licious logo")
@@ -68,27 +69,43 @@ Its versatile architecture makes it ideal for a wide range of applications: from
 
 ## Key Features
 
-<Steps>
-  <Step title="Engaging Search Experience">
-    - Lightning-fast full-text search powered by Elasticsearch - Dynamic facets
-    to refine and filter results - As-you-type suggestions and autocomplete
-    functionality - Advanced query parsing and search operators
-  </Step>
-  <Step title="Personalized Results">
-    - Customizable ranking and sorting algorithms - User preference integration
-    - Geographic and contextual relevance - Machine learning-enhanced
-    recommendations
-  </Step>
-  <Step title="Instant Insights">
-    - Real-time charts and data visualizations - Interactive dashboards and
-    analytics - Trend analysis and statistical summaries - Export capabilities
-    for further analysis
-  </Step>
-  <Step title="Powerful API">
-    - Comprehensive RESTful API for integration - GraphQL support for flexible
-    queries - Real-time data synchronization - Extensive documentation and SDKs
-  </Step>
-</Steps>
+<Accordions type="single">
+  <Accordion title="Engaging Search Experience" id="search-experience">
+    Provide users with an intuitive and powerful search interface:
+    - **Lightning-fast Full-text Search**: Powered by Elasticsearch for instant results across all data fields
+    - **Dynamic Facets**: Interactive filters that refine and filter results in real-time
+    - **As-you-type Suggestions**: Autocomplete functionality with intelligent suggestions
+    - **Advanced Query Parsing**: Support for complex search operators and boolean logic
+    - **Personalized Results**: Customizable ranking algorithms based on user preferences
+  </Accordion>
+  
+  <Accordion title="Personalized Results" id="personalized-results">
+    Tailor search results to individual user needs:
+    - **Customizable Ranking**: Configure sorting algorithms based on your data characteristics
+    - **User Preference Integration**: Remember user preferences and search history
+    - **Geographic Relevance**: Location-based result prioritization and filtering
+    - **Contextual Relevance**: Smart ranking based on user context and behavior
+    - **Machine Learning Enhancement**: AI-powered recommendations and result optimization
+  </Accordion>
+  
+  <Accordion title="Instant Insights" id="instant-insights">
+    Transform data into actionable insights:
+    - **Real-time Charts**: Interactive data visualizations that update with search results
+    - **Interactive Dashboards**: Comprehensive analytics and reporting interfaces
+    - **Trend Analysis**: Historical data analysis and pattern recognition
+    - **Statistical Summaries**: Automated generation of data summaries and key metrics
+    - **Export Capabilities**: Download results and visualizations for further analysis
+  </Accordion>
+  
+  <Accordion title="Powerful API" id="powerful-api">
+    Comprehensive API for seamless integration:
+    - **RESTful API**: Complete REST API for all search and data operations
+    - **GraphQL Support**: Flexible query language for complex data requirements
+    - **Real-time Synchronization**: WebSocket support for live data updates
+    - **Extensive Documentation**: Complete API reference with examples and SDKs
+    - **Authentication & Authorization**: Secure API access with flexible permission models
+  </Accordion>
+</Accordions>
 
 ## Architecture Overview
 

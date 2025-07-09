@@ -6,6 +6,7 @@ description: "The core web server and database system powering Open Food Facts. 
 import { Cards, Card } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 
 **Product Opener** is the server software for **Open Food Facts** and its sibling projects (Open Beauty Facts, Open Pet Food Facts, Open Products Facts). It is released under the AGPL license and is being developed in Perl, HTML and JavaScript as [Free and Open-Source Software](https://en.wikipedia.org/wiki/Free_and_open-source_software).
 
@@ -77,35 +78,94 @@ We strive to thoughtfully design every feature with respect to Open Food Facts' 
   </Card>
 </Cards>
 
-### Product Management
+## Key Features
 
-- Add and edit product information
-- Upload and manage product images
-- Collaborative editing with history tracking
-- Data quality validation and scoring
-
-### Search & Discovery
-
-- Full-text search across products
-- Advanced filtering by categories, labels, ingredients
-- Faceted search interface
-- Geographic data analysis
-
-### Data Export
-
-- JSONL exports of complete database
-- CSV exports for specific data sets
-- API access for real-time data
-- Integration with research platforms
+<Accordions type="single">
+  <Accordion title="Product Management" id="product-management">
+    Product Opener provides comprehensive tools for managing product data:
+    - **Add and Edit Products**: Users can add new products and edit existing information
+    - **Upload and Manage Images**: Support for multiple product images with automatic processing
+    - **Collaborative Editing**: Multiple users can contribute to the same product with full history tracking
+    - **Data Quality Validation**: Automated validation and scoring of product information
+    - **Batch Operations**: Tools for bulk editing and data import/export
+  </Accordion>
+  
+  <Accordion title="Search & Discovery" id="search-discovery">
+    Advanced search capabilities to help users find products:
+    - **Full-text Search**: Search across all product fields including ingredients, brands, and categories
+    - **Advanced Filtering**: Filter by categories, labels, ingredients, nutrition scores, and more
+    - **Faceted Search Interface**: Interactive filters that show available options and counts
+    - **Geographic Data Analysis**: Location-based product availability and regional preferences
+    - **Personalized Results**: Customizable sorting and ranking based on user preferences
+  </Accordion>
+  
+  <Accordion title="Data Export & Integration" id="data-export">
+    Multiple ways to access and export product data:
+    - **JSONL Exports**: Complete database exports in JSON Lines format for research and analysis
+    - **CSV Exports**: Structured data exports for specific data sets and spreadsheet analysis
+    - **API Access**: Real-time data access through REST and GraphQL APIs
+    - **Integration Tools**: SDKs and tools for integrating with external systems
+    - **Research Platform**: Dedicated access for academic and research institutions
+  </Accordion>
+</Accordions>
 
 ## Technology Stack
 
-- **Backend**: Perl with modern web frameworks
-- **Database**: MongoDB for document storage
-- **Cache**: Redis for performance optimization
-- **Search**: Elasticsearch for full-text search
-- **Images**: ImageMagick for processing
-- **Web Server**: Apache/Nginx
+<Accordions type="single">
+  <Accordion title="Backend Technologies" id="backend-tech">
+    - **Language**: Perl with modern web frameworks and libraries
+    - **Database**: MongoDB for flexible document storage and product data
+    - **Cache Layer**: Redis for high-performance caching and session management
+    - **Message Queue**: Background job processing for image processing and data imports
+    - **File Storage**: Distributed file system for product images and documents
+  </Accordion>
+  
+  <Accordion title="Search & Analytics" id="search-analytics">
+    - **Search Engine**: Elasticsearch for full-text search and complex queries
+    - **Analytics**: Real-time analytics and reporting on product data and usage
+    - **Indexing**: Automated indexing pipeline for product updates and new additions
+    - **Aggregations**: Fast aggregation queries for statistics and insights
+  </Accordion>
+  
+  <Accordion title="Infrastructure & Deployment" id="infrastructure">
+    - **Web Server**: Apache/Nginx for high-performance web serving
+    - **Load Balancing**: Multiple server instances with traffic distribution
+    - **CDN**: Global content delivery network for images and static assets
+    - **Monitoring**: Comprehensive monitoring and alerting systems
+    - **Backup**: Automated backup and disaster recovery procedures
+  </Accordion>
+</Accordions>
+
+## Development & Contribution
+
+<Accordions type="single">
+  <Accordion title="Getting Started with Development" id="dev-getting-started">
+    Ready to contribute to Product Opener? Here's how to get started:
+    1. **Setup Local Environment**: Follow the [Developer guide](/docs/Product-Opener/dev) to set up your development environment
+    2. **Understand the Architecture**: Learn about the system architecture and data models
+    3. **Choose Your First Issue**: Look for "good first issue" labels on GitHub
+    4. **Join the Community**: Connect with other developers on our Slack channel
+    5. **Submit Your Changes**: Follow our pull request guidelines and code review process
+  </Accordion>
+  
+  <Accordion title="API Development" id="api-development">
+    Working with Product Opener APIs:
+    - **API v2**: Legacy API with extensive endpoint coverage - see [API v2 docs](/docs/Product-Opener/v2)
+    - **API v3**: Modern API with improved performance and new features - see [API v3 docs](/docs/Product-Opener/v3)
+    - **Authentication**: Learn about API authentication and authorization
+    - **Best Practices**: Follow our API usage guidelines and optimization tips
+    - **Testing**: Use our testing tools and environments for development
+  </Accordion>
+  
+  <Accordion title="Image Processing" id="image-processing">
+    Understanding the image processing pipeline:
+    - **Upload System**: Multi-format image upload with validation and processing
+    - **ImageMagick Integration**: Automated image transformations and optimization
+    - **OCR Processing**: Optical character recognition for ingredient lists and nutrition tables
+    - **Quality Control**: Automated image quality assessment and validation
+    - **Storage Management**: Efficient storage and retrieval of product images
+  </Accordion>
+</Accordions>
 
 ## Getting Started
 

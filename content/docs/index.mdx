@@ -6,6 +6,7 @@ description: Comprehensive documentation for the Open Food Facts ecosystem - API
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 
 # Open Food Facts Documentation
 
@@ -108,6 +109,75 @@ Choose the documentation section that best fits your needs:
   All APIs are free to use and don't require authentication for read operations.
   Check individual API sections for specific usage guidelines.
 </Callout>
+
+## Frequently Asked Questions
+
+<Accordions type="single">
+  <Accordion title="Do I need authentication to use the APIs?" id="auth-question">
+    Most of our APIs are free to use without authentication for read operations. Authentication is only required for write operations (adding products, editing data, etc.). Check the specific API documentation for authentication requirements.
+  </Accordion>
+  
+  <Accordion title="What data formats are supported?" id="data-formats">
+    Our APIs support multiple data formats including JSON, JSONL, CSV, and XML. The Product Opener API returns JSON by default, but you can request specific formats using the appropriate endpoints or parameters.
+  </Accordion>
+  
+  <Accordion title="Is there a rate limit for API calls?" id="rate-limits">
+    We don't enforce strict rate limits for reasonable usage, but we ask developers to be respectful of our resources. For high-volume applications, please contact us to discuss your needs and ensure optimal performance.
+  </Accordion>
+  
+  <Accordion title="How can I contribute to Open Food Facts?" id="how-to-contribute">
+    There are many ways to contribute:
+    - **Add Products**: Use our mobile apps to scan and add products
+    - **Code Contributions**: Check our GitHub repositories for open issues
+    - **Translation**: Help translate the interface at translate.openfoodfacts.org
+    - **Documentation**: Improve our documentation and guides
+    - **Data Quality**: Help moderate and improve existing product data
+  </Accordion>
+  
+  <Accordion title="What licenses apply to the data and code?" id="licenses">
+    - **Data**: Open Database License (ODbL) - you can use, modify, and redistribute the data
+    - **Code**: Most projects use AGPL license, some components use other open-source licenses
+    - **Images**: Various licenses depending on the source, check individual image metadata
+  </Accordion>
+  
+  <Accordion title="How do I report bugs or request features?" id="bugs-features">
+    - **GitHub Issues**: Report bugs and request features on the specific project repository
+    - **Community Forum**: Discuss ideas and get help from the community
+    - **Developer Slack**: Join our Slack for real-time discussion with developers
+  </Accordion>
+</Accordions>
+
+## Technical Details
+
+<Accordions type="single">
+  <Accordion title="System Architecture Overview" id="architecture">
+    Open Food Facts uses a microservices architecture with the following main components:
+    - **Product Opener**: Core Perl-based backend handling the main database and web interface
+    - **Robotoff**: Python-based AI service for automated data extraction
+    - **Search-a-licious**: Elasticsearch-based search infrastructure
+    - **Knowledge Panels**: FastAPI service for structured product information
+    - **Open Prices**: Price tracking database and API
+    - **Folksonomy Engine**: Collaborative tagging system
+  </Accordion>
+  
+  <Accordion title="Database Schema and Data Model" id="database-schema">
+    Our database uses a flexible document-based model with MongoDB as the primary storage:
+    - **Products**: Core product information including ingredients, nutrition facts, images
+    - **Users**: Contributor accounts and authentication data
+    - **Revisions**: Complete history of all product changes
+    - **Images**: Product photos with metadata and processing information
+    - **Taxonomies**: Hierarchical classification systems for ingredients, categories, labels
+  </Accordion>
+  
+  <Accordion title="Performance and Scalability" id="performance">
+    Open Food Facts serves millions of users worldwide:
+    - **CDN**: Global content delivery network for images and static assets
+    - **Caching**: Redis-based caching for frequently accessed data
+    - **Load Balancing**: Multiple server instances with traffic distribution
+    - **Database Optimization**: Indexed queries and efficient data structures
+    - **API Optimization**: Compressed responses and efficient serialization
+  </Accordion>
+</Accordions>
 
 ## How can I help?
 
