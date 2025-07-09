@@ -15,7 +15,7 @@ This guide will allow you to rapidly build a ready-to-use development environmen
 
 </Callout>
 
-<Card title="Alternative: Cloud Development" href="how-to-use-gitpod">
+<Card title="Alternative: Cloud Development" href="/docs/Product-Opener/dev/development-environment/how-to-use-gitpod">
   Follow the Gitpod how-to guide to instantly provision a ready-to-code
   development environment in the cloud.
 </Card>
@@ -43,7 +43,7 @@ Docker is the easiest way to install the Open Food Facts server, play with it, a
 <Callout>
 **New to Perl?**
 
-Check [how to learn perl](how-to-learn-perl)!
+Check [how to learn perl](/docs/Product-Opener/dev/reference/how-to-learn-perl)!
 
 </Callout>
 
@@ -350,7 +350,7 @@ The `.env` file also contains some useful Docker Compose variables:
 - `COMPOSE_SEPARATOR` is the separator used for `COMPOSE_FILE`.
 
 **Note:**
-Instead of modifying `.env` (and risk committing it inadvertently), you can also set needed variables in your shell; they will override `.env` values. Consider creating a `.envrc` file that you source each time you need to work on the project. On linux and macOS, you can automatically do it if you [use direnv](how-to-use-direnv).
+Instead of modifying `.env` (and risk committing it inadvertently), you can also set needed variables in your shell; they will override `.env` values. Consider creating a `.envrc` file that you source each time you need to work on the project. On linux and macOS, you can automatically do it if you [use direnv](/docs/Product-Opener/dev/development-environment/how-to-use-direnv).
 
 ## 4. Build your dev environment
 
@@ -375,7 +375,7 @@ The command will run 2 subcommands:
 
 - You might not immediately see the test products: create an account, login, and they should appear.
 
-- For a full description of available make targets, see [Docker / Makefile commands](ref-docker-commands)
+- For a full description of available make targets, see [Docker / Makefile commands](/docs/Product-Opener/dev/reference/ref-docker-commands)
 
 ### Hosts file
 
@@ -389,13 +389,13 @@ Since the default `PRODUCT_OPENER_DOMAIN` in the `.env` file is set to `openfood
 
 ## Going further
 
-To learn more about developing with Docker, see the [Docker developer's guide](how-to-develop-using-docker).
+To learn more about developing with Docker, see the [Docker developer's guide](/docs/Product-Opener/dev/development-environment/how-to-develop-using-docker).
 
-To have all site pages on your dev instance, see [Using pages from openfoodfacts-web](how-to-use-pages-from-openfoodfacts-web)
+To have all site pages on your dev instance, see [Using pages from openfoodfacts-web](/docs/Product-Opener/dev/development-guides/how-to-use-pages-from-openfoodfacts-web)
 
-[Using Repl](how-to-use-repl) offers you a way to play with perl.
+[Using Repl](/docs/Product-Opener/dev/development-environment/how-to-use-repl) offers you a way to play with perl.
 
-Specific notes are provided on [applying AGRIBALYSE updates to support the Ecoscore](how-to-update-agribalyse-ecoscore) calculation.
+Specific notes are provided on [applying AGRIBALYSE updates to support the Ecoscore](/docs/Product-Opener/dev/development-guides/how-to-update-agribalyse-ecoscore) calculation.
 
 ## Visual Studio Code
 

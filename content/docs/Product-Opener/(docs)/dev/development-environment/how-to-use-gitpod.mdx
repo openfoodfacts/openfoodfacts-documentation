@@ -15,7 +15,7 @@ Gitpod provides a robust ready-to-code developer environment in the cloud elimin
   GitHub Codespaces should be similar.
 </Callout>
 
-For the most part, development on Gitpod is similar to developing locally as documented in the [quickstart guide](how-to-quick-start-guide) and [docker-developer-guide](how-to-develop-using-docker); however accessing your dev-deployment of `openfoodfacts-server` requires an extra step.
+For the most part, development on Gitpod is similar to developing locally as documented in the [quickstart guide](/docs/Product-Opener/dev/getting-started/how-to-quick-start-guide) and [docker-developer-guide](/docs/Product-Opener/dev/development-environment/how-to-develop-using-docker); however accessing your dev-deployment of `openfoodfacts-server` requires an extra step.
 
 ## Connect GitHub and Gitpod
 
@@ -40,7 +40,7 @@ On the Gitpod side, you can also update what Gitpod is allowed to do with your G
   ways to spin up an environment for openfoodfacts-server.
 </Callout>
 
-Once the repository is open in Gitpod, other instructions in the [quick-start guide](how-to-quick-start-guide) can be generally followed.
+Once the repository is open in Gitpod, other instructions in the [quick-start guide](/docs/Product-Opener/dev/getting-started/how-to-quick-start-guide) can be generally followed.
 
 ## Accessing your development instance of openfoodfacts-server
 
@@ -75,7 +75,7 @@ Once you execute the altered command in your terminal, you should be able to acc
 - **Port 80 Reserved**: For some Linux distributions, port 80 is reserved. A workaround is to switch to port 8080: in gitpod, open the .env file and replace the line `PRODUCT_OPENER_PORT=80` by `PRODUCT_OPENER_PORT=8080`, then replace `-L 80:localhost:80` by `-L 8080:localhost:8080`. **Rollback the changes on .env before making a pull request!**
 - **MacOS/Linux Port Binding**: On MacOS or Linux, when trying to bind, you might see a bind fail. Remember that any port below 1024 is reserved for the root user.
   - The easiest fix is to add `sudo` just before the ssh command
-  - Another way is to switch to port 8080: in gitpod, open the .env file (or better [use direnv](./how-to-use-direnv)) and change `PRODUCT_OPENER_PORT=80` by `PRODUCT_OPENER_PORT=8080`, then replace `-L 80:localhost:80` by `-L 8080:localhost:8080` in the ssh command and connect to `world.openfoodfacts.localhost:8080`. **Rollback the changes on .env before making a pull request!**
+  - Another way is to switch to port 8080: in gitpod, open the .env file (or better [use direnv](/docs/Product-Opener/dev/development-environment/how-to-use-direnv)) and change `PRODUCT_OPENER_PORT=80` by `PRODUCT_OPENER_PORT=8080`, then replace `-L 80:localhost:80` by `-L 8080:localhost:8080` in the ssh command and connect to `world.openfoodfacts.localhost:8080`. **Rollback the changes on .env before making a pull request!**
 - **Changing SSH Address**: The address to connect with ssh can change after a few days. If you get a `Connection closed by ... port 22` simply go back to https://gitpod.io/workspaces and copy the new address
 - **502 Bad Gateway**: If you load the page after some changes but get a `502 Bad Gateway`, check again your code. Something may be wrong with it. Just in case, try commenting out the part you just coded to see if it works
 

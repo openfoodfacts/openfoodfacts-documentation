@@ -7,7 +7,7 @@ import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 
 <Callout type="info" title="New to Perl?">
-  Check out our guide on [how to learn Perl](./how-to-learn-perl)!
+  Check out our guide on [how to learn Perl](/docs/Product-Opener/dev/reference/how-to-learn-perl)!
 </Callout>
 
 On your local dev instance, the "backend" container comes with [Devel::REPL](https://metacpan.org/pod/Devel::REPL) installed.
@@ -33,7 +33,7 @@ If you want to access external services (like mongodb), do not forget to start t
 
 <Steps>
   <Step title="Add CPANMOPTS to .env or .envrc">
-    Try going in your .env (or [.envrc](./how-to-use-direnv)) file and add the
+    Try going in your .env (or [.envrc](/docs/Product-Opener/dev/development-environment/how-to-use-direnv)) file and add the
     line:
     ```
     CPANMOPTS=--with-develop --with-feature=off_server_dev_tools
