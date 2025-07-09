@@ -8,8 +8,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
-# Production Architecture
-
 <Card title="Open Food Facts Infrastructure" description="Comprehensive production deployment architecture">
 
 This document outlines the complete production architecture of Open Food Facts, including server infrastructure, virtualization, configuration management, and deployment strategies.
@@ -30,15 +28,17 @@ This document outlines the complete production architecture of Open Food Facts, 
       <Card
         title="OVH Servers"
         description="Additional services hosted on OVH infrastructure"
+        href="/docs/Infra/hosting/ovh-servers"
       />
     </Cards>
   </Tab>
 
 <Tab value="Secondary Services">
-  ### Service Distribution - **Main web application:** off1 and off2 (Free
-  Datacenter) - **Supporting services:** OVH servers (ovh1, ovh2, ovh3) -
-  **Image serving:** Dedicated nginx instances - **Database services:**
-  Dedicated containers
+  ### Service Distribution 
+  - **Main web application:** off1 and off2 (Free Datacenter) 
+  - **Supporting services:** OVH servers (ovh1, ovh2, ovh3) 
+  - **Image serving:** Dedicated nginx instances 
+  - **Database services:** Dedicated containers
 </Tab>
 
   <Tab value="Virtualization">
@@ -149,12 +149,13 @@ We implement a [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy)
 
 <Tabs items={["Application Containers", "Shared Services", "Request Flow"]}>
   <Tab value="Application Containers">
-    Each Product Opener instance runs in its own LXC container: - **Public
-    flavors:** off, opf, opff, obf - **Producer Platform:** Separate container
-    (currently off only) ### Container Components Each container includes: -
-    **nginx:** Frontend web server - **apache:** Backend application server -
-    **minion:** Background job processor - **incron:** File system event
-    processor
+    Each Product Opener instance runs in its own LXC container: 
+    - **Public flavors:** off, opf, opff, obf 
+    - **Producer Platform:** Separate container (currently off only) ### Container Components Each container includes: 
+    - **nginx:** Frontend web server 
+    - **apache:** Backend application server 
+    - **minion:** Background job processor 
+    - **incron:** File system event processor
   </Tab>
 
 <Tab value="Shared Services">
@@ -446,21 +447,21 @@ flowchart TD
 
 <Tabs items={["Advantages", "Configuration", "Security"]}>
   <Tab value="Advantages">
-    - **TCP Streams:** Handles any TCP stream (not UDP) - **No Firewall Rules:**
-    No need for specific firewall configuration - **Built-in Auth:** Uses
-    specific authentication mechanism
+    - **TCP Streams:** Handles any TCP stream (not UDP)
+    - **No Firewall Rules:** No need for specific firewall configuration 
+    - **Built-in Auth:** Uses specific authentication mechanism
   </Tab>
 
 <Tab value="Configuration">
-  - **PSK Method:** Pre-Shared Key for speed and simplicity - **Unique Keys:**
-  Each server connection uses unique PSK - **TCP Only:** Limited to TCP traffic
-  (UDP not supported)
+  - **PSK Method:** Pre-Shared Key for speed and simplicity 
+  - **Unique Keys:** Each server connection uses unique PSK 
+  - **TCP Only:** Limited to TCP traffic (UDP not supported)
 </Tab>
 
   <Tab value="Security">
-    - **Encrypted Tunnels:** All inter-server communication encrypted -
-    **Authentication:** PSK-based connection authentication - **No Open Ports:**
-    No additional firewall rules required
+    - **Encrypted Tunnels:** All inter-server communication encrypted 
+    - **Authentication:** PSK-based connection authentication 
+    - **No Open Ports:** No additional firewall rules required
   </Tab>
 </Tabs>
 
