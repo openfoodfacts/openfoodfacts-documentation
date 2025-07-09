@@ -141,14 +141,14 @@ Serve images directly from the reverse proxy to avoid an extra nginx layer for f
 
 ## SSL Configuration
 
-<Tabs>
-  <Tab value="copy" label="Certificate Copy">
+<Tabs items={["copy", "install", "test"]}>
+  <Tab value="copy">
     ### Copy Existing Certificates
     
     Copy letsencrypt certificates and configurations from off2 host to off1 reverse proxy.
   </Tab>
   
-  <Tab value="install" label="Install Certbot">
+  <Tab value="install">
     ### Install Certbot
     
     ```bash title="Install Certbot with Nginx Plugin"
@@ -156,7 +156,7 @@ Serve images directly from the reverse proxy to avoid an extra nginx layer for f
     ```
   </Tab>
   
-  <Tab value="test" label="Test Renewal">
+  <Tab value="test">
     ### Test SSL Renewal
     
     ```bash title="Test Certificate Renewal"
@@ -314,8 +314,8 @@ proxy_pass http://10.1.0.113:80;
 
 ### Attempted Solutions
 
-<Tabs>
-  <Tab value="container" label="Container Issues">
+<Tabs items={["container", "host"]}>
+  <Tab value="container">
     ### Container Performance
     
     Performance issues suspected to be related to:
@@ -324,7 +324,7 @@ proxy_pass http://10.1.0.113:80;
     - Network configuration within container
   </Tab>
   
-  <Tab value="host" label="Host Direct Serving">
+  <Tab value="host">
     ### Direct Host Serving Attempt
     
     ```bash title="Setup Direct Host Nginx"

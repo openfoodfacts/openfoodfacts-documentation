@@ -52,24 +52,24 @@ import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 ### Key Documentation Sections
 
-<Tabs>
-<Tab value="misc" label="Misc Man Pages">
+<Tabs items={["misc", "concepts", "admin", "performance"]}>
+<Tab value="misc">
 [Misc man page section](https://openzfs.github.io/openzfs-docs/man/master/7/index.html) contains a lot of useful information on properties and features
 </Tab>
 
-<Tab value="concepts" label="Basic Concepts">
+<Tab value="concepts">
   [Basic
   Concepts](https://openzfs.github.io/openzfs-docs/Basic%20Concepts/index.html)
   is a good place to return to from time to time to grab concepts better
 </Tab>
 
-<Tab value="admin" label="System Administration">
+<Tab value="admin">
   [Man pages on system administration
   commands](https://openzfs.github.io/openzfs-docs/man/master/8/index.html) are
   really useful
 </Tab>
 
-<Tab value="performance" label="Performance and Tuning">
+<Tab value="performance">
 [Performance and Tuning](https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/index.html) is also valuable to dig in some options
 </Tab>
 </Tabs>
@@ -112,15 +112,15 @@ zfs list -o name,used,usedbydataset,usedbysnapshots,available -r <pool_name>
 
 ### Advanced Commands
 
-<Tabs>
-<Tab value="iostat" label="I/O Statistics">
+<Tabs items={["iostat", "zdb"]}>
+<Tab value="iostat">
 ```bash title="Detailed I/O Stats"
 zpool iostat -vl 5  # Particularly useful
 zpool iostat -w     # Helps understand time taken by data to be read/written
 ```
 </Tab>
 
-<Tab value="zdb" label="ZFS Debugger">
+<Tab value="zdb">
 ```bash title="ZFS Database Info"
 zdb -s <poolname>  # Pool statistics
 ```
@@ -149,8 +149,8 @@ zdb -s <poolname>  # Pool statistics
 
 ## Integration with Other Systems
 
-<Tabs>
-<Tab value="proxmox" label="Proxmox">
+<Tabs items={["proxmox", "sanoid"]}>
+<Tab value="proxmox">
 <Callout type="info">
 Proxmox uses ZFS to replicate containers and VMs between servers. It also uses it to backup data.
 
@@ -159,7 +159,7 @@ Proxmox uses ZFS to replicate containers and VMs between servers. It also uses i
 </Callout>
 </Tab>
 
-<Tab value="sanoid" label="Sanoid">
+<Tab value="sanoid">
 <Card title="Sanoid Integration" href="/docs/Infra/storage/sanoid">
 We use sanoid / syncoid to sync ZFS datasets between servers (also to back them up)
 </Card>
