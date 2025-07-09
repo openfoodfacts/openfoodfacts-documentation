@@ -81,8 +81,8 @@ This alert is fired by the `sanoid_check.sh` script which runs regularly via sys
 There are two possible alerts for each dataset, each requiring different diagnostic approaches.
 </Callout>
 
-<Tabs>
-  <Tab value="old-snapshot" label="Old Snapshot">
+<Tabs items={["old-snapshot", "too-many"]}>
+  <Tab value="old-snapshot">
     ### Last Snapshot `<dataset>` is Too Old
 
     <Steps>
@@ -130,7 +130,7 @@ There are two possible alerts for each dataset, each requiring different diagnos
     </Steps>
   </Tab>
   
-  <Tab value="too-many" label="Too Many Snapshots">
+  <Tab value="too-many">
     ### `<dataset>` Has Too Many Snapshots
 
     <Callout type="warning">

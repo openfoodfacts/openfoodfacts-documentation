@@ -23,8 +23,8 @@ Sometimes you need to add space to a QEMU VM disk.
 This doc is following https://pve.proxmox.com/wiki/Resize_disks
 </Callout>
 
-<Tabs>
-<Tab value="without-swap" label="Without Swap">
+<Tabs items={["without-swap", "with-swap"]}>
+<Tab value="without-swap">
 <Card title="Example Scenario">
 Adding 90GB on VM for docker prod (201) and disk scsi0
 </Card>
@@ -81,7 +81,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 </Steps>
 </Tab>
 
-<Tab value="with-swap" label="With Swap">
+<Tab value="with-swap">
 <Card title="Example Scenario">
 Adding 8GB on VM for monitoring (203) and disk scsi0
 </Card>

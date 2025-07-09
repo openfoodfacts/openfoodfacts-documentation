@@ -30,8 +30,8 @@ ovh1, ovh2, and ovh3 are fully sponsored by OVH, and we are very grateful for th
   </Card>
 </Cards>
 
-<Tabs>
-  <Tab value="compute" label="Compute Servers">
+<Tabs items={["compute", "storage", "kimsufi"]}>
+  <Tab value="compute">
     ### ovh1 & ovh2 - Compute Servers
     
     These are our primary compute servers that serve:
@@ -44,7 +44,7 @@ ovh1, ovh2, and ovh3 are fully sponsored by OVH, and we are very grateful for th
     </Callout>
   </Tab>
   
-  <Tab value="storage" label="Storage Server">
+  <Tab value="storage">
     ### ovh3 - Storage and Backup Server
     
     Dedicated to:
@@ -57,7 +57,7 @@ ovh1, ovh2, and ovh3 are fully sponsored by OVH, and we are very grateful for th
     </Callout>
   </Tab>
   
-  <Tab value="kimsufi" label="Kimsufi Server">
+  <Tab value="kimsufi">
     ### ks1 - Image Server
     
     Small "Kimsufi" server with specific purpose:

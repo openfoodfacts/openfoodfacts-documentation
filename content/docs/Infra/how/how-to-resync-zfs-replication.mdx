@@ -39,14 +39,14 @@ zfs list <dataset-name-on-backup>@<snapshot-name-on-backup-side>
 **Find Nearest Common Snapshot**
 If it's not the case, you have to search for the nearest common snapshot. It would probably be a "_daily" one or a "_monthly" one.
 
-<Tabs>
-<Tab value="daily" label="Daily Snapshots">
+<Tabs items={["daily", "monthly"]}>
+<Tab value="daily">
 ```bash title="Check Daily Snapshots"
 zfs list -t snap /path/to/dataset|grep "_daily"|tail
 ```
 </Tab>
 
-<Tab value="monthly" label="Monthly Snapshots">
+<Tab value="monthly">
 ```bash title="Check Monthly Snapshots"
 zfs list -t snap /path/to/dataset|grep "_monthly"|tail
 ```
