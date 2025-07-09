@@ -90,7 +90,11 @@ https://static.openfoodfacts.org/images/attributes/dist/nutriscore-e-new-en.svg
 
 <Tabs items={["Supported Languages", "Language Replacement"]}>
   <Tab value="Supported Languages">
-    - Dutch (nl) - French (fr) - German (de) - Luxembourgish (lb) - English (en)
+    - Dutch (nl) 
+    - French (fr) 
+    - German (de) 
+    - Luxembourgish (lb) 
+    - English (en)
   </Tab>
   <Tab value="Language Replacement">
     Replace the language code in the URL: `nutriscore-e-new-en.svg` →
@@ -161,7 +165,7 @@ if "en:categories-to-be-completed" in states_tags AND "en:nutrition-facts-comple
 </Callout>
 </Step>
 <Step title="Help the user add the category if it is missing">
-<Card title="Robotoff API Integration" href="https://docs.google.com/document/d/1IoDy0toQrrqtWHvDYp2rEVw84Yq1J0x2pt-0RGTm7h0/edit">
+<Card title="Robotoff API Integration" href="/docs/Robotoff">
 You can use our Robotoff API to get your users to validate a prediction
 </Card>
 </Step>
@@ -190,9 +194,11 @@ We now have a convenient API to automatically extract nutrition from an image
   ```
   </Step>
   <Step title="If the nutrition image is obsolete using the image refresh API">
-    <Card title="Image Refresh API" href="https://github.com/openfoodfacts/api-documentation/issues/15">
-    Learn more about refreshing obsolete nutrition images
-    </Card>
+    <Callout type="info">
+      **Image Refresh API**
+      
+      Learn more about refreshing obsolete nutrition images in the [API Reference](/docs/Product-Opener/v2)
+    </Callout>
   </Step>
 </Steps>
 
