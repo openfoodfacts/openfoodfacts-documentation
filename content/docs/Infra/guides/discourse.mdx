@@ -61,25 +61,25 @@ The sender email [have to be on main domain](/docs/Infra/services/mail#only-doma
 </Callout>
 
 <Steps>
-<Step>
-**Make a Snapshot**
-Make a snapshot before upgrade to ensure rollback capability.
-</Step>
+  <Step>
+    **Make a Snapshot**
+    Make a snapshot before upgrade to ensure rollback capability.
+  </Step>
 
-<Step>
-  **Try Web Interface Upgrade** 
-  Try to upgrade through the web interface:
-  https://forum.openfoodfacts.org/admin/upgrade (you need to be an admin)
-</Step>
+  <Step>
+    **Try Web Interface Upgrade** 
+    Try to upgrade through the web interface:
+    https://forum.openfoodfacts.org/admin/upgrade (you need to be an admin)
+  </Step>
 
-<Step>
-  **Test the Update** Test the update during several days to ensure stability.
-</Step>
+  <Step>
+    **Test the Update** Test the update during several days to ensure stability.
+  </Step>
 
-<Step>
-**Clean Up**
-After several days, if everything is fine, you can delete the snapshot.
-</Step>
+  <Step>
+    **Clean Up**
+    After several days, if everything is fine, you can delete the snapshot.
+  </Step>
 </Steps>
 
 <Callout type="info">
@@ -103,37 +103,37 @@ To do so log in to your server using SSH and run:
 In case the web interface upgrade fails, you have to upgrade in a Linux shell directly on the VM:
 
 <Steps>
-<Step>
-**Access the Server**
-1. Get root access on ovh1: `sudo su root`
-2. Connect yourself to the VM: `ssh 10.1.0.202`
-</Step>
+  <Step>
+    **Access the Server**
+    1. Get root access on ovh1: `sudo su root`
+    2. Connect yourself to the VM: `ssh 10.1.0.202`
+  </Step>
 
-<Step>
-  **System Updates** 
-  ```bash title="Update System" 
-  apt update && apt
-  dist-upgrade # updates the whole system 
-  ```
-</Step>
+  <Step>
+    **System Updates** 
+    ```bash title="Update System" 
+    apt update && apt
+    dist-upgrade # updates the whole system 
+    ```
+  </Step>
 
-<Step>
-  **Cleanup**
-  ```bash title="Clean Up" 
-  cd /var/discourse ./launcher cleanup #
-  cleans old docker images apt-get autoclean apt-get autoremove 
-  ```
-</Step>
+  <Step>
+    **Cleanup**
+    ```bash title="Clean Up" 
+    cd /var/discourse ./launcher cleanup #
+    cleans old docker images apt-get autoclean apt-get autoremove 
+    ```
+  </Step>
 
-<Step>**Create Snapshot** Create a snapshot if haven't done it yet!</Step>
+  <Step>**Create Snapshot** Create a snapshot if haven't done it yet!</Step>
 
-<Step>
-**Rebuild Application**
-```bash title="Rebuild Discourse"
-git pull
-./launcher rebuild app
-```
-</Step>
+  <Step>
+    **Rebuild Application**
+    ```bash title="Rebuild Discourse"
+    git pull
+    ./launcher rebuild app
+    ```
+  </Step>
 </Steps>
 
 ## Analytics with Matomo
@@ -147,31 +147,31 @@ We setup analytics with Matomo on the forum.
 ### Setup Process
 
 <Steps>
-<Step>
-**Create Website in Matomo**
-I created the website in Matomo. Site id is 8.
-</Step>
+  <Step>
+    **Create Website in Matomo**
+    I created the website in Matomo. Site id is 8.
+  </Step>
 
-<Step>
-  **Install Theme in Discourse** - Go to administration / Customize / theme -
-  Install / from a git repository:
-  https://github.com/paviliondev/discourse-matomo-analytics.git
-</Step>
+  <Step>
+    **Install Theme in Discourse** - Go to administration / Customize / theme -
+    Install / from a git repository:
+    https://github.com/paviliondev/discourse-matomo-analytics.git
+  </Step>
 
-<Step>
-  **Configure Settings** Settings: - Include component on these themes:
-  **Default** (using button *add to all them*) - host url:
-  `analytics.openfoodfacts.org` - website id: **8** - subdomain tracking:
-  **yes** - do not track: **yes** - disable cookies: **yes** (keep GDPR
-  compatibility)
-</Step>
+  <Step>
+    **Configure Settings** Settings: - Include component on these themes:
+    **Default** (using button *add to all them*) - host url:
+    `analytics.openfoodfacts.org` - website id: **8** - subdomain tracking:
+    **yes** - do not track: **yes** - disable cookies: **yes** (keep GDPR
+    compatibility)
+  </Step>
 
-<Step>
-**Update Content Security Policy**
-Discourse is very specific in it's Content Security Policy headers, so we have to add an entry for Matomo.
-- Go to administration / settings / security
-- In content security policy script src, add entry: `https://analytics.openfoodfacts.org/piwik.js`
-</Step>
+  <Step>
+    **Update Content Security Policy**
+    Discourse is very specific in it's Content Security Policy headers, so we have to add an entry for Matomo.
+    - Go to administration / settings / security
+    - In content security policy script src, add entry: `https://analytics.openfoodfacts.org/piwik.js`
+  </Step>
 </Steps>
 
 ## Events Plugin
@@ -202,10 +202,9 @@ Discourse is very specific in it's Content Security Policy headers, so we have t
 </Step>
 
 <Step>
-  **Add Plugin Repository** Add [the plugin's repository
-  URL](https://github.com/paviliondev/discourse-events.git) to your container's
-  app.yml file, right after the `git clone
-  https://github.com/discourse/docker_manager.git`
+  **Add Plugin Repository** 
+  Add [the plugin's repository URL](https://github.com/paviliondev/discourse-events.git) to your container's
+  app.yml file, right after the `git clone https://github.com/discourse/docker_manager.git`
 </Step>
 
 <Step>
