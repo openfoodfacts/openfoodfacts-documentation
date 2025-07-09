@@ -21,11 +21,11 @@ We removed the card with the two SSDs on it to put a new card that support four 
 We put the card back into the server.
 
 
-![SDD adpater card](../../img/2023-02-free-dc-ssd-pci-card.jpg "The SDD adapter card")`{ width=50% }`
+![SDD adpater card](../../img/2023-02-free-dc-ssd-pci-card.jpg "The SDD adapter card")
 
-![Inserting adpater card](../../img/2023-02-free-dc-ssd-pci-card-insertion.jpg "Inserting SDD adapter card into the extension slot")`{ width=50% }`
+![Inserting adpater card](../../img/2023-02-free-dc-ssd-pci-card-insertion.jpg "Inserting SDD adapter card into the extension slot")
 
-![Insert back slot in server](../../img/2023-02-free-dc-ssd-pci-setup.jpg "Inserting the extension slot with the SDD adapter card back in the server")`{ width=50% }`
+![Insert back slot in server](../../img/2023-02-free-dc-ssd-pci-setup.jpg "Inserting the extension slot with the SDD adapter card back in the server")
 
 
 
@@ -48,9 +48,9 @@ We go in:
 
 This is to specify how the PCI card supporting SSD will work (16 port divided in 4x4).
 
-![BIOS screen - slot bifurcation menu](../../img/2023-02-free-dc-bios-slot-bifurcation-menu.jpg "Getting to Slot bifurcation menu in BIOS")`{ width=50% }`
+![BIOS screen - slot bifurcation menu](../../img/2023-02-free-dc-bios-slot-bifurcation-menu.jpg "Getting to Slot bifurcation menu in BIOS")
 
-![BIOS screen - slot bifurcation](../../img/2023-02-free-dc-bios-slot-bifurcation-auto.jpg "Slot bifurcation set to Auto Discovery in BIOS")`{ width=50% }`
+![BIOS screen - slot bifurcation](../../img/2023-02-free-dc-bios-slot-bifurcation-auto.jpg "Slot bifurcation set to Auto Discovery in BIOS")
 
 ### IDRAC / IPMI
 We go in Network settings to configure IDRAC / IPMI (which has its own ethernet card):
@@ -61,7 +61,7 @@ We go in Network settings to configure IDRAC / IPMI (which has its own ethernet 
 * Static Prefered DNS: 213.36.253.10
 * Static Alter: 213.36.252.131
 
-![BIOS screen - IDRAC](../../img/2023-02-free-dc-bios-idrac-settings.jpg "IDRAC settings in BIOS")`{ width=50% }`
+![BIOS screen - IDRAC](../../img/2023-02-free-dc-bios-idrac-settings.jpg "IDRAC settings in BIOS")
 
 
 These settings are given by our host provider (free)
@@ -69,19 +69,19 @@ These settings are given by our host provider (free)
 ### PERC adapter
 We go reboot and go again in the BIOS to configure PERC Adapter Bios (Power Edge RAID Controller), and change configuration to be in HBA mode for disks.
 
-![BIOS screen - PERC - 1](../../img/2023-02-free-dc-bios-disks-perc-1.jpg "PERC settings in BIOS - first screen")`{ width=50% }`
+![BIOS screen - PERC - 1](../../img/2023-02-free-dc-bios-disks-perc-1.jpg "PERC settings in BIOS - first screen")
 
 
-![BIOS screen - PERC - 2](../../img/2023-02-free-dc-bios-disks-perc-2.jpg "PERC settings in BIOS - second screen")`{ width=50% }`
+![BIOS screen - PERC - 2](../../img/2023-02-free-dc-bios-disks-perc-2.jpg "PERC settings in BIOS - second screen")
 
 
-![BIOS screen - PERC - hba](../../img/2023-02-free-dc-bios-disks-perc-hba.jpg "PERC settings in BIOS - HBA mode screen")`{ width=50% }`
+![BIOS screen - PERC - hba](../../img/2023-02-free-dc-bios-disks-perc-hba.jpg "PERC settings in BIOS - HBA mode screen")
 
 ## Proxmox install
 
 We plug the bootable USB stick with [Proxmox VE](https://www.proxmox.com/en/proxmox-ve) iso for installation.
 
-![USB stick plugged for install](../../img/2023-02-free-dc-usb-stick.jpg "The USB stick with iso of Proxmox VE ready to boot")`{ width=50% }`
+![USB stick plugged for install](../../img/2023-02-free-dc-usb-stick.jpg "The USB stick with iso of Proxmox VE ready to boot")
 
 As we re-start the server we go in boot setup (F11) and in boot option menu, we choose the USB key media to boot.
 
@@ -93,13 +93,13 @@ We have to choose the target start disk. We can see all disks are there.
 We choose target ZFS. We choose RAID5, and we setup to only use the four 14TB disks. advanced config but keep the defaults.
 
 
-![Proxmox VE first screen](../../img/2023-02-free-dc-pve-install-start.jpg "The first screen of install of Proxmox VE")`{ width=50% }`
+![Proxmox VE first screen](../../img/2023-02-free-dc-pve-install-start.jpg "The first screen of install of Proxmox VE")
 
-![Proxmox VE choosing ZFS](../../img/2023-02-free-dc-pve-install-choice-zfs.jpg "We choose to install on ZFS")`{ width=50% }`
+![Proxmox VE choosing ZFS](../../img/2023-02-free-dc-pve-install-choice-zfs.jpg "We choose to install on ZFS")
 
-![ZFS pool choice screen](../../img/2023-02-free-dc-pve-install-zfs-pool.jpg "We choose the disks to add in the ZFS pool")`{ width=50% }`
+![ZFS pool choice screen](../../img/2023-02-free-dc-pve-install-zfs-pool.jpg "We choose the disks to add in the ZFS pool")
 
-![ZFS advanced](../../img/2023-02-free-dc-pve-install-zfs-pool-advanced.jpg "We kept default for ZFS advanced options")`{ width=50% }`
+![ZFS advanced](../../img/2023-02-free-dc-pve-install-zfs-pool-advanced.jpg "We kept default for ZFS advanced options")
 
 
 But maybe we did two errors:
@@ -115,11 +115,11 @@ Eno2 network setup:
 * Gateway: 213.36.253.222
 * DNS Server: 213.36.253.10
 
-![eno2 config](../../img/2023-02-free-dc-pve-install-network.jpg "Configuration for eno2 interface")`{ width=50% }`
+![eno2 config](../../img/2023-02-free-dc-pve-install-network.jpg "Configuration for eno2 interface")
 
 We are asked for confirmation:
 
-![Install summary screen](../../img/2023-02-free-dc-pve-install-summary.jpg "Summary of Proxmox install")`{ width=50% }`
+![Install summary screen](../../img/2023-02-free-dc-pve-install-summary.jpg "Summary of Proxmox install")
 
 And we launch install. It takes time. At the end it reboots.
 We remove USB stick.
@@ -136,7 +136,7 @@ So we use `zpool list` and `zpool status` to get the numeric id.
 Then `zpool import -f <numeric-id>`.
 
 
-![import of rpool with numeric id](../../img/2023-02-free-dc-pve-setup-zpool-import-rpool.jpg "We had to use numeric id to import rpool because of name clash")`{ width=50% }`
+![import of rpool with numeric id](../../img/2023-02-free-dc-pve-setup-zpool-import-rpool.jpg "We had to use numeric id to import rpool because of name clash")
 
 
 `zpool list` show us the pool.
@@ -151,12 +151,12 @@ We use `zpool import` to get other id for the old rpool and off-zfs
 
 `zpool import -f <numeric id> rpool2` to import old rpool with a new name (rpool2).
 
-![import of rpool2 with numeric id](../../img/2023-02-free-dc-pve-setup-zpool-import-rpool2.jpg "We had to use numeric id to import rpool2 because of name clash")`{ width=50% }`
+![import of rpool2 with numeric id](../../img/2023-02-free-dc-pve-setup-zpool-import-rpool2.jpg "We had to use numeric id to import rpool2 because of name clash")
 
 And finally import the last zfs pool
 `zpool import -f off-zfs`. W still need the `-f` because ZFS knows it was part of another system, and thus ask confirmation to import it in this new system.
 
-![final zfs pools](../../img/2023-02-free-dc-pve-setup-zpool-import-off-zfs.jpg "Final ZFS pools")`{ width=50% }`
+![final zfs pools](../../img/2023-02-free-dc-pve-setup-zpool-import-off-zfs.jpg "Final ZFS pools")
 
 ### zfs commands
 

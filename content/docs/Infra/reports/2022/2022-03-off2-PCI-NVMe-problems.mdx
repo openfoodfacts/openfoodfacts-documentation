@@ -18,7 +18,7 @@ We upgrade the Bios (v 1.4.5 > v 2.17.1), it did not resolved.
 
 After a looong investigation, thanks to checks we found that NVMe Drive did not seemed to be detected.
 
-![No NVMe Drive detected on PCI](../../img/2023-03-16-off2-test-error-pci-device.png "No NVMe Drive detected on PCI while testing")`{ width=50% }`
+![No NVMe Drive detected on PCI](../../img/2023-03-16-off2-test-error-pci-device.png "No NVMe Drive detected on PCI while testing")
 
 We then found that we could boot if we disabled PCI in Bios.
 
@@ -26,7 +26,7 @@ This means we lost the ssd disk we wanted to use as cache and fast disks at some
 
 Of course we had a message from zpool, at startup, unable to start the pool that was on NVMes.
 
-[Zpool error importing rpool](../../img/2023-03-16 zpool rpool error after disabling PCI.png "Zpool error importing rpool after disabling PCI")`{ width=50% }`
+[Zpool error importing rpool](../../img/2023-03-16 zpool rpool error after disabling PCI.png "Zpool error importing rpool after disabling PCI")
 
 This is resolved using:
 
