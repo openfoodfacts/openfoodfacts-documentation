@@ -42,21 +42,48 @@ Fortunately this works, but note that there is a pitfall: on the `minion_db` net
 
 ## Network Architecture
 
-```
-network    OFF              network       PRO              network
-po_default containers       minion_db     containers       po_pro_default
-    |                          |                              |
-    +------postgres------------+                              |
-    |                          |                              |
-    |                          |                              |
-    +-----backend--------------+                              |
-    |                          +----------backend-------------+
-    |                          |                              |
-    +------minion--------------+                              |
-    |                          +----------minion--------------+
-    |                          |                              |
-    |                          |                              |
-    +------frontend            |          frontend------------+
-    +------mongodb             |          mongodb-------------+
-    |                          |                              |
+```mermaid title="Network Architecture"
+graph TB
+    subgraph "po_default network (OFF)"
+        postgres[postgres]
+        backend_off[backend]
+        minion_off[minion]
+        frontend_off[frontend]
+        mongodb_off[mongodb]
+    end
+    
+    subgraph "minion_db network (shared)"
+        postgres_shared[postgres]
+        backend_shared_off[backend OFF]
+        backend_shared_pro[backend PRO]
+        minion_shared_off[minion OFF]
+        minion_shared_pro[minion PRO]
+    end
+    
+    subgraph "po_pro_default network (PRO)"
+        backend_pro[backend]
+        minion_pro[minion]
+        frontend_pro[frontend]
+        mongodb_pro[mongodb]
+    end
+    
+    %% Connections within networks
+    postgres === postgres_shared
+    backend_off === backend_shared_off
+    minion_off === minion_shared_off
+    backend_pro === backend_shared_pro
+    minion_pro === minion_shared_pro
+    
+    %% Shared database connections
+    postgres_shared -.-> backend_shared_off
+    postgres_shared -.-> backend_shared_pro
+    postgres_shared -.-> minion_shared_off
+    postgres_shared -.-> minion_shared_pro
+    
+    style postgres fill:#e1f5fe
+    style postgres_shared fill:#e1f5fe
+    style backend_shared_off fill:#f3e5f5
+    style backend_shared_pro fill:#f3e5f5
+    style minion_shared_off fill:#fff3e0
+    style minion_shared_pro fill:#fff3e0
 ```
