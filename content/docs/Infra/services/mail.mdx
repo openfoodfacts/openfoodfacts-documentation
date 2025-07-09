@@ -8,8 +8,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
-# Mail on Open Food Facts Infrastructure
-
 <Callout type="info">
   Because mail is difficult to setup, we use [Proxmox Mail
   Gateway](https://www.proxmox.com/en/proxmox-mail-gateway) as a relay to all
@@ -18,12 +16,9 @@ import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 The DKIM and SPF records are configured on main domain _openfoodfacts.org_.
 
-<Callout type="info">
 While DKIM is specific (because Brevo and Google keys are distinct by construction), main SPF rule includes Brevo and Google servers.
 
 No server receives mail, but they should be able to send them.
-
-</Callout>
 
 <Callout type="warning" id="only-domain">
   **Important:** We ONLY support email addresses on primary domain
@@ -47,21 +42,15 @@ No server receives mail, but they should be able to send them.
 
 ### Google Workspace
 
-<Callout type="info">
 We use Gmail for email boxes and groups.
 
 We have a DKIM record configured for google domain and sub-domains in the DNS, we also take into account in SPF rule. You can find the public key in google workspace admin console, under gmail.
 
-</Callout>
-
 ### Brevo
 
-<Callout type="info">
 We use Brevo to send newsletters.
-
 We have a DKIM record configured for the Brevo domain in the DNS, we also take into account in SPF rule. They use the **hello.openfoodfacts.org** subdomain.
 
-</Callout>
 
 <Callout type="info">
   You can find the public key if you are logged as admin in Brevo, in the top
@@ -217,19 +206,15 @@ I undo iptables and thunderbird config
 
 ## Server Configuration
 
-<Callout type="info">
-  On client servers (be it a VM, a host or a standalone server), we use either
-  exim4 or postfix.
-</Callout>
+On client servers (be it a VM, a host or a standalone server), we use either
+exim4 or postfix.
 
 ### Email Aliases
 
-<Callout type="info">
 We normally keep a standard `/etc/aliases`. We have specific groups to receive emails: `root@openfoodfacts.org` and `off@openfoodfacts.org`
 
 You may add some redirections for non standard users to one of those groups.
 
-</Callout>
 
 <Callout type="warning">
   Do not forget to run `newaliases`, and
