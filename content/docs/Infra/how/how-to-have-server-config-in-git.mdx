@@ -24,12 +24,12 @@ We use Git to store and track server/container/VM specific configurations for be
   <Card title="Clone Repository" href="#setup-the-repository">
     Set up the infrastructure configuration repository
   </Card>
-  <Card title="SSH Keys" href="#create-a-ssh-key">
+  <Card title="SSH Keys" href="#ssh-key-management">
     Configure authentication with deploy keys
   </Card>
   <Card
     title="Store Configs"
-    href="#use-repository-to-store-server-configurations"
+    href="#store-server-configurations"
   >
     Organize and symlink configuration files
   </Card>
@@ -177,14 +177,14 @@ We use Git to store and track server/container/VM specific configurations for be
 ### Handling Sensitive Files
 
 <Tabs>
-  <Tab value="recreatable" label="Recreatable Files">
+  <Tab value="Recreatable Files">
     ### Easy to Recreate For files that are easy to recreate: - Let's Encrypt
     certificates - API keys that can be regenerated - Passwords that can be
     reset easily **Solution**: Leave these files on the server only, don't
     commit to Git.
   </Tab>
 
-  <Tab value="important" label="Important Files">
+  <Tab value="Important Files">
     ### Not Easy to Recreate For files that are difficult to recreate or contain
     critical data: **Solution**: Store in the shared KeePass database for secure
     backup and team access.
@@ -201,22 +201,3 @@ We use Git to store and track server/container/VM specific configurations for be
   Server-specific scripts can also be stored in this repository for backup and
   evolution tracking.
 </Callout>
-
-<Cards>
-  <Card title="Backup Scripts" href="#store-server-scripts">
-    Keep server-specific automation scripts versioned
-  </Card>
-  <Card title="Evolution Tracking" href="#store-server-scripts">
-    Track changes and improvements over time
-  </Card>
-  <Card title="Team Collaboration" href="#store-server-scripts">
-    Share scripts and knowledge across team members
-  </Card>
-</Cards>
-
-### Benefits of Script Storage
-
-- **Version Control**: Track script evolution and changes
-- **Backup**: Ensure scripts aren't lost with server failures
-- **Collaboration**: Team members can review and improve scripts
-- **Documentation**: Scripts serve as infrastructure documentation
