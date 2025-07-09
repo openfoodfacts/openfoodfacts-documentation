@@ -6,8 +6,6 @@ description: "This document explains the architecture of Search-a-licious, detai
 import { Callout } from "fumadocs-ui/components/callout";
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
-import AnimatedSvg from "@/components/AnimatedSvg";
-import { DrawioViewer } from "@/components/DrawioViewer";
 
 <Card
   title="Component Overview"
@@ -19,24 +17,78 @@ import { DrawioViewer } from "@/components/DrawioViewer";
 ## Architecture Overview
 
 <Callout type="info">
-  This image illustrates the main components and their interactions.
+  This diagram illustrates the main components and their interactions.
 </Callout>
 
-<AnimatedSvg
-  src="../assets/architecture-diagram.drawio.svg"
-  alt="Search-a-licious Architecture diagram"
-  width="601px"
-  height="441px"
-  viewBox="-0.5 -0.5 601 441"
-/>
-
-([source](../assets/architecture-diagram.drawio))
-
-<DrawioViewer
-  src="../assets/architecture-diagram.drawio"
-  alt="Search-a-licious Architecture diagram"
-  height="600px"
-/>
+```mermaid title="Search-a-licious Architecture"
+flowchart TB
+    subgraph DataPlatforms["Any data platform"]
+        DP1[JSON API]
+        DP2[taxonomies]
+    end
+    
+    subgraph DataIngestion["Data ingestion"]
+        ES[Event Stream]
+        DF[Data fetcher]
+        OI[Offline ingestion]
+        IL[Ingestion logic]
+    end
+    
+    subgraph SearchAPI["Search API"]
+        FT[Fulltext]
+        FC[Facets]
+        NLP[NLP interpreter]
+        GG[Graph generator]
+        PS[Personalized search / ranking]
+    end
+    
+    subgraph Clients["Any client"]
+        SS[search SDK]
+        SW[search Widget]
+    end
+    
+    subgraph Engines["Storage & Search Engines"]
+        SE[search engine]
+        GE[graph engine]
+    end
+    
+    DD[Any data dump]
+    
+    %% Data flow connections
+    DP1 --> DF
+    DP2 --> IL
+    DP2 --> FT
+    
+    ES --> DF
+    DF --> IL
+    OI --> IL
+    IL --> FT
+    
+    DD --> OI
+    
+    %% Search API connections
+    FT --> SE
+    FC --> SE
+    GG --> GE
+    PS --> GE
+    
+    %% Client connections
+    SS --> SearchAPI
+    SW --> SearchAPI
+    
+    %% Engine connections
+    SE --> GG
+    GE --> GG
+    
+    %% Styling
+    classDef dataSource fill:#dae8fc,stroke:#6c8ebf
+    classDef processing fill:#d5e8d4,stroke:#82b366
+    classDef storage fill:#fff2cc,stroke:#d6b656
+    
+    class DP1,DP2,DD,SS,SW dataSource
+    class ES,DF,OI,IL,FT,FC,NLP,GG,PS processing
+    class SE,GE storage
+```
 
 ## Core Principles
 
