@@ -7,6 +7,7 @@ import { Callout } from "fumadocs-ui/components/callout";
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 
 This document presents the Continuous Integration and Continuous Delivery (CI/CD) process at Open Food Facts.
 
@@ -266,25 +267,24 @@ The current status of the automation of the deployment and testing processes acr
 
 ## Q&A
 
-<Card type="info" title="Container deployment is failing">
-Have a look at the `Actions` tab in the GitHub repository and finds out why it is failing. If the process has trouble checking out the appropriate commit sha, you might have to ssh to the machine, bring down the deployment (`make down`) and delete the repository folder. It will be automatically re-created for the next deployment.
-</Card>
-<Card type="info" title="Forgot to set an env variable">
-  Yes, simply make an empty commit to your deployment branch: `git commit
-  --allow-empty -m "trigger" && git push`. You can also re-trigger a deployment
-  in the repo's `Actions` tab, assuming you are a repo maintainer.
-</Card>
-<Card type="info" title="Set up deployment on new repository">
-  Go to the `Actions` tab and click on `New workflow`: scroll down to `Workflows
-  created by Open Food Facts` and click on `Set up this workflow` for both
-  `Docker image build` and `Docker Compose Deployment` workflows. You will also
-  need to create two GitHub environments and set up required secrets.
-</Card>
-<Card type="info" title="Deployment fails after merging PR">
-  Contact an OFF administrator to analyze why it is failing. The admin might
-  have to revert your PR to restore the previous working version in
-  pre-production. Ask the OFF administrator to deploy your PR before merging it.
-</Card>
-<Card type="info" title="Release candidate before official release">
-Yes, assuming your next version is `v1.1.0`, just create a git tag following semantic versioning using `git tag v1.1.0rc1 && git push --tags` and the automated process will deploy this release candidate to production.
-</Card>
+<Accordions type="single">
+  <Accordion title="Container deployment is failing" id="deployment-failing">
+    Have a look at the `Actions` tab in the GitHub repository and finds out why it is failing. If the process has trouble checking out the appropriate commit sha, you might have to ssh to the machine, bring down the deployment (`make down`) and delete the repository folder. It will be automatically re-created for the next deployment.
+  </Accordion>
+  
+  <Accordion title="Forgot to set an env variable" id="env-variable">
+    Yes, simply make an empty commit to your deployment branch: `git commit --allow-empty -m "trigger" && git push`. You can also re-trigger a deployment in the repo's `Actions` tab, assuming you are a repo maintainer.
+  </Accordion>
+  
+  <Accordion title="Set up deployment on new repository" id="new-repo-deployment">
+    Go to the `Actions` tab and click on `New workflow`: scroll down to `Workflows created by Open Food Facts` and click on `Set up this workflow` for both `Docker image build` and `Docker Compose Deployment` workflows. You will also need to create two GitHub environments and set up required secrets.
+  </Accordion>
+  
+  <Accordion title="Deployment fails after merging PR" id="pr-deployment-failure">
+    Contact an OFF administrator to analyze why it is failing. The admin might have to revert your PR to restore the previous working version in pre-production. Ask the OFF administrator to deploy your PR before merging it.
+  </Accordion>
+  
+  <Accordion title="Release candidate before official release" id="release-candidate">
+    Yes, assuming your next version is `v1.1.0`, just create a git tag following semantic versioning using `git tag v1.1.0rc1 && git push --tags` and the automated process will deploy this release candidate to production.
+  </Accordion>
+</Accordions>

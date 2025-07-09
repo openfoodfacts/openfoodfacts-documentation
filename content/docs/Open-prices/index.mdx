@@ -6,6 +6,7 @@ description: "Explore Open Prices, a project dedicated to collecting and sharing
 import { Callout } from "fumadocs-ui/components/callout";
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 
 A REST API designed to interact with the Open Food Facts _Open Prices_ database.
 
@@ -87,19 +88,43 @@ Join thousands of contributors helping build the world's largest open database o
 
 ## Key Features
 
-### Data Quality
-
-- **Photo Verification**: Every price requires proof photos
-- **Location Validation**: OpenStreetMap integration for store verification
-- **Temporal Tracking**: Historical price data with timestamps
-- **Community Moderation**: Collaborative quality assurance
-
-### Developer Tools
-
-- **RESTful API**: Modern API for accessing price data
-- **Real-time Updates**: Live price feeds and notifications
-- **Bulk Operations**: Efficient endpoints for large-scale data access
-- **Analytics**: Price trend analysis and statistical insights
+<Accordions type="single">
+  <Accordion title="Data Quality & Verification" id="data-quality">
+    Ensuring accurate and reliable price data:
+    - **Photo Verification**: Every price entry requires proof photos to ensure authenticity
+    - **Location Validation**: OpenStreetMap integration for accurate store verification and mapping
+    - **Temporal Tracking**: Complete historical price data with precise timestamps
+    - **Community Moderation**: Collaborative quality assurance with user reporting and review
+    - **Fraud Prevention**: Multi-layer verification to prevent fake or misleading entries
+  </Accordion>
+  
+  <Accordion title="Developer Tools & API" id="developer-tools">
+    Comprehensive tools for developers and researchers:
+    - **RESTful API**: Modern, well-documented API for accessing all price data
+    - **Real-time Updates**: Live price feeds and WebSocket notifications for instant updates
+    - **Bulk Operations**: Efficient endpoints for large-scale data access and analysis
+    - **Analytics**: Built-in price trend analysis and statistical insights
+    - **SDKs**: Client libraries for popular programming languages
+  </Accordion>
+  
+  <Accordion title="User Experience" id="user-experience">
+    Intuitive interfaces for easy price contribution:
+    - **Web Interface**: User-friendly Vue.js frontend for desktop price contributions
+    - **Mobile Integration**: Seamless integration with Open Food Facts mobile apps
+    - **Batch Entry**: Efficient workflow for adding multiple prices from shopping trips
+    - **Proof Upload**: Simple photo upload process with automatic validation
+    - **Location Search**: Smart location lookup with auto-complete and mapping
+  </Accordion>
+  
+  <Accordion title="Open Data & Transparency" id="open-data">
+    Making price data freely available:
+    - **Open Licenses**: All data available under open licenses for research and innovation
+    - **Export Options**: Multiple data formats (JSON, CSV, XML) for different use cases
+    - **Research Access**: Special tools and datasets for academic and research purposes
+    - **Transparency**: Complete audit trail for all price entries and modifications
+    - **Community Contributions**: Recognition and tracking of contributor efforts
+  </Accordion>
+</Accordions>
 
 ## Design & User Interface
 

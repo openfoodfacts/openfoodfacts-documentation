@@ -6,6 +6,7 @@ description: "AI-powered product data extraction service for Open Food Facts. Le
 import { Cards, Card } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 
 **Robotoff** is a service that generates predictions from product data such as images, text, and metadata. These predictions can individually or collectively be refined into actionable suggestions known as insights.
 
@@ -63,19 +64,43 @@ Robotoff works together with:
 
 ## Key Features
 
-### Machine Learning Pipeline
-
-- **Computer Vision**: Advanced image processing for product analysis
-- **Natural Language Processing**: Text extraction and ingredient parsing
-- **Prediction Models**: Category and label prediction algorithms
-- **Quality Assurance**: Automated data validation and quality checks
-
-### Integration Capabilities
-
-- **Real-time Processing**: Live product image analysis
-- **Batch Processing**: Bulk data processing for existing products
-- **API Access**: RESTful API for third-party integrations
-- **Webhook Support**: Real-time notifications for processed data
+<Accordions type="single">
+  <Accordion title="Machine Learning Pipeline" id="ml-pipeline">
+    Advanced AI capabilities for product analysis:
+    - **Computer Vision**: State-of-the-art image processing algorithms for product image analysis
+    - **Natural Language Processing**: Advanced text extraction and ingredient parsing capabilities
+    - **Prediction Models**: Machine learning models for category and label prediction
+    - **Quality Assurance**: Automated data validation and quality scoring systems
+    - **Continuous Learning**: Models that improve over time with new data and feedback
+  </Accordion>
+  
+  <Accordion title="Integration Capabilities" id="integration">
+    Flexible integration options for various use cases:
+    - **Real-time Processing**: Live product image analysis with instant predictions
+    - **Batch Processing**: Efficient bulk data processing for existing product databases
+    - **API Access**: Comprehensive RESTful API for third-party integrations
+    - **Webhook Support**: Real-time notifications and callbacks for processed data
+    - **Mobile SDK**: Integration libraries for mobile applications
+  </Accordion>
+  
+  <Accordion title="Data Extraction Features" id="data-extraction">
+    Comprehensive data extraction capabilities:
+    - **OCR Technology**: Advanced optical character recognition for text extraction
+    - **Ingredient Analysis**: Structured parsing and analysis of ingredient lists
+    - **Nutritional Data**: Automatic extraction of nutrition facts from product images
+    - **Logo Detection**: Brand logo recognition and certification label identification
+    - **Multi-language Support**: Text extraction and analysis in multiple languages
+  </Accordion>
+  
+  <Accordion title="Quality & Accuracy" id="quality-accuracy">
+    Ensuring high-quality predictions and data:
+    - **Confidence Scoring**: Each prediction includes confidence levels for quality assessment
+    - **Human Validation**: Integration with human reviewers for quality control
+    - **Feedback Loop**: Continuous improvement based on user feedback and corrections
+    - **Model Versioning**: Tracked model versions with performance metrics
+    - **Error Handling**: Robust error handling and fallback mechanisms
+  </Accordion>
+</Accordions>
 
 ## Weekly Meetings
 

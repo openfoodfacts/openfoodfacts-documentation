@@ -6,6 +6,7 @@ description: Collaborative tagging system for adding free-form property/value pa
 import { Card, Cards } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
 
 A lightweight REST API designed for the Open Food Facts Folksonomy Engine.
 
@@ -87,45 +88,74 @@ The Folksonomy Engine uses the following main concepts:
 
 ## Common Use Cases
 
-### Product Enhancement
+<Accordions type="single">
+  <Accordion title="Product Enhancement" id="product-enhancement">
+    Enhance product information with community-contributed data:
+    - **Cooking Instructions**: Add preparation methods, cooking times, and serving suggestions
+    - **Dietary Restrictions**: Specify allergen information, dietary compliance (vegan, kosher, etc.)
+    - **Packaging Details**: Note packaging materials, recyclability, and sustainability information
+    - **Preparation Methods**: Include cooking instructions, serving suggestions, and usage tips
+    - **Regional Variations**: Document regional product variations and availability
+  </Accordion>
+  
+  <Accordion title="Community Insights" id="community-insights">
+    Share community knowledge and experiences:
+    - **Personal Reviews**: Add ratings, taste profiles, and quality assessments
+    - **Usage Recommendations**: Suggest best use cases, pairing suggestions, and alternatives
+    - **Allergen Warnings**: Community-verified allergen information and cross-contamination alerts
+    - **Regional Availability**: Document where products are available and seasonal variations
+    - **Cultural Context**: Add cultural significance, traditional uses, and regional names
+  </Accordion>
+  
+  <Accordion title="Data Quality & Corrections" id="data-quality">
+    Improve data accuracy through community contributions:
+    - **Correction Suggestions**: Propose fixes for incorrect product information
+    - **Additional Product Names**: Add alternative names, regional terms, and translations
+    - **Translation Contributions**: Provide translations for product names and descriptions
+    - **Quality Assessments**: Rate data accuracy and completeness
+    - **Verification**: Confirm or dispute existing product information
+  </Accordion>
+  
+  <Accordion title="Advanced Applications" id="advanced-applications">
+    Specialized use cases for developers and researchers:
+    - **Private Tags**: Store personal notes and private classifications
+    - **Batch Operations**: Manage large numbers of tags efficiently
+    - **Data Analytics**: Analyze tag patterns and community contributions
+    - **Integration**: Connect with external systems and applications
+    - **Research**: Use folksonomy data for academic and commercial research
+  </Accordion>
+</Accordions>
 
-- Add cooking instructions
-- Specify dietary restrictions
-- Note packaging details
-- Include preparation methods
+## Technical Implementation
 
-### Community Insights
-
-- Personal reviews and ratings
-- Usage recommendations
-- Allergen warnings
-- Regional availability
-
-### Data Quality
-
-- Correction suggestions
-- Additional product names
-- Translation contributions
-- Quality assessments
-
-### Authentication
-
-Most operations require authentication using Open Food Facts credentials. You can authenticate using:
-
-- Username/password to get a bearer token
-- Open Food Facts session cookie
-
-### Tagging System
-
-Tags in the Folksonomy Engine follow a key-value structure where:
-
-- Keys represent the type of information (e.g., "organic", "fair-trade", "source")
-- Values provide the specific information for that key
-- Tags can be public (visible to all) or private (visible only to the owner)
-
-### Versioning
-
-Each tag has a version number that increments with updates, ensuring data consistency and enabling conflict resolution.
+<Accordions type="single">
+  <Accordion title="Authentication & Security" id="authentication-security">
+    Secure access to the Folksonomy Engine:
+    - **Username/Password**: Authenticate using Open Food Facts credentials to get a bearer token
+    - **Session Cookies**: Use existing Open Food Facts session cookies for seamless integration
+    - **Token Management**: Secure token storage and refresh mechanisms
+    - **Permission Levels**: Different access levels for public and private tags
+    - **Rate Limiting**: API rate limits to prevent abuse and ensure fair usage
+  </Accordion>
+  
+  <Accordion title="Tagging System Structure" id="tagging-system">
+    Understanding the tag data model:
+    - **Key-Value Pairs**: Tags follow a structured key-value format for consistency
+    - **Public vs Private**: Tags can be public (visible to all) or private (visible only to owner)
+    - **Versioning**: Each tag has a version number for data consistency and conflict resolution
+    - **Ownership**: Tags are associated with specific users for accountability
+    - **Validation**: Input validation and sanitization for data quality
+  </Accordion>
+  
+  <Accordion title="API Endpoints & Operations" id="api-endpoints">
+    Core API functionality:
+    - **CRUD Operations**: Create, read, update, and delete product tags
+    - **Search & Filter**: Flexible search capabilities across products and tags
+    - **Bulk Operations**: Efficient endpoints for managing multiple tags
+    - **Statistics**: Access usage statistics and analytics for tags and products
+    - **Pagination**: Handle large datasets with efficient pagination
+  </Accordion>
+</Accordions>
 
 ## Getting Started
 

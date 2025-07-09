@@ -109,28 +109,101 @@ Its versatile architecture makes it ideal for a wide range of applications: from
 
 ## Architecture Overview
 
-### Core Components
+<Accordions type="single">
+  <Accordion title="Core Components" id="core-components">
+    The foundation of Search-a-licious:
+    - **Elasticsearch Backend**: High-performance search and analytics engine providing scalable full-text search
+    - **FastAPI Service**: Modern Python API framework delivering fast, async search endpoints
+    - **React Frontend**: Responsive web interface built with reusable components for consistent user experience
+    - **Configuration Engine**: Flexible setup system for different data types and use cases
+    - **Data Pipeline**: Automated ingestion and processing of various data formats
+  </Accordion>
+  
+  <Accordion title="Integration Capabilities" id="integration-capabilities">
+    Seamless integration with existing systems:
+    - **Data Ingestion**: Support for various data sources including JSON, CSV, database exports
+    - **Real-time Updates**: Live data synchronization and automatic indexing
+    - **Multi-tenancy**: Support for multiple datasets and applications from single instance
+    - **Extensibility**: Plugin architecture for custom functionality and business logic
+    - **API-first Design**: Everything accessible through well-documented APIs
+  </Accordion>
+  
+  <Accordion title="Performance & Scalability" id="performance-scalability">
+    Built for scale and performance:
+    - **Distributed Architecture**: Horizontal scaling across multiple nodes
+    - **Caching Layer**: Redis-based caching for frequently accessed data
+    - **Load Balancing**: Traffic distribution across multiple service instances
+    - **Resource Optimization**: Efficient memory and CPU usage patterns
+    - **Monitoring & Observability**: Comprehensive logging and metrics collection
+  </Accordion>
+</Accordions>
 
-- **Elasticsearch Backend**: High-performance search and analytics engine
-- **FastAPI Service**: Modern Python API framework for search endpoints
-- **React Frontend**: Responsive web interface with reusable components
-- **Configuration Engine**: Flexible setup for different data types and use cases
+## Technical Implementation
 
-### Integration Capabilities
+<Accordions type="single">
+  <Accordion title="Core Technologies" id="core-technologies">
+    Search-a-licious is built on proven, open-source technologies:
+    - **[Elasticsearch](https://www.elastic.co/elasticsearch)**: Powerful search engine foundation providing distributed, RESTful search and analytics
+    - **[Web Components](https://developer.mozilla.org/en-US/docs/Web/API/Web_Components)**: Built with Lit framework for reusable, framework-agnostic UI components
+    - **[Vega](https://vega.github.io/)**: Advanced visualization and charting capabilities with interactive dashboards
+    - **[Redis](https://redis.io/)**: Event stream processing, caching, and real-time data synchronization
+    - **FastAPI**: Modern Python web framework for high-performance API development
+  </Accordion>
+  
+  <Accordion title="Development Tools" id="development-tools">
+    Tools and processes for effective development:
+    - **Docker Compose**: Complete development environment with all services
+    - **Hot Reload**: Fast development cycle with instant code changes
+    - **Testing Framework**: Comprehensive unit and integration testing
+    - **CI/CD Pipeline**: Automated testing and deployment workflows
+    - **Code Quality Tools**: Linting, formatting, and security analysis
+  </Accordion>
+  
+  <Accordion title="Deployment Options" id="deployment-options">
+    Flexible deployment strategies:
+    - **Docker Containers**: Ready-to-deploy containerized services
+    - **Kubernetes**: Orchestrated deployment for production environments
+    - **Cloud Native**: Support for major cloud providers (AWS, GCP, Azure)
+    - **On-premises**: Full control deployment for sensitive data
+    - **Hybrid Solutions**: Mix of cloud and on-premises components
+  </Accordion>
+</Accordions>
 
-- **Data Ingestion**: Support for various data sources and formats
-- **Real-time Updates**: Live data synchronization and indexing
-- **Multi-tenancy**: Support for multiple datasets and applications
-- **Extensibility**: Plugin architecture for custom functionality
+## Getting Started
 
-## Contributors
+<Card title="Start with Tutorial" href="/docs/Search-a-licious/users/tutorial">
+  Read our comprehensive tutorial to get started with Search-a-licious!
+</Card>
 
-<a href="https://github.com/openfoodfacts/search-a-licious/graphs/contributors">
-  <img
-    alt="List of contributors to this repository"
-    src="https://contrib.rocks/image?repo=openfoodfacts/search-a-licious"
-  />
-</a>
+<Accordions type="single">
+  <Accordion title="Quick Start Guide" id="quick-start">
+    Get Search-a-licious running in minutes:
+    1. **Clone the Repository**: `git clone https://github.com/openfoodfacts/search-a-licious.git`
+    2. **Install Dependencies**: Set up your development environment with Docker
+    3. **Configure Your Data**: Create a configuration file describing your dataset
+    4. **Import Data**: Use the import tool to load your data into Elasticsearch
+    5. **Launch Services**: Start all services with `docker-compose up`
+    6. **Access Interface**: Open your browser and start searching!
+  </Accordion>
+  
+  <Accordion title="Configuration Basics" id="configuration-basics">
+    Essential configuration concepts:
+    - **Data Schema**: Define your data structure and field mappings
+    - **Search Settings**: Configure search behavior, facets, and filters
+    - **UI Customization**: Customize the look and feel of your search interface
+    - **Performance Tuning**: Optimize for your specific data size and usage patterns
+    - **Security Settings**: Configure authentication and access controls
+  </Accordion>
+  
+  <Accordion title="Integration Examples" id="integration-examples">
+    Common integration patterns:
+    - **Web Applications**: Embed search components in your existing web apps
+    - **Mobile Apps**: Use the API to build mobile search experiences
+    - **Analytics Platforms**: Connect to BI tools for advanced analytics
+    - **Data Pipelines**: Integrate with ETL processes for automated data updates
+    - **Third-party Services**: Connect to external APIs and data sources
+  </Accordion>
+</Accordions>
 
 ## Technical Overview
 
@@ -156,36 +229,15 @@ Its versatile architecture makes it ideal for a wide range of applications: from
     description="One command initial data import from JSONL data export"
   />
 </Cards>
-### Core Technologies
 
-<Cards>
-  <Card
-    title="Elasticsearch"
-    href="https://www.elastic.co/elasticsearch"
-    description="Powerful search engine foundation"
-  />
-  <Card
-    title="Web Components"
-    href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Components"
-    description="Built with Lit framework for reusable UI components"
-  />
-  <Card
-    title="Vega"
-    href="https://vega.github.io/"
-    description="Advanced visualization and charting capabilities"
-  />
-  <Card
-    title="Redis"
-    href="https://redis.io/"
-    description="Event stream processing and caching"
-  />
-</Cards>
+## Contributors
 
-## Getting Started
-
-<Card title="Start with Tutorial" href="/docs/Search-a-licious/users/tutorial">
-  Read our comprehensive tutorial to get started with Search-a-licious!
-</Card>
+<a href="https://github.com/openfoodfacts/search-a-licious/graphs/contributors">
+  <img
+    alt="List of contributors to this repository"
+    src="https://contrib.rocks/image?repo=openfoodfacts/search-a-licious"
+  />
+</a>
 
 ## Documentation Structure
 
