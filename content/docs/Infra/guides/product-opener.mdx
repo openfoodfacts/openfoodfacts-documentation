@@ -12,8 +12,8 @@ Product Opener is the backend that powers the Open Food Facts website and mobile
 
 ## Deployment Overview
 
-<Tabs>
-<Tab value="staging" label="Staging Environment">
+<Tabs items={["staging", "production"]}>
+<Tab value="staging">
 <Card title="Staging Deployment">
 In staging, Open Food Facts is deployed on the ovh1 server (ovh1.openfoodfacts.org), in a proxmox VM (201) specific to all staging services.
 </Card>
@@ -23,7 +23,7 @@ Other sibling projects are not deployed in staging.
 </Callout>
 </Tab>
 
-<Tab value="production" label="Production Environment">
+<Tab value="production">
 <Card title="Production Deployment">
 In production, it's deployed on the off2 server (off2.openfoodfacts.org).
 </Card>
@@ -121,8 +121,8 @@ For example, for OFF, the directory is `/srv/off`.
 
 ## Service Management
 
-<Tabs>
-    <Tab value="apache" label="Apache Server">
+<Tabs items={["apache", "cron"]}>
+    <Tab value="apache">
         <Callout type="info">
             The apache server is managed by systemd.
         </Callout>
@@ -132,7 +132,7 @@ For example, for OFF, the directory is `/srv/off`.
     ```
     </Tab>
 
-    <Tab value="cron" label="Scheduled Tasks">
+    <Tab value="cron">
         <Callout type="info">
             We don't use cron anymore to manage scheduled tasks, we use systemd timers instead.
         </Callout>

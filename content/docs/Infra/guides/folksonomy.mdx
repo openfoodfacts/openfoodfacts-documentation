@@ -49,8 +49,8 @@ Folksonomy is a service to allow contributors to freely add labels and values to
 
 ## Useful Commands
 
-<Tabs>
-<Tab value="status" label="Service Status">
+<Tabs items={["status", "logs"]}>
+<Tab value="status">
 ```bash title="Check Service Status"
 systemctl status folksonomy
 ```
@@ -60,7 +60,7 @@ You can also use reload/restart/etc. with this command.
 </Callout>
 </Tab>
 
-<Tab value="logs" label="Service Logs">
+<Tab value="logs">
 ```bash title="View Service Logs"
 sudo journalctl -u folksonomy
 ```

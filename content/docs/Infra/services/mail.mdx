@@ -148,14 +148,14 @@ See also [installation report](/docs/Infra/reports/2022/2022-02-proxmox-mail-gat
 
 ### Network Redirects
 
-<Tabs>
-<Tab value="dns" label="DNS Configuration">
+<Tabs items={["dns", "iptables", "nginx"]}>
+<Tab value="dns">
 - `pmg.openfoodfacts.org` is a CNAME to `ovh1.openfoodfacts.org`
 - `ovh1` IP address is reported in the SPF entry of the DNS
 - There is an entry for the DKIM key
 </Tab>
 
-<Tab value="iptables" label="Iptables Rules">
+<Tab value="iptables">
 An iptables rule on host (`ovh1`) redirects our server incoming IPs to the VM SMTP port (25). Private network address (corresponding to VM and docker ranges) are also redirected.
 
 To add a new machine:
@@ -173,15 +173,15 @@ Note that the port 25 is in fact the private (trusted) port (not the public one,
 </Callout>
 </Tab>
 
-<Tab value="nginx" label="NGINX Proxy">
+<Tab value="nginx">
 The [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy) (VM `101` on `ovh1`) proxies requests to `pmg.openfoodfacts.org` on port 80, to the proxmox mail gateway VM (`102`), this is needed for certificate generation through Let's Encrypt by the gateway.
 </Tab>
 </Tabs>
 
 ### Testing Gateway Configuration
 
-<Tabs>
-<Tab value="simple" label="Simple Test">
+<Tabs items={["simple", "quality"]}>
+<Tab value="simple">
 To do a simple test, you may use:
 
 ```bash title="Simple Mail Test"
@@ -192,7 +192,7 @@ Directly on the `pmg` server.
 
 </Tab>
 
-<Tab value="quality" label="Quality Test">
+<Tab value="quality">
 To test quality of the configuration we can send a mail to a service such as https://www.mail-tester.com/
 
 <Steps>
@@ -237,8 +237,8 @@ You may add some redirections for non standard users to one of those groups.
   postfix service (`postfix.service` and/or `postfix@-.service`).
 </Callout>
 
-<Tabs>
-<Tab value="postfix" label="Postfix Configuration">
+<Tabs items={["postfix", "exim4"]}>
+<Tab value="postfix">
 <Steps>
 <Step>
 **Run Configuration**
@@ -269,7 +269,7 @@ So, for example, if you touch `/etc/alias` (with after `sudo newaliases`) you ne
 </Callout>
 </Tab>
 
-<Tab value="exim4" label="Exim4 Configuration">
+<Tab value="exim4">
 <Steps>
 <Step>
 **Run Configuration**
@@ -296,14 +296,14 @@ dpkg-reconfigure exim4-config
 
 ### Testing Mail Configuration
 
-<Tabs>
-<Tab value="sendmail" label="Using Sendmail">
+<Tabs items={["sendmail", "mailx"]}>
+<Tab value="sendmail">
 ```bash title="Test with Sendmail"
 echo "Subject: sendmail test xxx" | sudo sendmail -f alex@openfoodfacts.org -v root
 ```
 </Tab>
 
-<Tab value="mailx" label="Using Mailx">
+<Tab value="mailx">
 With the `bsd-mailx` package installed:
 
 ```bash title="Test with Mailx"

@@ -111,8 +111,8 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
   iptables-persistent for rule persistence.
 </Callout>
 
-<Tabs>
-  <Tab value="ovh" label="OVH Servers">
+<Tabs items={["ovh", "off1"]}>
+  <Tab value="ovh">
     ### OVH Server 
     Rules Rules are stored in: 
     ```bash title="Rule Locations"
@@ -120,7 +120,7 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
     ```
   </Tab>
 
-  <Tab value="off1" label="OFF1 Server">
+  <Tab value="off1">
     ### OFF1 Server 
     Rules Rules are stored in: 
     ```bash title="Rule Location"
@@ -180,8 +180,8 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
 
 ## Troubleshooting Common Issues
 
-<Tabs>
-  <Tab value="color" label="No Color in Shell">
+<Tabs items={["color", "completion"]}>
+  <Tab value="color">
     ### Shell Color Issues
     <Steps>
       <Step>
@@ -202,7 +202,7 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
     </Steps>
   </Tab>
 
-  <Tab value="completion" label="No Autocompletion">
+  <Tab value="completion">
     ### Autocompletion Issues
     <Steps>
       <Step>

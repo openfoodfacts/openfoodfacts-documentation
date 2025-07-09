@@ -86,8 +86,8 @@ We have three network physical interface on each server:
 
 ![Ethernet cables](../img/2023-02-free-dc-ethernet.jpg "The three eternet cables on the server")
 
-<Tabs>
-<Tab value="ipv4" label="IPv4 Configuration">
+<Tabs items={["ipv4", "ipv6"]}>
+<Tab value="ipv4">
 We have the following static IP v4 addresses:
 
 **off1:**
@@ -113,7 +113,7 @@ Also we have a vmbr1 on each host with a private network, which is forwarded thr
 
 </Tab>
 
-<Tab value="ipv6" label="IPv6 Configuration">
+<Tab value="ipv6">
 <Callout type="info">
 For each IPv4 address correspond an IPv6 range of `2a01:e0d:0001:c:58bf:fa<last-part-of-ipv4-address>::*/64`
 last-part-of-ipv4-address is a two digit hexadecimal number.
