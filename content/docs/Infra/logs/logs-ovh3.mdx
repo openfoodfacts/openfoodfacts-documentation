@@ -36,8 +36,6 @@ import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 ### 2024-10-31 System Taking 100% CPU
 
-<Card title="High CPU Usage Resolution" description="ARC processes consuming all CPU resources">
-
 #### Problem Description
 
 <Steps>
@@ -62,8 +60,6 @@ import { Tabs, Tab } from "fumadocs-ui/components/tabs";
   requiring system restart.
 </Callout>
 
-</Card>
-
 ### 2024-10-10 Disk Drive Issues
 
 <Callout type="error">
@@ -74,8 +70,6 @@ import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 See [Infrastructure Issue #424](https://github.com/openfoodfacts/openfoodfacts-infrastructure/issues/424) for details.
 
 ### 2023-12-05 SSL Certificates Expired
-
-<Card title="Images SSL Certificate Problem" description="Certificate renewal failed due to missing nginx plugin">
 
 #### Issue Details
 
@@ -106,17 +100,12 @@ Dec  5 13:12:58 off2 certbot[385770]: Failed to renew certificate images.openfoo
   </Step>
 </Steps>
 
-</Card>
-
 ### 2023-09-12 Logrotate Configuration
-
-<Card title="Nginx Log Management" description="Configured log rotation for large nginx access logs">
 
 **Issue:** Nginx had a very large static-access.log file (52G).
 
 **Solution:** Modified `/etc/logrotate.d/nginx` to include `/rpool/logs-nginx/*.log` and executed log rotation.
 
-</Card>
 
 ### ZFS Dataset Stall Incidents
 
@@ -125,32 +114,26 @@ Dec  5 13:12:58 off2 certbot[385770]: Failed to renew certificate images.openfoo
   suggests potential hardware issues.
 </Callout>
 
-<Tabs items={["2023-09-07", "2023-06-08", "2023-05-30", "2023-05-04"]}>
-  <Tab value="2023-09-07">
-    #### 2023-09-07 ZFS Dataset Stalled **Context:** Day after switching
-    images.openfoodfacts.org back to ovh3. **Symptoms:** -
-    Images.openfoodfacts.org down alert - Nginx restart failed with zombie
-    processes - Processes couldn't be killed (I/O wait state) - File listing
-    worked, but content access hung - ZFS pool status showed READ error on sdb
-    **Resolution:** Hard reboot required. [Slack
-    Discussion](https://openfoodfacts.slack.com/archives/C01F18SQ8F7/p1694089024775499)
-  </Tab>
+#### 2023-09-07 ZFS Dataset Stalled 
+**Context:** Day after switching images.openfoodfacts.org back to ovh3. 
+**Symptoms:**
+- Images.openfoodfacts.org down alert 
+- Nginx restart failed with zombie processes 
+- Processes couldn't be killed (I/O wait state) 
+- File listing worked, but content access hung 
+- ZFS pool status showed READ error on sdb
+**Resolution:** Hard reboot required. [Slack Discussion](https://openfoodfacts.slack.com/archives/C01F18SQ8F7/p1694089024775499)
 
-  <Tab value="2023-06-08">
-    #### 2023-06-08 ZFS Dataset Stalled **Symptoms:** - Nginx images not
-    responding - off.net also affected - ZFS dataset stopped working at 00:50
-    UTC **Resolution:** Hard reboot (no symptoms in logs). [Slack
-    Discussion](https://openfoodfacts.slack.com/archives/C1FPYCWM7/p1686298752505019)
-  </Tab>
+#### 2023-06-08 ZFS Dataset Stalled 
+**Symptoms:** 
+- Nginx images not responding 
+- off.net also affected 
+- ZFS dataset stopped working at 00:50 UTC 
+**Resolution:** Hard reboot (no symptoms in logs). [Slack Discussion](https://openfoodfacts.slack.com/archives/C1FPYCWM7/p1686298752505019)
 
-  <Tab value="2023-05-30">
-    #### 2023-05-30 ZFS Dataset Stalled Hard reboot required.
-  </Tab>
+#### 2023-05-30 ZFS Dataset Stalled Hard reboot required.
 
-  <Tab value="2023-05-04">
-    #### 2023-05-04 ZFS Dataset Stalled Hard reboot required.
-  </Tab>
-</Tabs>
+#### 2023-05-04 ZFS Dataset Stalled Hard reboot required.
 
 ### Related Issues
 
