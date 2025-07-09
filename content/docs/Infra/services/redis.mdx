@@ -49,9 +49,12 @@ We have a production instance of Redis dedicated to Open Food Facts operations.
   </Step>
 
   <Step>
-    **Connection from OVH** To use from ovh1/ovh2, connect to stunnel client
-    server on standard Redis port: ```bash title="Redis Connection" # Connect to
-    Redis through stunnel redis-cli -h 10.1.0.113 -p 6379 ```
+    **Connection from OVH** 
+    To use from ovh1/ovh2, connect to stunnel client server on standard Redis port: 
+    ```bash title="Redis Connection" 
+    # Connect to Redis through stunnel 
+    redis-cli -h 10.1.0.113 -p 6379 
+    ```
   </Step>
 </Steps>
 
@@ -59,9 +62,11 @@ We have a production instance of Redis dedicated to Open Food Facts operations.
 
 <Tabs>
   <Tab value="deployment" label="Deployment">
-    ### Container Deployment - **Location**: Container 122 on the OFF Proxmox
-    cluster - **Data Storage**: `/var/lib/redis` is in a specific dataset -
-    **OS**: Simple Debian deployment
+    ### Container Deployment
+    
+    - **Location**: Container 122 on the OFF Proxmox cluster
+    - **Data Storage**: `/var/lib/redis` is in a specific dataset
+    - **OS**: Simple Debian deployment
   </Tab>
 
   <Tab value="configuration" label="Configuration">
@@ -69,8 +74,9 @@ We have a production instance of Redis dedicated to Open Food Facts operations.
     <Callout type="info">
       Specific configurations are stored in `confs/off-redis` directory.
     </Callout>
-    **System Service**: - Override systemd service to send emails on failure -
-    Automated monitoring and alerting
+    **System Service**: 
+    - Override systemd service to send emails on failure 
+    - Automated monitoring and alerting
   </Tab>
 </Tabs>
 

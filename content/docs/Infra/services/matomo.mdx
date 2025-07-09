@@ -103,9 +103,8 @@ private function extendLockExpireToMakeSureWeCanProcessARequestSet(RequestSet $r
 
 ## Site Setup
 
-<Steps>
-  <Step>**Add Website** Go to manage / websites and add a website</Step>
-</Steps>
+**Add Website** 
+Go to manage / websites and add a website
 
 ### GDPR Compliance
 
@@ -169,13 +168,11 @@ We setup matomo for performance (our websites requires it) with several main poi
 </Cards>
 
 <Callout type="info">
-  **Performance Details:** - Systemd timers jobs process redis entries every
-  minute (see `confs/matomo/systemd/matomo-tracking@.{(timer, service)}`) - We
-  have instances 0, 1, 2,… 7, to process each queue - MariaDB configuration:
-  `/etc/mysql/mariadb.conf.d/90-off-configs.cnf` (linked to this repository
-  `confs/matomo/mysql/mariadb.conf.d/90-off-configs.cnf`) - We also tried to
-  avoid "2006 MySQL server has gone away" following
-  https://matomo.org/faq/troubleshooting/faq_183/
+  **Performance Details:** 
+  - Systemd timers jobs process redis entries every minute (see `confs/matomo/systemd/matomo-tracking@.{(timer, service)}`) 
+  - We have instances 0, 1, 2,… 7, to process each queue 
+  - MariaDB configuration: `/etc/mysql/mariadb.conf.d/90-off-configs.cnf` (linked to this repository `confs/matomo/mysql/mariadb.conf.d/90-off-configs.cnf`) 
+  - We also tried to avoid "2006 MySQL server has gone away" following https://matomo.org/faq/troubleshooting/faq_183/
 </Callout>
 
 **Archiving Configuration:**
@@ -299,43 +296,39 @@ Logs are in `/var/log/matomo`
 ### How to Monitor Archive Jobs
 
 <Tabs>
-<Tab value="status" label="Service Status">
-```bash title="Check Archive Status"
-# see jobs status
-systemctl status matomo-archive@{main,2,5}.service
-# see timers status
-systemctl status matomo-archive@{main,2,5}.timer
-```
-</Tab>
-
-<Tab value="logs" label="Logs">
-Logs are in `/var/log/matomo`
-</Tab>
+  <Tab value="status" label="Service Status">
+    ```bash title="Check Archive Status"
+    # see jobs status
+    systemctl status matomo-archive@{main,2,5}.service
+    # see timers status
+    systemctl status matomo-archive@{main,2,5}.timer
+    ```
+  </Tab>
+  <Tab value="logs" label="Logs">
+    Logs are in `/var/log/matomo`
+  </Tab>
 </Tabs>
 
 ### How to Monitor Database
 
 <Tabs>
-<Tab value="analyze" label="Analyze Tables">
-`diagnostics:analyze-archive-table` can help see informations about tables.
+  <Tab value="analyze" label="Analyze Tables">
+    `diagnostics:analyze-archive-table` can help see informations about tables.
 
-Use it with `YYYY_MM` argument.
+    Use it with `YYYY_MM` argument.
 
-```bash title="Analyze Archive Table"
-cd /var/www/html/matomo
-./console diagnostics:analyze-archive-table 2023_12
-```
+    ```bash title="Analyze Archive Table"
+    cd /var/www/html/matomo
+    ./console diagnostics:analyze-archive-table 2023_12
+    ```
+  </Tab>
+  <Tab value="optimize" label="Optimize Tables">
+    `database:optimize-archive-table` can optimize tables if needed. Do it on old tables that are not moving any more. Use with a `YYYY-MM-DD` argument.
 
-</Tab>
-
-<Tab value="optimize" label="Optimize Tables">
-`database:optimize-archive-table` can optimize tables if needed. Do it on old tables that are not moving any more. Use with a `YYYY-MM-DD` argument.
-
-```bash title="Optimize Archive Table"
-./console database:optimize-archive-table 2023-12-01
-```
-
-</Tab>
+    ```bash title="Optimize Archive Table"
+    ./console database:optimize-archive-table 2023-12-01
+    ```
+  </Tab>
 </Tabs>
 
 ### How to Test a Command in PHP CLI

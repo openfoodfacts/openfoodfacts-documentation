@@ -8,8 +8,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
-# Free Datacenter
-
 <Callout type="info">
   [Fondation Free](https://www.fondation-free.fr/) is graciously providing us
   hosting for two servers: off1 and off2. They also provide network and
@@ -37,28 +35,28 @@ Those are DELL servers.
 ![Server cover](../img/2023-02-free-dc-instructions-on-server-cover.jpg "Instructions on the server cover")`{ width=50% }`
 
 <Steps>
-<Step>
-**Switching Off**
-To switch a server off, plug a screen and keyboard or use ssh, login and use shutdown command.
-</Step>
+  <Step>
+  **Switching Off**
+  To switch a server off, plug a screen and keyboard or use ssh, login and use shutdown command.
+  </Step>
 
-<Step>
-  **Switching On** The server switch on button is on the front panel, a small ⏼
-  button on the right.
-</Step>
+  <Step>
+    **Switching On** 
+    The server switch on button is on the front panel, a small ⏼ button on the right.
+  </Step>
 
-<Step>
-**Power Supply**
-There is a double plug for power supply. A small velcro helps keeps plugs in place.
-</Step>
+  <Step>
+    **Power Supply**
+    There is a double plug for power supply. A small velcro helps keeps plugs in place.
+  </Step>
 </Steps>
 
 ![Plugs velcro](../img/2023-02-free-dc-plugs-velcro.jpg "A small velcro maintains plugs in place")`{ width=50% }`
 
 <Callout type="info">
-There is a blue led if all is ok (on the front and on the back). If something is wrong it turns to orange and blinks. (it will be the case for example if cover is not on the server).
+  There is a blue led if all is ok (on the front and on the back). If something is wrong it turns to orange and blinks. (it will be the case for example if cover is not on the server).
 
-You can make the LED blink to identify the server by a button on the left on the front side of the server.
+  You can make the LED blink to identify the server by a button on the left on the front side of the server.
 
 </Callout>
 
@@ -103,9 +101,12 @@ We have the following static IP v4 addresses:
 - 213.36.253.214/27 used for the reverse proxy container
 
 <Callout type="info">
-  **Network Details:** - Gateway: 213.36.253.222 - DNS: 213.36.253.10
-  (gw4-vl12.free.org) - Reverse names: - off1.openfoodfacts.org for
-  213.36.253.206 - off2.openfoodfacts.org for 213.36.253.208
+  **Network Details:** 
+  - Gateway: 213.36.253.222 
+  - DNS: 213.36.253.10 (gw4-vl12.free.org) 
+  - Reverse names: 
+  - off1.openfoodfacts.org for 213.36.253.206 
+  - off2.openfoodfacts.org for 213.36.253.208
 </Callout>
 
 Also we have a vmbr1 on each host with a private network, which is forwarded through vmbr0 on the host.
@@ -152,8 +153,11 @@ SSDs are in the back of the server (extension card)
 ## off2 Configuration
 
 <Card title="off2.openfoodfacts.org">
-  **Hardware Specifications:** - 4x14TB disks - 2x2TB SSD - 1x1TB SSD - 1x60GB
-  [optane disk](https://en.wikipedia.org/wiki/3D_XPoint)
+  **Hardware Specifications:** 
+  - 4x14TB disks 
+  - 2x2TB SSD 
+  - 1x1TB SSD 
+  - 1x60GB [optane disk](https://en.wikipedia.org/wiki/3D_XPoint)
 </Card>
 
 <Callout type="info">
@@ -202,6 +206,5 @@ Those settings are in the BIOS settings. They enable a distant reboot of the ser
 Apart from the IDRAC address, off2 has the 213.36.253.208 IP address.
 
 <Callout type="info">
-  We also have 213.36.253.214 which is dedicated to the [NGINX reverse
-  proxy](/docs/Infra/networking/nginx-reverse-proxy).
+  We also have 213.36.253.214 which is dedicated to the [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy).
 </Callout>

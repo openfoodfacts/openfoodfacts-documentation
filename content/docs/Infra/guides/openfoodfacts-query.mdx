@@ -8,8 +8,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
-# Open Food Facts Query
-
 <Card title="Performance Optimization" description="MongoDB aggregation replacement for faster product exploration">
 
 The Open Food Facts Query project computes aggregation requests visible on the website when users select "Explore products by". It provides faster results by avoiding direct MongoDB queries.
@@ -119,19 +117,22 @@ The Open Food Facts Query project computes aggregation requests visible on the w
 
 <Tabs items={["Production Specs", "Staging Specs", "Performance"]}>
   <Tab value="Production Specs">
-    - **Server:** off1 Proxmox host - **Container:** CT 115 (dedicated) -
-    **Deployment:** Docker Compose - **URL:** https://query.openfoodfacts.org/
+    - **Server:** off1 Proxmox host
+    - **Container:** CT 115 (dedicated) 
+    - **Deployment:** Docker Compose 
+    - **URL:** https://query.openfoodfacts.org/
   </Tab>
 
   <Tab value="Staging Specs">
-    - **Server:** Staging dockers VM - **Storage:** ZFS dataset on NVME pool -
-    **URL:** https://query.openfoodfacts.net/
+    - **Server:** Staging dockers VM 
+    - **Storage:** ZFS dataset on NVME pool 
+    - **URL:** https://query.openfoodfacts.net/
   </Tab>
 
   <Tab value="Performance">
-    - **Database:** Bypasses MongoDB for aggregations - **Speed:** Faster than
-    direct database queries - **Scalability:** Optimized for high-volume product
-    exploration
+    - **Database:** Bypasses MongoDB for aggregations 
+    - **Speed:** Faster than direct database queries 
+    - **Scalability:** Optimized for high-volume produce exploration
   </Tab>
 </Tabs>
 

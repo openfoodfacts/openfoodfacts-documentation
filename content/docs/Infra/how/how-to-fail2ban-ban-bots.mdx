@@ -22,8 +22,10 @@ Learn how to configure and use Fail2ban to protect your servers from malicious b
 
 <Steps>
   <Step>
-    **Install Fail2ban** ```bash title="Install Fail2ban" sudo apt install
-    fail2ban ```
+    **Install Fail2ban**
+    ```bash title="Install Fail2ban"
+    sudo apt install fail2ban
+    ```
   </Step>
 
   <Step>
@@ -63,10 +65,11 @@ Create a jail for manually banning problematic IP addresses that automated filte
 
 <Steps>
   <Step>
-    **Enable Manual Ban Jail** ```bash title="Enable nginx-manual-ban Jail" ln
-    -s
-    /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/jail.d/nginx-manual-ban.local
-    /etc/fail2ban/jail.d/ systemctl restart fail2ban ```
+    **Enable Manual Ban Jail**
+    ```bash title="Enable nginx-manual-ban Jail"
+    ln -s /opt/openfoodfacts-infrastructure/confs/common/fail2ban-nftables/jail.d/nginx-manual-ban.local /etc/fail2ban/jail.d/
+    systemctl restart fail2ban
+    ```
   </Step>
 
   <Step>

@@ -125,11 +125,11 @@ See https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html#_administration
     Administrator email is tech@openfoodfacts.org
   </Card>
   <Card title="Relay Configuration">
-    Relay is set to smtp-relay.gmail.com (for incoming mails - though we
-    shouldn't need it)
+    Relay is set to smtp-relay.gmail.com (for incoming mails - though we shouldn't need it)
   </Card>
   <Card title="Port Configuration">
-    - SMTP private port: `25` - Public port: `26`
+    - SMTP private port: `25` 
+    - Public port: `26`
   </Card>
   <Card title="Network Security">
     In networks tab, there are all servers IPs, though because of redirects, PMG
@@ -321,39 +321,42 @@ Note that we use bsd-mailx and not the alias from mailutils as it does not behav
 If you do not receive the email on expected group, here are some checks:
 
 <Steps>
-<Step>
-**Check Local Logs**
-- `/var/log/exim/` if you use `exim4`
-- `/var/log/mail*` if you use postfix
-</Step>
+  <Step>
+    **Check Local Logs**
+    - `/var/log/exim/` if you use `exim4`
+    - `/var/log/mail*` if you use postfix
+  </Step>
 
-<Step>**Check PMG VM Logs** - `/var/log/mail*` on pmg VM</Step>
+  <Step>
+    **Check PMG VM Logs** 
+    - `/var/log/mail*` on pmg VM
+  </Step>
 
-<Step>
-**Test Network Connectivity**
-```bash title="Network Tests"
-ping pmg.openfoodfacts.org
-nc -vz pmg.openfoodfacts.org 25
-```
+  <Step>
+    **Test Network Connectivity**
+    ```bash title="Network Tests"
+    ping pmg.openfoodfacts.org
+    nc -vz pmg.openfoodfacts.org 25
+    ```
 
-<Callout type="info">
-If `nc` command fails, you might have firewall problems: verify iptables on your machine and on ovh1. (`nc` command belongs to `netcat-traditional` or `netcat-openbsd` packages)
-</Callout>
-</Step>
+    <Callout type="info">
+      If `nc` command fails, you might have firewall problems: verify iptables on your machine and on ovh1. (`nc` command belongs to `netcat-traditional` or `netcat-openbsd` packages)
+    </Callout>
+  </Step>
 
-<Step>
-**Manual SMTP Test**
-You can even try to send a mail manually using SMTP protocol using `nc pmg.openfoodfacts.org` and following a tutorial about [sending email with netcat](https://www.linuxjournal.com/content/sending-email-with-netcat).
+  <Step>
+    **Manual SMTP Test**
+    You can even try to send a mail manually using SMTP protocol using `nc pmg.openfoodfacts.org` and following a tutorial about [sending email with netcat](https://www.linuxjournal.com/content/sending-email-with-netcat).
 
-If it succeeds this may mean you have a problem in username to email address translation.
+    If it succeeds this may mean you have a problem in username to email address translation.
 
-</Step>
+  </Step>
 
-<Step>
-**Check Configuration Files**
-- `/etc/mailname` contains `openfoodfacts.org` (see also [debian wiki](https://wiki.debian.org/EtcMailName))
-- Check `/etc/aliases` and `/etc/email-addresses` if you use exim4
-</Step>
+  <Step>
+    **Check Configuration Files**
+    - `/etc/mailname` contains `openfoodfacts.org` (see also [debian wiki](https://wiki.debian.org/EtcMailName))
+    - Check `/etc/aliases` and `/etc/email-addresses` if you use exim4
+  </Step>
 </Steps>
 
 ## References

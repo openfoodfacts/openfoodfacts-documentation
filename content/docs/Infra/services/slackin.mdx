@@ -50,15 +50,22 @@ We replaced the Slackin service with a simple static page on the [nginx reverse 
 
 <Step>
   **Update Static Page** On OVH reverse proxy (server hosting
-  slack.openfoodfacts.org): ```bash title="Update Invitation Link" # Edit the
-  HTML file vim /var/www/slack/index.html # Change the href for the "Join our
-  slack" link with your new link # Save the file ```
+  slack.openfoodfacts.org):
+  ```bash title="Update Invitation Link"
+  # Edit the HTML file
+  vim /var/www/slack/index.html
+  # Change the href for the "Join our slack" link with your new link
+  # Save the file
+  ```
 </Step>
 
   <Step>
-    **Commit Changes** ```bash title="Save Configuration" cd
-    /opt/openfoodfacts-infrastructure # Commit your changes following the git
-    workflow ``` See [how to have server config in
+    **Commit Changes**
+    ```bash title="Save Configuration"
+    cd /opt/openfoodfacts-infrastructure
+    # Commit your changes following the git workflow
+    ```
+    See [how to have server config in
     git](/docs/Infra/how/how-to-have-server-config-in-git) for details.
   </Step>
 </Steps>
@@ -81,18 +88,22 @@ The original system at https://slack.openfoodfacts.org enabled users to join our
 
 <Tabs>
   <Tab value="tech" label="Technical Details">
-    ### Technical Stack - **Base**: [Slackin
-    project](https://github.com/rauchg/slackin) - **Runtime**: Node.js service -
-    **Container**: Container 109 on ovh1 - **Location**: `/home/nodejs` -
-    **Process Manager**:
-    [PM2](https://pm2.io/docs/runtime/guide/process-management/) - **Service**:
-    systemd service named `pm2-nodejs`
+    ### Technical Stack
+    
+    - **Base**: [Slackin project](https://github.com/rauchg/slackin)
+    - **Runtime**: Node.js service
+    - **Container**: Container 109 on ovh1
+    - **Location**: `/home/nodejs`
+    - **Process Manager**: [PM2](https://pm2.io/docs/runtime/guide/process-management/)
+    - **Service**: systemd service named `pm2-nodejs`
   </Tab>
 
 <Tab value="network" label="Network Configuration">
-  ### Network Setup - **Port**: Listened on port 3000 - **Access**: Through
-  [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy) -
-  **Domain**: slack.openfoodfacts.org
+  ### Network Setup
+  
+  - **Port**: Listened on port 3000
+  - **Access**: Through [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy)
+  - **Domain**: slack.openfoodfacts.org
 </Tab>
 
   <Tab value="issues" label="Deprecation Reasons">
@@ -100,11 +111,9 @@ The original system at https://slack.openfoodfacts.org enabled users to join our
     <Callout type="warning">
       Slackin became non-functional due to Slack API changes:
     </Callout>
-    - [Main issue](https://github.com/rauchg/slackin/issues/417) - [Extended
-    version issue](https://github.com/emedvedev/slackin-extended/issues/205) -
-    [Slack integration issue](https://github.com/integrations/slack/issues/1063)
-    Slack deprecated the APIs that Slackin relied on, with no replacement
-    planned.
+    - [Main issue](https://github.com/rauchg/slackin/issues/417) 
+    - [Extended version issue](https://github.com/emedvedev/slackin-extended/issues/205) 
+    - [Slack integration issue](https://github.com/integrations/slack/issues/1063) Slack deprecated the APIs that Slackin relied on, with no replacement planned.
   </Tab>
 </Tabs>
 
@@ -126,16 +135,19 @@ The original system at https://slack.openfoodfacts.org enabled users to join our
 
 <Tabs>
   <Tab value="benefits" label="Benefits">
-    ### Advantages of Static Page - **Reliability**: No dependency on deprecated
-    APIs - **Simplicity**: Easy to maintain and update - **Performance**: Fast
-    loading, no server processing - **Stability**: Less likely to break with
-    Slack changes
+    ### Advantages of Static Page
+    
+    - **Reliability**: No dependency on deprecated APIs
+    - **Simplicity**: Easy to maintain and update
+    - **Performance**: Fast loading, no server processing
+    - **Stability**: Less likely to break with Slack changes
   </Tab>
 
   <Tab value="limitations" label="Limitations">
-    ### Disadvantages - **Manual Updates**: Requires manual link renewal every
-    400 invitations - **No Analytics**: Can't track invitation usage
-    automatically - **Less Features**: No real-time user count or other dynamic
-    features
+    ### Disadvantages
+    
+    - **Manual Updates**: Requires manual link renewal every 400 invitations
+    - **No Analytics**: Can't track invitation usage automatically
+    - **Less Features**: No real-time user count or other dynamic features
   </Tab>
 </Tabs>

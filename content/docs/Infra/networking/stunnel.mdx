@@ -48,17 +48,21 @@ sequenceDiagram
 
 <Tabs>
   <Tab value="client" label="Client Side">
-    ### Stunnel Client - **Role**: Where connections are initiated (*Stunnel
-    Server 1* in diagram) - **Configuration**: `client=yes` - **Security**: Must
-    **never** be exposed on public IP - **Location**: Internal container with
-    private IP only
+    ### Stunnel Client
+    
+    - **Role**: Where connections are initiated (*Stunnel Server 1* in diagram)
+    - **Configuration**: `client=yes`
+    - **Security**: Must **never** be exposed on public IP
+    - **Location**: Internal container with private IP only
   </Tab>
 
   <Tab value="server" label="Server Side">
-    ### Stunnel Server - **Role**: Accepts connections and forwards to target
-    service - **Configuration**: `client=no` (server side) - **Security**: May
-    be exposed publicly through reverse proxy - **Location**: Reverse proxy
-    configuration
+    ### Stunnel Server
+    
+    - **Role**: Accepts connections and forwards to target service
+    - **Configuration**: `client=no` (server side)
+    - **Security**: May be exposed publicly through reverse proxy
+    - **Location**: Reverse proxy configuration
   </Tab>
 </Tabs>
 
@@ -115,15 +119,22 @@ sequenceDiagram
   </Step>
 
   <Step>
-    **Security Requirements** ```bash title="Secure PSK Files" chmod -R go-rwx
-    /etc/stunnel/psk/ ```
+    **Security Requirements**
+    ```bash title="Secure PSK Files"
+    chmod -R go-rwx /etc/stunnel/psk/
+    ```
     <Callout type="warning">
       PSK files must **never** be committed to Git repository. Keep them on
       servers only.
     </Callout>
   </Step>
 
-  <Step>**Generate PSK** ```bash title="Generate PSK" pwgen 32 ```</Step>
+  <Step>
+    **Generate PSK**
+    ```bash title="Generate PSK"
+    pwgen 32
+    ```
+  </Step>
 
   <Step>
     **Unique Usernames** Keep each username unique for each server **and** each

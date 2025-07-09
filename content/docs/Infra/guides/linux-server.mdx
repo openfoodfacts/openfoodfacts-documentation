@@ -8,8 +8,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
-# Linux Server Guidelines
-
 Guidelines for managing Linux servers within the Open Food Facts infrastructure.
 
 <Callout type="warning">
@@ -34,8 +32,7 @@ Guidelines for managing Linux servers within the Open Food Facts infrastructure.
 </Cards>
 
 <Callout type="info">
-  Every server is referenced in the [CT and VM list of OFF
-  infrastructure](https://docs.google.com/document/d/14x5yPdcJ8uLoc5zb0HYjb_EYUIWZzOlaPWYyLSuIcTw/edit?resourcekey=0-h0h9ksbTUBykEDuBkXH4fg#).
+  Every server is referenced in the [CT and VM list of OFF infrastructure](https://docs.google.com/document/d/14x5yPdcJ8uLoc5zb0HYjb_EYUIWZzOlaPWYyLSuIcTw/edit?resourcekey=0-h0h9ksbTUBykEDuBkXH4fg#).
 </Callout>
 
 ## Configuration Management
@@ -116,13 +113,19 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
 
 <Tabs>
   <Tab value="ovh" label="OVH Servers">
-    ### OVH Server Rules Rules are stored in: ```bash title="Rule Locations"
-    /etc/iptables/rule.v4 # IPv4 rules /etc/iptables/rule.v6 # IPv6 rules ```
+    ### OVH Server 
+    Rules Rules are stored in: 
+    ```bash title="Rule Locations"
+    /etc/iptables/rule.v4 # IPv4 rules /etc/iptables/rule.v6 # IPv6 rules 
+    ```
   </Tab>
 
   <Tab value="off1" label="OFF1 Server">
-    ### OFF1 Server Rules Rules are stored in: ```bash title="Rule Location"
-    /etc/iptables.up.rules ```
+    ### OFF1 Server 
+    Rules Rules are stored in: 
+    ```bash title="Rule Location"
+    /etc/iptables.up.rules 
+    ```
   </Tab>
 </Tabs>
 
@@ -145,8 +148,7 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
   </Step>
 
   <Step>
-    **Reference Documentation** See [Docker iptables
-    documentation](https://docs.docker.com/network/iptables/) for details.
+    **Reference Documentation** See [Docker iptables documentation](https://docs.docker.com/network/iptables/) for details.
   </Step>
 </Steps>
 
@@ -162,12 +164,17 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
 <Steps>
   <Step>
     **Check Current Configuration** Compare current and default configurations:
-    ```bash title="Compare Bashrc" diff $HOME/.bashrc /etc/skel/.bashrc ```
+    ```bash title="Compare Bashrc" 
+    diff $HOME/.bashrc /etc/skel/.bashrc 
+    ```
   </Step>
 
   <Step>
-    **Copy Default Configuration** If different, copy the default: ```bash
-    title="Update Bashrc" cp /etc/skel/.bashrc /root/ ```
+    **Copy Default Configuration** 
+    If different, copy the default: 
+    ```bash
+    title="Update Bashrc" cp /etc/skel/.bashrc /root/ 
+    ```
   </Step>
 </Steps>
 
@@ -178,13 +185,19 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
     ### Shell Color Issues
     <Steps>
       <Step>
-        **Check TERM Variable** ```bash title="Check Terminal Type" echo $TERM
-        ``` Should be `xterm-256color` or `linux`.
+        **Check TERM Variable** 
+        ```bash title="Check Terminal Type" 
+        echo $TERM
+        ``` 
+        Should be `xterm-256color` or `linux`.
       </Step>
 
       <Step>
-        **Fix Bashrc** ```bash title="Compare and Fix" diff $HOME/.bashrc
-        /etc/skel/.bashrc # If different, copy from /etc/skel/.bashrc ```
+        **Fix Bashrc** 
+        ```bash title="Compare and Fix" 
+        diff $HOME/.bashrc
+        /etc/skel/.bashrc # If different, copy from /etc/skel/.bashrc 
+        ```
       </Step>
     </Steps>
   </Tab>
@@ -193,14 +206,19 @@ For detailed configuration, see [Mail - Servers](/docs/Infra/services/mail#serve
     ### Autocompletion Issues
     <Steps>
       <Step>
-        **Check bash-completion Package** ```bash title="Verify Installation"
-        dpkg --verify bash-completion && echo ok ```
+        **Check bash-completion Package** 
+        ```bash title="Verify Installation"
+        dpkg --verify bash-completion && echo ok 
+        ```
       </Step>
 
       <Step>
-        **Fix Bashrc Configuration** ```bash title="Compare and Fix" diff
+        **Fix Bashrc Configuration** 
+        ```bash title="Compare and Fix" 
+        diff
         $HOME/.bashrc /etc/skel/.bashrc # If different, copy from
-        /etc/skel/.bashrc ```
+        /etc/skel/.bashrc 
+        ```
       </Step>
     </Steps>
   </Tab>

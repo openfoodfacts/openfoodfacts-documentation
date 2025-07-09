@@ -8,8 +8,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
-# Folksonomy API
-
 Folksonomy is a service to allow contributors to freely add labels and values to products.
 
 <Card
@@ -85,18 +83,26 @@ cd ~/folksonomy_api
 </Step>
 
 <Step>
-  **Upgrade from Git Repository** ```bash title="Upgrade Code" git fetch git
-  checkout vX.y.z ```
-</Step>
-
-<Step>
-  **Install Dependencies** ```bash title="Install Dependencies" poetry install
+  **Upgrade from Git Repository** 
+  ```bash title="Upgrade Code"
+  git fetch
+  git checkout vX.y.z 
   ```
 </Step>
 
 <Step>
-  **Database Migration** ```bash title="Run Database Migration" poetry run yoyo
-  apply --database postgresql:///folksonomy ```
+  **Install Dependencies** 
+  ```bash title="Install Dependencies" 
+  poetry install
+  ```
+</Step>
+
+<Step>
+  **Database Migration** 
+  ```bash title="Run Database Migration" 
+  poetry run yoyo
+  apply --database postgresql:///folksonomy 
+  ```
 </Step>
 
 <Step>

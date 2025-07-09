@@ -53,9 +53,11 @@ We use Git to store and track server/container/VM specific configurations for be
   </Step>
 
   <Step>
-    **Clone Repository** ```bash title="Clone Infrastructure Repository" cd /opt
-    git clone
-    git@github.com-my-project:openfoodfacts/openfoodfacts-infrastructure.git ```
+    **Clone Repository**
+    ```bash title="Clone Infrastructure Repository"
+    cd /opt
+    git clone git@github.com-my-project:openfoodfacts/openfoodfacts-infrastructure.git
+    ```
   </Step>
 </Steps>
 
@@ -68,8 +70,10 @@ We use Git to store and track server/container/VM specific configurations for be
     "root@some-descriptive-host-name" ```
     <Steps>
       <Step>
-        **Copy Public Key** ```bash title="Get Public Key" cat
-        /root/.ssh/id_ed25519.pub ```
+        **Copy Public Key**
+        ```bash title="Get Public Key"
+        cat /root/.ssh/id_ed25519.pub
+        ```
       </Step>
 
       <Step>
@@ -87,20 +91,27 @@ We use Git to store and track server/container/VM specific configurations for be
     </Callout>
     <Steps>
       <Step>
-        **Create Project-Specific Key** ```bash title="Generate Project Key"
-        ssh-keygen -t ed25519 -C "root@my-project-my-server-name" -f
-        "/root/.ssh/github_my-project" cat /root/.ssh/github_my-project.pub ```
+        **Create Project-Specific Key**
+        ```bash title="Generate Project Key"
+        ssh-keygen -t ed25519 -C "root@my-project-my-server-name" -f "/root/.ssh/github_my-project"
+        cat /root/.ssh/github_my-project.pub
+        ```
       </Step>
 
       <Step>
-        **Configure SSH Client** Edit `/root/.ssh/config`: ```ini title="SSH
-        Config" Host github.com-my-project Hostname github.com
-        IdentityFile=/root/.ssh/github_my-project ```
+        **Configure SSH Client** Edit `/root/.ssh/config`:
+        ```ini title="SSH Config"
+        Host github.com-my-project
+        Hostname github.com
+        IdentityFile=/root/.ssh/github_my-project
+        ```
       </Step>
 
       <Step>
-        **Clone with Alias** ```bash title="Clone with SSH Alias" git clone
-        git@github.com-my-project:my-org/my-project.git ```
+        **Clone with Alias**
+        ```bash title="Clone with SSH Alias"
+        git clone git@github.com-my-project:my-org/my-project.git
+        ```
       </Step>
     </Steps>
     <Callout type="info">

@@ -159,11 +159,14 @@ We setup analytics with Matomo on the forum.
   </Step>
 
   <Step>
-    **Configure Settings** Settings: - Include component on these themes:
-    **Default** (using button *add to all them*) - host url:
-    `analytics.openfoodfacts.org` - website id: **8** - subdomain tracking:
-    **yes** - do not track: **yes** - disable cookies: **yes** (keep GDPR
-    compatibility)
+    **Configure Settings**
+    Settings:
+    - Include component on these themes: **Default** (using button *add to all them*)
+    - host url: `analytics.openfoodfacts.org`
+    - website id: **8**
+    - subdomain tracking: **yes**
+    - do not track: **yes**
+    - disable cookies: **yes** (keep GDPR compatibility)
   </Step>
 
   <Step>
@@ -181,38 +184,37 @@ We setup analytics with Matomo on the forum.
 </Callout>
 
 <Steps>
-<Step>
-**Access the Server**
-1. Get root access on ovh1: `sudo su root`
-2. Connect yourself to the VM: `ssh 10.1.0.202`
-</Step>
+  <Step>
+  **Access the Server**
+  1. Get root access on ovh1: `sudo su root`
+  2. Connect yourself to the VM: `ssh 10.1.0.202`
+  </Step>
 
-<Step>
-  **Navigate to Discourse Directory** 
-  ```bash title="Navigate" 
-  cd /var/discourse
+  <Step>
+    **Navigate to Discourse Directory** 
+    ```bash title="Navigate" 
+    cd /var/discourse
+    ```
+  </Step>
+
+  <Step>
+    **Edit Configuration** 
+    ```bash title="Edit Config" 
+    nano containers/app.yml 
+    ```
+  </Step>
+
+  <Step>
+    **Add Plugin Repository** 
+    Add [the plugin's repository URL](https://github.com/paviliondev/discourse-events.git) to your container's app.yml file, right after the `git clone https://github.com/discourse/docker_manager.git`
+  </Step>
+
+  <Step>
+  **Rebuild Application**
+  ```bash title="Rebuild App"
+  ./launcher rebuild app
   ```
-</Step>
-
-<Step>
-  **Edit Configuration** 
-  ```bash title="Edit Config" 
-  nano containers/app.yml 
-  ```
-</Step>
-
-<Step>
-  **Add Plugin Repository** 
-  Add [the plugin's repository URL](https://github.com/paviliondev/discourse-events.git) to your container's
-  app.yml file, right after the `git clone https://github.com/discourse/docker_manager.git`
-</Step>
-
-<Step>
-**Rebuild Application**
-```bash title="Rebuild App"
-./launcher rebuild app
-```
-</Step>
+  </Step>
 </Steps>
 
 <Callout type="warning">

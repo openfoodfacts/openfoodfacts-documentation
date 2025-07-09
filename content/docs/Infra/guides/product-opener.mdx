@@ -8,8 +8,6 @@ import { Card, Cards } from 'fumadocs-ui/components/card';
 import { Steps, Step } from 'fumadocs-ui/components/steps';
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
-# Product Opener Overview
-
 Product Opener is the backend that powers the Open Food Facts website and mobile apps, and all the other siblings projects (Open Beauty Facts, Open Pet Food Facts, Open Products Facts...).
 
 ## Deployment Overview
@@ -41,8 +39,8 @@ Each flavor of Open Food Facts is deployed in its own proxmox VM:
 | OFF-PRO | 114 |
 
 <Callout type="info">
-The internal IP of the VMs is `10.1.0.{VMID}`.
-Once connected on the off2 server, OFF can therefore be accessed on `10.1.0.113`.
+    The internal IP of the VMs is `10.1.0.{VMID}`.
+    Once connected on the off2 server, OFF can therefore be accessed on `10.1.0.113`.
 </Callout>
 </Tab>
 </Tabs>
@@ -111,34 +109,34 @@ For example, for OFF, the directory is `/srv/off`.
 </Callout>
 
 <Cards>
-<Card title="Log Files">
-- All logs are stored in `./logs`
-- NGINX logs: `./logs/access.log` and `./logs/error.log`
-- Application logs: `./logs/log4perl.log`
-</Card>
-<Card title="Image Files">
-Images are stored in `./images/products`
-</Card>
+    <Card title="Log Files">
+        - All logs are stored in `./logs`
+        - NGINX logs: `./logs/access.log` and `./logs/error.log`
+        - Application logs: `./logs/log4perl.log`
+    </Card>
+    <Card title="Image Files">
+        Images are stored in `./images/products`
+    </Card>
 </Cards>
 
 ## Service Management
 
 <Tabs>
-<Tab value="apache" label="Apache Server">
-<Callout type="info">
-The apache server is managed by systemd.
-</Callout>
+    <Tab value="apache" label="Apache Server">
+        <Callout type="info">
+            The apache server is managed by systemd.
+        </Callout>
 
-```bash title="Restart Apache"
-sudo systemctl restart apache2
-```
-</Tab>
+    ```bash title="Restart Apache"
+    sudo systemctl restart apache2
+    ```
+    </Tab>
 
-<Tab value="cron" label="Scheduled Tasks">
-<Callout type="info">
-We don't use cron anymore to manage scheduled tasks, we use systemd timers instead.
-</Callout>
+    <Tab value="cron" label="Scheduled Tasks">
+        <Callout type="info">
+            We don't use cron anymore to manage scheduled tasks, we use systemd timers instead.
+        </Callout>
 
-You can find all the timers in `/etc/systemd/system/`.
-</Tab>
+    You can find all the timers in `/etc/systemd/system/`.
+    </Tab>
 </Tabs>
