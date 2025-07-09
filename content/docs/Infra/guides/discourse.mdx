@@ -8,8 +8,6 @@ import { Card, Cards } from "fumadocs-ui/components/card";
 import { Steps, Step } from "fumadocs-ui/components/steps";
 import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
-# Discourse
-
 [Discourse](https://www.discourse.org/) is a forum application.
 
 <Callout type="info">
@@ -35,8 +33,7 @@ It defines volumes where all the data is found. It's in `/var/discourse/shared/s
 </Callout>
 
 <Callout type="info">
-  You might get a shell into the docker container using `./launcher enter app
-  bash`.
+  You might get a shell into the docker container using `./launcher enter app bash`.
 </Callout>
 
 ## Mail Configuration
@@ -70,7 +67,8 @@ Make a snapshot before upgrade to ensure rollback capability.
 </Step>
 
 <Step>
-  **Try Web Interface Upgrade** Try to upgrade through the web interface:
+  **Try Web Interface Upgrade** 
+  Try to upgrade through the web interface:
   https://forum.openfoodfacts.org/admin/upgrade (you need to be an admin)
 </Step>
 
@@ -87,7 +85,7 @@ After several days, if everything is fine, you can delete the snapshot.
 <Callout type="info">
 While upgrading via the web interface, you could possibly get this error message:
 
-```
+```sh
 You are running an old version of the Discourse image.
 
 Upgrades via the web UI are disabled until you run the latest image.
@@ -112,13 +110,19 @@ In case the web interface upgrade fails, you have to upgrade in a Linux shell di
 </Step>
 
 <Step>
-  **System Updates** ```bash title="Update System" apt update && apt
-  dist-upgrade # updates the whole system ```
+  **System Updates** 
+  ```bash title="Update System" 
+  apt update && apt
+  dist-upgrade # updates the whole system 
+  ```
 </Step>
 
 <Step>
-  **Cleanup** ```bash title="Clean Up" cd /var/discourse ./launcher cleanup #
-  cleans old docker images apt-get autoclean apt-get autoremove ```
+  **Cleanup**
+  ```bash title="Clean Up" 
+  cd /var/discourse ./launcher cleanup #
+  cleans old docker images apt-get autoclean apt-get autoremove 
+  ```
 </Step>
 
 <Step>**Create Snapshot** Create a snapshot if haven't done it yet!</Step>
@@ -184,12 +188,17 @@ Discourse is very specific in it's Content Security Policy headers, so we have t
 </Step>
 
 <Step>
-  **Navigate to Discourse Directory** ```bash title="Navigate" cd /var/discourse
+  **Navigate to Discourse Directory** 
+  ```bash title="Navigate" 
+  cd /var/discourse
   ```
 </Step>
 
 <Step>
-  **Edit Configuration** ```bash title="Edit Config" nano containers/app.yml ```
+  **Edit Configuration** 
+  ```bash title="Edit Config" 
+  nano containers/app.yml 
+  ```
 </Step>
 
 <Step>
