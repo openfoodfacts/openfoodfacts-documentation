@@ -286,8 +286,8 @@ zpool scrub <pool_name>
   through ssh to sync the distant server (send snapshots).
 </Callout>
 
-<Tabs>
-<Tab value="automatic" label="Automatic Sync">
+<Tabs items={["automatic", "manual"]}>
+<Tab value="automatic">
 <Card title="Automated Syncing" href="/docs/Infra/storage/sanoid">
 We normally do it using sanoid and syncoid
 </Card>
@@ -296,7 +296,7 @@ Proxmox might also do it as part of corosync to replicate containers across clus
 
 </Tab>
 
-<Tab value="manual" label="Manual Sync">
+<Tab value="manual">
 ```bash title="Manual ZFS Sync"
 zfs send <previous-snap> <dataset_name>@<last-snap> \
   | ssh <hostname> zfs recv <target_dataset_name> -F
@@ -335,8 +335,8 @@ On ovh3: [snapshot-purge.sh](https://github.com/openfoodfacts/openfoodfacts-infr
 
 To mount dataset in a proxmox container you have two options:
 
-<Tabs>
-<Tab value="shared-disk" label="Shared Disk">
+<Tabs items={["shared-disk", "bind-volumes"]}>
+<Tab value="shared-disk">
 <Callout type="info">
 Not really experimented yet, but it could have the advantage to enable replication.
 </Callout>
@@ -354,7 +354,7 @@ In another VM/CT, add the same disk.
 </Steps>
 </Tab>
 
-<Tab value="bind-volumes" label="Bind Volumes">
+<Tab value="bind-volumes">
 See: https://pve.proxmox.com/wiki/Linux_Container#_bind_mount_points and https://pve.proxmox.com/wiki/Unprivileged_LXC_containers
 
 <Steps>

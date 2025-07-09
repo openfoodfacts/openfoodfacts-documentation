@@ -178,8 +178,8 @@ Most of the time HTTPS certificates are managed on the nginx reverse proxy VM. H
 **Prepare Service Definition**
 First prepare the service definition to answer on port 443 and 80:
 
-<Tabs>
-<Tab value="https" label="HTTPS Configuration">
+<Tabs items={["https", "http"]}>
+<Tab value="https">
 Change your current configuration to listen on 443:
 
 ```nginx title="HTTPS Server Block"
@@ -192,7 +192,7 @@ server{
 
 </Tab>
 
-<Tab value="http" label="HTTP Redirect">
+<Tab value="http">
 Add a new bare section for port 80:
 
 ```nginx title="HTTP Server Block"

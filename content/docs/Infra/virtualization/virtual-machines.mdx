@@ -32,8 +32,8 @@ Our infrastructure uses a mix of Proxmox containers and QEMU VMs to host various
 
 ## VM Categories
 
-<Tabs>
-  <Tab value="production" label="Production Services">
+<Tabs items={["production", "development", "infrastructure"]}>
+  <Tab value="production">
     Production VMs hosting live services:
     - **off-net**: ProductOpener frontend + backend, MongoDB, PostgreSQL, Memcached
     - **robotoff-net**: Robotoff API + Schedulers + Workers, PostgreSQL DB
@@ -41,14 +41,14 @@ Our infrastructure uses a mix of Proxmox containers and QEMU VMs to host various
     - **monitoring**: Docker-based observability stack
   </Tab>
   
-  <Tab value="development" label="Development/Testing">
+  <Tab value="development">
     Development and testing environments:
     - **robotoff-dev**: Development instance with full stack
     - **mongo-dev**: MongoDB development instance
     - **Folksonomy Engine API dev**: PostgreSQL, Python3
   </Tab>
   
-  <Tab value="infrastructure" label="Infrastructure">
+  <Tab value="infrastructure">
     Supporting infrastructure services:
     - **Monitoring VM**: ElasticSearch, Grafana, InfluxDB, Prometheus
     - **Mail services**: Postfix, mail processing

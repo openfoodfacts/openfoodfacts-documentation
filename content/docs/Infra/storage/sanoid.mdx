@@ -43,8 +43,8 @@ Configuration is managed through `/etc/sanoid/sanoid.conf` which defines:
 See [reference documentation](https://github.com/jimsalterjrs/sanoid/wiki/Sanoid) for detailed configuration options.
 </Callout>
 
-<Tabs>
-  <Tab value="synced" label="Synced Datasets">
+<Tabs items={["synced", "local"]}>
+  <Tab value="synced">
     ### Synced from Remote Server
     
     For datasets synced from different servers:
@@ -53,7 +53,7 @@ See [reference documentation](https://github.com/jimsalterjrs/sanoid/wiki/Sanoid
     - **No creation**: Source server handles snapshot creation
   </Tab>
   
-  <Tab value="local" label="Local Datasets">
+  <Tab value="local">
     ### Local Source Datasets
     
     For datasets where this server is the source:
@@ -141,8 +141,8 @@ Always prefer **pull mode** to avoid elevated privileges on distant servers. Thi
 
 ## Getting Status
 
-<Tabs>
-  <Tab value="services" label="Service Status">
+<Tabs items={["services", "snapshots"]}>
+  <Tab value="services">
     ### Check Service Status
     
     ```bash title="Service Status Commands"
@@ -151,7 +151,7 @@ Always prefer **pull mode** to avoid elevated privileges on distant servers. Thi
     ```
   </Tab>
   
-  <Tab value="snapshots" label="Snapshot Status">
+  <Tab value="snapshots">
     ### List Snapshots
     
     ```bash title="List ZFS Snapshots"
