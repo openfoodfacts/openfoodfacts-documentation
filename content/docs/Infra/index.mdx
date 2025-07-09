@@ -121,8 +121,6 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 
 ### off1 (Free Datacenter)
 
-<Card title="Main Production Server" description="Located at free.org - Main Open Food Facts services">
-
 **Current Setup:**
 
 - Bare-metal Debian installation (migration to Proxmox planned)
@@ -136,11 +134,8 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 
 - https://cestemballepresdechezvous.fr/
 
-</Card>
 
 ### off2 (Free Datacenter)
-
-<Card title="Database Server" description="Located at free.org - Main database infrastructure">
 
 **Current Setup:**
 
@@ -150,11 +145,7 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 
 - Main MongoDB instance supporting all product data for Product Opener instances on [off1](#off1)
 
-</Card>
-
 ### ovh1 (OVH Strasbourg - sbg3)
-
-<Card title="Proxmox Services" description="Small services and reverse proxy">
 
 **Setup:**
 
@@ -168,11 +159,8 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 - Blog
 - [Odoo (connect)](/docs/Infra/services/odoo)
 
-</Card>
 
 ### ovh2 (OVH Roubaix - rbx8)
-
-<Card title="Docker Services" description="Staging and production Docker environments">
 
 **Setup:**
 
@@ -184,13 +172,11 @@ Open Food Facts operates a robust, distributed infrastructure across multiple ho
 - **Staging VM**: Development and testing services
 - **Production VM**: Live production services
 
-See [Docker architecture](/docs/Infra/containerization/docker-architecture) for details.
+See [Docker architecture](/docs/Infra/containerization/docker_architecture) for details.
 
-</Card>
 
 ### ovh3 (OVH Roubaix - rbx7)
 
-<Card title="Storage Server" description="Main storage and static content serving">
 
 **Main Contents:**
 
@@ -203,19 +189,13 @@ See [Docker architecture](/docs/Infra/containerization/docker-architecture) for 
   capabilities for static content.
 </Callout>
 
-</Card>
-
 ### osm45 (Moji)
-
-<Card title="IPv6 Infrastructure" description="Located at Moji datacenter">
 
 **Network Configuration:**
 
 - IPv6 only (+ IPv4 internal network)
 
 See [Moji Datacenter](/docs/Infra/hosting/moji-datacenter) for complete details.
-
-</Card>
 
 ## Contributing
 
