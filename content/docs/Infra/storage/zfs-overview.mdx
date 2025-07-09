@@ -52,46 +52,80 @@ import { Tabs, Tab } from "fumadocs-ui/components/tabs";
 
 ### Key Documentation Sections
 
-<Tabs items={["misc", "concepts", "admin", "performance"]}>
-<Tab value="misc">
-[Misc man page section](https://openzfs.github.io/openzfs-docs/man/master/7/index.html) contains a lot of useful information on properties and features
-</Tab>
-
-<Tab value="concepts">
-  [Basic
-  Concepts](https://openzfs.github.io/openzfs-docs/Basic%20Concepts/index.html)
-  is a good place to return to from time to time to grab concepts better
-</Tab>
-
-<Tab value="admin">
-  [Man pages on system administration
-  commands](https://openzfs.github.io/openzfs-docs/man/master/8/index.html) are
-  really useful
-</Tab>
-
-<Tab value="performance">
-[Performance and Tuning](https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/index.html) is also valuable to dig in some options
-</Tab>
-</Tabs>
+<Cards>
+  <Card 
+    title="Misc Man Pages" 
+    href="https://openzfs.github.io/openzfs-docs/man/master/7/index.html"
+    description="Contains a lot of useful information on properties and features"
+  />
+  <Card 
+    title="Basic Concepts" 
+    href="https://openzfs.github.io/openzfs-docs/Basic%20Concepts/index.html"
+    description="A good place to return to from time to time to grab concepts better"
+  />
+  <Card 
+    title="System Administration" 
+    href="https://openzfs.github.io/openzfs-docs/man/master/8/index.html"
+    description="Man pages on system administration commands are really useful"
+  />
+  <Card 
+    title="Performance and Tuning" 
+    href="https://openzfs.github.io/openzfs-docs/Performance%20and%20Tuning/index.html"
+    description="Valuable to dig in some options for optimization"
+  />
+</Cards>
 
 ## Useful Commands
 
-<Cards>
-  <Card title="Pool Status">`zpool status` - See eventual errors</Card>
-  <Card title="Device List">`zpool list -v` - See all devices</Card>
-  <Card title="Dataset List">
-    `zfs list -r` - Get all datasets and their mountpoints
-  </Card>
-  <Card title="I/O Statistics">
-    `zpool iostat` - See stats about read / write
-  </Card>
-  <Card title="Pool History">
-    `zpool history` - List all operations done on a pool
-  </Card>
-  <Card title="Space Usage">
-    `zpool list -o name,size,usedbysnapshots,allocated` - See space allocated
-  </Card>
-</Cards>
+<Steps>
+<Step>
+**Pool Status**
+```bash
+zpool status
+```
+See eventual errors in your ZFS pools.
+</Step>
+
+<Step>
+**Device List**
+```bash
+zpool list -v
+```
+See all devices in your pools.
+</Step>
+
+<Step>
+**Dataset List**
+```bash
+zfs list -r
+```
+Get all datasets and their mountpoints.
+</Step>
+
+<Step>
+**I/O Statistics**
+```bash
+zpool iostat
+```
+See stats about read/write operations.
+</Step>
+
+<Step>
+**Pool History**
+```bash
+zpool history
+```
+List all operations done on a pool.
+</Step>
+
+<Step>
+**Space Usage**
+```bash
+zpool list -o name,size,usedbysnapshots,allocated
+```
+See space allocated in your pools.
+</Step>
+</Steps>
 
 ### Important Command Notes
 
