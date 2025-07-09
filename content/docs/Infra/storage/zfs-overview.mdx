@@ -135,14 +135,11 @@ See space allocated in your pools.
   second it's used space.
 </Callout>
 
-<Callout type="info">
 **Free Space**: `df` on a dataset does not really work because free space is shared between the datasets. You can still see datasets usage by using:
 
 ```bash title="Dataset Usage"
 zfs list -o name,used,usedbydataset,usedbysnapshots,available -r <pool_name>
 ```
-
-</Callout>
 
 ### Advanced Commands
 
