@@ -55,7 +55,6 @@ This document outlines the complete production architecture of Open Food Facts, 
 
 ## Configuration Management
 
-<Card title="Git-Based Configuration" description="Infrastructure as Code approach with Git version control">
 
 ### Configuration Strategy
 
@@ -106,11 +105,7 @@ We maintain server configurations in the [infrastructure git repository](https:/
 - [Explanation on server configuration with git](/docs/Infra/configuration/explain-server-config-in-git)
 - [How to have server config in git](/docs/Infra/how/how-to-have-server-config-in-git)
 
-</Card>
-
 ## NGINX Proxy Architecture
-
-<Card title="Reverse Proxy Setup" description="Cascading NGINX configuration with security features">
 
 ### Proxy Structure
 
@@ -139,11 +134,8 @@ We implement a [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy)
 
 **Related:** [How to use fail2ban to ban bots](/docs/Infra/how/how-to-fail2ban-ban-bots)
 
-</Card>
 
 ## Product Opener Deployment
-
-<Card title="Container-Based Deployment" description="One application per LXC container architecture">
 
 ### Container Strategy
 
@@ -207,11 +199,9 @@ We implement a [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy)
 
 </Card>
 
-</Card>
 
 ## Folder Structure
 
-<Card title="Deployment Layout" description="Standardized directory structure for deployments">
 
 ### Design Principle
 
@@ -249,11 +239,8 @@ We implement a [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy)
   volumes: data, caches, and configuration data.
 </Callout>
 
-</Card>
-
 ## Storage Architecture
 
-<Card title="ZFS-Based Storage" description="Comprehensive data storage strategy with ZFS datasets">
 
 ### Storage Principles
 
@@ -302,13 +289,10 @@ We implement a [NGINX reverse proxy](/docs/Infra/networking/nginx-reverse-proxy)
 
 ### Proxmox Integration
 
-<Card title="Bind Mount Configuration" description="ZFS dataset mounting in Proxmox containers">
 
 Datasets are mounted using Proxmox Mount Point (`mp<number>`) entries in container configuration.
 
 **Reference:** [Bind mounting ZFS Datasets in Proxmox](/docs/Infra/virtualization/proxmox#bind-mounting-zfs-datasets)
-
-</Card>
 
 ### Storage Flow Diagram
 
@@ -336,11 +320,7 @@ flowchart TD
     end
 ```
 
-</Card>
-
 ## ZFS Storage Synchronization
-
-<Card title="Backup and Replication Strategy" description="Comprehensive data protection with ZFS snapshots and sync">
 
 ### Synchronization Tools
 
@@ -421,11 +401,7 @@ flowchart TD
   OVH3 or OFF2 images are also served by NGINX for `images.openfoodfacts.org`.
 </Callout>
 
-</Card>
-
 ## Network Architecture
-
-<Card title="Internal Communication" description="Secure inter-service communication strategy">
 
 ### Communication Principles
 
@@ -474,8 +450,6 @@ flowchart TD
 </Callout>
 
 ![Architecture diagram](/docs/Infra/img/architecture-diagram.png)
-
-</Card>
 
 ## Future Improvements
 
