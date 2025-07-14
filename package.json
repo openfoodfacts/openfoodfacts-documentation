@@ -24,7 +24,7 @@
     "next": "15.3.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "shiki": "3.7.0",
+    "shiki": "3.8.0",
     "unist-util-visit": "^5.0.0",
     "yaml": "^2.8.0"
   },
