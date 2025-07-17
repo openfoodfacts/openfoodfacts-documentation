@@ -6,7 +6,9 @@
   "pages":[
     "index",
     "---API References---",
+    "---Version 2 API's ---",
     "...(api)/v2",
+    "---Version 3 API's ---",
     "...(api)/v3"
   ]
 }
