@@ -10,12 +10,9 @@ const config = {
   images: {
     unoptimized: true,
   },
-  // GitHub Pages serves from a subdirectory when not using a custom domain
-  // Remove basePath and assetPrefix if you're using a custom domain
-  ...(process.env.GITHUB_ACTIONS && {
-    basePath: '/openfoodfacts-documentation',
-    assetPrefix: '/openfoodfacts-documentation/',
-  }),
+  // GitHub Pages configuration
+  basePath: process.env.GITHUB_ACTIONS ? '/openfoodfacts-documentation' : '',
+  assetPrefix: process.env.GITHUB_ACTIONS ? '/openfoodfacts-documentation/' : '',
 };
 
 export default withMDX(config);
