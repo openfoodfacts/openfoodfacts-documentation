@@ -1,134 +1,168 @@
 ---
-title: "Robotoff"
-description: "AI-powered product data extraction service for Open Food Facts. Learn about computer vision, ingredient analysis, and machine learning features."
+title: "API Reference"
+description: "Complete API documentation for Robotoff - the AI-powered product data extraction service for Open Food Facts"
 ---
 
 import { Cards, Card } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
-import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
-import { GithubInfo } from "fumadocs-ui/components/github-info";
 
-**Robotoff** is a service that generates predictions from product data such as images, text, and metadata. These predictions can individually or collectively be refined into actionable suggestions known as insights.
+The **Robotoff API** provides programmatic access to Open Food Facts' AI-powered product data extraction and processing capabilities. This comprehensive API enables developers to integrate advanced computer vision, machine learning, and data processing features into their applications.
 
 <Callout type="info">
-  Robotoff automatically extracts data from product images, including
-  ingredients, nutritional information, labels, and categories, helping to
-  improve the quality and completeness of the Open Food Facts database.
+  The Robotoff API is a RESTful service that processes product images, extracts
+  structured data, and provides intelligent predictions to enhance product
+  information quality.
 </Callout>
 
-## What does Robotoff do?
+## Authentication
 
-Robotoff performs various AI-powered tasks to enhance product data quality:
+Most endpoints are publicly accessible. For operations that require authentication, you'll need to provide appropriate credentials through the Open Food Facts authentication system.
 
-<Steps>
-  <Step title="Image Analysis">
-    Extracts text from product images using advanced OCR (Optical Character
-    Recognition) technology
-  </Step>
-  <Step title="Ingredient Detection">
-    Identifies, parses, and structures ingredient lists from product packaging
-  </Step>
-  <Step title="Label Recognition">
-    Detects quality labels, certifications, and claims (organic, fair trade,
-    etc.)
-  </Step>
-  <Step title="Category Prediction">
-    Suggests appropriate product categories based on image content and text
-    analysis
-  </Step>
-  <Step title="Nutrition Extraction">
-    Extracts nutritional information tables from product images
-  </Step>
-  <Step title="Logo Detection">
-    Identifies brand logos, quality marks, and certification labels
-  </Step>
-</Steps>
+## API Categories
 
-## Architecture
+The Robotoff API is organized into several functional categories:
 
-Robotoff works together with:
+### Core Prediction Services
 
-- [Product Opener](https://github.com/openfoodfacts/openfoodfacts-server) - Core Open Food Facts server
-- [Open Food Facts Apps](https://github.com/openfoodfacts/smooth-app) - Mobile applications
+- **Prediction Management**: Manage AI predictions, retrieve prediction results, and handle prediction workflows
+- **Image Predictions**: Process product images and extract structured data using computer vision
+- **Predict Services**: Direct prediction endpoints for text analysis, language detection, and category prediction
 
-## Documentation Sections
+### Content Management
 
-<Cards>
-  <Card href="/docs/Robotoff/api-index" title="API Reference">
-    Complete API documentation for integrating with Robotoff services
-  </Card>
-  <Card href="/docs/Robotoff/research" title="Research">
-    Research papers, experimental features, and ML model documentation
-  </Card>
-</Cards>
+- **Logo Management**: Detect, annotate, and manage product logos and brand marks
+- **Annotation Management**: Handle human annotations and crowdsourced data validation
+- **Question Management**: Manage validation questions and community feedback workflows
 
-## Key Features
+### Image Processing
 
-<Accordions type="single">
-  <Accordion title="Machine Learning Pipeline" id="ml-pipeline">
-    Advanced AI capabilities for product analysis:
-    - **Computer Vision**: State-of-the-art image processing algorithms for product image analysis
-    - **Natural Language Processing**: Advanced text extraction and ingredient parsing capabilities
-    - **Prediction Models**: Machine learning models for category and label prediction
-    - **Quality Assurance**: Automated data validation and quality scoring systems
-    - **Continuous Learning**: Models that improve over time with new data and feedback
-  </Accordion>
-  
-  <Accordion title="Integration Capabilities" id="integration">
-    Flexible integration options for various use cases:
-    - **Real-time Processing**: Live product image analysis with instant predictions
-    - **Batch Processing**: Efficient bulk data processing for existing product databases
-    - **API Access**: Comprehensive RESTful API for third-party integrations
-    - **Webhook Support**: Real-time notifications and callbacks for processed data
-    - **Mobile SDK**: Integration libraries for mobile applications
-  </Accordion>
-  
-  <Accordion title="Data Extraction Features" id="data-extraction">
-    Comprehensive data extraction capabilities:
-    - **OCR Technology**: Advanced optical character recognition for text extraction
-    - **Ingredient Analysis**: Structured parsing and analysis of ingredient lists
-    - **Nutritional Data**: Automatic extraction of nutrition facts from product images
-    - **Logo Detection**: Brand logo recognition and certification label identification
-    - **Multi-language Support**: Text extraction and analysis in multiple languages
-  </Accordion>
-  
-  <Accordion title="Quality & Accuracy" id="quality-accuracy">
-    Ensuring high-quality predictions and data:
-    - **Confidence Scoring**: Each prediction includes confidence levels for quality assessment
-    - **Human Validation**: Integration with human reviewers for quality control
-    - **Feedback Loop**: Continuous improvement based on user feedback and corrections
-    - **Model Versioning**: Tracked model versions with performance metrics
-    - **Error Handling**: Robust error handling and fallback mechanisms
-  </Accordion>
-</Accordions>
+- **Image Management**: Upload, process, and manage product images for analysis
+- **Image Processing**: Advanced image processing operations and OCR capabilities
 
-## Weekly Meetings
+### Data & Insights
 
-- **When**: Tuesdays at 11:00 Paris Time (10:00 London Time, 15:30 IST, 02:00 AM PT)
-- **Video Call**: [Google Meet](https://meet.google.com/qvv-grzm-gzb)
-- **Phone**: https://tel.meet/qvv-grzm-gzb?pin=9965177492770
-- **Agenda**: [Weekly Agenda](https://drive.google.com/open?id=1RUfmWHjtFVaBcvQ17YfXu6FW6oRFWg-2lncljG0giKI)
+- **Insight Management**: Manage AI-generated insights and data extraction results
+- **Dataset Management**: Manage training datasets and model data
 
-## Contributors
+### Operations & Monitoring
 
-<GithubInfo owner="openfoodfacts" repo="robotoff" />
-
-<a href="https://github.com/openfoodfacts/robotoff/graphs/contributors">
-  <img
-    alt="List of contributors to this repository"
-    src="https://contrib.rocks/image?repo=openfoodfacts/robotoff"
-  />
-</a>
+- **Batch Processing**: Execute and monitor large-scale batch processing operations
+- **User Management**: User statistics and contribution tracking
+- **ANN Search**: Approximate nearest neighbor search for similar products
+- **System Status**: Health checks, API status, and system monitoring
 
 ## Getting Started
 
-1. **Explore the Architecture**: Start with the [Architecture guide](/docs/Robotoff/introduction/architecture) to understand how Robotoff works
-2. **Contributing**: Check the [Contributing guide](/docs/Robotoff/introduction/contributing) if you want to help improve Robotoff
-3. **How-to Guides**: Browse practical guides for specific tasks
-4. **API Reference**: Use the API documentation for integration
+<Steps>
+  <Step title="Explore System Status">
+    Start by checking the [API status](/docs/Robotoff/system/getApiStatus) to
+    ensure the service is running
+  </Step>
+  <Step title="Test Basic Predictions">
+    Try simple predictions like [language
+    detection](/docs/Robotoff/predict/predictLanguagePost) to understand the API
+    structure
+  </Step>
+  <Step title="Process Product Images">
+    Use [image prediction
+    endpoints](/docs/Robotoff/image-predictions/getImagePredictions) to extract
+    data from product images
+  </Step>
+  <Step title="Integrate Advanced Features">
+    Explore specialized endpoints for logo detection, batch processing, and
+    insight management
+  </Step>
+</Steps>
+
+## Common Use Cases
+
+### Product Data Extraction
+
+- Extract ingredient lists from product packaging
+- Identify nutritional information tables
+- Detect product categories and classifications
+- Extract brand information and logos
+
+### Quality Assurance
+
+- Validate existing product data
+- Generate improvement suggestions
+- Crowdsource data validation through questions
+- Track annotation quality and user contributions
+
+### Batch Processing
+
+- Process large volumes of product images
+- Update existing product information
+- Generate insights for data analysis
+- Export processed data for further analysis
+
+### Research and Development
+
+- Access training datasets
+- Experiment with different prediction models
+- Analyze prediction accuracy and performance
+- Contribute to model improvements
+
+## Response Format
+
+All API responses follow a consistent JSON structure:
+
+```json
+{
+  "status": "success",
+  "data": {
+    // Response data
+  },
+  "meta": {
+    "count": 100,
+    "page": 1,
+    "pages": 10
+  }
+}
+```
+
+## Error Handling
+
+The API uses standard HTTP status codes and provides detailed error messages:
+
+- `200` - Success
+- `400` - Bad Request (invalid parameters)
+- `401` - Unauthorized (authentication required)
+- `404` - Not Found (endpoint or resource not found)
+- `429` - Rate Limited (too many requests)
+- `500` - Internal Server Error
+
+## Rate Limits
+
+API requests are subject to rate limiting to ensure fair usage:
+
+- **General endpoints**: 100 requests per minute
+- **Image processing**: 20 requests per minute
+- **Batch operations**: 5 requests per minute
+
+<Callout type="warning">
+  Rate limits may vary based on endpoint complexity and system load. Always
+  implement proper error handling and retry logic in your applications.
+</Callout>
+
+## SDKs and Libraries
+
+While there are no official SDKs, the API follows REST conventions and can be easily integrated using standard HTTP libraries in any programming language:
+
+- **Python**: `requests`, `httpx`
+- **JavaScript**: `fetch`, `axios`
+- **Java**: `OkHttp`, `HttpClient`
+- **PHP**: `Guzzle`, `cURL`
+
+## Support and Community
+
+- **GitHub Issues**: [Report bugs and request features](https://github.com/openfoodfacts/robotoff/issues)
+- **Slack Community**: Join the Open Food Facts Slack workspace
+- **API Updates**: Follow the [changelog](https://github.com/openfoodfacts/robotoff/releases) for API changes
 
 <Callout type="info">
-  Robotoff is constantly learning and improving. The AI models are regularly
-  updated based on new data and community feedback.
+  The Robotoff API is actively developed and improved based on community
+  feedback. Contributions and suggestions are welcome!
 </Callout>

@@ -5,8 +5,6 @@
   "root": true,
   "pages":[
     "index",
-    "---Project Guide---",
-    "...(docs)",
     "---API References---",
     "...(api)"
   ]

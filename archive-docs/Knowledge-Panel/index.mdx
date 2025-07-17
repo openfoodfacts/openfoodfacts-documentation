@@ -1,0 +1,137 @@
+---
+title: "Knowledge Panel"
+description: "Complete guide to Open Food Facts Knowledge Panel system, including facets, API usage, development setup, and contribution guidelines."
+---
+
+import { Callout } from "fumadocs-ui/components/callout";
+import { Card, Cards } from "fumadocs-ui/components/card";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+
+<Callout type="info">
+  The Knowledge Panel system provides structured, ready-to-display information
+  about food products through facets, making complex product data accessible and
+  understandable for users worldwide.
+</Callout>
+
+## What are Knowledge Panels?
+
+Knowledge Panels are structured information displays that present product data in an organized, user-friendly format. They help users understand various aspects of food products through categorized information based on different facets like categories, brands, ingredients, and nutritional data.
+
+## Key Features
+
+<Steps>
+  <Step title="Facet-Based Organization">
+    Information is organized by facets such as categories, labels, ingredients,
+    nutritional aspects, and environmental impact
+  </Step>
+  <Step title="Multi-Language Support">
+    Knowledge panels support multiple languages with localized content for
+    international accessibility
+  </Step>
+  <Step title="Country-Specific Data">
+    Panels display region-specific information based on country parameters,
+    regulations, and local preferences
+  </Step>
+  <Step title="API Integration">
+    Easy integration with external applications through a comprehensive RESTful
+    API
+  </Step>
+  <Step title="Real-time Updates">
+    Dynamic content that updates based on the latest product information and
+    scientific data
+  </Step>
+</Steps>
+
+## Documentation Sections
+
+<Cards>
+  <Card
+    title="API Reference"
+    href="/docs/Knowledge-Panel/api-index"
+    description="Complete API documentation for accessing knowledge panels and facet data"
+  />
+  <Card
+    title="Project Setup"
+    href="/docs/Knowledge-Panel/how-to-guides/Project-setup-locally"
+    description="Set up the Knowledge Panel system locally for development and testing"
+  />
+  <Card
+    title="Contributing Guide"
+    href="/docs/Knowledge-Panel/how-to-guides/CONTRIBUTING"
+    description="Learn how to contribute to the Knowledge Panel project development"
+  />
+  <Card
+    title="Testing Documentation"
+    href="/docs/Knowledge-Panel/how-to-guides/Testing"
+    description="Comprehensive testing guide for validating changes and new features"
+  />
+</Cards>
+
+## System Architecture
+
+### Core Components
+
+- **FastAPI Backend**: High-performance API service for serving knowledge panels
+- **Facet Engine**: Processes and structures product data into meaningful categories
+- **Localization System**: Handles multi-language content and country-specific information
+- **Caching Layer**: Optimizes performance for frequently accessed panels
+
+### Integration Points
+
+- **Product Opener**: Connects with the main product database
+- **Robotoff**: Integrates AI-generated insights and predictions
+- **External APIs**: Supports third-party applications and mobile apps
+
+## Development Workflow
+
+<Callout type="info">
+**Quick Start for Developers**
+
+The Knowledge Panel system is built with modern web technologies and follows best practices for API development and testing.
+
+</Callout>
+
+## API Usage
+
+The Knowledge Panel API allows you to retrieve structured information about products based on various facets. Here's a quick example:
+
+```json title="Example API Request"
+GET https://facets-kp.openfoodfacts.org/knowledge_panel?facet_tag=category&value_tag=yogurts&lang_code=en&country=us
+```
+
+<Card
+  title="Interactive API Documentation"
+  href="https://facets-kp.openfoodfacts.org/docs"
+>
+  Try out the API directly in your browser with our interactive documentation.
+</Card>
+
+## Contributing
+
+<Callout>
+**Open Source Project**
+
+The Knowledge Panel system is part of the Open Food Facts ecosystem, a collaborative project that relies on community contributions. We welcome developers, designers, and food enthusiasts to help improve the system.
+
+</Callout>
+
+### Ways to Contribute
+
+- **Code**: Improve the API, add new features, fix bugs
+- **Documentation**: Help improve guides and documentation
+- **Testing**: Report issues and help test new features
+- **Data**: Contribute to the underlying food database
+
+### Repository
+
+- **Repository**: [openfoodfacts/facets-knowledge-panels](https://github.com/openfoodfacts/facets-knowledge-panels)
+- **Community**: [Open Food Facts Community](https://world.openfoodfacts.org/contribute)
+
+### Contributors
+
+<a href="https://github.com/openfoodfacts/facets-knowledge-panels/graphs/contributors">
+  <img
+    alt="List of contributors to this repository"
+    src="https://contrib.rocks/image?repo=openfoodfacts/facets-knowledge-panels"
+  />
+</a>

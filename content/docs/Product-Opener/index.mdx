@@ -1,209 +1,123 @@
 ---
-title: "Product Opener"
-description: "The core web server and database system powering Open Food Facts. Learn about the backend infrastructure, APIs, and database architecture."
+title: "Product Opener API"
+description: "Complete API documentation for Product Opener - the core web server and database system powering Open Food Facts"
 ---
 
 import { Cards, Card } from "fumadocs-ui/components/card";
 import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
-import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
-import { GithubInfo } from "fumadocs-ui/components/github-info";
 
-**Product Opener** is the server software for **Open Food Facts** and its sibling projects (Open Beauty Facts, Open Pet Food Facts, Open Products Facts). It is released under the AGPL license and is being developed in Perl, HTML and JavaScript as [Free and Open-Source Software](https://en.wikipedia.org/wiki/Free_and_open-source_software).
+The **Product Opener API** provides programmatic access to the core web server and database system that powers Open Food Facts and its sibling projects (Open Beauty Facts, Open Pet Food Facts, and Open Products Facts). This comprehensive API enables developers to interact with the world's largest open food database.
 
 <Callout type="info">
-  Product Opener handles product data storage, API endpoints, user management,
-  image processing, and serves the main website frontend for millions of users
-  worldwide.
+  Product Opener is the heart of the Open Food Facts ecosystem, managing
+  product data, user contributions, and powering the main web interface that
+  millions of users interact with daily.
 </Callout>
 
-## What is Product Opener?
+## Authentication
 
-Product Opener is the heart of the Open Food Facts ecosystem, providing:
+Most read operations are publicly accessible. For write operations and user-specific data, you'll need to authenticate using the Open Food Facts authentication system.
 
-<Steps>
-  <Step title="Web Server">
-    Serves the main Open Food Facts website interface for browsing and editing
-    products
-  </Step>
-  <Step title="Database System">
-    Stores comprehensive product information, images, and user contribution data
-  </Step>
-  <Step title="API Backend">
-    Provides REST and GraphQL APIs for third-party applications and mobile apps
-  </Step>
-  <Step title="Image Processing">
-    Handles product image uploads, transformations, and OCR processing
-  </Step>
-  <Step title="User Management">
-    Manages user accounts, authentication, and contribution tracking
-  </Step>
-  <Step title="Data Pipeline">
-    Processes, validates, and enriches product information from multiple sources
-  </Step>
-</Steps>
+## API Versions
 
-## Architecture
+The Product Opener API is available in multiple versions:
 
-Product Opener works together with:
+### API v2 (Legacy)
+The original API version that provides backward compatibility and basic product data access.
 
-- [Robotoff](https://github.com/openfoodfacts/robotoff) - Open Food Facts' AI system (Python)
-- [Open Food Facts App](https://github.com/openfoodfacts/smooth-app) - Mobile applications
-- Open Food Facts query system
-- The upcoming openfoodfacts-auth system
-
-## Design & User Interface
-
-We strive to thoughtfully design every feature with respect to Open Food Facts' graphic charter and design system.
-
-- Current Website Design](https://www.figma.com/design/Qg9URUyrjHgYmnDHXRsTTB/Current-Website-design?m=auto&t=jNwvjRR8nIgOzzJZ-6) [![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?logo=figma&logoColor=white)
-- [Join the Design Team](https://github.com/openfoodfacts/openfoodfacts-design)
-
-## Documentation Sections
-
-<Cards>
-  <Card href="/docs/Product-Opener/v2" title="API v2 Reference">
-    Legacy API endpoints for product data access and management
-  </Card>
-  <Card href="/docs/Product-Opener/v3" title="API v3 Reference">
-    Modern API with enhanced capabilities and improved performance
-  </Card>
-  <Card href="/docs/Product-Opener/dev" title="Developer Documentation">
-    Development setup, architecture guides, and contribution guidelines
-  </Card>
-  <Card href="/docs/Product-Opener/tutorials" title="Tutorials">
-    Step-by-step guides for common development tasks
-  </Card>
-  <Card href="/docs/Product-Opener/api-docs" title="API Documentation">
-    Comprehensive API documentation with examples and best practices
-  </Card>
-</Cards>
+### API v3 (Current)
+The latest API version with enhanced features, better performance, and comprehensive data access.
 
 ## Key Features
 
-<Accordions type="single">
-  <Accordion title="Product Management" id="product-management">
-    Product Opener provides comprehensive tools for managing product data:
-    - **Add and Edit Products**: Users can add new products and edit existing information
-    - **Upload and Manage Images**: Support for multiple product images with automatic processing
-    - **Collaborative Editing**: Multiple users can contribute to the same product with full history tracking
-    - **Data Quality Validation**: Automated validation and scoring of product information
-    - **Batch Operations**: Tools for bulk editing and data import/export
-  </Accordion>
-  
-  <Accordion title="Search & Discovery" id="search-discovery">
-    Advanced search capabilities to help users find products:
-    - **Full-text Search**: Search across all product fields including ingredients, brands, and categories
-    - **Advanced Filtering**: Filter by categories, labels, ingredients, nutrition scores, and more
-    - **Faceted Search Interface**: Interactive filters that show available options and counts
-    - **Geographic Data Analysis**: Location-based product availability and regional preferences
-    - **Personalized Results**: Customizable sorting and ranking based on user preferences
-  </Accordion>
-  
-  <Accordion title="Data Export & Integration" id="data-export">
-    Multiple ways to access and export product data:
-    - **JSONL Exports**: Complete database exports in JSON Lines format for research and analysis
-    - **CSV Exports**: Structured data exports for specific data sets and spreadsheet analysis
-    - **API Access**: Real-time data access through REST and GraphQL APIs
-    - **Integration Tools**: SDKs and tools for integrating with external systems
-    - **Research Platform**: Dedicated access for academic and research institutions
-  </Accordion>
-</Accordions>
+<Cards>
+  <Card
+    title="Product Database"
+    description="Access and manage the world's largest open food database with over 3 million products"
+    href="/docs/Product-Opener/api/v3"
+  />
+  <Card
+    title="User Management"
+    description="Handle user accounts, authentication, and contribution tracking"
+    href="/docs/Product-Opener/api/v3"
+  />
+  <Card
+    title="Image Processing"
+    description="Upload, process, and manage product images with OCR capabilities"
+    href="/docs/Product-Opener/api/v3"
+  />
+  <Card
+    title="Data Validation"
+    description="Validate product data, handle corrections, and manage data quality"
+    href="/docs/Product-Opener/api/v3"
+  />
+</Cards>
 
-## Technology Stack
+## Core Capabilities
 
-<Accordions type="single">
-  <Accordion title="Backend Technologies" id="backend-tech">
-    - **Language**: Perl with modern web frameworks and libraries
-    - **Database**: MongoDB for flexible document storage and product data
-    - **Cache Layer**: Redis for high-performance caching and session management
-    - **Message Queue**: Background job processing for image processing and data imports
-    - **File Storage**: Distributed file system for product images and documents
-  </Accordion>
-  
-  <Accordion title="Search & Analytics" id="search-analytics">
-    - **Search Engine**: Elasticsearch for full-text search and complex queries
-    - **Analytics**: Real-time analytics and reporting on product data and usage
-    - **Indexing**: Automated indexing pipeline for product updates and new additions
-    - **Aggregations**: Fast aggregation queries for statistics and insights
-  </Accordion>
-  
-  <Accordion title="Infrastructure & Deployment" id="infrastructure">
-    - **Web Server**: Apache/Nginx for high-performance web serving
-    - **Load Balancing**: Multiple server instances with traffic distribution
-    - **CDN**: Global content delivery network for images and static assets
-    - **Monitoring**: Comprehensive monitoring and alerting systems
-    - **Backup**: Automated backup and disaster recovery procedures
-  </Accordion>
-</Accordions>
+The Product Opener API enables you to:
 
-## Development & Contribution
+<Steps>
+  <Step title="Product Data Access">
+    Retrieve comprehensive product information including ingredients,
+    nutritional data, labels, and categories
+  </Step>
+  <Step title="Data Contribution">
+    Add new products, update existing information, and upload product images
+  </Step>
+  <Step title="Search & Discovery">
+    Search products by various criteria including barcode, name, brand,
+    categories, and nutritional values
+  </Step>
+  <Step title="Data Analysis">
+    Access aggregated data for research, analysis, and application development
+  </Step>
+</Steps>
 
-<Accordions type="single">
-  <Accordion title="Getting Started with Development" id="dev-getting-started">
-    Ready to contribute to Product Opener? Here's how to get started:
-    1. **Setup Local Environment**: Follow the [Developer guide](/docs/Product-Opener/dev) to set up your development environment
-    2. **Understand the Architecture**: Learn about the system architecture and data models
-    3. **Choose Your First Issue**: Look for "good first issue" labels on GitHub
-    4. **Join the Community**: Connect with other developers on our Slack channel
-    5. **Submit Your Changes**: Follow our pull request guidelines and code review process
-  </Accordion>
-  
-  <Accordion title="API Development" id="api-development">
-    Working with Product Opener APIs:
-    - **API v2**: Legacy API with extensive endpoint coverage - see [API v2 docs](/docs/Product-Opener/v2)
-    - **API v3**: Modern API with improved performance and new features - see [API v3 docs](/docs/Product-Opener/v3)
-    - **Authentication**: Learn about API authentication and authorization
-    - **Best Practices**: Follow our API usage guidelines and optimization tips
-    - **Testing**: Use our testing tools and environments for development
-  </Accordion>
-  
-  <Accordion title="Image Processing" id="image-processing">
-    Understanding the image processing pipeline:
-    - **Upload System**: Multi-format image upload with validation and processing
-    - **ImageMagick Integration**: Automated image transformations and optimization
-    - **OCR Processing**: Optical character recognition for ingredient lists and nutrition tables
-    - **Quality Control**: Automated image quality assessment and validation
-    - **Storage Management**: Efficient storage and retrieval of product images
-  </Accordion>
-</Accordions>
+## Supported Projects
+
+Product Opener powers multiple Open \*Facts projects:
+
+- **Open Food Facts**: The main food product database
+- **Open Beauty Facts**: Cosmetics and personal care products
+- **Open Pet Food Facts**: Pet food and care products  
+- **Open Products Facts**: General consumer products
+
+## Data Standards
+
+Product Opener follows open data standards and provides:
+
+- **Open Data**: All data is freely available under the Open Database License
+- **Standardized Categories**: Uses standardized taxonomies for ingredients, labels, and categories
+- **Multilingual Support**: Product data available in multiple languages
+- **Rich Metadata**: Comprehensive product information including environmental impact
 
 ## Getting Started
 
-1. **API Documentation**: Start with the [API guides](/docs/Product-Opener/api) to understand data access
-2. **Development Setup**: Follow the [Developer guide](/docs/Product-Opener/dev) to set up a local environment
-3. **Image Processing**: Learn about [image handling](/docs/Product-Opener/images) capabilities
+To begin using the Product Opener API:
 
-<Callout type="info">
-  Product Opener is designed to handle millions of products and users. The
-  architecture emphasizes performance, scalability, and data integrity.
+1. **Explore the API**: Start with read-only operations to understand the data structure
+2. **Authentication**: Set up authentication for write operations
+3. **Choose API Version**: Select between v2 (legacy) or v3 (recommended) based on your needs
+4. **Integration**: Integrate the API into your application or research project
+
+<Callout type="warning">
+  Rate limiting is applied to prevent abuse. For high-volume applications,
+  consider implementing caching and following API best practices.
 </Callout>
 
-## Related Projects
+## API References
 
-- **[Robotoff](/docs/Robotoff)**: AI service for automated data extraction
-- **[Search-a-licious](/docs/Search-a-licious)**: Advanced search infrastructure
-- **[Open Prices](/docs/Open-prices)**: Price tracking system
-
-## Weekly Meetings
-
-- **When**: Mondays at 17:00 Paris Time (CET/CEST)
-- **Video Call**: [Google Meet](https://meet.google.com/nnw-qswu-hza)
-- **Phone**: https://tel.meet/nnw-qswu-hza?pin=2111028061202
-- **Agenda**: [Weekly Agenda](https://drive.google.com/open?id=1LL8-aiSF482xaJ1o0AKmhXB5QWfVE0_jzvYakq3VXys)
-
-## Support
-
-- **Backers**: [Become a backer](https://opencollective.com/openfoodfacts-server#backer)
-- **Sponsors**: [Become a sponsor](https://opencollective.com/openfoodfacts-server#sponsor)
-
-## Contributors
-
-<GithubInfo owner="openfoodfacts" repo="openfoodfacts-server" />
-
-<a href="https://github.com/openfoodfacts/openfoodfacts-server/graphs/contributors">
-  <img
-    alt="List of contributors to this repository"
-    src="https://contrib.rocks/image?repo=openfoodfacts/openfoodfacts-server"
+<Cards>
+  <Card
+    title="API v3 Reference"
+    description="Complete reference for the latest API version with enhanced features"
+    href="/docs/Product-Opener/api/v3"
   />
-</a>
+  <Card
+    title="API v2 Reference"
+    description="Legacy API reference for backward compatibility"
+    href="/docs/Product-Opener/api/v2"
+  />
+</Cards>

@@ -1,0 +1,134 @@
+---
+title: "Robotoff"
+description: "AI-powered product data extraction service for Open Food Facts. Learn about computer vision, ingredient analysis, and machine learning features."
+---
+
+import { Cards, Card } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
+import { Steps, Step } from "fumadocs-ui/components/steps";
+import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
+import { GithubInfo } from "fumadocs-ui/components/github-info";
+
+**Robotoff** is a service that generates predictions from product data such as images, text, and metadata. These predictions can individually or collectively be refined into actionable suggestions known as insights.
+
+<Callout type="info">
+  Robotoff automatically extracts data from product images, including
+  ingredients, nutritional information, labels, and categories, helping to
+  improve the quality and completeness of the Open Food Facts database.
+</Callout>
+
+## What does Robotoff do?
+
+Robotoff performs various AI-powered tasks to enhance product data quality:
+
+<Steps>
+  <Step title="Image Analysis">
+    Extracts text from product images using advanced OCR (Optical Character
+    Recognition) technology
+  </Step>
+  <Step title="Ingredient Detection">
+    Identifies, parses, and structures ingredient lists from product packaging
+  </Step>
+  <Step title="Label Recognition">
+    Detects quality labels, certifications, and claims (organic, fair trade,
+    etc.)
+  </Step>
+  <Step title="Category Prediction">
+    Suggests appropriate product categories based on image content and text
+    analysis
+  </Step>
+  <Step title="Nutrition Extraction">
+    Extracts nutritional information tables from product images
+  </Step>
+  <Step title="Logo Detection">
+    Identifies brand logos, quality marks, and certification labels
+  </Step>
+</Steps>
+
+## Architecture
+
+Robotoff works together with:
+
+- [Product Opener](https://github.com/openfoodfacts/openfoodfacts-server) - Core Open Food Facts server
+- [Open Food Facts Apps](https://github.com/openfoodfacts/smooth-app) - Mobile applications
+
+## Documentation Sections
+
+<Cards>
+  <Card href="/docs/Robotoff/api-index" title="API Reference">
+    Complete API documentation for integrating with Robotoff services
+  </Card>
+  <Card href="/docs/Robotoff/research" title="Research">
+    Research papers, experimental features, and ML model documentation
+  </Card>
+</Cards>
+
+## Key Features
+
+<Accordions type="single">
+  <Accordion title="Machine Learning Pipeline" id="ml-pipeline">
+    Advanced AI capabilities for product analysis:
+    - **Computer Vision**: State-of-the-art image processing algorithms for product image analysis
+    - **Natural Language Processing**: Advanced text extraction and ingredient parsing capabilities
+    - **Prediction Models**: Machine learning models for category and label prediction
+    - **Quality Assurance**: Automated data validation and quality scoring systems
+    - **Continuous Learning**: Models that improve over time with new data and feedback
+  </Accordion>
+  
+  <Accordion title="Integration Capabilities" id="integration">
+    Flexible integration options for various use cases:
+    - **Real-time Processing**: Live product image analysis with instant predictions
+    - **Batch Processing**: Efficient bulk data processing for existing product databases
+    - **API Access**: Comprehensive RESTful API for third-party integrations
+    - **Webhook Support**: Real-time notifications and callbacks for processed data
+    - **Mobile SDK**: Integration libraries for mobile applications
+  </Accordion>
+  
+  <Accordion title="Data Extraction Features" id="data-extraction">
+    Comprehensive data extraction capabilities:
+    - **OCR Technology**: Advanced optical character recognition for text extraction
+    - **Ingredient Analysis**: Structured parsing and analysis of ingredient lists
+    - **Nutritional Data**: Automatic extraction of nutrition facts from product images
+    - **Logo Detection**: Brand logo recognition and certification label identification
+    - **Multi-language Support**: Text extraction and analysis in multiple languages
+  </Accordion>
+  
+  <Accordion title="Quality & Accuracy" id="quality-accuracy">
+    Ensuring high-quality predictions and data:
+    - **Confidence Scoring**: Each prediction includes confidence levels for quality assessment
+    - **Human Validation**: Integration with human reviewers for quality control
+    - **Feedback Loop**: Continuous improvement based on user feedback and corrections
+    - **Model Versioning**: Tracked model versions with performance metrics
+    - **Error Handling**: Robust error handling and fallback mechanisms
+  </Accordion>
+</Accordions>
+
+## Weekly Meetings
+
+- **When**: Tuesdays at 11:00 Paris Time (10:00 London Time, 15:30 IST, 02:00 AM PT)
+- **Video Call**: [Google Meet](https://meet.google.com/qvv-grzm-gzb)
+- **Phone**: https://tel.meet/qvv-grzm-gzb?pin=9965177492770
+- **Agenda**: [Weekly Agenda](https://drive.google.com/open?id=1RUfmWHjtFVaBcvQ17YfXu6FW6oRFWg-2lncljG0giKI)
+
+## Contributors
+
+<GithubInfo owner="openfoodfacts" repo="robotoff" />
+
+<a href="https://github.com/openfoodfacts/robotoff/graphs/contributors">
+  <img
+    alt="List of contributors to this repository"
+    src="https://contrib.rocks/image?repo=openfoodfacts/robotoff"
+  />
+</a>
+
+## Getting Started
+
+1. **Explore the Architecture**: Start with the [Architecture guide](/docs/Robotoff/introduction/architecture) to understand how Robotoff works
+2. **Contributing**: Check the [Contributing guide](/docs/Robotoff/introduction/contributing) if you want to help improve Robotoff
+3. **How-to Guides**: Browse practical guides for specific tasks
+4. **API Reference**: Use the API documentation for integration
+
+<Callout type="info">
+  Robotoff is constantly learning and improving. The AI models are regularly
+  updated based on new data and community feedback.
+</Callout>

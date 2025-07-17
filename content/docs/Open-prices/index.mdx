@@ -1,154 +1,98 @@
 ---
-title: "Open Prices"
-description: "Explore Open Prices, a project dedicated to collecting and sharing food product prices globally. Features REST API, web interface, and contributor tools."
+title: Open Prices API
+description: Django REST API for the Open Food Facts prices database - a comprehensive collection of food product prices from around the world.
 ---
 
-import { Callout } from "fumadocs-ui/components/callout";
 import { Card, Cards } from "fumadocs-ui/components/card";
+import { Callout } from "fumadocs-ui/components/callout";
 import { Steps, Step } from "fumadocs-ui/components/steps";
-import { Accordion, Accordions } from "fumadocs-ui/components/accordion";
-import { GithubInfo } from "fumadocs-ui/components/github-info";
 
-A REST API designed to interact with the Open Food Facts _Open Prices_ database.
+The Open Prices API provides access to the Open Food Facts prices database, offering comprehensive price information for food products worldwide. Built with Django REST Framework, this API enables developers to access, contribute, and analyze global food pricing data.
 
 <Callout type="info">
-  Open Prices is a project to collect and share prices of food products around
-  the world, enabling price transparency and helping consumers make informed
-  decisions. Learn more at
-  [prices.openfoodfacts.org](https://prices.openfoodfacts.org/).
+  Open Prices is a collaborative project to collect and share food product
+  prices from stores around the world, providing transparency and helping
+  consumers make informed purchasing decisions.
 </Callout>
 
-## System Architecture
+## API Overview
 
-The Open Prices ecosystem consists of complementary components:
-
-<Steps>
-  <Step title="REST API">
-    Backend API built with Django for data management and processing
-  </Step>
-  <Step title="Web Interface">
-    User-friendly frontend built with Vue.js for price contributions
-  </Step>
-  <Step title="Mobile Integration">
-    Integration with Open Food Facts mobile apps for seamless price addition
-  </Step>
-</Steps>
-
-## Getting Started
-
-<Callout type="info">
-**Ready to Contribute?**
-
-Join thousands of contributors helping build the world's largest open database of food prices.
-
-</Callout>
-
-<Cards>
-  <Card
-    title="Add a Single Price"
-    href="/docs/Open-prices/docs/add-a-price"
-    description="Step-by-step guide to add individual product prices with proof photos"
-  />
-  <Card
-    title="Add Multiple Prices"
-    href="/docs/Open-prices/docs/add-multiple-prices"
-    description="Efficient workflow for adding prices from shopping trips and store visits"
-  />
-  <Card
-    title="API Documentation"
-    href="/docs/Open-prices/api-index"
-    description="Complete API reference for developers building price-aware applications"
-  />
-  <Card
-    title="Maintenance Guide"
-    href="/docs/Open-prices/docs/maintenance"
-    description="Technical maintenance procedures, OCR operations, and data quality tools"
-  />
-</Cards>
-
-## How It Works
+The Open Prices API enables you to:
 
 <Steps>
-  <Step title="Data Collection">
-    Contributors photograph price tags and products as proof, ensuring data
-    authenticity and traceability
+  <Step title="Price Data Access">
+    Retrieve price information for products across different stores and time
+    periods
   </Step>
-  <Step title="Location Verification">
-    All locations are verified through OpenStreetMap integration to ensure
-    accuracy and prevent fraud
+  <Step title="Location Integration">
+    Access store locations and geographic price distribution data
   </Step>
-  <Step title="Price Validation">
-    Each entry includes timestamp, location data, and proof photos for
-    comprehensive price tracking
+  <Step title="Price Submission">
+    Contribute new price data with proof photos and location verification
   </Step>
-  <Step title="Open Data">
-    All price data is made available under open licenses for research,
-    applications, and transparency
+  <Step title="Analytics">
+    Access price trends, statistics, and historical data analysis
   </Step>
 </Steps>
 
 ## Key Features
 
-<Accordions type="single">
-  <Accordion title="Data Quality & Verification" id="data-quality">
-    Ensuring accurate and reliable price data:
-    - **Photo Verification**: Every price entry requires proof photos to ensure authenticity
-    - **Location Validation**: OpenStreetMap integration for accurate store verification and mapping
-    - **Temporal Tracking**: Complete historical price data with precise timestamps
-    - **Community Moderation**: Collaborative quality assurance with user reporting and review
-    - **Fraud Prevention**: Multi-layer verification to prevent fake or misleading entries
-  </Accordion>
-  
-  <Accordion title="Developer Tools & API" id="developer-tools">
-    Comprehensive tools for developers and researchers:
-    - **RESTful API**: Modern, well-documented API for accessing all price data
-    - **Real-time Updates**: Live price feeds and WebSocket notifications for instant updates
-    - **Bulk Operations**: Efficient endpoints for large-scale data access and analysis
-    - **Analytics**: Built-in price trend analysis and statistical insights
-    - **SDKs**: Client libraries for popular programming languages
-  </Accordion>
-  
-  <Accordion title="User Experience" id="user-experience">
-    Intuitive interfaces for easy price contribution:
-    - **Web Interface**: User-friendly Vue.js frontend for desktop price contributions
-    - **Mobile Integration**: Seamless integration with Open Food Facts mobile apps
-    - **Batch Entry**: Efficient workflow for adding multiple prices from shopping trips
-    - **Proof Upload**: Simple photo upload process with automatic validation
-    - **Location Search**: Smart location lookup with auto-complete and mapping
-  </Accordion>
-  
-  <Accordion title="Open Data & Transparency" id="open-data">
-    Making price data freely available:
-    - **Open Licenses**: All data available under open licenses for research and innovation
-    - **Export Options**: Multiple data formats (JSON, CSV, XML) for different use cases
-    - **Research Access**: Special tools and datasets for academic and research purposes
-    - **Transparency**: Complete audit trail for all price entries and modifications
-    - **Community Contributions**: Recognition and tracking of contributor efforts
-  </Accordion>
-</Accordions>
-
-## Design & User Interface
-
-We strive to thoughtfully design every feature with respect to Open Food Facts' graphic charter and design system.
-
-- [![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?logo=figma&logoColor=white) Open Prices Mockups](https://www.figma.com/design/cIB7CInl2BfueMzWnz09t6/Open-Prices?node-id=0-1&p=f&t=LC7UvPjngw57NGSs-0)
-- [![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?logo=figma&logoColor=white) Mobile App Design](https://www.figma.com/design/nFMjewFAOa8cahtob7CAB/Mobile-App-Design--Quentin-?node-id=5816-22697&p=f&t=AkgTM9QzMK7tQeGC-0)
-- [Join the Design Team](https://github.com/openfoodfacts/openfoodfacts-design)
-
-## Weekly Meetings
-
-- **When**: Wednesdays at 14:00 Paris Time
-- **Video Call**: [Google Meet](https://meet.google.com/oin-hiqp-tmd)
-- **Phone**: https://tel.meet/oin-hiqp-tmd?pin=5784334159966
-- **Agenda**: [Weekly Agenda](https://docs.google.com/document/u/0/d/1-OfMAi-cB7mi9_q172EbBCWHkfKDM0zVg4wzULW3pFY/edit)
-
-## Contributors
-
-<GithubInfo owner="openfoodfacts" repo="open-prices" />
-
-<a href="https://github.com/openfoodfacts/open-prices/graphs/contributors">
-  <img
-    alt="List of contributors to this repository"
-    src="https://contrib.rocks/image?repo=openfoodfacts/open-prices"
+<Cards>
+  <Card
+    title="Price Management"
+    description="Create, update, and retrieve price information with proof photos and validation"
+    href="/docs/Open-prices/prices/prices_create"
   />
-</a>
+  <Card
+    title="Location Data"
+    description="Access store locations verified through OpenStreetMap integration"
+    href="/docs/Open-prices/locations/locations_create"
+  />
+  <Card
+    title="Product Integration"
+    description="Link prices to Open Food Facts products using barcodes and identifiers"
+    href="/docs/Open-prices/products/products_code_retrieve"
+  />
+  <Card
+    title="Product Catalog"
+    description="Browse and search products with associated price data"
+    href="/docs/Open-prices/products/products_list"
+  />
+  <Card
+    title="Receipt Processing"
+    description="Upload and process receipts to extract price information"
+    href="/docs/Open-prices/proofs/proof_destroy"
+  />
+  <Card
+    title="User Management"
+    description="Handle user accounts and authentication for contributors"
+    href="/docs/Open-prices/users/users_list"
+  />
+  <Card
+    title="Statistics"
+    description="Access aggregated statistics and analytics about price data"
+    href="/docs/Open-prices/stats/stats_retrieve"
+  />
+</Cards>
+
+## Base URL
+
+```sh
+https://prices.openfoodfacts.org/api
+```
+
+## API Features
+
+### Data Quality
+
+- **Photo Verification**: All prices require proof photos for validation
+- **Location Validation**: Store locations verified through OpenStreetMap
+- **Duplicate Prevention**: Automatic detection and handling of duplicate entries
+- **Community Moderation**: User reporting and moderation tools
+
+### Developer Tools
+
+- **RESTful Design**: Clean, predictable API endpoints following REST principles
+- **Comprehensive Documentation**: Auto-generated OpenAPI documentation
+- **Rate Limiting**: Fair usage policies with clear limits
+- **CORS Support**: Cross-origin requests for web applications
