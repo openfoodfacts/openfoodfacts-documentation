@@ -8,11 +8,11 @@
   },
   "servers": [
     {
-      "url": "https://robotoff.openfoodfacts.org/api/v1/",
+      "url": "https://robotoff.openfoodfacts.org/api/v1",
       "description": "Production server"
     },
     {
-      "url": "https://robotoff.openfoodfacts.net/api/v1/",
+      "url": "https://robotoff.openfoodfacts.net/api/v1",
       "description": "Preproduction server"
     }
   ],
@@ -137,159 +137,6 @@
         "responses": {
           "200": {
             "description": "The questions matching the filters",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "no_questions",
-                        "found"
-                      ]
-                    },
-                    "questions": {
-                      "type": "array",
-                      "items": {
-                        "type": "object"
-                      }
-                    },
-                    "count": {
-                      "type": "integer",
-                      "description": "The total number of results with the provided filters"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/questions/random": {
-      "get": {
-        "tags": [
-          "Question Management"
-        ],
-        "summary": "Get random questions",
-        "operationId": "getRandomQuestions",
-        "deprecated": true,
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/lang"
-          },
-          {
-            "$ref": "#/components/parameters/count"
-          },
-          {
-            "$ref": "#/components/parameters/server_type"
-          },
-          {
-            "$ref": "#/components/parameters/insight_types"
-          },
-          {
-            "$ref": "#/components/parameters/countries"
-          },
-          {
-            "$ref": "#/components/parameters/brands"
-          },
-          {
-            "$ref": "#/components/parameters/value_tag"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          },
-          {
-            "$ref": "#/components/parameters/reserved_barcode"
-          },
-          {
-            "$ref": "#/components/parameters/campaigns"
-          },
-          {
-            "$ref": "#/components/parameters/predictor"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The queried insights",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "no_questions",
-                        "found"
-                      ]
-                    },
-                    "questions": {
-                      "type": "array",
-                      "items": {
-                        "type": "object"
-                      }
-                    },
-                    "count": {
-                      "type": "integer",
-                      "description": "The total number of results with the provided filters"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/questions/popular": {
-      "get": {
-        "tags": [
-          "Question Management"
-        ],
-        "summary": "Get questions about popular products",
-        "operationId": "getPopularQuestions",
-        "deprecated": true,
-        "description": "Questions are ranked by the product popularity (based on scan count).\n",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/lang"
-          },
-          {
-            "$ref": "#/components/parameters/count"
-          },
-          {
-            "$ref": "#/components/parameters/server_type"
-          },
-          {
-            "$ref": "#/components/parameters/insight_types"
-          },
-          {
-            "$ref": "#/components/parameters/countries"
-          },
-          {
-            "$ref": "#/components/parameters/brands"
-          },
-          {
-            "$ref": "#/components/parameters/value_tag"
-          },
-          {
-            "$ref": "#/components/parameters/page"
-          },
-          {
-            "$ref": "#/components/parameters/reserved_barcode"
-          },
-          {
-            "$ref": "#/components/parameters/campaigns"
-          },
-          {
-            "$ref": "#/components/parameters/predictor"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Questions about popular products",
             "content": {
               "application/json": {
                 "schema": {
@@ -472,111 +319,13 @@
         }
       }
     },
-    "/insights/random": {
-      "get": {
-        "tags": [
-          "Insight Management"
-        ],
-        "deprecated": true,
-        "summary": "Get a random insight, use GET /insights?order_by=random instead",
-        "operationId": "getRandomInsights",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/insight_type"
-          },
-          {
-            "$ref": "#/components/parameters/countries"
-          },
-          {
-            "$ref": "#/components/parameters/value_tag"
-          },
-          {
-            "$ref": "#/components/parameters/server_type"
-          },
-          {
-            "$ref": "#/components/parameters/count"
-          },
-          {
-            "$ref": "#/components/parameters/predictor"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Random insights matching the criteria",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "insights": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/InsightSearchResult"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/insights/{barcode}": {
-      "get": {
-        "tags": [
-          "Insight Management"
-        ],
-        "deprecated": true,
-        "summary": "Get all insights for a specific product, use GET /insights?barcode={barcode} instead",
-        "operationId": "getInsightsByBarcode",
-        "parameters": [
-          {
-            "$ref": "#/components/parameters/barcode_path"
-          },
-          {
-            "$ref": "#/components/parameters/server_type"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "All insights for the specific product",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "insights": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/InsightSearchResult"
-                      }
-                    },
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "no_insights",
-                        "found"
-                      ]
-                    },
-                    "count": {
-                      "type": "integer",
-                      "description": "The total number of results"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/insights": {
       "get": {
         "tags": [
           "Insight Management"
         ],
         "summary": "List insights",
+        "description": "Return insights based on various filters. The results can be filtered by insight type, barcode, annotation status, and more.\nThe `insight_types` parameter is a comma-separated list of insight types to filter by.\nIf no `insight_types` are provided, insights of all types are returned.\n",
         "operationId": "getInsights",
         "parameters": [
           {
@@ -815,7 +564,8 @@
             "in": "query",
             "schema": {
               "type": "boolean",
-              "default": null
+              "default": null,
+              "nullable": true
             }
           },
           {
@@ -825,6 +575,7 @@
             "schema": {
               "type": "integer",
               "default": null,
+              "nullable": true,
               "minimum": 0,
               "maximum": 10000
             }
@@ -865,6 +616,7 @@
           {
             "name": "y_min",
             "in": "query",
+            "description": "The minimum y-coordinate for cropping, relative to the image height.\nWe use relative coordinates, with (0, 0) being the upper left corner and \n(1, 1) being the lower right corner.\n",
             "example": 0.47795143723487854,
             "schema": {
               "type": "number",
@@ -874,6 +626,7 @@
           },
           {
             "name": "x_min",
+            "description": "The minimum x-coordinate for cropping, relative to the image width.\nWe use relative coordinates, with (0, 0) being the upper left corner and \n(1, 1) being the lower right corner.\n",
             "in": "query",
             "example": 0.5583494305610657,
             "schema": {
@@ -884,6 +637,7 @@
           },
           {
             "name": "y_max",
+            "description": "The maximum y-coordinate for cropping, relative to the image height.\nWe use relative coordinates, with (0, 0) being the upper left corner and \n(1, 1) being the lower right corner.\n",
             "in": "query",
             "example": 0.5653171539306641,
             "schema": {
@@ -894,6 +648,7 @@
           },
           {
             "name": "x_max",
+            "description": "The maximum x-coordinate for cropping, relative to the image width.\nWe use relative coordinates, with (0, 0) being the upper left corner and \n(1, 1) being the lower right corner.\n",
             "in": "query",
             "example": 0.6795185804367065,
             "schema": {
@@ -924,6 +679,7 @@
           "Image Predictions"
         ],
         "summary": "Get image predictions",
+        "description": "Return image predictions based on various filters. The results can be filtered by model name, type, confidence, and more.\n",
         "operationId": "getImagePredictions",
         "parameters": [
           {
@@ -963,7 +719,7 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "example": 1
+              "example": "1"
             }
           },
           {
@@ -1055,7 +811,11 @@
                   "properties": {
                     "logos": {
                       "type": "array",
-                      "description": "Details about requested logos"
+                      "description": "Details about requested logos",
+                      "items": {
+                        "type": "object",
+                        "description": "Information about the logo"
+                      }
                     },
                     "count": {
                       "type": "number",
@@ -1149,7 +909,8 @@
             "in": "query",
             "schema": {
               "type": "boolean",
-              "default": null
+              "default": null,
+              "nullable": true
             }
           }
         ],
@@ -1163,7 +924,11 @@
                   "properties": {
                     "logos": {
                       "type": "array",
-                      "description": "Found logos"
+                      "description": "Found logos",
+                      "items": {
+                        "type": "object",
+                        "description": "Information about the logo"
+                      }
                     },
                     "count": {
                       "type": "number",
@@ -1566,7 +1331,7 @@
                     }
                   },
                   "server_type": {
-                    "$ref": "#/components/parameters/server_type/schema"
+                    "$ref": "#/components/parameters/server_type"
                   }
                 },
                 "required": [
@@ -2026,7 +1791,7 @@
                         "type": "string",
                         "description": "The barcode of the product to categorize",
                         "minLength": 1,
-                        "example": 748162621021
+                        "example": "0748162621021"
                       },
                       "server_type": {
                         "type": "string",
@@ -2722,20 +2487,12 @@
         "example": {
           "id": "3cd5aecd-edcc-4237-87d0-6595fc4e53c9",
           "type": "label",
-          "barcode": 9782012805866
+          "barcode": 9782012805866,
+          "countries": [
+            "en:france",
+            "en:united-kingdom"
+          ]
         }
-      },
-      "ServerDomainParameter": {
-        "description": "The server domain associated with the image/product.\n\nIf the `server_domain` top level domain does not match the server configuration,\nan HTTP 400 error will be raised\n",
-        "type": "string",
-        "example": "api.openfoodfacts.org",
-        "enum": [
-          "api.openfoodfacts.org",
-          "api.openbeautyfacts.org",
-          "api.openproductfacts.org",
-          "api.openpetfoodfacts.org",
-          "api.pro.openfoodfacts.org"
-        ]
       },
       "Prediction": {
         "type": "object",
@@ -2769,7 +2526,8 @@
           "value": {
             "type": "string",
             "description": "the value of the prediction. It is used if no canonical tag can be used\nfor the prediction type. For example, we use it to store the detected product weight\nvalue (example: `100 g`)\n",
-            "example": null
+            "example": null,
+            "nullable": true
           },
           "automatic_processing": {
             "type": "boolean",
@@ -2809,8 +2567,7 @@
             ]
           },
           "confidence": {
-            "type": "string",
-            "format": "number",
+            "type": "number",
             "example": 0.95,
             "description": "confidence score of the prediction, it is only provided for ML-based predictions. It may be null.\n"
           }
