@@ -142,43 +142,6 @@
       }
     },
     "/api/v1/tickets": {
-      "post": {
-        "summary": "Create Ticket",
-        "description": "Create a ticket.\n\nThis function is used to create a ticket for a product or an image.\nA ticket is a request for a product or an image to be reviewed.",
-        "operationId": "create_ticket_api_v1_tickets_post",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TicketCreate"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Ticket"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
       "get": {
         "summary": "Get Tickets",
         "description": "Get all tickets.\n\nThis function is used to get all tickets with status open.",
@@ -399,6 +362,49 @@
         }
       }
     },
+    "/api/v1/stats": {
+      "get": {
+        "summary": "Get Stats",
+        "description": "Get number of tickets by status for the last n days.\n\nArgs:\n    n_days (int): The number of days from which to fetch ticket data.\n    Default is 31 days.\n\nReturns:\n    dict: A dictionary containing the total number of tickets,\n    tickets by status, tickets by flavor, and tickets by type.\n    The keys are:\n        - total_tickets: Total number of tickets.\n        - tickets_by_status: A dictionary with ticket status as keys\n            and the count of tickets as values.\n        - tickets_by_flavor: A dictionary with ticket flavor as keys\n            and the count of tickets as values.\n        - tickets_by_type: A dictionary with ticket type as keys\n            and the count of tickets as values.\n        - n_days: The number of days for which the data is fetched.\n        - start_date: The start date of the data range in ISO format.\n        - end_date: The end date of the data range in ISO format.",
+        "operationId": "get_stats_api_v1_stats_get",
+        "parameters": [
+          {
+            "name": "n_days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 31,
+              "title": "N Days"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Stats Api V1 Stats Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/status": {
       "get": {
         "summary": "Status",
@@ -434,11 +440,7 @@
             "description": "Barcode of the product, if the flag is about a product or a product image. In case of a search issue, this field is null."
           },
           "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IssueType"
-              }
-            ],
+            "$ref": "#/components/schemas/IssueType",
             "description": "Type of the issue"
           },
           "url": {
@@ -452,11 +454,7 @@
             "description": "Open Food Facts User ID of the flagger"
           },
           "source": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/SourceType"
-              }
-            ],
+            "$ref": "#/components/schemas/SourceType",
             "description": "Source of the flag. It can be a user from the mobile app, the web or a flag generated automatically by robotoff."
           },
           "confidence": {
@@ -491,11 +489,7 @@
             ]
           },
           "flavor": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Flavor"
-              }
-            ],
+            "$ref": "#/components/schemas/Flavor",
             "description": "Flavor (project) associated with the ticket"
           },
           "reason": {
@@ -610,162 +604,6 @@
           "robotoff"
         ],
         "title": "SourceType"
-      },
-      "Ticket": {
-        "properties": {
-          "barcode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Barcode",
-            "description": "Barcode of the product, if the ticket is about a product or a product image. In case of a search issue, this field is null."
-          },
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IssueType"
-              }
-            ],
-            "description": "Type of the issue"
-          },
-          "url": {
-            "type": "string",
-            "title": "Url",
-            "description": "URL of the product or of the flagged image"
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TicketStatus"
-              }
-            ],
-            "description": "Status of the ticket",
-            "default": "open"
-          },
-          "image_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Image Id",
-            "description": "ID of the flagged image, if the ticket type is `image`",
-            "examples": [
-              "1",
-              "front_fr"
-            ]
-          },
-          "flavor": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Flavor"
-              }
-            ],
-            "description": "Flavor (project) associated with the ticket"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At",
-            "description": "Creation datetime of the ticket"
-          },
-          "id": {
-            "type": "integer",
-            "title": "Id",
-            "description": "ID of the ticket"
-          }
-        },
-        "type": "object",
-        "required": [
-          "type",
-          "url",
-          "flavor",
-          "id"
-        ],
-        "title": "Ticket"
-      },
-      "TicketCreate": {
-        "properties": {
-          "barcode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Barcode",
-            "description": "Barcode of the product, if the ticket is about a product or a product image. In case of a search issue, this field is null."
-          },
-          "type": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/IssueType"
-              }
-            ],
-            "description": "Type of the issue"
-          },
-          "url": {
-            "type": "string",
-            "title": "Url",
-            "description": "URL of the product or of the flagged image"
-          },
-          "status": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TicketStatus"
-              }
-            ],
-            "description": "Status of the ticket",
-            "default": "open"
-          },
-          "image_id": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Image Id",
-            "description": "ID of the flagged image, if the ticket type is `image`",
-            "examples": [
-              "1",
-              "front_fr"
-            ]
-          },
-          "flavor": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Flavor"
-              }
-            ],
-            "description": "Flavor (project) associated with the ticket"
-          },
-          "created_at": {
-            "type": "string",
-            "format": "date-time",
-            "title": "Created At",
-            "description": "Creation datetime of the ticket"
-          }
-        },
-        "type": "object",
-        "required": [
-          "type",
-          "url",
-          "flavor"
-        ],
-        "title": "TicketCreate"
       },
       "TicketStatus": {
         "type": "string",
