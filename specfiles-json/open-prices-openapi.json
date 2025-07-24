@@ -726,12 +726,14 @@
               "enum": [
                 0,
                 1,
+                10,
                 2,
                 3,
-                4
+                4,
+                5
               ]
             },
-            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag"
+            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag\n* `5` - no_barcode\n* `10` - other"
           },
           {
             "in": "query",
@@ -4802,12 +4804,12 @@
           },
           "status": {
             "nullable": true,
-            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag",
+            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag\n* `5` - no_barcode\n* `10` - other",
             "minimum": -2147483648,
             "maximum": 2147483647,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/Status579Enum"
+                "$ref": "#/components/schemas/StatusDe1Enum"
               },
               {
                 "$ref": "#/components/schemas/NullEnum"
@@ -5428,12 +5430,12 @@
           },
           "status": {
             "nullable": true,
-            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag",
+            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag\n* `5` - no_barcode\n* `10` - other",
             "minimum": -2147483648,
             "maximum": 2147483647,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/Status579Enum"
+                "$ref": "#/components/schemas/StatusDe1Enum"
               },
               {
                 "$ref": "#/components/schemas/NullEnum"
@@ -5485,12 +5487,12 @@
           },
           "status": {
             "nullable": true,
-            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag",
+            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag\n* `5` - no_barcode\n* `10` - other",
             "minimum": -2147483648,
             "maximum": 2147483647,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/Status579Enum"
+                "$ref": "#/components/schemas/StatusDe1Enum"
               },
               {
                 "$ref": "#/components/schemas/NullEnum"
@@ -5603,12 +5605,12 @@
           },
           "status": {
             "nullable": true,
-            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag",
+            "description": "The annotation status\n\n* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag\n* `5` - no_barcode\n* `10` - other",
             "minimum": -2147483648,
             "maximum": 2147483647,
             "oneOf": [
               {
-                "$ref": "#/components/schemas/Status579Enum"
+                "$ref": "#/components/schemas/StatusDe1Enum"
               },
               {
                 "$ref": "#/components/schemas/NullEnum"
@@ -6692,16 +6694,18 @@
           "status"
         ]
       },
-      "Status579Enum": {
+      "StatusDe1Enum": {
         "enum": [
           0,
           1,
           2,
           3,
-          4
+          4,
+          5,
+          10
         ],
         "type": "integer",
-        "description": "* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag"
+        "description": "* `0` - deleted\n* `1` - linked_to_price\n* `2` - not_readable\n* `3` - truncated\n* `4` - not_price_tag\n* `5` - no_barcode\n* `10` - other"
       },
       "TotalStats": {
         "type": "object",
