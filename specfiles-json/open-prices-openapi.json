@@ -5570,6 +5570,12 @@
             "description": "The specific version of the model that generated the prediction",
             "maxLength": 30
           },
+          "schema_version": {
+            "type": "string",
+            "nullable": true,
+            "description": "The schema version of the prediction data. Used to handle changes in the prediction data structure. It is currently used when calling Gemine API to extract price tags.",
+            "maxLength": 20
+          },
           "data": {
             "description": "a dict representing the data of the prediction. This field is model-specific."
           },
