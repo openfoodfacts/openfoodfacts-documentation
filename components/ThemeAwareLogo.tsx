@@ -15,7 +15,7 @@ const getAssetPath = (path: string) => {
   // Check if we're in a GitHub Pages environment (production build)
   const isGitHubPages =
     typeof window !== "undefined" &&
-    window.location.hostname === "jagjeevanak.github.io";
+    window.location.hostname === "openfoodfacts.github.io";
 
   if (isGitHubPages) {
     return `/openfoodfacts-documentation${path}`;
