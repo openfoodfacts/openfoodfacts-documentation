@@ -1,7 +1,6 @@
-# openfoodfacts-documentation
+# Openfoodfacts-documentation
 
-This is a Next.js application generated with
-[Create Fumadocs](https://github.com/fuma-nama/fumadocs).
+OpenFoodFacts Documentation provides up-to-date API docs, generated from the spec file, for easy developer integration. It guides developers on how to integrate, query, and interact with OpenFoodFacts data and services using the official API endpoints, ensuring reliable and up-to-date technical reference.
 
 Run development server:
 
