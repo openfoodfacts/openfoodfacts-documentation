@@ -5144,6 +5144,16 @@
             "type": "string",
             "description": "Abbreviated name in requested language"
           },
+          "product_type": {
+            "type": "string",
+            "description": "The product type is a fundamental separation that tells on which platform the product is made available:\nOpen Food Facts, Open Beauty Facts, Open Pet Food Facts or Open Products Facts.\n\nEach platform has variations on the way it analyses the product.\n\nChanging the product type moves the product to the new platform.\nIt must be done thoughtfully.\n",
+            "enum": [
+              "beauty",
+              "food",
+              "petfood",
+              "product"
+            ]
+          },
           "code": {
             "type": "string",
             "description": "barcode of the product (can be EAN-13 or internal codes for some food stores),\nfor products without a barcode,\nOpen Food Facts assigns a number starting with the 200 reserved prefix\n"
@@ -9013,6 +9023,16 @@
               "abbreviated_product_name": {
                 "type": "string",
                 "description": "Abbreviated name in requested language"
+              },
+              "product_type": {
+                "type": "string",
+                "description": "The product type is a fundamental separation that tells on which platform the product is made available:\nOpen Food Facts, Open Beauty Facts, Open Pet Food Facts or Open Products Facts.\n\nEach platform has variations on the way it analyses the product.\n\nChanging the product type moves the product to the new platform.\nIt must be done thoughtfully.\n",
+                "enum": [
+                  "beauty",
+                  "food",
+                  "petfood",
+                  "product"
+                ]
               },
               "code": {
                 "type": "string",
