@@ -45,33 +45,15 @@
         "summary": "Authentication",
         "description": "Authentication: provide user/password and get a bearer token in return\n\n- **username**: Open Food Facts user_id (not email)\n- **password**: user password (clear text, but HTTPS encrypted)\n\ntoken is returned, to be used in later requests with usual \"Authorization: bearer token\" headers",
         "operationId": "authentication_auth_post",
-        "parameters": [
-          {
-            "name": "session",
-            "in": "cookie",
-            "required": false,
-            "schema": {
-              "anyOf": [
-                {
-                  "type": "string"
-                },
-                {
-                  "type": "null"
-                }
-              ],
-              "title": "Session"
-            }
-          }
-        ],
         "requestBody": {
-          "required": true,
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
                 "$ref": "#/components/schemas/Body_authentication_auth_post"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
@@ -828,6 +810,255 @@
           }
         }
       }
+    },
+    "/admin/property/check-clash": {
+      "post": {
+        "tags": [
+          "Admin - Property Management"
+        ],
+        "summary": "Check Property Clash",
+        "description": "Check for potential clashes when renaming a property\n\nReturns information about products that would be affected by the rename:\n- **old_property**: The current property name\n- **new_property**: The target property name\n\nReturns counts and list of conflicting products where both properties exist",
+        "operationId": "check_property_clash_admin_property_check_clash_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyClashCheckRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PropertyClashCheck"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/property/rename": {
+      "post": {
+        "tags": [
+          "Admin - Property Management"
+        ],
+        "summary": "Rename Property",
+        "description": "Rename a property across all products\n\nWhen renaming a property that already exists:\n- If both properties have the same value: keep one entry\n- If both properties have different values: keep the original property's value\n\n- **old_property**: The current property name\n- **new_property**: The target property name",
+        "operationId": "rename_property_admin_property_rename_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyRenameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/property": {
+      "delete": {
+        "tags": [
+          "Admin - Property Management"
+        ],
+        "summary": "Delete Property",
+        "description": "Delete a property from all products\n\n- **property**: The property name to delete",
+        "operationId": "delete_property_admin_property_delete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PropertyDeleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/user/me": {
+      "get": {
+        "summary": "Get User Info",
+        "description": "Get current user roles (admin, moderator, user)",
+        "operationId": "get_user_info_user_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/value/replace": {
+      "post": {
+        "tags": [
+          "Admin - Value Management"
+        ],
+        "summary": "Replace Value",
+        "description": "Replace a value for a specific property across all products\n\n- **property**: The property name\n- **old_value**: The value to replace\n- **new_value**: The new value",
+        "operationId": "replace_value_admin_value_replace_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValueRenameRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/value": {
+      "delete": {
+        "tags": [
+          "Admin - Value Management"
+        ],
+        "summary": "Delete Value",
+        "description": "Delete a specific value for a property from all products\n\n- **property**: The property name\n- **value**: The value to delete",
+        "operationId": "delete_value_admin_value_delete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValueDeleteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -1071,6 +1302,84 @@
         ],
         "title": "ProductTag"
       },
+      "PropertyClashCheck": {
+        "properties": {
+          "products_with_both": {
+            "type": "integer",
+            "title": "Products With Both"
+          },
+          "products_with_old_only": {
+            "type": "integer",
+            "title": "Products With Old Only"
+          },
+          "products_with_new_only": {
+            "type": "integer",
+            "title": "Products With New Only"
+          },
+          "conflicting_products": {
+            "items": {},
+            "type": "array",
+            "title": "Conflicting Products"
+          }
+        },
+        "type": "object",
+        "required": [
+          "products_with_both",
+          "products_with_old_only",
+          "products_with_new_only",
+          "conflicting_products"
+        ],
+        "title": "PropertyClashCheck"
+      },
+      "PropertyClashCheckRequest": {
+        "properties": {
+          "old_property": {
+            "type": "string",
+            "title": "Old Property"
+          },
+          "new_property": {
+            "type": "string",
+            "title": "New Property"
+          }
+        },
+        "type": "object",
+        "required": [
+          "old_property",
+          "new_property"
+        ],
+        "title": "PropertyClashCheckRequest"
+      },
+      "PropertyDeleteRequest": {
+        "properties": {
+          "property": {
+            "type": "string",
+            "title": "Property"
+          }
+        },
+        "type": "object",
+        "required": [
+          "property"
+        ],
+        "title": "PropertyDeleteRequest"
+      },
+      "PropertyRenameRequest": {
+        "properties": {
+          "old_property": {
+            "type": "string",
+            "title": "Old Property"
+          },
+          "new_property": {
+            "type": "string",
+            "title": "New Property"
+          }
+        },
+        "type": "object",
+        "required": [
+          "old_property",
+          "new_property"
+        ],
+        "title": "PropertyRenameRequest"
+      },
       "TokenResponse": {
         "properties": {
           "access_token": {
@@ -1139,6 +1448,47 @@
           "product_count"
         ],
         "title": "ValueCount"
+      },
+      "ValueDeleteRequest": {
+        "properties": {
+          "property": {
+            "type": "string",
+            "title": "Property"
+          },
+          "value": {
+            "type": "string",
+            "title": "Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "property",
+          "value"
+        ],
+        "title": "ValueDeleteRequest"
+      },
+      "ValueRenameRequest": {
+        "properties": {
+          "property": {
+            "type": "string",
+            "title": "Property"
+          },
+          "old_value": {
+            "type": "string",
+            "title": "Old Value"
+          },
+          "new_value": {
+            "type": "string",
+            "title": "New Value"
+          }
+        },
+        "type": "object",
+        "required": [
+          "property",
+          "old_value",
+          "new_value"
+        ],
+        "title": "ValueRenameRequest"
       }
     },
     "securitySchemes": {
