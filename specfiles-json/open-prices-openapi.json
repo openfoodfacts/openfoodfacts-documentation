@@ -3912,6 +3912,9 @@
           "is_published": {
             "type": "boolean"
           },
+          "stats": {
+            "nullable": true
+          },
           "created": {
             "type": "string",
             "format": "date-time"
