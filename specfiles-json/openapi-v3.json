@@ -136,7 +136,7 @@
                       "description": "A response object to describe if a READ or WRITE request was successful or not, and if there were errors or warnings, and what the impact of those errors or warnings was.",
                       "examples": [
                         {
-                          "status_id": "success_with_errors",
+                          "status": "success_with_errors",
                           "result": {
                             "id": "product_updated",
                             "name": "Product updated",
@@ -167,7 +167,7 @@
                         }
                       ],
                       "properties": {
-                        "status_id": {
+                        "status": {
                           "type": "string",
                           "enum": [
                             "success",
@@ -11033,7 +11033,7 @@
                       "description": "A response object to describe if a READ or WRITE request was successful or not, and if there were errors or warnings, and what the impact of those errors or warnings was.",
                       "examples": [
                         {
-                          "status_id": "success_with_errors",
+                          "status": "success_with_errors",
                           "result": {
                             "id": "product_updated",
                             "name": "Product updated",
@@ -11064,7 +11064,7 @@
                         }
                       ],
                       "properties": {
-                        "status_id": {
+                        "status": {
                           "type": "string",
                           "enum": [
                             "success",
@@ -12137,7 +12137,7 @@
                       "description": "A response object to describe if a READ or WRITE request was successful or not, and if there were errors or warnings, and what the impact of those errors or warnings was.",
                       "examples": [
                         {
-                          "status_id": "success_with_errors",
+                          "status": "success_with_errors",
                           "result": {
                             "id": "product_updated",
                             "name": "Product updated",
@@ -12168,7 +12168,7 @@
                         }
                       ],
                       "properties": {
-                        "status_id": {
+                        "status": {
                           "type": "string",
                           "enum": [
                             "success",
@@ -12571,7 +12571,7 @@
                       "description": "A response object to describe if a READ or WRITE request was successful or not, and if there were errors or warnings, and what the impact of those errors or warnings was.",
                       "examples": [
                         {
-                          "status_id": "success_with_errors",
+                          "status": "success_with_errors",
                           "result": {
                             "id": "product_updated",
                             "name": "Product updated",
@@ -12602,7 +12602,7 @@
                         }
                       ],
                       "properties": {
-                        "status_id": {
+                        "status": {
                           "type": "string",
                           "enum": [
                             "success",
@@ -12856,7 +12856,7 @@
                       "description": "A response object to describe if a READ or WRITE request was successful or not, and if there were errors or warnings, and what the impact of those errors or warnings was.",
                       "examples": [
                         {
-                          "status_id": "success_with_errors",
+                          "status": "success_with_errors",
                           "result": {
                             "id": "product_updated",
                             "name": "Product updated",
@@ -12887,7 +12887,7 @@
                         }
                       ],
                       "properties": {
-                        "status_id": {
+                        "status": {
                           "type": "string",
                           "enum": [
                             "success",
@@ -13277,7 +13277,7 @@
                       "description": "A response object to describe if a READ or WRITE request was successful or not, and if there were errors or warnings, and what the impact of those errors or warnings was.",
                       "examples": [
                         {
-                          "status_id": "success_with_errors",
+                          "status": "success_with_errors",
                           "result": {
                             "id": "product_updated",
                             "name": "Product updated",
@@ -13308,7 +13308,7 @@
                         }
                       ],
                       "properties": {
-                        "status_id": {
+                        "status": {
                           "type": "string",
                           "enum": [
                             "success",
@@ -13916,7 +13916,7 @@
                       "description": "A response object to describe if a READ or WRITE request was successful or not, and if there were errors or warnings, and what the impact of those errors or warnings was.",
                       "examples": [
                         {
-                          "status_id": "success_with_errors",
+                          "status": "success_with_errors",
                           "result": {
                             "id": "product_updated",
                             "name": "Product updated",
@@ -13947,7 +13947,7 @@
                         }
                       ],
                       "properties": {
-                        "status_id": {
+                        "status": {
                           "type": "string",
                           "enum": [
                             "success",
