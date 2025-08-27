@@ -8265,318 +8265,316 @@
                                       "additionalProperties": "string"
                                     }
                                   ],
-                                  "properties": {
-                                    "additionalProperties": {
-                                      "title": "panel",
-                                      "type": "object",
-                                      "description": "Each panel contains an optional title and an optional array of elements.",
-                                      "properties": {
-                                        "type": {
-                                          "type": "string",
-                                          "description": "Type of the panel. If set to \"card\", the panel and its sub-panels should be displayed in a card. If set to \"inline\", the panel should have its content always displayed."
+                                  "additionalProperties": {
+                                    "title": "panel",
+                                    "type": "object",
+                                    "description": "Each panel contains an optional title and an optional array of elements.",
+                                    "properties": {
+                                      "type": {
+                                        "type": "string",
+                                        "description": "Type of the panel. If set to \"card\", the panel and its sub-panels should be displayed in a card. If set to \"inline\", the panel should have its content always displayed."
+                                      },
+                                      "expanded": {
+                                        "type": "boolean",
+                                        "description": "If true, the panel is to be displayed already expanded. If false, only the title should be displayed, and the user should be able to click or tap it to open the panel and display the elements."
+                                      },
+                                      "expand_for": {
+                                        "type": "string",
+                                        "description": "If set to \"large\", the content of the panel should be expanded on large screens, but it should still be possible to unexpand it."
+                                      },
+                                      "evaluation": {
+                                        "type": "string",
+                                        "description": "An evaluation status specifically for this title element. This can be used to directly color the icon if 'icon_color_from_evaluation' is true and this field is present, or it might provide context for the title itself. e.g. bad is red. Please be careful in choosing colors, to avoid 50 shades of red.",
+                                        "example": "bad",
+                                        "enum": [
+                                          "good",
+                                          "average",
+                                          "neutral",
+                                          "bad",
+                                          "unknown"
+                                        ]
+                                      },
+                                      "half_width_on_mobile": {
+                                        "type": "boolean",
+                                        "description": "If true, suggests that this panel could be rendered as half-width on mobile devices, allowing for side-by-side display with another half-width panel if applicable.",
+                                        "example": true
+                                      },
+                                      "title_element": {
+                                        "title": "title_element",
+                                        "x-stoplight": {
+                                          "id": "lox0wvl9bdgy2"
                                         },
-                                        "expanded": {
-                                          "type": "boolean",
-                                          "description": "If true, the panel is to be displayed already expanded. If false, only the title should be displayed, and the user should be able to click or tap it to open the panel and display the elements."
-                                        },
-                                        "expand_for": {
-                                          "type": "string",
-                                          "description": "If set to \"large\", the content of the panel should be expanded on large screens, but it should still be possible to unexpand it."
-                                        },
-                                        "evaluation": {
-                                          "type": "string",
-                                          "description": "An evaluation status specifically for this title element. This can be used to directly color the icon if 'icon_color_from_evaluation' is true and this field is present, or it might provide context for the title itself. e.g. bad is red. Please be careful in choosing colors, to avoid 50 shades of red.",
-                                          "example": "bad",
-                                          "enum": [
-                                            "good",
-                                            "average",
-                                            "neutral",
-                                            "bad",
-                                            "unknown"
-                                          ]
-                                        },
-                                        "half_width_on_mobile": {
-                                          "type": "boolean",
-                                          "description": "If true, suggests that this panel could be rendered as half-width on mobile devices, allowing for side-by-side display with another half-width panel if applicable.",
-                                          "example": true
-                                        },
-                                        "title_element": {
-                                          "title": "title_element",
+                                        "type": "object",
+                                        "description": "The title of a panel.",
+                                        "properties": {
+                                          "name": {
+                                            "type": "string",
+                                            "description": "A short name of this panel, not including any actual values"
+                                          },
+                                          "title": {
+                                            "type": "string"
+                                          },
+                                          "type": {
+                                            "type": "string",
+                                            "enum": [
+                                              "grade",
+                                              "percentage"
+                                            ],
+                                            "description": "Used to indicate how the value of this item is measured, such as \"grade\" for Nutri-Score and Green-Score or \"percentage\" for Salt"
+                                          },
+                                          "grade": {
+                                            "type": "string",
+                                            "description": "The value for this panel where it corresponds to a A to E grade such as the Nutri-Score or the Green-Score.",
+                                            "enum": [
+                                              "a+",
+                                              "a",
+                                              "b",
+                                              "c",
+                                              "d",
+                                              "e",
+                                              "f",
+                                              "unknown"
+                                            ]
+                                          },
+                                          "value": {
+                                            "type": "number",
+                                            "description": "The numeric value of the panel, where the type is \"percentage\""
+                                          },
+                                          "icon_url": {
+                                            "type": "string"
+                                          },
+                                          "icon_color_from_evaluation": {
+                                            "type": "string"
+                                          },
+                                          "icon_size": {
+                                            "type": "string",
+                                            "description": "If set to \"small\", the icon should be displayed at a small size.\n"
+                                          }
+                                        }
+                                      },
+                                      "elements": {
+                                        "type": "array",
+                                        "description": "An ordered list of elements to display in the content of the panel.",
+                                        "items": {
+                                          "title": "element",
                                           "x-stoplight": {
-                                            "id": "lox0wvl9bdgy2"
+                                            "id": "e2ybdrtmx0tme"
                                           },
                                           "type": "object",
-                                          "description": "The title of a panel.",
+                                          "description": "Each element object contains one specific element object such as a text element or an image element.\n",
                                           "properties": {
-                                            "name": {
-                                              "type": "string",
-                                              "description": "A short name of this panel, not including any actual values"
-                                            },
-                                            "title": {
-                                              "type": "string"
-                                            },
                                             "type": {
                                               "type": "string",
                                               "enum": [
-                                                "grade",
-                                                "percentage"
+                                                "text",
+                                                "image",
+                                                "action",
+                                                "panel",
+                                                "panel_group",
+                                                "table"
                                               ],
-                                              "description": "Used to indicate how the value of this item is measured, such as \"grade\" for Nutri-Score and Green-Score or \"percentage\" for Salt"
+                                              "description": "The type of the included element object.\nThe type also indicates which field contains the included element object.\ne.g. if the type is \"text\", the included element object will be in the \"text_element\" field.\n\nNote that in the future, new type of element may be added,\nso your code should ignore unrecognized types, and unknown properties.\n\nTODO: add Map type\n"
                                             },
-                                            "grade": {
-                                              "type": "string",
-                                              "description": "The value for this panel where it corresponds to a A to E grade such as the Nutri-Score or the Green-Score.",
-                                              "enum": [
-                                                "a+",
-                                                "a",
-                                                "b",
-                                                "c",
-                                                "d",
-                                                "e",
-                                                "f",
-                                                "unknown"
-                                              ]
+                                            "text_element": {
+                                              "title": "text_element",
+                                              "x-stoplight": {
+                                                "id": "vdwxlt73qnqfa"
+                                              },
+                                              "type": "object",
+                                              "description": "A text in simple HTML format to display.\n\nFor some specific texts that correspond to a product field (e.g. a product name, the ingredients list of a product),the edit_field_* fields are used to indicate how to edit the field value.",
+                                              "properties": {
+                                                "type": {
+                                                  "type": "string",
+                                                  "description": "the type of text, might influence the way you display it.\n",
+                                                  "enum": [
+                                                    "summary",
+                                                    "warning",
+                                                    "notes"
+                                                  ]
+                                                },
+                                                "html": {
+                                                  "type": "string",
+                                                  "description": "Text to display in HTML format."
+                                                },
+                                                "language": {
+                                                  "type": "string",
+                                                  "description": "Language of the text. The name of the language is returned in the language requested when making the API call. e.g. if the text is in Polish, and the requested language is French, the language field will contain \"Polonais\" (French for \"Polish\"). Only set for specific fields such as the list of ingredients of a product."
+                                                },
+                                                "lc": {
+                                                  "type": "string",
+                                                  "description": "2 letter language code for the text. Only set for specific fields such as the list of ingredients of a product."
+                                                },
+                                                "edit_field_id": {
+                                                  "type": "string",
+                                                  "description": "id of the field used to edit this text in the product edit API."
+                                                },
+                                                "edit_field_type": {
+                                                  "type": "string",
+                                                  "description": "Type of the product field."
+                                                },
+                                                "edit_field_value": {
+                                                  "type": "string",
+                                                  "description": "Current value of the product field. This may differ from the html field which can contain extra formating."
+                                                },
+                                                "source_url": {
+                                                  "type": "string",
+                                                  "description": "Link to the source",
+                                                  "example": "https://en.wikipedia.org/wiki/Sodium acetate"
+                                                },
+                                                "source_text": {
+                                                  "type": "string",
+                                                  "description": "name of the source",
+                                                  "example": "Wikipedia"
+                                                },
+                                                "source_lc": {
+                                                  "type": "string",
+                                                  "description": "Source locale name",
+                                                  "example": "en"
+                                                },
+                                                "source_language": {
+                                                  "type": "string",
+                                                  "description": "Human readable source locale name",
+                                                  "example": "English"
+                                                }
+                                              }
                                             },
-                                            "value": {
-                                              "type": "number",
-                                              "description": "The numeric value of the panel, where the type is \"percentage\""
+                                            "image_element": {
+                                              "title": "image_element",
+                                              "x-stoplight": {
+                                                "id": "k4v4kwt489q3j"
+                                              },
+                                              "type": "object",
+                                              "properties": {
+                                                "url": {
+                                                  "type": "string",
+                                                  "description": "full URL of the image"
+                                                },
+                                                "width": {
+                                                  "type": "integer",
+                                                  "description": "Width of the image.\n\nThis is just a suggestion coming from the server, \nthe client may choose to use its own dimensions for the image.\n"
+                                                },
+                                                "height": {
+                                                  "type": "integer",
+                                                  "description": "Height of the image.\n\nThis is just a suggestion coming from the server,\nthe client may choose to use its own dimensions for the image.\n"
+                                                },
+                                                "alt_text": {
+                                                  "type": "string",
+                                                  "description": "Alt Text of the image."
+                                                }
+                                              }
                                             },
-                                            "icon_url": {
+                                            "action_element": {
                                               "type": "string"
                                             },
-                                            "icon_color_from_evaluation": {
-                                              "type": "string"
+                                            "panel_element": {
+                                              "title": "panel_element",
+                                              "x-stoplight": {
+                                                "id": "ymx41elz4yrnj"
+                                              },
+                                              "type": "object",
+                                              "description": "Panels can include other panels as sub-panels using the panel_element.",
+                                              "properties": {
+                                                "panel_id": {
+                                                  "type": "string",
+                                                  "description": "The id of the panel to include. The id is the key of the panel in the panels object returned in the knowledge_panels field."
+                                                }
+                                              }
                                             },
-                                            "icon_size": {
-                                              "type": "string",
-                                              "description": "If set to \"small\", the icon should be displayed at a small size.\n"
-                                            }
-                                          }
-                                        },
-                                        "elements": {
-                                          "type": "array",
-                                          "description": "An ordered list of elements to display in the content of the panel.",
-                                          "items": {
-                                            "title": "element",
-                                            "x-stoplight": {
-                                              "id": "e2ybdrtmx0tme"
-                                            },
-                                            "type": "object",
-                                            "description": "Each element object contains one specific element object such as a text element or an image element.\n",
-                                            "properties": {
-                                              "type": {
-                                                "type": "string",
-                                                "enum": [
-                                                  "text",
-                                                  "image",
-                                                  "action",
-                                                  "panel",
-                                                  "panel_group",
-                                                  "table"
-                                                ],
-                                                "description": "The type of the included element object.\nThe type also indicates which field contains the included element object.\ne.g. if the type is \"text\", the included element object will be in the \"text_element\" field.\n\nNote that in the future, new type of element may be added,\nso your code should ignore unrecognized types, and unknown properties.\n\nTODO: add Map type\n"
+                                            "panel_group_element": {
+                                              "title": "panel_group_element",
+                                              "x-stoplight": {
+                                                "id": "b7emlfrgiuue2"
                                               },
-                                              "text_element": {
-                                                "title": "text_element",
-                                                "x-stoplight": {
-                                                  "id": "vdwxlt73qnqfa"
+                                              "type": "object",
+                                              "properties": {
+                                                "title": {
+                                                  "type": "string"
                                                 },
-                                                "type": "object",
-                                                "description": "A text in simple HTML format to display.\n\nFor some specific texts that correspond to a product field (e.g. a product name, the ingredients list of a product),the edit_field_* fields are used to indicate how to edit the field value.",
-                                                "properties": {
-                                                  "type": {
-                                                    "type": "string",
-                                                    "description": "the type of text, might influence the way you display it.\n",
-                                                    "enum": [
-                                                      "summary",
-                                                      "warning",
-                                                      "notes"
-                                                    ]
-                                                  },
-                                                  "html": {
-                                                    "type": "string",
-                                                    "description": "Text to display in HTML format."
-                                                  },
-                                                  "language": {
-                                                    "type": "string",
-                                                    "description": "Language of the text. The name of the language is returned in the language requested when making the API call. e.g. if the text is in Polish, and the requested language is French, the language field will contain \"Polonais\" (French for \"Polish\"). Only set for specific fields such as the list of ingredients of a product."
-                                                  },
-                                                  "lc": {
-                                                    "type": "string",
-                                                    "description": "2 letter language code for the text. Only set for specific fields such as the list of ingredients of a product."
-                                                  },
-                                                  "edit_field_id": {
-                                                    "type": "string",
-                                                    "description": "id of the field used to edit this text in the product edit API."
-                                                  },
-                                                  "edit_field_type": {
-                                                    "type": "string",
-                                                    "description": "Type of the product field."
-                                                  },
-                                                  "edit_field_value": {
-                                                    "type": "string",
-                                                    "description": "Current value of the product field. This may differ from the html field which can contain extra formating."
-                                                  },
-                                                  "source_url": {
-                                                    "type": "string",
-                                                    "description": "Link to the source",
-                                                    "example": "https://en.wikipedia.org/wiki/Sodium acetate"
-                                                  },
-                                                  "source_text": {
-                                                    "type": "string",
-                                                    "description": "name of the source",
-                                                    "example": "Wikipedia"
-                                                  },
-                                                  "source_lc": {
-                                                    "type": "string",
-                                                    "description": "Source locale name",
-                                                    "example": "en"
-                                                  },
-                                                  "source_language": {
-                                                    "type": "string",
-                                                    "description": "Human readable source locale name",
-                                                    "example": "English"
-                                                  }
-                                                }
-                                              },
-                                              "image_element": {
-                                                "title": "image_element",
-                                                "x-stoplight": {
-                                                  "id": "k4v4kwt489q3j"
-                                                },
-                                                "type": "object",
-                                                "properties": {
-                                                  "url": {
-                                                    "type": "string",
-                                                    "description": "full URL of the image"
-                                                  },
-                                                  "width": {
-                                                    "type": "integer",
-                                                    "description": "Width of the image.\n\nThis is just a suggestion coming from the server, \nthe client may choose to use its own dimensions for the image.\n"
-                                                  },
-                                                  "height": {
-                                                    "type": "integer",
-                                                    "description": "Height of the image.\n\nThis is just a suggestion coming from the server,\nthe client may choose to use its own dimensions for the image.\n"
-                                                  },
-                                                  "alt_text": {
-                                                    "type": "string",
-                                                    "description": "Alt Text of the image."
-                                                  }
-                                                }
-                                              },
-                                              "action_element": {
-                                                "type": "string"
-                                              },
-                                              "panel_element": {
-                                                "title": "panel_element",
-                                                "x-stoplight": {
-                                                  "id": "ymx41elz4yrnj"
-                                                },
-                                                "type": "object",
-                                                "description": "Panels can include other panels as sub-panels using the panel_element.",
-                                                "properties": {
-                                                  "panel_id": {
-                                                    "type": "string",
-                                                    "description": "The id of the panel to include. The id is the key of the panel in the panels object returned in the knowledge_panels field."
-                                                  }
-                                                }
-                                              },
-                                              "panel_group_element": {
-                                                "title": "panel_group_element",
-                                                "x-stoplight": {
-                                                  "id": "b7emlfrgiuue2"
-                                                },
-                                                "type": "object",
-                                                "properties": {
-                                                  "title": {
+                                                "panel_ids": {
+                                                  "type": "array",
+                                                  "description": "The ids of the panels to include. The ids are the keys of the panels in the panels object returned in the knowledge_panels field.",
+                                                  "items": {
                                                     "type": "string"
-                                                  },
-                                                  "panel_ids": {
-                                                    "type": "array",
-                                                    "description": "The ids of the panels to include. The ids are the keys of the panels in the panels object returned in the knowledge_panels field.",
-                                                    "items": {
-                                                      "type": "string"
-                                                    }
-                                                  },
-                                                  "image": {
+                                                  }
+                                                },
+                                                "image": {
+                                                  "type": "object",
+                                                  "description": "An image related to the panel group (e.g. the ingredients or nutrition facts image for the ingredients and nutrition panel groups)."
+                                                }
+                                              },
+                                              "description": "The panel group element is used to display an optional title followed by a number of sub-panels."
+                                            },
+                                            "table_element": {
+                                              "title": "table_element",
+                                              "type": "object",
+                                              "description": "Element to display a table.",
+                                              "properties": {
+                                                "id": {
+                                                  "type": "string",
+                                                  "description": "An id for the table."
+                                                },
+                                                "title": {
+                                                  "type": "string",
+                                                  "description": "Title of the column.\n"
+                                                },
+                                                "rows": {
+                                                  "type": "string"
+                                                },
+                                                "columns": {
+                                                  "type": "array",
+                                                  "items": {
                                                     "type": "object",
-                                                    "description": "An image related to the panel group (e.g. the ingredients or nutrition facts image for the ingredients and nutrition panel groups)."
-                                                  }
-                                                },
-                                                "description": "The panel group element is used to display an optional title followed by a number of sub-panels."
-                                              },
-                                              "table_element": {
-                                                "title": "table_element",
-                                                "type": "object",
-                                                "description": "Element to display a table.",
-                                                "properties": {
-                                                  "id": {
-                                                    "type": "string",
-                                                    "description": "An id for the table."
-                                                  },
-                                                  "title": {
-                                                    "type": "string",
-                                                    "description": "Title of the column.\n"
-                                                  },
-                                                  "rows": {
-                                                    "type": "string"
-                                                  },
-                                                  "columns": {
-                                                    "type": "array",
-                                                    "items": {
-                                                      "type": "object",
-                                                      "title": "table_column",
-                                                      "properties": {
-                                                        "type": {
-                                                          "type": "string"
-                                                        },
-                                                        "text": {
-                                                          "type": "string"
-                                                        },
-                                                        "text_for_small_screens": {
-                                                          "type": "string"
-                                                        },
-                                                        "style": {
-                                                          "type": "string"
-                                                        },
-                                                        "column_group_id": {
-                                                          "type": "string"
-                                                        },
-                                                        "shown_by_default": {
-                                                          "type": "boolean"
-                                                        }
+                                                    "title": "table_column",
+                                                    "properties": {
+                                                      "type": {
+                                                        "type": "string"
+                                                      },
+                                                      "text": {
+                                                        "type": "string"
+                                                      },
+                                                      "text_for_small_screens": {
+                                                        "type": "string"
+                                                      },
+                                                      "style": {
+                                                        "type": "string"
+                                                      },
+                                                      "column_group_id": {
+                                                        "type": "string"
+                                                      },
+                                                      "shown_by_default": {
+                                                        "type": "boolean"
                                                       }
                                                     }
                                                   }
                                                 }
                                               }
-                                            },
-                                            "required": [
-                                              "type"
-                                            ]
-                                          }
-                                        },
-                                        "level": {
-                                          "type": "string",
-                                          "description": "a message level, as levels we use in log.\nIt might help theming the panel visually. Some possible values: info, recommendation\n",
-                                          "example": "info"
-                                        },
-                                        "size": {
-                                          "type": "string",
-                                          "enum": [
-                                            "small"
-                                          ],
-                                          "description": "size is either empty (normal display) \nor small to indicate a panel that should have a smaller font size\n",
-                                          "example": "small"
-                                        },
-                                        "topics": {
-                                          "type": "array",
-                                          "items": {
-                                            "type": "string",
-                                            "example": "health"
+                                            }
                                           },
-                                          "description": "topics currently include health, environment, problem"
+                                          "required": [
+                                            "type"
+                                          ]
                                         }
+                                      },
+                                      "level": {
+                                        "type": "string",
+                                        "description": "a message level, as levels we use in log.\nIt might help theming the panel visually. Some possible values: info, recommendation\n",
+                                        "example": "info"
+                                      },
+                                      "size": {
+                                        "type": "string",
+                                        "enum": [
+                                          "small"
+                                        ],
+                                        "description": "size is either empty (normal display) \nor small to indicate a panel that should have a smaller font size\n",
+                                        "example": "small"
+                                      },
+                                      "topics": {
+                                        "type": "array",
+                                        "items": {
+                                          "type": "string",
+                                          "example": "health"
+                                        },
+                                        "description": "topics currently include health, environment, problem"
                                       }
                                     }
                                   },
@@ -13559,318 +13557,316 @@
                                   "additionalProperties": "string"
                                 }
                               ],
-                              "properties": {
-                                "additionalProperties": {
-                                  "title": "panel",
-                                  "type": "object",
-                                  "description": "Each panel contains an optional title and an optional array of elements.",
-                                  "properties": {
-                                    "type": {
-                                      "type": "string",
-                                      "description": "Type of the panel. If set to \"card\", the panel and its sub-panels should be displayed in a card. If set to \"inline\", the panel should have its content always displayed."
+                              "additionalProperties": {
+                                "title": "panel",
+                                "type": "object",
+                                "description": "Each panel contains an optional title and an optional array of elements.",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "description": "Type of the panel. If set to \"card\", the panel and its sub-panels should be displayed in a card. If set to \"inline\", the panel should have its content always displayed."
+                                  },
+                                  "expanded": {
+                                    "type": "boolean",
+                                    "description": "If true, the panel is to be displayed already expanded. If false, only the title should be displayed, and the user should be able to click or tap it to open the panel and display the elements."
+                                  },
+                                  "expand_for": {
+                                    "type": "string",
+                                    "description": "If set to \"large\", the content of the panel should be expanded on large screens, but it should still be possible to unexpand it."
+                                  },
+                                  "evaluation": {
+                                    "type": "string",
+                                    "description": "An evaluation status specifically for this title element. This can be used to directly color the icon if 'icon_color_from_evaluation' is true and this field is present, or it might provide context for the title itself. e.g. bad is red. Please be careful in choosing colors, to avoid 50 shades of red.",
+                                    "example": "bad",
+                                    "enum": [
+                                      "good",
+                                      "average",
+                                      "neutral",
+                                      "bad",
+                                      "unknown"
+                                    ]
+                                  },
+                                  "half_width_on_mobile": {
+                                    "type": "boolean",
+                                    "description": "If true, suggests that this panel could be rendered as half-width on mobile devices, allowing for side-by-side display with another half-width panel if applicable.",
+                                    "example": true
+                                  },
+                                  "title_element": {
+                                    "title": "title_element",
+                                    "x-stoplight": {
+                                      "id": "lox0wvl9bdgy2"
                                     },
-                                    "expanded": {
-                                      "type": "boolean",
-                                      "description": "If true, the panel is to be displayed already expanded. If false, only the title should be displayed, and the user should be able to click or tap it to open the panel and display the elements."
-                                    },
-                                    "expand_for": {
-                                      "type": "string",
-                                      "description": "If set to \"large\", the content of the panel should be expanded on large screens, but it should still be possible to unexpand it."
-                                    },
-                                    "evaluation": {
-                                      "type": "string",
-                                      "description": "An evaluation status specifically for this title element. This can be used to directly color the icon if 'icon_color_from_evaluation' is true and this field is present, or it might provide context for the title itself. e.g. bad is red. Please be careful in choosing colors, to avoid 50 shades of red.",
-                                      "example": "bad",
-                                      "enum": [
-                                        "good",
-                                        "average",
-                                        "neutral",
-                                        "bad",
-                                        "unknown"
-                                      ]
-                                    },
-                                    "half_width_on_mobile": {
-                                      "type": "boolean",
-                                      "description": "If true, suggests that this panel could be rendered as half-width on mobile devices, allowing for side-by-side display with another half-width panel if applicable.",
-                                      "example": true
-                                    },
-                                    "title_element": {
-                                      "title": "title_element",
+                                    "type": "object",
+                                    "description": "The title of a panel.",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string",
+                                        "description": "A short name of this panel, not including any actual values"
+                                      },
+                                      "title": {
+                                        "type": "string"
+                                      },
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "grade",
+                                          "percentage"
+                                        ],
+                                        "description": "Used to indicate how the value of this item is measured, such as \"grade\" for Nutri-Score and Green-Score or \"percentage\" for Salt"
+                                      },
+                                      "grade": {
+                                        "type": "string",
+                                        "description": "The value for this panel where it corresponds to a A to E grade such as the Nutri-Score or the Green-Score.",
+                                        "enum": [
+                                          "a+",
+                                          "a",
+                                          "b",
+                                          "c",
+                                          "d",
+                                          "e",
+                                          "f",
+                                          "unknown"
+                                        ]
+                                      },
+                                      "value": {
+                                        "type": "number",
+                                        "description": "The numeric value of the panel, where the type is \"percentage\""
+                                      },
+                                      "icon_url": {
+                                        "type": "string"
+                                      },
+                                      "icon_color_from_evaluation": {
+                                        "type": "string"
+                                      },
+                                      "icon_size": {
+                                        "type": "string",
+                                        "description": "If set to \"small\", the icon should be displayed at a small size.\n"
+                                      }
+                                    }
+                                  },
+                                  "elements": {
+                                    "type": "array",
+                                    "description": "An ordered list of elements to display in the content of the panel.",
+                                    "items": {
+                                      "title": "element",
                                       "x-stoplight": {
-                                        "id": "lox0wvl9bdgy2"
+                                        "id": "e2ybdrtmx0tme"
                                       },
                                       "type": "object",
-                                      "description": "The title of a panel.",
+                                      "description": "Each element object contains one specific element object such as a text element or an image element.\n",
                                       "properties": {
-                                        "name": {
-                                          "type": "string",
-                                          "description": "A short name of this panel, not including any actual values"
-                                        },
-                                        "title": {
-                                          "type": "string"
-                                        },
                                         "type": {
                                           "type": "string",
                                           "enum": [
-                                            "grade",
-                                            "percentage"
+                                            "text",
+                                            "image",
+                                            "action",
+                                            "panel",
+                                            "panel_group",
+                                            "table"
                                           ],
-                                          "description": "Used to indicate how the value of this item is measured, such as \"grade\" for Nutri-Score and Green-Score or \"percentage\" for Salt"
+                                          "description": "The type of the included element object.\nThe type also indicates which field contains the included element object.\ne.g. if the type is \"text\", the included element object will be in the \"text_element\" field.\n\nNote that in the future, new type of element may be added,\nso your code should ignore unrecognized types, and unknown properties.\n\nTODO: add Map type\n"
                                         },
-                                        "grade": {
-                                          "type": "string",
-                                          "description": "The value for this panel where it corresponds to a A to E grade such as the Nutri-Score or the Green-Score.",
-                                          "enum": [
-                                            "a+",
-                                            "a",
-                                            "b",
-                                            "c",
-                                            "d",
-                                            "e",
-                                            "f",
-                                            "unknown"
-                                          ]
+                                        "text_element": {
+                                          "title": "text_element",
+                                          "x-stoplight": {
+                                            "id": "vdwxlt73qnqfa"
+                                          },
+                                          "type": "object",
+                                          "description": "A text in simple HTML format to display.\n\nFor some specific texts that correspond to a product field (e.g. a product name, the ingredients list of a product),the edit_field_* fields are used to indicate how to edit the field value.",
+                                          "properties": {
+                                            "type": {
+                                              "type": "string",
+                                              "description": "the type of text, might influence the way you display it.\n",
+                                              "enum": [
+                                                "summary",
+                                                "warning",
+                                                "notes"
+                                              ]
+                                            },
+                                            "html": {
+                                              "type": "string",
+                                              "description": "Text to display in HTML format."
+                                            },
+                                            "language": {
+                                              "type": "string",
+                                              "description": "Language of the text. The name of the language is returned in the language requested when making the API call. e.g. if the text is in Polish, and the requested language is French, the language field will contain \"Polonais\" (French for \"Polish\"). Only set for specific fields such as the list of ingredients of a product."
+                                            },
+                                            "lc": {
+                                              "type": "string",
+                                              "description": "2 letter language code for the text. Only set for specific fields such as the list of ingredients of a product."
+                                            },
+                                            "edit_field_id": {
+                                              "type": "string",
+                                              "description": "id of the field used to edit this text in the product edit API."
+                                            },
+                                            "edit_field_type": {
+                                              "type": "string",
+                                              "description": "Type of the product field."
+                                            },
+                                            "edit_field_value": {
+                                              "type": "string",
+                                              "description": "Current value of the product field. This may differ from the html field which can contain extra formating."
+                                            },
+                                            "source_url": {
+                                              "type": "string",
+                                              "description": "Link to the source",
+                                              "example": "https://en.wikipedia.org/wiki/Sodium acetate"
+                                            },
+                                            "source_text": {
+                                              "type": "string",
+                                              "description": "name of the source",
+                                              "example": "Wikipedia"
+                                            },
+                                            "source_lc": {
+                                              "type": "string",
+                                              "description": "Source locale name",
+                                              "example": "en"
+                                            },
+                                            "source_language": {
+                                              "type": "string",
+                                              "description": "Human readable source locale name",
+                                              "example": "English"
+                                            }
+                                          }
                                         },
-                                        "value": {
-                                          "type": "number",
-                                          "description": "The numeric value of the panel, where the type is \"percentage\""
+                                        "image_element": {
+                                          "title": "image_element",
+                                          "x-stoplight": {
+                                            "id": "k4v4kwt489q3j"
+                                          },
+                                          "type": "object",
+                                          "properties": {
+                                            "url": {
+                                              "type": "string",
+                                              "description": "full URL of the image"
+                                            },
+                                            "width": {
+                                              "type": "integer",
+                                              "description": "Width of the image.\n\nThis is just a suggestion coming from the server, \nthe client may choose to use its own dimensions for the image.\n"
+                                            },
+                                            "height": {
+                                              "type": "integer",
+                                              "description": "Height of the image.\n\nThis is just a suggestion coming from the server,\nthe client may choose to use its own dimensions for the image.\n"
+                                            },
+                                            "alt_text": {
+                                              "type": "string",
+                                              "description": "Alt Text of the image."
+                                            }
+                                          }
                                         },
-                                        "icon_url": {
+                                        "action_element": {
                                           "type": "string"
                                         },
-                                        "icon_color_from_evaluation": {
-                                          "type": "string"
+                                        "panel_element": {
+                                          "title": "panel_element",
+                                          "x-stoplight": {
+                                            "id": "ymx41elz4yrnj"
+                                          },
+                                          "type": "object",
+                                          "description": "Panels can include other panels as sub-panels using the panel_element.",
+                                          "properties": {
+                                            "panel_id": {
+                                              "type": "string",
+                                              "description": "The id of the panel to include. The id is the key of the panel in the panels object returned in the knowledge_panels field."
+                                            }
+                                          }
                                         },
-                                        "icon_size": {
-                                          "type": "string",
-                                          "description": "If set to \"small\", the icon should be displayed at a small size.\n"
-                                        }
-                                      }
-                                    },
-                                    "elements": {
-                                      "type": "array",
-                                      "description": "An ordered list of elements to display in the content of the panel.",
-                                      "items": {
-                                        "title": "element",
-                                        "x-stoplight": {
-                                          "id": "e2ybdrtmx0tme"
-                                        },
-                                        "type": "object",
-                                        "description": "Each element object contains one specific element object such as a text element or an image element.\n",
-                                        "properties": {
-                                          "type": {
-                                            "type": "string",
-                                            "enum": [
-                                              "text",
-                                              "image",
-                                              "action",
-                                              "panel",
-                                              "panel_group",
-                                              "table"
-                                            ],
-                                            "description": "The type of the included element object.\nThe type also indicates which field contains the included element object.\ne.g. if the type is \"text\", the included element object will be in the \"text_element\" field.\n\nNote that in the future, new type of element may be added,\nso your code should ignore unrecognized types, and unknown properties.\n\nTODO: add Map type\n"
+                                        "panel_group_element": {
+                                          "title": "panel_group_element",
+                                          "x-stoplight": {
+                                            "id": "b7emlfrgiuue2"
                                           },
-                                          "text_element": {
-                                            "title": "text_element",
-                                            "x-stoplight": {
-                                              "id": "vdwxlt73qnqfa"
+                                          "type": "object",
+                                          "properties": {
+                                            "title": {
+                                              "type": "string"
                                             },
-                                            "type": "object",
-                                            "description": "A text in simple HTML format to display.\n\nFor some specific texts that correspond to a product field (e.g. a product name, the ingredients list of a product),the edit_field_* fields are used to indicate how to edit the field value.",
-                                            "properties": {
-                                              "type": {
-                                                "type": "string",
-                                                "description": "the type of text, might influence the way you display it.\n",
-                                                "enum": [
-                                                  "summary",
-                                                  "warning",
-                                                  "notes"
-                                                ]
-                                              },
-                                              "html": {
-                                                "type": "string",
-                                                "description": "Text to display in HTML format."
-                                              },
-                                              "language": {
-                                                "type": "string",
-                                                "description": "Language of the text. The name of the language is returned in the language requested when making the API call. e.g. if the text is in Polish, and the requested language is French, the language field will contain \"Polonais\" (French for \"Polish\"). Only set for specific fields such as the list of ingredients of a product."
-                                              },
-                                              "lc": {
-                                                "type": "string",
-                                                "description": "2 letter language code for the text. Only set for specific fields such as the list of ingredients of a product."
-                                              },
-                                              "edit_field_id": {
-                                                "type": "string",
-                                                "description": "id of the field used to edit this text in the product edit API."
-                                              },
-                                              "edit_field_type": {
-                                                "type": "string",
-                                                "description": "Type of the product field."
-                                              },
-                                              "edit_field_value": {
-                                                "type": "string",
-                                                "description": "Current value of the product field. This may differ from the html field which can contain extra formating."
-                                              },
-                                              "source_url": {
-                                                "type": "string",
-                                                "description": "Link to the source",
-                                                "example": "https://en.wikipedia.org/wiki/Sodium acetate"
-                                              },
-                                              "source_text": {
-                                                "type": "string",
-                                                "description": "name of the source",
-                                                "example": "Wikipedia"
-                                              },
-                                              "source_lc": {
-                                                "type": "string",
-                                                "description": "Source locale name",
-                                                "example": "en"
-                                              },
-                                              "source_language": {
-                                                "type": "string",
-                                                "description": "Human readable source locale name",
-                                                "example": "English"
-                                              }
-                                            }
-                                          },
-                                          "image_element": {
-                                            "title": "image_element",
-                                            "x-stoplight": {
-                                              "id": "k4v4kwt489q3j"
-                                            },
-                                            "type": "object",
-                                            "properties": {
-                                              "url": {
-                                                "type": "string",
-                                                "description": "full URL of the image"
-                                              },
-                                              "width": {
-                                                "type": "integer",
-                                                "description": "Width of the image.\n\nThis is just a suggestion coming from the server, \nthe client may choose to use its own dimensions for the image.\n"
-                                              },
-                                              "height": {
-                                                "type": "integer",
-                                                "description": "Height of the image.\n\nThis is just a suggestion coming from the server,\nthe client may choose to use its own dimensions for the image.\n"
-                                              },
-                                              "alt_text": {
-                                                "type": "string",
-                                                "description": "Alt Text of the image."
-                                              }
-                                            }
-                                          },
-                                          "action_element": {
-                                            "type": "string"
-                                          },
-                                          "panel_element": {
-                                            "title": "panel_element",
-                                            "x-stoplight": {
-                                              "id": "ymx41elz4yrnj"
-                                            },
-                                            "type": "object",
-                                            "description": "Panels can include other panels as sub-panels using the panel_element.",
-                                            "properties": {
-                                              "panel_id": {
-                                                "type": "string",
-                                                "description": "The id of the panel to include. The id is the key of the panel in the panels object returned in the knowledge_panels field."
-                                              }
-                                            }
-                                          },
-                                          "panel_group_element": {
-                                            "title": "panel_group_element",
-                                            "x-stoplight": {
-                                              "id": "b7emlfrgiuue2"
-                                            },
-                                            "type": "object",
-                                            "properties": {
-                                              "title": {
+                                            "panel_ids": {
+                                              "type": "array",
+                                              "description": "The ids of the panels to include. The ids are the keys of the panels in the panels object returned in the knowledge_panels field.",
+                                              "items": {
                                                 "type": "string"
-                                              },
-                                              "panel_ids": {
-                                                "type": "array",
-                                                "description": "The ids of the panels to include. The ids are the keys of the panels in the panels object returned in the knowledge_panels field.",
-                                                "items": {
-                                                  "type": "string"
-                                                }
-                                              },
-                                              "image": {
+                                              }
+                                            },
+                                            "image": {
+                                              "type": "object",
+                                              "description": "An image related to the panel group (e.g. the ingredients or nutrition facts image for the ingredients and nutrition panel groups)."
+                                            }
+                                          },
+                                          "description": "The panel group element is used to display an optional title followed by a number of sub-panels."
+                                        },
+                                        "table_element": {
+                                          "title": "table_element",
+                                          "type": "object",
+                                          "description": "Element to display a table.",
+                                          "properties": {
+                                            "id": {
+                                              "type": "string",
+                                              "description": "An id for the table."
+                                            },
+                                            "title": {
+                                              "type": "string",
+                                              "description": "Title of the column.\n"
+                                            },
+                                            "rows": {
+                                              "type": "string"
+                                            },
+                                            "columns": {
+                                              "type": "array",
+                                              "items": {
                                                 "type": "object",
-                                                "description": "An image related to the panel group (e.g. the ingredients or nutrition facts image for the ingredients and nutrition panel groups)."
-                                              }
-                                            },
-                                            "description": "The panel group element is used to display an optional title followed by a number of sub-panels."
-                                          },
-                                          "table_element": {
-                                            "title": "table_element",
-                                            "type": "object",
-                                            "description": "Element to display a table.",
-                                            "properties": {
-                                              "id": {
-                                                "type": "string",
-                                                "description": "An id for the table."
-                                              },
-                                              "title": {
-                                                "type": "string",
-                                                "description": "Title of the column.\n"
-                                              },
-                                              "rows": {
-                                                "type": "string"
-                                              },
-                                              "columns": {
-                                                "type": "array",
-                                                "items": {
-                                                  "type": "object",
-                                                  "title": "table_column",
-                                                  "properties": {
-                                                    "type": {
-                                                      "type": "string"
-                                                    },
-                                                    "text": {
-                                                      "type": "string"
-                                                    },
-                                                    "text_for_small_screens": {
-                                                      "type": "string"
-                                                    },
-                                                    "style": {
-                                                      "type": "string"
-                                                    },
-                                                    "column_group_id": {
-                                                      "type": "string"
-                                                    },
-                                                    "shown_by_default": {
-                                                      "type": "boolean"
-                                                    }
+                                                "title": "table_column",
+                                                "properties": {
+                                                  "type": {
+                                                    "type": "string"
+                                                  },
+                                                  "text": {
+                                                    "type": "string"
+                                                  },
+                                                  "text_for_small_screens": {
+                                                    "type": "string"
+                                                  },
+                                                  "style": {
+                                                    "type": "string"
+                                                  },
+                                                  "column_group_id": {
+                                                    "type": "string"
+                                                  },
+                                                  "shown_by_default": {
+                                                    "type": "boolean"
                                                   }
                                                 }
                                               }
                                             }
                                           }
-                                        },
-                                        "required": [
-                                          "type"
-                                        ]
-                                      }
-                                    },
-                                    "level": {
-                                      "type": "string",
-                                      "description": "a message level, as levels we use in log.\nIt might help theming the panel visually. Some possible values: info, recommendation\n",
-                                      "example": "info"
-                                    },
-                                    "size": {
-                                      "type": "string",
-                                      "enum": [
-                                        "small"
-                                      ],
-                                      "description": "size is either empty (normal display) \nor small to indicate a panel that should have a smaller font size\n",
-                                      "example": "small"
-                                    },
-                                    "topics": {
-                                      "type": "array",
-                                      "items": {
-                                        "type": "string",
-                                        "example": "health"
+                                        }
                                       },
-                                      "description": "topics currently include health, environment, problem"
+                                      "required": [
+                                        "type"
+                                      ]
                                     }
+                                  },
+                                  "level": {
+                                    "type": "string",
+                                    "description": "a message level, as levels we use in log.\nIt might help theming the panel visually. Some possible values: info, recommendation\n",
+                                    "example": "info"
+                                  },
+                                  "size": {
+                                    "type": "string",
+                                    "enum": [
+                                      "small"
+                                    ],
+                                    "description": "size is either empty (normal display) \nor small to indicate a panel that should have a smaller font size\n",
+                                    "example": "small"
+                                  },
+                                  "topics": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "example": "health"
+                                    },
+                                    "description": "topics currently include health, environment, problem"
                                   }
                                 }
                               },
