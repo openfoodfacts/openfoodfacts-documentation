@@ -1,0 +1,287 @@
+name: Manual Fumadocs Conversion
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_directory:
+        description: "Source directory to convert (relative to repo root)"
+        required: true
+        default: "docs"
+        type: string
+      output_directory:
+        description: "Output directory (leave empty for in-place conversion)"
+        required: false
+        type: string
+      dry_run:
+        description: "Dry run - preview changes without writing files"
+        required: false
+        default: false
+        type: boolean
+      create_backup:
+        description: "Create backup of original files"
+        required: false
+        default: true
+        type: boolean
+      validate_only:
+        description: "Only validate files without converting"
+        required: false
+        default: false
+        type: boolean
+      custom_config:
+        description: "Custom configuration (JSON format)"
+        required: false
+        type: string
+
+jobs:
+  manual-conversion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install fumadocs-transpiler
+        run: |
+          npm install -g fumadocs-transpiler@latest
+          echo "Installed version: $(fumadocs-transpiler --version)"
+
+      - name: Validate inputs
+        run: |
+          echo "🔍 Validating inputs..."
+
+          # Check if source directory exists
+          if [ ! -d "${{ github.event.inputs.source_directory }}" ]; then
+            echo "❌ Source directory '${{ github.event.inputs.source_directory }}' does not exist"
+            exit 1
+          fi
+
+          # Count markdown files
+          MD_COUNT=$(find "${{ github.event.inputs.source_directory }}" -name "*.md" | wc -l)
+          echo "📝 Found $MD_COUNT markdown files in '${{ github.event.inputs.source_directory }}'"
+
+          if [ $MD_COUNT -eq 0 ]; then
+            echo "⚠️ No markdown files found in the specified directory"
+            exit 1
+          fi
+
+      - name: Create configuration file
+        run: |
+          if [ -n "${{ github.event.inputs.custom_config }}" ]; then
+            echo "📝 Using custom configuration..."
+            echo '${{ github.event.inputs.custom_config }}' > fumadocs-transpiler.config.json
+          else
+            echo "📝 Creating default configuration..."
+            cat > fumadocs-transpiler.config.json << 'EOF'
+          {
+            "componentMappings": {
+              "callout-info": "<Callout type=\"info\">{{content}}</Callout>",
+              "callout-warn": "<Callout type=\"warn\">{{content}}</Callout>",
+              "callout-error": "<Callout type=\"error\">{{content}}</Callout>",
+              "callout-note": "<Callout type=\"note\">{{content}}</Callout>",
+              "tip": "<Callout type=\"info\">{{content}}</Callout>",
+              "warning": "<Callout type=\"warn\">{{content}}</Callout>",
+              "danger": "<Callout type=\"error\">{{content}}</Callout>",
+              "info": "<Callout type=\"info\">{{content}}</Callout>",
+              "note": "<Callout type=\"note\">{{content}}</Callout>"
+            },
+            "preserveOriginal": false,
+            "outputExtension": ".mdx",
+            "imports": [
+              "import { Callout } from 'fumadocs-ui/components/callout';",
+              "import { Tabs, Tab } from 'fumadocs-ui/components/tabs';",
+              "import { Steps, Step } from 'fumadocs-ui/components/steps';",
+              "import { Accordions, Accordion } from 'fumadocs-ui/components/accordion';",
+              "import { CodeBlock } from 'fumadocs-ui/components/codeblock';",
+              "import { Files, File } from 'fumadocs-ui/components/files';",
+              "import { Banner } from 'fumadocs-ui/components/banner';"
+            ],
+            "backupOriginal": ${{ github.event.inputs.create_backup }},
+            "validateSyntax": true
+          }
+          EOF
+          fi
+
+          echo "📋 Configuration file created:"
+          cat fumadocs-transpiler.config.json | jq .
+
+      - name: Validate configuration
+        run: |
+          echo "🔍 Validating configuration..."
+          fumadocs-transpiler config validate fumadocs-transpiler.config.json
+
+      - name: Run validation (if requested)
+        if: github.event.inputs.validate_only == 'true'
+        run: |
+          echo "🔍 Validating markdown files only..."
+          fumadocs-transpiler "${{ github.event.inputs.source_directory }}" \
+            --config fumadocs-transpiler.config.json \
+            --validate-only \
+            --verbose
+
+      - name: Run dry run (if requested)
+        if: github.event.inputs.dry_run == 'true' && github.event.inputs.validate_only == 'false'
+        run: |
+          echo "🔍 Running dry run..."
+          if [ -n "${{ github.event.inputs.output_directory }}" ]; then
+            fumadocs-transpiler "${{ github.event.inputs.source_directory }}" "${{ github.event.inputs.output_directory }}" \
+              --config fumadocs-transpiler.config.json \
+              --dry-run \
+              --verbose
+          else
+            fumadocs-transpiler "${{ github.event.inputs.source_directory }}" \
+              --config fumadocs-transpiler.config.json \
+              --dry-run \
+              --verbose
+          fi
+
+      - name: Convert files
+        if: github.event.inputs.dry_run == 'false' && github.event.inputs.validate_only == 'false'
+        run: |
+          echo "🚀 Converting markdown files..."
+
+          if [ -n "${{ github.event.inputs.output_directory }}" ]; then
+            echo "📁 Converting to output directory: ${{ github.event.inputs.output_directory }}"
+            fumadocs-transpiler "${{ github.event.inputs.source_directory }}" "${{ github.event.inputs.output_directory }}" \
+              --config fumadocs-transpiler.config.json \
+              --verbose
+          else
+            echo "📁 Converting in-place"
+            fumadocs-transpiler "${{ github.event.inputs.source_directory }}" \
+              --config fumadocs-transpiler.config.json \
+              --verbose
+          fi
+
+      - name: Generate conversion report
+        if: github.event.inputs.dry_run == 'false' && github.event.inputs.validate_only == 'false'
+        run: |
+          echo "📊 Generating conversion report..."
+
+          # Create report directory
+          mkdir -p conversion-report
+
+          # Count files
+          TOTAL_MD=$(find "${{ github.event.inputs.source_directory }}" -name "*.md" | wc -l)
+          TOTAL_MDX=$(find . -name "*.mdx" | wc -l)
+          BACKUP_FILES=$(find . -name "*.md.backup*" | wc -l)
+
+          # Generate report
+          cat > conversion-report/summary.md << EOF
+          # Fumadocs Conversion Report
+
+          **Date:** $(date)
+          **Transpiler Version:** $(fumadocs-transpiler --version)
+          **Source Directory:** ${{ github.event.inputs.source_directory }}
+          **Output Directory:** ${{ github.event.inputs.output_directory || 'In-place conversion' }}
+
+          ## Statistics
+
+          - 📝 Original markdown files: $TOTAL_MD
+          - ✅ Generated MDX files: $TOTAL_MDX
+          - 💾 Backup files created: $BACKUP_FILES
+
+          ## Configuration Used
+
+          \`\`\`json
+          $(cat fumadocs-transpiler.config.json)
+          \`\`\`
+
+          ## Changed Files
+
+          $(if git diff --quiet; then echo "No changes detected"; else git diff --name-only | head -50; fi)
+
+          EOF
+
+          echo "📋 Conversion report generated"
+
+      - name: Check for changes
+        id: changes
+        if: github.event.inputs.dry_run == 'false' && github.event.inputs.validate_only == 'false'
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No changes detected"
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+          fi
+
+      - name: Commit changes
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+          # Add all relevant files
+          git add "*.mdx"
+          if [ "${{ github.event.inputs.create_backup }}" == "true" ]; then
+            git add "*.md.backup*"
+          fi
+          git add "conversion-report/"
+
+          # Create detailed commit message
+          git commit -m "🤖 Manual Fumadocs conversion
+
+          Source: ${{ github.event.inputs.source_directory }}
+          Output: ${{ github.event.inputs.output_directory || 'In-place' }}
+          Backup: ${{ github.event.inputs.create_backup }}
+
+          - Converted $(git diff --cached --name-only | grep '\.mdx$' | wc -l) files
+          - Transpiler: fumadocs-transpiler@$(fumadocs-transpiler --version | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')
+
+          Triggered by: @${{ github.actor }}"
+
+          git push
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fumadocs-conversion-${{ github.run_number }}
+          path: |
+            **/*.mdx
+            **/*.md.backup*
+            fumadocs-transpiler.config.json
+            conversion-report/
+          retention-days: 30
+
+      - name: Create job summary
+        if: always()
+        run: |
+          echo "## 🤖 Manual Fumadocs Conversion Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          echo "### 📋 Input Parameters:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Source Directory:** \`${{ github.event.inputs.source_directory }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Output Directory:** \`${{ github.event.inputs.output_directory || 'In-place conversion' }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry Run:** ${{ github.event.inputs.dry_run }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Create Backup:** ${{ github.event.inputs.create_backup }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Validate Only:** ${{ github.event.inputs.validate_only }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by:** @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ github.event.inputs.validate_only }}" == "true" ]; then
+            echo "✅ **Validation completed**" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ github.event.inputs.dry_run }}" == "true" ]; then
+            echo "🔍 **Dry run completed** - no files were modified" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ steps.changes.outputs.changed }}" == "true" ]; then
+            echo "✅ **Conversion completed successfully!**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "### 📊 Results:" >> $GITHUB_STEP_SUMMARY
+            echo "- 📝 MDX files generated: $(find . -name '*.mdx' | wc -l)" >> $GITHUB_STEP_SUMMARY
+            echo "- 💾 Backup files created: $(find . -name '*.md.backup*' | wc -l)" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "ℹ️ **No changes needed** - all files are already up to date" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🔧 Tools Used:" >> $GITHUB_STEP_SUMMARY
+          echo "- **Transpiler:** fumadocs-transpiler@$(fumadocs-transpiler --version | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+')" >> $GITHUB_STEP_SUMMARY
+          echo "- **Package:** [fumadocs-transpiler](https://www.npmjs.com/package/fumadocs-transpiler)" >> $GITHUB_STEP_SUMMARY
