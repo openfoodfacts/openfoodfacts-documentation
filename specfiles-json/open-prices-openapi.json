@@ -5891,6 +5891,11 @@
           "type": {
             "$ref": "#/components/schemas/TypeEbbEnum"
           },
+          "image_md5_hash": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 32
+          },
           "image_thumb_path": {
             "type": "string",
             "nullable": true
@@ -6045,6 +6050,11 @@
           "type": {
             "$ref": "#/components/schemas/TypeEbbEnum"
           },
+          "image_md5_hash": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 32
+          },
           "image_thumb_path": {
             "type": "string",
             "nullable": true
@@ -6193,6 +6203,11 @@
           },
           "type": {
             "$ref": "#/components/schemas/TypeEbbEnum"
+          },
+          "image_md5_hash": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 32
           },
           "image_thumb_path": {
             "type": "string",
