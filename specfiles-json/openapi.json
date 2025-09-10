@@ -5931,9 +5931,14 @@
               "title": "image",
               "description": "This object represent an image that was uploaded to a product.\n\"imgid\" is an integer which is a sequential number unique to each picture.\n",
               "properties": {
+                "imgid": {
+                  "type": "integer",
+                  "example": 123456789,
+                  "description": "If the image is selected as the front / ingredients / nutrition / packaging image,\nthis is the index to access the original image URL in the `images` field of the product.\nIf the image is not selected as one of these, this field is null.\n\nSo if the product has the following `images` field:\n\n```json\n\"images\": {\n  1: { ... },\n  front_en: { imgid: 1, ... },\n  ...\n}\n```\n\nthen the front image can be accessed by `images[1]`.\n"
+                },
                 "sizes": {
                   "type": "object",
-                  "description": "The available image sizes for the product (both reduced and full). \nThe reduced images are the ones with numbers as the key( 100, 200 etc) \nwhile the full images have `full` as the key.\n",
+                  "description": "The available image sizes for the product (both reduced and full).\nThe reduced images are the ones with numbers as the key( 100, 200 etc)\nwhile the full images have `full` as the key.\n",
                   "properties": {
                     "full": {
                       "type": "object",
@@ -9813,9 +9818,14 @@
                   "title": "image",
                   "description": "This object represent an image that was uploaded to a product.\n\"imgid\" is an integer which is a sequential number unique to each picture.\n",
                   "properties": {
+                    "imgid": {
+                      "type": "integer",
+                      "example": 123456789,
+                      "description": "If the image is selected as the front / ingredients / nutrition / packaging image,\nthis is the index to access the original image URL in the `images` field of the product.\nIf the image is not selected as one of these, this field is null.\n\nSo if the product has the following `images` field:\n\n```json\n\"images\": {\n  1: { ... },\n  front_en: { imgid: 1, ... },\n  ...\n}\n```\n\nthen the front image can be accessed by `images[1]`.\n"
+                    },
                     "sizes": {
                       "type": "object",
-                      "description": "The available image sizes for the product (both reduced and full). \nThe reduced images are the ones with numbers as the key( 100, 200 etc) \nwhile the full images have `full` as the key.\n",
+                      "description": "The available image sizes for the product (both reduced and full).\nThe reduced images are the ones with numbers as the key( 100, 200 etc)\nwhile the full images have `full` as the key.\n",
                       "properties": {
                         "full": {
                           "type": "object",
