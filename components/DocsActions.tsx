@@ -131,9 +131,9 @@ export function DocsActions({ slug, markdownContent }: DocsActionsProps) {
   const path = slug ? slug.join("/") : "index";
 
   // Get GitHub repository info from environment variables
-  const githubOwner = process.env.NEXT_PUBLIC_GITHUB_OWNER || "jagjeevanak";
+  const githubOwner = process.env.NEXT_PUBLIC_GITHUB_OWNER || "openfoodfacts";
   const githubRepo =
-    process.env.NEXT_PUBLIC_GITHUB_REPO || "openfoodfacts-documentation";
+    process.env.NEXT_PUBLIC_GITHUB_REPO || "documentation";
   const githubBranch = process.env.NEXT_PUBLIC_GITHUB_BRANCH || "main";
   const contentPath = process.env.NEXT_PUBLIC_CONTENT_PATH || "content/docs";
 
