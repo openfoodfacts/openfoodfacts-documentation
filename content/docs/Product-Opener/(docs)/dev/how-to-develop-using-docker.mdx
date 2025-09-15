@@ -10,9 +10,9 @@ This page describes how to test and debug your changes once you have set up the 
 
 ### Tail Docker Compose logs
 
-``` title="sh"
+``` sh
 make log
-```
+``` title="Tail Docker Compose logs"
 
 You will get logs from nginx, mongodb, postgres, etc.
 
@@ -23,7 +23,7 @@ but are instead available in specific directories.
 
 To see them use:
 
-``` title="sh"
+``` sh
 make tail
 ```
 
@@ -37,9 +37,9 @@ It will `tail -f` all the files present in the `logs/` directory:
 * `nginx/error.log`
 
 You can also simply run:
-``` title="sh"
+``` sh
 tail -f <FILEPATH>
-```
+``` title="Tail other logs"
 to check a specific log.
 
 One of the most important is `log4perl.log`.
@@ -52,7 +52,7 @@ settings. You can tweak that file with your own dev configuration settings and
 run `make restart` to reload the changes.
 
 A setting useful for local environments is to set `TRACE` log level:
-``` title="sh"
+``` sh
 log4perl.rootLogger=TRACE, LOGFILE
 ```
 
@@ -60,9 +60,9 @@ log4perl.rootLogger=TRACE, LOGFILE
 
 Run the following to open a bash shell within the `backend` container:
 
-``` title="sh"
+``` sh
 docker compose exec backend bash
-```
+``` title="Opening a shell in a Docker container"
 
 You should see `root@<CONTAINER_ID>:/#` (opened root shell): you are now within the Docker container and can begin typing some commands!
 
@@ -70,7 +70,7 @@ You should see `root@<CONTAINER_ID>:/#` (opened root shell): you are now within 
 
 Navigate to the specific directory and run
 
-``` title="sh"
+``` sh
 ls -lrt
 ```
 It will list all directories and their permissions.
@@ -79,9 +79,9 @@ It will list all directories and their permissions.
 
 Navigate to your specific directory using `cd` and run
 
-``` title="sh"
+``` sh
 mkdir directory-name
-```
+``` title="Creating directory"
 
 ### Running minion jobs
 
@@ -89,22 +89,22 @@ mkdir directory-name
 
 Go to `/opt/product-opener/scripts` and run
 
-``` title="sh"
+``` sh
 ./minion_producers.pl minion job
 ```
 
 The above command will show the status of minion jobs. Run the following command to launch the minion jobs.
 
-``` title="sh"
+``` sh
 ./minion_producers.pl minion worker -m production -q pro.openfoodfacts.org
-```
+``` title="Running minion jobs"
 
 ### Restarting Apache
 
 Sometimes restarting the whole `backend` container is overkill, and you can just
 restart `Apache` from inside the container:
 
-``` title="sh"
+``` sh
 apache2ctl -k restart
 ```
 
@@ -153,14 +153,14 @@ An alternative to `when-changed` is `inotifywait`.
 
 ## Run queries on MongoDB database
 
-``` title="sh"
+``` sh
 docker compose exec mongodb mongo
-```
+``` title="Run queries on MongoDB database"
 
 The above command will open a MongoDB shell, allowing you to use all the `mongo` 
 commands to interact with the database:
 
-``` title="sh"
+``` sh
 show dbs
 use off
 db.products.count()
@@ -252,15 +252,15 @@ You will need:
 To switch between configurations, set `ENV_FILE` before running `make` commands,
 (or `docker compose` command):
 
-``` title="sh"
+``` sh
 ENV_FILE=.env.off-pro make up # starts the OFF Producer's Platform containers.
 ENV_FILE=.env.obf     make up # starts the OBF containers.
 ENV_FILE=.env.opff    make up # starts the OPFF containers.
-```
+``` title="different .env file"
 
 or export it to keep it for a while:
 
-``` title="sh"
+``` sh
 export ENV_FILE=.env.off # going to work on OFF for a while
 make up
 make restart
@@ -297,16 +297,16 @@ A good strategy is to have multiple terminals open, one for each deployment:
 **Note:** the above case of 4 deployments is ***a bit ambitious***, since ProductOpener's `backend` container takes about ~6GB of RAM to run, meaning that the above 4 deployments would require a total of 24GB of RAM available.
 
 **Example:** if you already have Open Food Facts up and running and you would like to have Open Beauty Facts as well. Then, copy `.env` to `.env.obf` and modify the following variables:
-``` title="sh"
+``` sh
 COMPOSE_PROJECT_NAME=po_off
 COMPOSE_PROFILES=off
 PRODUCT_OPENER_DOMAIN=openfoodfacts.localhost
 PRODUCT_OPENER_PORT=80
 PRODUCT_OPENER_FLAVOR=openfoodfacts
 PRODUCT_OPENER_FLAVOR_SHORT=off
-```
+``` title="different .env file"
 to
-``` title="sh"
+``` sh
 COMPOSE_PROJECT_NAME=po_obf
 COMPOSE_PROFILES=obf
 PRODUCT_OPENER_DOMAIN=openbeautyfacts.localhost
@@ -315,7 +315,7 @@ PRODUCT_OPENER_FLAVOR=openbeautyfacts
 PRODUCT_OPENER_FLAVOR_SHORT=obf
 ```
 Run:
-``` title="sh"
+``` sh
 export ENV_FILE=.env.obf
 make dev
 ```

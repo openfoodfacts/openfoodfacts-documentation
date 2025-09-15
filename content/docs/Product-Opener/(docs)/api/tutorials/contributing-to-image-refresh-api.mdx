@@ -76,7 +76,7 @@ Your application should parse this response to dynamically generate calls to act
 
 Here is a pseudo-code example demonstrating how to create button text based on the API response.
 
-``` title="js"
+``` js
 // Assume 'images_to_update' is the object from the API response
 // e.g., { packaging_fr: 0, front_fr: 83734290 }
 
@@ -100,7 +100,7 @@ for (key, value) in images_to_update:
 
     // Now, create a button with this text.
     // e.g., "Refresh front picture", "Take packaging picture"
-```
+``` title="Client-Side Implementation Logic"
 
 #### Optional: Displaying the Image Age
 
@@ -110,7 +110,7 @@ For images that need refreshing (where the value is `> 0`), you can provide more
 
 You can use a library or a simple function to convert seconds into years, months, days, etc.
 
-```javascript title="Client-Side Implementation Logic"
+```javascript
 function formatTime(seconds) {
   if (seconds < 60) return "just now";
 
