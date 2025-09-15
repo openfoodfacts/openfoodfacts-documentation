@@ -18,9 +18,7 @@ If you have an app that makes POST calls and you don't want your users to authen
 ---
 
 ## Adding images to support your edit, and get machine learning predictions
-
-If you ask your users just one thing, it would be to send photos of the packaging (front, ingredients, nutrition, recycling, the more the better).
-
+If you ask your users just one thing, it would be to send photos of the packaging (front, ingredients, nutrition, recycling, the more the better)
 Please refer to our [comprehensive tutorial on uploading images](../tutorial-uploading-photo-to-a-product.md)
 
 ---
@@ -28,7 +26,6 @@ Please refer to our [comprehensive tutorial on uploading images](../tutorial-upl
 ## Sending the right country and language parameters, based on the country your user is located in, and the language the product is in.
 
 Traditionaly we advised to define the subdomain for the query as `us`. The subdomain automatically defines the country code (`cc`) and language of the interface (`lc`). The country code determines that only the products sold in the US are displayed. The language of the interface for the country code US is English.
-
 In this case:
 [https://us.openfoodfacts.org/cgi/product_jqm2.pl?​​​​​​​](https://us.openfoodfacts.org/cgi/product_jqm2.pl?​​​​​​​)
 
@@ -54,7 +51,7 @@ After the version number, the word `code`, followed by its barcode must be added
 
 Dave adds his user credentials to the call as follows:
 
-[https://us.openfoodfacts.org/cgi/product_jqm2.pl?code=0074570036004&user_id=myappname&password=](https://us.openfoodfacts.org/cgi/product_jqm2.pl?code=0074570036004&user_id=myappname&password=)\*\*
+[https://us.openfoodfacts.org/cgi/product_jqm2.pl?code=0074570036004&user_id=myappname&password=](https://us.openfoodfacts.org/cgi/product_jqm2.pl?code=0074570036004&user_id=myappname&password=)**
 
 ---
 
@@ -64,6 +61,7 @@ You can define one or more parameters to add, for example, the brand and the Kos
 
 - `brands`: Häagen-Dazs
 - `labels`: kosher
+
 
 The call looks like this:
 
@@ -99,8 +97,8 @@ It should be structured as: user-agent + user-id.
 
 `comment=Edit by a Healthy Choices 1.2 iOS user - SxGFRZkFwdytsK2NYaDg4MzRVenNvUEI4LzU2a2JWK05LZkFRSWc9PQ`
 
----
 
+---
 ## Leveraging Robotoff ML predictions to simplify life for your users
 
 Leveraging [Robotoff prediction](../intro-robotoff.md) to simplify life for your users.
@@ -123,3 +121,6 @@ Getting your users to [input packaging data](../../dev/explain-packaging-data.md
 
 - You can then reload the product, potentially using Knowledge Panels, to show the rewarding result of their work.
 - Make sure to congratulate them each time for their contribution to Open Food Facts and the common good.
+
+
+ 

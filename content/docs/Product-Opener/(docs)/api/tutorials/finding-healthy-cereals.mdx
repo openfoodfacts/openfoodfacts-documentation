@@ -3,11 +3,10 @@ title: "Finding healthy breakfast cereals"
 ---
 
 **Dave** wants his app to make an API call to provide Stefano healthy plant-based breakfast cereals.
-
----
-
+--- 
 - **This is a search usecase.** Please note that search is not a good way to extract info from the database, and anyone trying to do that will be rate-limited and banned. Please use the https://world.openfoodfacts.org/data](https://world.openfoodfacts.org/data) for super convenient data export of the whole database and images that you can slice and dice easily.
 - Also note that we have an elastic-based revamp of the Search API upcoming, called search-a-licious, and we need some more developper help to make it broadly available. You can join the effort at https://github.com/openfoodfacts/search-a-licious](https://github.com/openfoodfacts/search-a-licious) and on the Slack (https://slack.openfoodfacts.org](https://slack.openfoodfacts.org), #search channel)
+
 
 ---
 
@@ -45,6 +44,7 @@ where:
 - `tagtype_0` adds the first search criterion (categories)
 - `tag_contains_0=contains` determines that the results should be included (note that you can exclude products from the search)
 - `tag_0` defines the category to be filtered by (breakfast_cereals)
+    
 
 **Note:** The parameters are concatenated with `&`.
 
@@ -55,6 +55,7 @@ With this query, the nutrition facts of more than 200 products are displayed.
 Then, Dave wants to exclude the products that contain ingredients from palm oil. He adds a new parameter to the query:
 
 - `ingredients_from_palm_oil=without`
+    
 
 This parameter excludes the products that might contain palm oil ingredients from the search.
 
@@ -63,6 +64,7 @@ This parameter excludes the products that might contain palm oil ingredients fro
 Next, Dave adds another parameter to exclude the products that contain additives:
 
 - `additives=without`
+    
 
 The query is as follows:
 
@@ -73,6 +75,7 @@ Finally, Dave adds another parameter to include only products with a nutriscore 
 - `tagtype_1=nutrition_grade`
 - `tag_contains_1=contains`
 - `tag_1=A`
+    
 
 The complete query looks like this:
 
