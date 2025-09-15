@@ -183,6 +183,51 @@ jobs:
           #   echo "Search-a-licious documentation transpiled successfully"
           # fi
 
+      - name: Copy documentation assets
+        run: |
+          echo "Copying Product Opener assets..."
+          if [ -d "docs/product-opener/assets" ]; then
+            mkdir -p "content/docs/Product-Opener/(docs)/assets"
+            cp -r docs/product-opener/assets/* "content/docs/Product-Opener/(docs)/assets/"
+            echo "Product Opener assets copied successfully"
+          fi
+          
+          # Uncomment and modify these sections when other repositories are enabled
+          # echo "Copying Robotoff assets..."
+          # if [ -d "docs/robotoff/assets" ]; then
+          #   mkdir -p "content/docs/Robotoff/(docs)/assets"
+          #   cp -r docs/robotoff/assets/* "content/docs/Robotoff/(docs)/assets/"
+          #   echo "Robotoff assets copied successfully"
+          # fi
+          
+          # echo "Copying Infrastructure assets..."
+          # if [ -d "docs/infrastructure/assets" ]; then
+          #   mkdir -p "content/docs/infrastructure/(docs)/assets"
+          #   cp -r docs/infrastructure/assets/* "content/docs/infrastructure/(docs)/assets/"
+          #   echo "Infrastructure assets copied successfully"
+          # fi
+          
+          # echo "Copying Open Prices assets..."
+          # if [ -d "docs/open-prices/assets" ]; then
+          #   mkdir -p "content/docs/Open-prices/(docs)/assets"
+          #   cp -r docs/open-prices/assets/* "content/docs/Open-prices/(docs)/assets/"
+          #   echo "Open Prices assets copied successfully"
+          # fi
+          
+          # echo "Copying Knowledge Panels assets..."
+          # if [ -d "docs/knowledge-panels/assets" ]; then
+          #   mkdir -p "content/docs/Knowledge-Panel/(docs)/assets"
+          #   cp -r docs/knowledge-panels/assets/* "content/docs/Knowledge-Panel/(docs)/assets/"
+          #   echo "Knowledge Panels assets copied successfully"
+          # fi
+          
+          # echo "Copying Search-a-licious assets..."
+          # if [ -d "docs/search-a-licious/assets" ]; then
+          #   mkdir -p "content/docs/search-a-licious/(docs)/assets"
+          #   cp -r docs/search-a-licious/assets/* "content/docs/search-a-licious/(docs)/assets/"
+          #   echo "Search-a-licious assets copied successfully"
+          # fi
+
       - name: Cleanup temporary directories
         run: |
           rm -rf temp-product-opener
@@ -216,6 +261,7 @@ jobs:
           # - search-a-licious/docs
 
           Files transpiled from Markdown to MDX using fumadocs-transpiler
+          Assets (images, etc.) copied to maintain documentation dependencies
           Updated at $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
           git push origin main
 
@@ -232,6 +278,7 @@ jobs:
             # echo "- Search-a-licious: openfoodfacts/search-a-licious/docs"
             echo ""
             echo "All Markdown files have been transpiled to MDX format using fumadocs-transpiler"
+            echo "Documentation assets (images, etc.) copied to maintain dependencies"
           else
             echo "No changes detected in developer documentation"
           fi
