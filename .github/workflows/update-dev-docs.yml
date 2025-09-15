@@ -148,38 +148,38 @@ jobs:
         run: |
           echo "Transpiling Product Opener documentation..."
           if [ -d "docs/product-opener" ]; then
-            npx fumadocs-transpiler@latest --input docs/product-opener --output "app/docs/Product-Opener/(docs)" --verbose
+            npx fumadocs-transpiler@latest --input docs/product-opener --output "content/docs/Product-Opener/(docs)" --verbose
             echo "Product Opener documentation transpiled successfully"
           fi
           
           # Uncomment and modify these sections when other repositories are enabled
           # echo "Transpiling Robotoff documentation..."
           # if [ -d "docs/robotoff" ]; then
-          #   npx fumadocs-transpiler@latest --input docs/robotoff --output "app/docs/Robotoff/(docs)" --verbose
+          #   npx fumadocs-transpiler@latest --input docs/robotoff --output "content/docs/Robotoff/(docs)" --verbose
           #   echo "Robotoff documentation transpiled successfully"
           # fi
           
           # echo "Transpiling Infrastructure documentation..."
           # if [ -d "docs/infrastructure" ]; then
-          #   npx fumadocs-transpiler@latest --input docs/infrastructure --output "app/docs/infrastructure/(docs)" --verbose
+          #   npx fumadocs-transpiler@latest --input docs/infrastructure --output "content/docs/infrastructure/(docs)" --verbose
           #   echo "Infrastructure documentation transpiled successfully"
           # fi
           
           # echo "Transpiling Open Prices documentation..."
           # if [ -d "docs/open-prices" ]; then
-          #   npx fumadocs-transpiler@latest --input docs/open-prices --output "app/docs/Open-prices/(docs)" --verbose
+          #   npx fumadocs-transpiler@latest --input docs/open-prices --output "content/docs/Open-prices/(docs)" --verbose
           #   echo "Open Prices documentation transpiled successfully"
           # fi
           
           # echo "Transpiling Knowledge Panels documentation..."
           # if [ -d "docs/knowledge-panels" ]; then
-          #   npx fumadocs-transpiler@latest --input docs/knowledge-panels --output "app/docs/Knowledge-Panel/(docs)" --verbose
+          #   npx fumadocs-transpiler@latest --input docs/knowledge-panels --output "content/docs/Knowledge-Panel/(docs)" --verbose
           #   echo "Knowledge Panels documentation transpiled successfully"
           # fi
           
           # echo "Transpiling Search-a-licious documentation..."
           # if [ -d "docs/search-a-licious" ]; then
-          #   npx fumadocs-transpiler@latest --input docs/search-a-licious --output "app/docs/search-a-licious/(docs)" --verbose
+          #   npx fumadocs-transpiler@latest --input docs/search-a-licious --output "content/docs/search-a-licious/(docs)" --verbose
           #   echo "Search-a-licious documentation transpiled successfully"
           # fi
 
