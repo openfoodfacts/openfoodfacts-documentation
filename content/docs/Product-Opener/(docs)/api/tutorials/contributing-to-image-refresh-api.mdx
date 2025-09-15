@@ -31,7 +31,7 @@ https://{world|fr|...}.openfoodfacts.org/api/v2/product/[BARCODE]?fields=images_
 
 Here is a request for the French (`fr`) images for product `3483130043180`.
 
-```title="The API Endpoint"
+```sh title="The API Endpoint"
 https://fr.openfoodfacts.org/api/v2/produit/3483130043180?fields=images_to_update_fr
 ```
 
@@ -78,7 +78,7 @@ Your application should parse this response to dynamically generate calls to act
 
 Here is a pseudo-code example demonstrating how to create button text based on the API response.
 
-```title="Client-Side Implementation Logic"
+```js title="Client-Side Implementation Logic"
 // Assume 'images_to_update' is the object from the API response
 // e.g., { packaging_fr: 0, front_fr: 83734290 }
 

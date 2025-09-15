@@ -31,7 +31,7 @@ https://world.openfoodfacts.net/api/v2/product/3017624010701
 ```
 
 The response returns every data about Nutella Ferrero on the database. To get the nutriscore, we need to limit the response by specifying the nutriscore field, which is the `nutrition_grades` and `product_name`.
-<!--Is it only nutriscore_data -->
+{/* Is it only nutriscore_data */}
 
 ### Query Parameters
 
@@ -49,13 +49,13 @@ The response returned contains an object of the `code`, `product`, `status_verbo
 
 ```json title="Nutri-Score Response"
 {
-    "code": "3017624010701",
-    "product": {
-        "nutrition_grades": "e",
-        "product_name": "Nutella"
-    },
-    "status": 1,
-    "status_verbose": "product found"
+  "code": "3017624010701",
+  "product": {
+    "nutrition_grades": "e",
+    "product_name": "Nutella"
+  },
+  "status": 1,
+  "status_verbose": "product found"
 }
 ```
 
@@ -110,7 +110,7 @@ The `product` object in the response now contains the extra fields to show how t
 
 For more details, see the reference documentation for [Get A Product By Barcode](https://openfoodfacts.github.io/openfoodfacts-server/api/ref-v2/#get-/api/v2/product/-barcode-).
 
-<!-- Probably have a conclusion that links to the next possible topic eg filter countries using lc and cc-->
+{/* Probably have a conclusion that links to the next possible topic eg filter countries using lc and cc */}
 
 ## Completing products to get the Nutri-Score
 
@@ -119,7 +119,7 @@ For more details, see the reference documentation for [Get A Product By Barcode]
 When these fields are missing in a nutriscore computation response, it signifies that the product does not have a Nutri-Score computation due to some missing nutrition data.
 Let's look at the [100% Real Orange Juice](https://world.openfoodfacts.net/api/v2/product/0180411000803/100-real-orange-juice?product_name,nutriscore_data,nutriments,nutrition_grades). If the product nutrition data is missing some fields, you can volunteer and contribute to it by getting the missing tags and writing to the OFF API to add them.
 
-<!-- I dont know if using 100% Real Orange Juice is a good approach for now , should we state that it was not computed at the time of writing this article just incase it gets computed in future or there is a product we can use to test this that wont change in future ? -->
+{/* I dont know if using 100% Real Orange Juice is a good approach for now , should we state that it was not computed at the time of writing this article just incase it gets computed in future or there is a product we can use to test this that wont change in future ? */}
 
 To know the missing tags, check the `misc-tags` field from the product response.
 
@@ -129,21 +129,21 @@ The response shows the missing fields and category needed to compute the Nutri-S
 
 ```json title="Products without a Nutri-Score"
 {
-    "code": "0180411000803",
-    "product": {
-        "misc_tags": [
-            "en:nutriscore-not-computed",
-            "en:nutriscore-missing-category",
-            "en:nutrition-not-enough-data-to-compute-nutrition-score",
-            "en:nutriscore-missing-nutrition-data",
-            "en:nutriscore-missing-nutrition-data-sodium",
-            "en:ecoscore-extended-data-not-computed",
-            "en:ecoscore-not-computed",
-            "en:main-countries-new-product"
-        ]
-    },
-    "status": 1,
-    "status_verbose": "product found"
+  "code": "0180411000803",
+  "product": {
+    "misc_tags": [
+      "en:nutriscore-not-computed",
+      "en:nutriscore-missing-category",
+      "en:nutrition-not-enough-data-to-compute-nutrition-score",
+      "en:nutriscore-missing-nutrition-data",
+      "en:nutriscore-missing-nutrition-data-sodium",
+      "en:ecoscore-extended-data-not-computed",
+      "en:ecoscore-not-computed",
+      "en:main-countries-new-product"
+    ]
+  },
+  "status": 1,
+  "status_verbose": "product found"
 }
 ```
 
@@ -165,14 +165,14 @@ Add your valid `user_id` and `password` as body parameters to your request for a
 
 To write `sodium` and `category` to 100% Real Orange Juice so that the Nutri-Score can be computed, the request body should contain these fields:
 
-| Key        | Value           | Description  |
-| ------------- |:-------------:| -----:|
-| user_id     | *** | A valid user_id |
-| password      | ***     |   A valid password |
-| code | 0180411000803      |    The barcode of the product to be added/edited |
-| nutriment_sodium | 0.015      |    Amount of sodium |
-| nutriment_sodium_unit | g      |   Unit of sodium relative to the amount |
-| categories | Orange Juice     |   Category of the Product |
+| Key                   |     Value     |                                   Description |
+| --------------------- | :-----------: | --------------------------------------------: |
+| user_id               |    \*\*\*     |                               A valid user_id |
+| password              |    \*\*\*     |                              A valid password |
+| code                  | 0180411000803 | The barcode of the product to be added/edited |
+| nutriment_sodium      |     0.015     |                              Amount of sodium |
+| nutriment_sodium_unit |       g       |         Unit of sodium relative to the amount |
+| categories            | Orange Juice  |                       Category of the Product |
 
 Using curl:
 
@@ -186,8 +186,8 @@ If the request is successful, it returns a response that indicates that the fiel
 
 ```json title="Write data to make Nutri-Score computation possible"
 {
-    "status_verbose": "fields saved",
-    "status": 1
+  "status_verbose": "fields saved",
+  "status": 1
 }
 ```
 
@@ -230,7 +230,7 @@ For more details, see the reference documentation for [Add or Edit A Product](ht
 
 You can also check the reference cheatsheet to know how to add/edit other types of product data.
 
-<!-- Include the link of the cheatsheet once it is published. -->
+{/* Include the link of the cheatsheet once it is published. */}
 
 ## Search for a Product by Nutri-score
 
@@ -246,19 +246,19 @@ Make a `GET` request to the `Search for Products` endpoint.
 https://world.openfoodfacts.org/api/v2/search
 ```
 
-Add the search criteria used to filter the products as query parameters.  For Orange Juice with a nutrition_grade of `c`, add query parameters `categories_tags_en` to filter `Orange Juice` while `nutrition_grades_tags` to filter `c`.  The response will return all the products in the database with the category `Orange Juice` and nutrition_grade `c`.
+Add the search criteria used to filter the products as query parameters. For Orange Juice with a nutrition_grade of `c`, add query parameters `categories_tags_en` to filter `Orange Juice` while `nutrition_grades_tags` to filter `c`. The response will return all the products in the database with the category `Orange Juice` and nutrition_grade `c`.
 
 ```text title="Describing the Search Request"
 https://world.openfoodfacts.net/api/v2/search?categories_tags_en=Orange Juice&nutrition_grades_tags=c
 ```
 
-To limit the response, add `fields` to the query parameters to specify the fields to be returned in each product object response.  For this tutorial, limit the response to `code`, `product_name`, `nutrition_grades`, and `categories_tags_en`.
+To limit the response, add `fields` to the query parameters to specify the fields to be returned in each product object response. For this tutorial, limit the response to `code`, `product_name`, `nutrition_grades`, and `categories_tags_en`.
 
 ```text title="Describing the Search Request"
 https://world.openfoodfacts.net/api/v2/search?categories_tags_en=Orange Juice&nutrition_grades_tags=c&fields=code,nutrition_grades,categories_tags_en
 ```
 
-The response returns all products that belong to the Orange Juice category, with the nutrition_grade "c" and limits each product object response to only the specified fields.  It also returns the count(total number) of products that match the search criteria.
+The response returns all products that belong to the Orange Juice category, with the nutrition_grade "c" and limits each product object response to only the specified fields. It also returns the count(total number) of products that match the search criteria.
 
 ```json title="Describing the Search Request"
 {
