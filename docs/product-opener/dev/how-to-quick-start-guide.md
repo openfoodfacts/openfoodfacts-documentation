@@ -5,9 +5,10 @@ As an alternative to setting up your environment locally, follow the [Gitpod how
 to instantly provision a ready-to-code development environment in the cloud.
 
 First setup time estimate is `~10min` with the following specs:
-* `8 GB` of RAM dedicated to Docker client
-* `6` cores dedicated to Docker client
-* `12 MB/s` internet speed
+
+- `8 GB` of RAM dedicated to Docker client
+- `6` cores dedicated to Docker client
+- `12 MB/s` internet speed
 
 ## 1. Prerequisites
 
@@ -15,20 +16,22 @@ First setup time estimate is `~10min` with the following specs:
 
 Docker provides an isolated environment, very close to a Virtual Machine. This environment contains everything required to launch the Open Food Facts server. There is **no need to install** Perl, Perl modules, Nginx, or Apache separately.
 
-> **_NOTE:_**  New to Perl? Check [how to learn perl](how-to-learn-perl.md)!
+> **_NOTE:_** New to Perl? Check [how to learn perl](how-to-learn-perl.md)!
 
 **Installation steps:**
+
 - GIT version >= 2.25.0
 - [Install Docker CE](https://docs.docker.com/engine/install/)
-> If you run e.g. Debian, don't forget to add your user to the `docker` group!  
+  > If you run e.g. Debian, don't forget to add your user to the `docker` group!
 
 ### MacOS Prerequisites: Installing GNU grep for Full Regex Support
 
 On macOS, the default version of **grep** is BSD grep, which does not support certain GNU-specific options—most notably, the `-P` flag for Perl-compatible regular expressions. If you encounter errors like:
 
-```console
+``bash
 grep: invalid option -- P
 usage: grep [-abcdDEFGHhIiJLlMmnOopqRSsUVvwXxZz] [-A num] [-B num] [-C[num]] …
+
 ```
 
 You can resolve the issue by installing GNU grep and prioritizing it in your shell's PATH.
@@ -37,39 +40,46 @@ You can resolve the issue by installing GNU grep and prioritizing it in your she
 
 1. **Install GNU grep via Homebrew:**
 
-   ```console
+   ``bash
    brew install grep
-   ```
+```
 
 2. **Update Your PATH:**
 
    Add the following line to your `~/.zshrc` (or your shell’s configuration file):
 
-   ```console
+   ``bash
    export PATH="$(brew --prefix grep)/libexec/gnubin:$PATH"
+
    ```
 
    This ensures that the GNU version (often available as `ggrep`) is used by default instead of BSD grep.
+
+   ```
 
 3. **Apply the Changes:**
 
    Restart your terminal or run:
 
-   ```console
+   ``bash
    source ~/.zshrc
+
+   ```
+
    ```
 
 4. **Verify Installed Version:**
 
 Run the following command to ensure that GNU grep is installed and properly configured:
 
-```console
+``bash
 grep --version
+
 ```
 
 You should see an output similar to the example below, indicating that GNU grep (with Homebrew packaging) is active and supports the `-P` option via PCRE2:
 
-```console
+``bash
 grep (GNU grep) 3.11
 Packaged by Homebrew
 Copyright (C) 2023 Free Software Foundation, Inc.
@@ -96,20 +106,20 @@ The Make tasks use a number of Linux commands, such as rm and nproc, so it is re
 
 The process of cloning the repository will create a number of symbolic links which require specific permissions under Windows. In order to do this you can use any one of these alternatives:
 
- - Use an Administrative command prompt for all Git commands
- - Completely disable UAC
- - Specifically grant the [Create symbolic links](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/create-symbolic-links) permission to your user
+- Use an Administrative command prompt for all Git commands
+- Completely disable UAC
+- Specifically grant the [Create symbolic links](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/create-symbolic-links) permission to your user
 
 Make sure you also activated the [Developer mode](https://learn.microsoft.com/en-us/windows/apps/get-started/enable-your-device-for-development) on your device.
-
 
 ### Windows Subsystem for Linux (WSL) Prerequisites
 
 Ensure that you have WSL installed on your Windows machine. For instructions on how to do so, you can follow [Microsoft's guide to install WSL](https://learn.microsoft.com/en-us/windows/wsl/install).
 
 After successfully installing WSL, you need to set up your Linux distribution and install Docker on it:
+
 - Go to the Microsoft Store and install [Ubuntu](https://www.microsoft.com/store/productId/9PDXGNCFSCZV?ocid=pdpshare) as your Linux distribution
-- Open Ubuntu and execute the commands/instructions specified in [Installing Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/) (**NOTE: this is NOT the same thing as Docker for Desktop)
+- Open Ubuntu and execute the commands/instructions specified in [Installing Docker Engine on Ubuntu](https://docs.docker.com/engine/install/ubuntu/) (\*\*NOTE: this is NOT the same thing as Docker for Desktop)
 - Restart your computer to ensure all changes take effect and WSL can properly integrate with Docker
 
 ### Docker Desktop Prerequisite
@@ -118,7 +128,6 @@ If you use Docker Desktop:
 
 - ensure you allow enough memory for your VMs (at least 4G)
 - ensure you Enabled host networking (in Resources / Network)
-
 
 ## 2. Fork and clone the repository from GitHub
 
@@ -129,7 +138,7 @@ If you use Docker Desktop:
 ### Fork the repository
 
 If you want to collaborate you will need to fork the repository.
-(See [*Creating a pull request from a fork* in Github documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) for an explanation.)
+(See [_Creating a pull request from a fork_ in Github documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) for an explanation.)
 
 Go to https://github.com/openfoodfacts/openfoodfacts-server and click the "Fork" button.
 
@@ -152,41 +161,48 @@ Choose your preferred way to clone, either:
 
 If you are running Docker on Windows, please use the following git clone command:
 
-```console
+``bash
+
 # replace my-user-id with your user id if you forked the repository, otherwise use openfoodfacts
+
 git clone -c core.symlinks=true https://github.com/my-user-id/openfoodfacts-server.git
+
 ```
 or (if you want to use ssh)
-```console
+``bash
 # replace my-user-id with your user id if you forked the repository, otherwise use openfoodfacts
 git clone -c core.symlinks=true git@github.com:my-user-id/openfoodfacts-server.git
 ```
 
 #### On other systems:
 
-```console
+``bash
+
 # replace my-user-id with your user id if you forked the repository, otherwise use openfoodfacts
+
 git clone git@github.com:my-user-id/openfoodfacts-server.git
+
 ```
 
 or
 
-```console
+``bash
 # replace my-user-id with your user id if you forked the repository, otherwise use openfoodfacts
 git clone https://github.com/my-user-id/openfoodfacts-server.git
 ```
 
 Go to the cloned directory:
 
-```console
+``bash
 cd openfoodfacts-server/
+
 ```
 
 ### Shallow Clone
 
 A full clone of the `openfoodfacts-server` repository can consume a significant amount of your PC's resources. It will download over 2 GiB of data and take up over 3 GiB of drive space.
 
-```console
+``bash
 git clone --single-branch --depth=1 https://github.com/openfoodfacts/openfoodfacts-server.git
 ```
 
@@ -194,10 +210,11 @@ To save your PC's resources, consider using a shallow clone by only cloning the 
 
 You will still be able to contribute PRs based on the `main` branch. However, you will not be able to view the full Git version history of any files, and you need to use an additional branch from GitHub, e.g., `gh-pages`, you can do it like this:
 
-```console
+``bash
 git remote set-branches --add origin gh-pages
 git fetch --depth=1 origin gh-pages:gh-pages
 git checkout gh-pages
+
 ```
 
 > _Note: you can skip this step for the first setup since the default `.env` in the repo contains all the default values required to get started._
@@ -243,7 +260,7 @@ On linux and macOS, you can automatically do it if you [use direnv](how-to-use-d
 
 From the repository root, run:
 
-```console
+``bash
 make dev
 ```
 
@@ -254,23 +271,26 @@ make dev
 > **Note:**
 >
 > If docker complains about
+>
 > ```
 > ERROR: could not find an available, non-overlapping IPv4 address pool among the defaults to assign to the network
 > ```
+>
 > It can be solved by adding `{"base": "172.80.0.0/16","size": 24}, {"base": "172.90.0.0/16","size": 24}` to `default-address-pools` in `/etc/docker/daemon.json` and then restarting the docker daemon.
 > _Credits to https://theorangeone.net/posts/increase-docker-ip-space/ for this solution._
 
 The command will run 2 subcommands:
-* `make up`: **Build and run containers** from the local directory and bind local code files, so that you do not have to rebuild everytime.
-* `make import_sample_data`: **Load sample data** into `mongodb` container (~100 products).
 
-***Notes:***
+- `make up`: **Build and run containers** from the local directory and bind local code files, so that you do not have to rebuild everytime.
+- `make import_sample_data`: **Load sample data** into `mongodb` container (~100 products).
 
-* The first build can take between 10 and 30 minutes depending on your machine and internet connection (broadband connection heavily recommended, as this will download Docker base images, install Debian and Perl modules in preparation of the final container image).
+**_Notes:_**
 
-* You might not immediately see the test products: create an account, login, and they should appear.
+- The first build can take between 10 and 30 minutes depending on your machine and internet connection (broadband connection heavily recommended, as this will download Docker base images, install Debian and Perl modules in preparation of the final container image).
 
-* For a full description of available make targets, see [Docker / Makefile commands](ref-docker-commands.md)
+- You might not immediately see the test products: create an account, login, and they should appear.
+
+- For a full description of available make targets, see [Docker / Makefile commands](ref-docker-commands.md)
 
 **Hosts file:**
 
@@ -306,9 +326,10 @@ To use the devcontainer, install [prerequisites](#1-prerequisites), [clone the r
 
 When running `make dev`:
 
-```console
+``bash
 bash: make: command not found
-```
+
+````
 
 **Solution (if using Windows):**
 Click the Windows button, then type “environment properties” into the search bar and hit Enter. Click Environment Variables, then under System variables choose Path and click Edit. Click New and insert C:\Program Files (x86)\GnuWin32\bin, then save the changes. Open a new terminal and test that the command works.
@@ -319,7 +340,7 @@ Check that your bash PATH setting is correct. If it is, your Linux distro doesn'
 
 ```shell
 sudo apt-get install make
-```
+````
 
 For other distros, consult your distro's documentation or support resources for the command to use.
 
@@ -327,7 +348,8 @@ For other distros, consult your distro's documentation or support resources for 
 
 When running `make dev`:
 
-```console
+``bash
+
 <h1>Software error:</h1>
 <pre>Could not load taxonomy: /mnt/podata/taxonomies/traces.result.json at /opt/product-opener/lib/ProductOpener/Tags.pm line 1976.
 Compilation failed in require at /opt/product-opener/scripts/build_lang.pl line 31, &lt;DATA&gt; line 2104.
@@ -350,23 +372,26 @@ traces.result.json is a symlink to allergens.result.json
 You have to enable the 'Developer Mode' in order to use the symlinks.
 To enable Developer Mode:
 
-* on windows 10: Settings > Update & Security > 'For developers' …
-* on windows 11: Settings > Privacy & Security > 'For developers' …
+- on windows 10: Settings > Update & Security > 'For developers' …
+- on windows 11: Settings > Privacy & Security > 'For developers' …
 
-and turn on the toggle for *Developer Mode*.
+and turn on the toggle for _Developer Mode_.
 
 On Windows systems, the git repository needs to be cloned with symlinks enabled.
 
 You need to remove the directory where you cloned the project, and clone the project again, using the right options:
 
-```console
+``bash
+
 # replace my-user-id with your user id if you forked the repository, otherwise use openfoodfacts
+
 git clone -c core.symlinks=true git@github.com:my-user-id/openfoodfacts-server.git
+
 ```
 ### make dev error: open /.docker/buildx/current: permission denied
 On macOS
 When running `make dev`:
-```console
+``bash
 docker compose --env-file=.env  build   2>&1
 open /.docker/buildx/current: permission denied
 make: *** [build] Error 1
@@ -375,16 +400,19 @@ openfoodfacts-server %
 
 **Solution:**
 Check for permissions by
-```console
+``bash
 ls -la /.docker/buildx
+
 ```
 If there is a file that is not owned by user with root instead of USER:
-```console
+``bash
 -rw-------   1 root    staff   48 Apr 28 17:04 current
 ```
+
 Then Run
-```console
+``bash
 sudo chown -R USER:USER /Users/USER/.docker/buildx
+
 ```
 Replacing USER with current user
 
@@ -400,19 +428,20 @@ Use the Git Bash shell to run the make commands in windows so that programs like
 
 When running `make import_prod_data`.
 
-```console
+``bash
 process_begin: CreateProcess(NULL, wget --no-verbose https://static.openfoodfacts.org/data/openfoodfacts-mongodbdump.gz, ...) failed.
 make (e=2): The system cannot find the file specified.
 ```
 
 You need to install [wget for windows](https://eternallybored.org/misc/wget/). The referenced version is able to use the Windows Certificate Store, whereas the standard [gnuwin32 version](https://gnuwin32.sourceforge.net/packages/wget.htm) will give errors about not being able to verify the server certificate.
 
-### make: *** [Makefile:154: import_sample_data] Error 22
+### make: \*\*\* [Makefile:154: import_sample_data] Error 22
 
 When running `make import_sample_data`
 
-```console
+``bash
 <hl>Software error:</h1>
+
 <pre>MongoDB: :SelectionError: No writable server available. MongoDB server status:
 Topology type: Single; Member status:
 mongodb:27017 (type: Unknown, error: MongoDB::NetworkError: Could not connect to 'mongodb:27017': Temporary failure in name resolution )
@@ -427,7 +456,8 @@ and the time and date of the error.
 
 [Sat Dec 17 19:52:21 2022] update_all_products from_dir_in_mongodb.pl: mongodb:27017 (type: Unknown, error: MongoDB::NetworkError: Could not connect to 'mongodb:27017': Temporary failure in name resolution )
 
-make: *** [Makefile:154: import_sample data] Error 22
+make: \*\*\* [Makefile:154: import_sample data] Error 22
+
 ```
 
 **Solution:**
@@ -436,22 +466,24 @@ The cause of this issue is that you already have the mongodb database server run
 *For Linux users:*
 
 First stop the MongoDB server from your OS
-```console
+``bash
 sudo systemctl stop mongod
 ```
 
 Then check that mongod is stopped with:
-```console
+``bash
 systemctl status mongod | grep Active
+
 ```
 > **Note:**
 > The output of this command should be:
   `Active: inactive (dead)`
 
 Then, execute this:
-```console
+``bash
 docker compose up
 ```
+
 > **Note:**
 > To know more about docker compose commands do read [this guide](how-to-develop-using-docker.md)
 
@@ -459,7 +491,8 @@ docker compose up
 
 When running `make dev`:
 
-```console
+``bash
+
 <h1>Software error:</h1>
 <pre>can't write into /mnt/podata/data/Lang.openfoodfacts.localhost.sto: Permission denied at /opt/product-opener/lib/ProductOpener/Store.pm line 234.
 </pre>
@@ -475,61 +508,63 @@ make: *** [Makefile:126: build_lang] Error 13
 
 Use the powershell/cmd to run the make dev commands in windows.
 
-
 ### make dev error: [build] Error 1 - failed to solve: process "/bin/sh -c usermod --uid $USER_UID www-data && groupmod --gid $USER_GID www-data" did not complete successfully: exit code: 4
 
 **On WSL(for root user)**
 When using `make dev`:
 
-```console
-<p>
-------
- > [backend modperl 5/5] RUN usermod --uid 0 www-data &&     groupmod --gid 1000 www-data:
-0.492 usermod: UID '0' already exists
-------
-failed to solve: process "/bin/sh -c usermod --uid $USER_UID www-data &&     groupmod --gid $USER_GID www-data" did not complete successfully: exit code: 4
+``bash
+
+## <p>
+
+> [backend modperl 5/5] RUN usermod --uid 0 www-data && groupmod --gid 1000 www-data:
+
+## 0.492 usermod: UID '0' already exists
+
+failed to solve: process "/bin/sh -c usermod --uid $USER_UID www-data && groupmod --gid $USER_GID www-data" did not complete successfully: exit code: 4
+
 </p>
 make: *** [Makefile:147: build] Error 1
 ```
 
 **Solution:**
 
-Reason for the error: 
+Reason for the error:
 "usermod: UID '0' already exists" means that the user is being assigned UID 0, which is already used by the root user.
-
 
 To solve it create an environment variable(USER_UID=1000) inside .envrc using direnv. Steps to do that:
 
 Install direnv
-```console
+``bash
 sudo apt install direnv
+
 ```
 
 Enable direnv for Your Shell
-```console
+``bash
 echo 'eval "$(direnv hook bash)"' >> ~/.bashrc
 source ~/.bashrc
 ```
 
 Create a .envrc File in Your Project
-```console
+``bash
 echo 'USER_UID=1000' > .envrc
+
 ```
 
 Finally, run this to allow .envrc:
-```console
+``bash
 direnv allow
 ```
 
-
-### make dev error: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Head "http://%2Fvar%2Frun%2Fdocker.sock/_ping": dial unix /var/run/docker.sock: connect: permission denied make: *** [Makefile:147 : build] Erreur 1
-
-
+### make dev error: permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Head "http://%2Fvar%2Frun%2Fdocker.sock/\_ping": dial unix /var/run/docker.sock: connect: permission denied make: \*\*\* [Makefile:147 : build] Erreur 1
 
 **Solution:**
 
 Add the user to docker group :
-```console
+``bash
 sudo usermod -aG docker $USER
+
 ```
 
+```
