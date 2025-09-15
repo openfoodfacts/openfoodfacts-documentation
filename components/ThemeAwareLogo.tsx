@@ -18,7 +18,7 @@ const getAssetPath = (path: string) => {
     window.location.hostname === "openfoodfacts.github.io";
 
   if (isGitHubPages) {
-    return `/openfoodfacts-documentation${path}`;
+    return `/documentation${path}`;
   }
   return path;
 };

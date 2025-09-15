@@ -1,14 +1,14 @@
 # How to install search-a-licious
 
-
 ## Prerequisites
 
 ### Ensure mmap count is high enough
 
 If you are on Linux, before running the services, you need to make sure that your [system mmap count is high enough for Elasticsearch to run](https://www.elastic.co/guide/en/elasticsearch/reference/current/vm-max-map-count.html). You can do this by running:
 
-```console
+``bash
 sudo sysctl -w vm.max_map_count=262144
+
 ```
 
 To make the change permanent, you need to add a line `vm.max_map_count=262144` to the `/etc/sysctl.conf` file and run the command `sudo sysctl -p` to apply the changes.
@@ -47,14 +47,14 @@ Our [CI file for deployment](https://github.com/openfoodfacts/search-a-licious/b
 
 You should now be able to start docker:
 
-```console
+``bash
 docker compose up -d
 ```
 
 > [!NOTES]
-> * You may encounter a permission error if your user is not part of the `docker` group, in which case you should either [add it](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) or modify the Makefile to prefix `sudo` to all docker and docker compose commands.
-> * Update container might crash because if you are note connected to any Redis, Search-a-licious will still run. You need to connect to Redis only if you want continuous updates. See [How to update the index](./how-to-update-index.md)
-
+>
+> - You may encounter a permission error if your user is not part of the `docker` group, in which case you should either [add it](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) or modify the Makefile to prefix `sudo` to all docker and docker compose commands.
+> - Update container might crash because if you are note connected to any Redis, Search-a-licious will still run. You need to connect to Redis only if you want continuous updates. See [How to update the index](./how-to-update-index.md)
 
 ## Using it
 

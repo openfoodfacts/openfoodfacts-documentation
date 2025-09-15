@@ -11,8 +11,8 @@ const config = {
     unoptimized: true,
   },
   // GitHub Pages configuration
-  basePath: process.env.GITHUB_ACTIONS ? '/openfoodfacts-documentation' : '',
-  assetPrefix: process.env.GITHUB_ACTIONS ? '/openfoodfacts-documentation/' : '',
+  basePath: process.env.GITHUB_ACTIONS ? '/documentation' : '',
+  assetPrefix: process.env.GITHUB_ACTIONS ? '/documentation/' : '',
 };
 
 export default withMDX(config);

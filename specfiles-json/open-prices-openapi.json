@@ -4840,7 +4840,7 @@
           "price": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true
@@ -4851,7 +4851,7 @@
           "price_without_discount": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true
@@ -4974,7 +4974,7 @@
           "receipt_price_total": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -4983,7 +4983,7 @@
           "receipt_online_delivery_costs": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -5073,7 +5073,7 @@
           "price": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true
@@ -5084,7 +5084,7 @@
           "price_without_discount": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true
@@ -5241,7 +5241,7 @@
           "price": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true
@@ -5252,7 +5252,7 @@
           "price_without_discount": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true
@@ -5651,7 +5651,7 @@
           "price": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true
@@ -5662,7 +5662,7 @@
           "price_without_discount": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true
@@ -5950,7 +5950,7 @@
           "receipt_price_total": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -5959,7 +5959,7 @@
           "receipt_online_delivery_costs": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6109,7 +6109,7 @@
           "receipt_price_total": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6118,7 +6118,7 @@
           "receipt_online_delivery_costs": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6263,7 +6263,7 @@
           "receipt_price_total": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6272,7 +6272,7 @@
           "receipt_online_delivery_costs": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6465,7 +6465,7 @@
           "receipt_price_total": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6474,7 +6474,7 @@
           "receipt_online_delivery_costs": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6555,7 +6555,7 @@
           "receipt_price_total": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6564,7 +6564,7 @@
           "receipt_online_delivery_costs": {
             "type": "number",
             "format": "double",
-            "maximum": 100000000,
+            "maximum": 10000000,
             "minimum": 0,
             "exclusiveMaximum": true,
             "nullable": true,
@@ -6939,6 +6939,11 @@
             "maximum": 2147483647,
             "minimum": 0
           },
+          "proof_currency_count": {
+            "type": "integer",
+            "maximum": 2147483647,
+            "minimum": 0
+          },
           "proof_in_challenge_count": {
             "type": "integer",
             "maximum": 2147483647,
@@ -7080,6 +7085,11 @@
             "minimum": 0
           },
           "proof_kind_consumption_count": {
+            "type": "integer",
+            "maximum": 2147483647,
+            "minimum": 0
+          },
+          "proof_currency_count": {
             "type": "integer",
             "maximum": 2147483647,
             "minimum": 0

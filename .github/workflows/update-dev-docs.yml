@@ -34,55 +34,55 @@ jobs:
           sparse-checkout: |
             docs
 
-      - name: Fetch Robotoff documentation
-        uses: actions/checkout@v5
-        with:
-          repository: openfoodfacts/robotoff
-          path: temp-robotoff
-          sparse-checkout: |
-            doc
+      # - name: Fetch Robotoff documentation
+      #   uses: actions/checkout@v5
+      #   with:
+      #     repository: openfoodfacts/robotoff
+      #     path: temp-robotoff
+      #     sparse-checkout: |
+      #       doc
 
-      - name: Fetch Infrastructure documentation
-        uses: actions/checkout@v5
-        with:
-          repository: openfoodfacts/openfoodfacts-infrastructure
-          ref: develop
-          path: temp-infrastructure
-          sparse-checkout: |
-            docs
+      # - name: Fetch Infrastructure documentation
+      #   uses: actions/checkout@v5
+      #   with:
+      #     repository: openfoodfacts/openfoodfacts-infrastructure
+      #     ref: develop
+      #     path: temp-infrastructure
+      #     sparse-checkout: |
+      #       docs
 
-      - name: Fetch Open Prices documentation
-        uses: actions/checkout@v5
-        with:
-          repository: openfoodfacts/open-prices
-          path: temp-open-prices
-          sparse-checkout: |
-            docs
+      # - name: Fetch Open Prices documentation
+      #   uses: actions/checkout@v5
+      #   with:
+      #     repository: openfoodfacts/open-prices
+      #     path: temp-open-prices
+      #     sparse-checkout: |
+      #       docs
 
-      - name: Fetch Knowledge Panel documentation
-        uses: actions/checkout@v5
-        with:
-          repository: openfoodfacts/facets-knowledge-panels
-          path: temp-knowledge-panels
-          sparse-checkout: |
-            docs
+      # - name: Fetch Knowledge Panel documentation
+      #   uses: actions/checkout@v5
+      #   with:
+      #     repository: openfoodfacts/facets-knowledge-panels
+      #     path: temp-knowledge-panels
+      #     sparse-checkout: |
+      #       docs
 
-      - name: Fetch Search-a-licious documentation
-        uses: actions/checkout@v5
-        with:
-          repository: openfoodfacts/search-a-licious
-          path: temp-search-a-licious
-          sparse-checkout: |
-            docs
+      # - name: Fetch Search-a-licious documentation
+      #   uses: actions/checkout@v5
+      #   with:
+      #     repository: openfoodfacts/search-a-licious
+      #     path: temp-search-a-licious
+      #     sparse-checkout: |
+      #       docs
 
       - name: Create docs directory structure
         run: |
           mkdir -p docs/product-opener
-          mkdir -p docs/robotoff
-          mkdir -p docs/infrastructure
-          mkdir -p docs/open-prices
-          mkdir -p docs/knowledge-panels
-          mkdir -p docs/search-a-licious
+          # mkdir -p docs/robotoff
+          # mkdir -p docs/infrastructure
+          # mkdir -p docs/open-prices
+          # mkdir -p docs/knowledge-panels
+          # mkdir -p docs/search-a-licious
 
       - name: Copy Product Opener documentation
         run: |
@@ -93,59 +93,149 @@ jobs:
             echo "Warning: Product Opener documentation not found"
           fi
 
-      - name: Copy Robotoff documentation
-        run: |
-          if [ -d "temp-robotoff/doc" ]; then
-            cp -r temp-robotoff/doc/* docs/robotoff/
-            echo "Robotoff documentation copied successfully"
-          else
-            echo "Warning: Robotoff documentation not found"
-          fi
+      # - name: Copy Robotoff documentation
+      #   run: |
+      #     if [ -d "temp-robotoff/doc" ]; then
+      #       cp -r temp-robotoff/doc/* docs/robotoff/
+      #       echo "Robotoff documentation copied successfully"
+      #     else
+      #       echo "Warning: Robotoff documentation not found"
+      #     fi
 
-      - name: Copy Infrastructure documentation
-        run: |
-          if [ -d "temp-infrastructure/docs" ]; then
-            cp -r temp-infrastructure/docs/* docs/infrastructure/
-            echo "Infrastructure documentation copied successfully"
-          else
-            echo "Warning: Infrastructure documentation not found"
-          fi
+      # - name: Copy Infrastructure documentation
+      #   run: |
+      #     if [ -d "temp-infrastructure/docs" ]; then
+      #       cp -r temp-infrastructure/docs/* docs/infrastructure/
+      #       echo "Infrastructure documentation copied successfully"
+      #     else
+      #       echo "Warning: Infrastructure documentation not found"
+      #     fi
 
-      - name: Copy Open Prices documentation
-        run: |
-          if [ -d "temp-open-prices/docs" ]; then
-            cp -r temp-open-prices/docs/* docs/open-prices/
-            echo "Open Prices documentation copied successfully"
-          else
-            echo "Warning: Open Prices documentation not found"
-          fi
+      # - name: Copy Open Prices documentation
+      #   run: |
+      #     if [ -d "temp-open-prices/docs" ]; then
+      #       cp -r temp-open-prices/docs/* docs/open-prices/
+      #       echo "Open Prices documentation copied successfully"
+      #     else
+      #       echo "Warning: Open Prices documentation not found"
+      #     fi
 
-      - name: Copy Knowledge Panel documentation
-        run: |
-          if [ -d "temp-knowledge-panels/docs" ]; then
-            cp -r temp-knowledge-panels/docs/* docs/knowledge-panels/
-            echo "Knowledge Panel documentation copied successfully"
-          else
-            echo "Warning: Knowledge Panel documentation not found"
-          fi
+      # - name: Copy Knowledge Panel documentation
+      #   run: |
+      #     if [ -d "temp-knowledge-panels/docs" ]; then
+      #       cp -r temp-knowledge-panels/docs/* docs/knowledge-panels/
+      #       echo "Knowledge Panel documentation copied successfully"
+      #     else
+      #       echo "Warning: Knowledge Panel documentation not found"
+      #     fi
 
-      - name: Copy Search-a-licious documentation
+      # - name: Copy Search-a-licious documentation
+      #   run: |
+      #     if [ -d "temp-search-a-licious/docs" ]; then
+      #       cp -r temp-search-a-licious/docs/* docs/search-a-licious/
+      #       echo "Search-a-licious documentation copied successfully"
+      #     else
+      #       echo "Warning: Search-a-licious documentation not found"
+      #     fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Transpile markdown files to MDX
         run: |
-          if [ -d "temp-search-a-licious/docs" ]; then
-            cp -r temp-search-a-licious/docs/* docs/search-a-licious/
-            echo "Search-a-licious documentation copied successfully"
-          else
-            echo "Warning: Search-a-licious documentation not found"
+          echo "Transpiling Product Opener documentation..."
+          if [ -d "docs/product-opener" ]; then
+            npx fumadocs-transpiler@latest --input docs/product-opener --output "content/docs/Product-Opener/(docs)" --verbose
+            echo "Product Opener documentation transpiled successfully"
           fi
+          
+          # Uncomment and modify these sections when other repositories are enabled
+          # echo "Transpiling Robotoff documentation..."
+          # if [ -d "docs/robotoff" ]; then
+          #   npx fumadocs-transpiler@latest --input docs/robotoff --output "content/docs/Robotoff/(docs)" --verbose
+          #   echo "Robotoff documentation transpiled successfully"
+          # fi
+          
+          # echo "Transpiling Infrastructure documentation..."
+          # if [ -d "docs/infrastructure" ]; then
+          #   npx fumadocs-transpiler@latest --input docs/infrastructure --output "content/docs/infrastructure/(docs)" --verbose
+          #   echo "Infrastructure documentation transpiled successfully"
+          # fi
+          
+          # echo "Transpiling Open Prices documentation..."
+          # if [ -d "docs/open-prices" ]; then
+          #   npx fumadocs-transpiler@latest --input docs/open-prices --output "content/docs/Open-prices/(docs)" --verbose
+          #   echo "Open Prices documentation transpiled successfully"
+          # fi
+          
+          # echo "Transpiling Knowledge Panels documentation..."
+          # if [ -d "docs/knowledge-panels" ]; then
+          #   npx fumadocs-transpiler@latest --input docs/knowledge-panels --output "content/docs/Knowledge-Panel/(docs)" --verbose
+          #   echo "Knowledge Panels documentation transpiled successfully"
+          # fi
+          
+          # echo "Transpiling Search-a-licious documentation..."
+          # if [ -d "docs/search-a-licious" ]; then
+          #   npx fumadocs-transpiler@latest --input docs/search-a-licious --output "content/docs/search-a-licious/(docs)" --verbose
+          #   echo "Search-a-licious documentation transpiled successfully"
+          # fi
+
+      - name: Copy documentation assets
+        run: |
+          echo "Copying Product Opener assets..."
+          if [ -d "docs/product-opener/assets" ]; then
+            mkdir -p "content/docs/Product-Opener/(docs)/assets"
+            cp -r docs/product-opener/assets/* "content/docs/Product-Opener/(docs)/assets/"
+            echo "Product Opener assets copied successfully"
+          fi
+          
+          # Uncomment and modify these sections when other repositories are enabled
+          # echo "Copying Robotoff assets..."
+          # if [ -d "docs/robotoff/assets" ]; then
+          #   mkdir -p "content/docs/Robotoff/(docs)/assets"
+          #   cp -r docs/robotoff/assets/* "content/docs/Robotoff/(docs)/assets/"
+          #   echo "Robotoff assets copied successfully"
+          # fi
+          
+          # echo "Copying Infrastructure assets..."
+          # if [ -d "docs/infrastructure/assets" ]; then
+          #   mkdir -p "content/docs/infrastructure/(docs)/assets"
+          #   cp -r docs/infrastructure/assets/* "content/docs/infrastructure/(docs)/assets/"
+          #   echo "Infrastructure assets copied successfully"
+          # fi
+          
+          # echo "Copying Open Prices assets..."
+          # if [ -d "docs/open-prices/assets" ]; then
+          #   mkdir -p "content/docs/Open-prices/(docs)/assets"
+          #   cp -r docs/open-prices/assets/* "content/docs/Open-prices/(docs)/assets/"
+          #   echo "Open Prices assets copied successfully"
+          # fi
+          
+          # echo "Copying Knowledge Panels assets..."
+          # if [ -d "docs/knowledge-panels/assets" ]; then
+          #   mkdir -p "content/docs/Knowledge-Panel/(docs)/assets"
+          #   cp -r docs/knowledge-panels/assets/* "content/docs/Knowledge-Panel/(docs)/assets/"
+          #   echo "Knowledge Panels assets copied successfully"
+          # fi
+          
+          # echo "Copying Search-a-licious assets..."
+          # if [ -d "docs/search-a-licious/assets" ]; then
+          #   mkdir -p "content/docs/search-a-licious/(docs)/assets"
+          #   cp -r docs/search-a-licious/assets/* "content/docs/search-a-licious/(docs)/assets/"
+          #   echo "Search-a-licious assets copied successfully"
+          # fi
 
       - name: Cleanup temporary directories
         run: |
           rm -rf temp-product-opener
-          rm -rf temp-robotoff
-          rm -rf temp-infrastructure
-          rm -rf temp-open-prices
-          rm -rf temp-knowledge-panels
-          rm -rf temp-search-a-licious
+          # rm -rf temp-robotoff
+          # rm -rf temp-infrastructure
+          # rm -rf temp-open-prices
+          # rm -rf temp-knowledge-panels
+          # rm -rf temp-search-a-licious
 
       - name: Check for changes
         id: git-check
@@ -160,30 +250,35 @@ jobs:
       - name: Commit changes
         if: steps.git-check.outputs.changed == 'true'
         run: |
-          git commit --no-verify -m "docs: update developer documentation from source repositories
+          git commit --no-verify -m "docs: update and transpile developer documentation from source repositories
 
-          Auto-generated synchronization from:
+          Auto-generated synchronization and MDX transpilation from:
           - openfoodfacts-server/docs
-          - robotoff/doc
-          - openfoodfacts-infrastructure/docs
-          - open-prices/docs
-          - facets-knowledge-panels/docs
-          - search-a-licious/docs
+          # - robotoff/doc
+          # - openfoodfacts-infrastructure/docs
+          # - open-prices/docs
+          # - facets-knowledge-panels/docs
+          # - search-a-licious/docs
 
+          Files transpiled from Markdown to MDX using fumadocs-transpiler
+          Assets (images, etc.) copied to maintain documentation dependencies
           Updated at $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
           git push origin main
 
       - name: Summary
         run: |
           if [ "${{ steps.git-check.outputs.changed }}" == "true" ]; then
-            echo "Developer documentation updated successfully"
-            echo "Updated documentation from the following repositories:"
+            echo "Developer documentation updated and transpiled successfully"
+            echo "Updated and transpiled documentation from the following repositories:"
             echo "- Product Opener: openfoodfacts/openfoodfacts-server/docs"
-            echo "- Robotoff: openfoodfacts/robotoff/doc"
-            echo "- Infrastructure: openfoodfacts/openfoodfacts-infrastructure/docs"
-            echo "- Open Prices: openfoodfacts/open-prices/docs"
-            echo "- Knowledge Panels: openfoodfacts/facets-knowledge-panels/docs"
-            echo "- Search-a-licious: openfoodfacts/search-a-licious/docs"
+            # echo "- Robotoff: openfoodfacts/robotoff/doc"
+            # echo "- Infrastructure: openfoodfacts/openfoodfacts-infrastructure/docs"
+            # echo "- Open Prices: openfoodfacts/open-prices/docs"
+            # echo "- Knowledge Panels: openfoodfacts/facets-knowledge-panels/docs"
+            # echo "- Search-a-licious: openfoodfacts/search-a-licious/docs"
+            echo ""
+            echo "All Markdown files have been transpiled to MDX format using fumadocs-transpiler"
+            echo "Documentation assets (images, etc.) copied to maintain dependencies"
           else
             echo "No changes detected in developer documentation"
           fi
