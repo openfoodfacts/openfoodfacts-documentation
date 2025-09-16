@@ -8,7 +8,7 @@ This tutorial explains how to use the Open Food Facts API to identify which prod
 
 The goal is to request a special field, `images_to_update_[lang]`, for a given product. The API will return a list of key image types (front, ingredients, etc.) and a value indicating their status: either they are missing or they are old.
 
----
+-----
 
 ### The API Endpoint
 
@@ -22,8 +22,8 @@ https://{world|fr|...}.openfoodfacts.org/api/v2/product/[BARCODE]?fields=images_
 
 **Parameters:**
 
-- `[BARCODE]`: The barcode of the product you are querying.
-- `[LANG]`: The two-letter [ISO language code](https://static.openfoodfacts.org/data/taxonomies/languages.json) for which you want to check the images (e.g., `en`, `fr`, `de`). Your application should use its current language setting here.
+  - `[BARCODE]`: The barcode of the product you are querying.
+  - `[LANG]`: The two-letter [ISO language code](https://static.openfoodfacts.org/data/taxonomies/languages.json) for which you want to check the images (e.g., `en`, `fr`, `de`). Your application should use its current language setting here.
 
 **Example Request:**
 
@@ -33,7 +33,7 @@ Here is a request for the French (`fr`) images for product `3483130043180`.
 https://fr.openfoodfacts.org/api/v2/produit/3483130043180?fields=images_to_update_fr
 ```
 
----
+-----
 
 ### Understanding the API Response
 
@@ -57,12 +57,16 @@ The API returns a standard product JSON object, but it will only contain the `im
 
 The `images_to_update_fr` object contains key-value pairs.
 
-- **Key**: The key is a combination of the **image type** and the **language code**, separated by an underscore (e.g., `front_fr`). The main image types are: - `front` - `ingredients` - `nutrition` - `packaging`
+- **Key**: The key is a combination of the **image type** and the **language code**, separated by an underscore (e.g., `front_fr`). The main image types are:
+      - `front`
+      - `ingredients`
+      - `nutrition`
+      - `packaging`
   - **Value**: The value tells you the status of the image.
-    - `0`: The image **does not exist**. The user should be prompted to **take** a new picture.
-    - `> 0`: The image **exists but is old**. The value is the age of the image in **seconds**. The user should be prompted to **refresh** it with a new one.
+      - `0`: The image **does not exist**. The user should be prompted to **take** a new picture.
+      - `> 0`: The image **exists but is old**. The value is the age of the image in **seconds**. The user should be prompted to **refresh** it with a new one.
 
----
+-----
 
 ### Client-Side Implementation Logic
 
@@ -72,7 +76,7 @@ Your application should parse this response to dynamically generate calls to act
 
 Here is a pseudo-code example demonstrating how to create button text based on the API response.
 
-```js title="Client-Side Implementation Logic"
+``` js
 // Assume 'images_to_update' is the object from the API response
 // e.g., { packaging_fr: 0, front_fr: 83734290 }
 
@@ -116,14 +120,14 @@ function formatTime(seconds) {
     week: 604800,
     day: 86400,
     hour: 3600,
-    minute: 60,
+    minute: 60
   };
 
   for (let unit in units) {
     const value = units[unit];
     if (seconds >= value) {
       const count = Math.floor(seconds / value);
-      return `${count} ${unit}${count > 1 ? "s" : ""} ago`;
+      return `${count} ${unit}${count > 1 ? 's' : ''} ago`;
     }
   }
 }

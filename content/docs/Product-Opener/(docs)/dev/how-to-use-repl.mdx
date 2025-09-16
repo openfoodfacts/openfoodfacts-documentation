@@ -2,7 +2,7 @@
 title: "How to use Perl REPL (re.pl)"
 ---
 
-> **_NOTE:_** New to Perl? Check [how to learn perl](how-to-learn-perl.md)!
+> **_NOTE:_**  New to Perl? Check [how to learn perl](how-to-learn-perl.md)!
 
 On your local dev instance, the "backend" container
 comes with [Devel::REPL](https://metacpan.org/pod/Devel::REPL) installed.
@@ -16,7 +16,7 @@ you can load any module of `ProductOpener` from within it.
 
 Just run
 
-```sh title="Launch Repl"
+``` sh
 docker compose run --rm backend re.pl
 ``` title="Launch Repl"
 
@@ -25,10 +25,9 @@ If you want to access external services (like mongodb), do not forget to start t
 **_NOTE:_** If you get "exec: re.pl: not found", it means you may not have dev tools installed.
 Try going in your .env (or [.envrc](./how-to-use-direnv/)) file and add the line:
 
-```sh title="Environment configuration"
+``` sh
 CPANMOPTS=--with-develop --with-feature=off_server_dev_tools
 ```
-
 then just make build and retry, you will then be able to run re.pl
 
 ## Testing perl code

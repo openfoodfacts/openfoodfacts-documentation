@@ -9,7 +9,6 @@ Those tasks are run by a Minion worker service, which is configured in /etc/syst
 ## Log files
 
 in the logs directory, we have:
-
 - minion.log - states which tasks are started
 - minion_log4perl.log - debug messages from the Perl code that implements the Minion tasks
 
@@ -62,17 +61,17 @@ as the root user: `systemctl stop minion@off.service`
 And run it manually as a normal process
 
 as the off user:
-```bash title="Debugging failed import of pro platform data on public platform"
+```bash
 sudo -u off bash
 source env/setenv off
 TAP_LOG_FILTER=none perl scripts/minion_producers.pl minion worker -m production
-```
+``` bash
 
 The `TAP_LOG_FILTER` environment variable is used to set the log level for Log4Perl. Setting it to `none` prints messages for all log levels.
 
 I added a print STDERR in Import.pm to see if a specific product is causing the problem:
 
-```bash title="Debug output"
+``` bash
 Import.pm - org: systeme-u - code: 3256221408515
 ```
 
@@ -92,7 +91,7 @@ To debug it, I added print STDERR statements in TaxonomiesEnhancer.pm, to try to
 
 The following line is the error:
 
-``` title="bash"
+``` bash
                 $log->debug(
                         "check_ingredients_between_languages > detect_missing_stop_words_after_list -   too much difference between languages to raise warning. diff/total > tolerance: $translation_difference_count / $#$ingredients1 = "
                                 . $translation_difference_count / $#$ingredients1 . " > "
@@ -102,8 +101,8 @@ The following line is the error:
 
 `$#array` is equal to `0` when `@array` contains 1 element, so it makes a `division by 0 error` and the task fails. But unfortunately I could not find any log where this division by zero error was reported, the only thing we get from Minion is that the task failed...
 
+
 **Finally:** don't forget to **restart the minion service** !
 
 ```bash
 sudo systemctl start minion@off.service
-```
