@@ -3049,6 +3049,13 @@
           },
           {
             "in": "query",
+            "name": "image_md5_hash",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "kind",
             "schema": {
               "type": "string",
@@ -3865,6 +3872,13 @@
             "type": "integer",
             "readOnly": true
           },
+          "locations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Location"
+            },
+            "readOnly": true
+          },
           "status": {
             "type": "string",
             "readOnly": true
@@ -3927,6 +3941,7 @@
         },
         "required": [
           "id",
+          "locations",
           "status",
           "tag",
           "updated"
@@ -4832,9 +4847,17 @@
             "nullable": true
           },
           "labels_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "origins_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "price": {
@@ -5065,9 +5088,17 @@
             "nullable": true
           },
           "labels_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "origins_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "price": {
@@ -5233,9 +5264,17 @@
             "nullable": true
           },
           "labels_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "origins_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "price": {
@@ -5643,9 +5682,17 @@
             "nullable": true
           },
           "labels_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "origins_tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
             "nullable": true
           },
           "price": {

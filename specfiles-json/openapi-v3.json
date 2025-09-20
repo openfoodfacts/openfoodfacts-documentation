@@ -8367,7 +8367,7 @@
                                           "type": "object",
                                           "description": "Each element object contains one specific element object such as a text element or an image element.\n",
                                           "properties": {
-                                            "type": {
+                                            "element_type": {
                                               "type": "string",
                                               "enum": [
                                                 "text",
@@ -8377,7 +8377,7 @@
                                                 "panel_group",
                                                 "table"
                                               ],
-                                              "description": "The type of the included element object.\nThe type also indicates which field contains the included element object.\ne.g. if the type is \"text\", the included element object will be in the \"text_element\" field.\n\nNote that in the future, new type of element may be added,\nso your code should ignore unrecognized types, and unknown properties.\n\nTODO: add Map type\n"
+                                              "description": "The type of the included element object.\nThe element_type also indicates which field contains the included element object.\ne.g. if the element_type is \"text\", the included element object will be in the \"text_element\" field.\n\nNote that in the future, new type of element may be added,\nso your code should ignore unrecognized types, and unknown properties.\n\nTODO: add Map type\n"
                                             },
                                             "text_element": {
                                               "title": "text_element",
@@ -8555,7 +8555,7 @@
                                             }
                                           },
                                           "required": [
-                                            "type"
+                                            "element_type"
                                           ]
                                         }
                                       },
@@ -13659,7 +13659,7 @@
                                       "type": "object",
                                       "description": "Each element object contains one specific element object such as a text element or an image element.\n",
                                       "properties": {
-                                        "type": {
+                                        "element_type": {
                                           "type": "string",
                                           "enum": [
                                             "text",
@@ -13669,7 +13669,7 @@
                                             "panel_group",
                                             "table"
                                           ],
-                                          "description": "The type of the included element object.\nThe type also indicates which field contains the included element object.\ne.g. if the type is \"text\", the included element object will be in the \"text_element\" field.\n\nNote that in the future, new type of element may be added,\nso your code should ignore unrecognized types, and unknown properties.\n\nTODO: add Map type\n"
+                                          "description": "The type of the included element object.\nThe element_type also indicates which field contains the included element object.\ne.g. if the element_type is \"text\", the included element object will be in the \"text_element\" field.\n\nNote that in the future, new type of element may be added,\nso your code should ignore unrecognized types, and unknown properties.\n\nTODO: add Map type\n"
                                         },
                                         "text_element": {
                                           "title": "text_element",
@@ -13847,7 +13847,7 @@
                                         }
                                       },
                                       "required": [
-                                        "type"
+                                        "element_type"
                                       ]
                                     }
                                   },
